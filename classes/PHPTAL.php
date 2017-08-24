@@ -14,6 +14,7 @@
  */
 
 define('PHPTAL_VERSION', '1_3_0');
+define('PHPTAL_SUBPATH_RECURSION_LEVEL',3);
 
 PHPTAL::autoloadRegister();
 
@@ -791,7 +792,23 @@ class PHPTAL
     private function setCodeFile()
     {
         $this->findTemplate();
-        $this->_codeFile = $this->getPhpCodeDestination() . $this->getFunctionName() . '.' . $this->getPhpCodeExtension();
+        $this->_codeFile = $this->getPhpCodeDestination() . $this->getSubPath() . '/'  . $this->getFunctionName() . '.' . $this->getPhpCodeExtension();
+    }
+
+    /**
+     * Generate a subpath structure depending on the config
+     */
+    private function getSubPath()
+    {
+        $real_path = md5($this->getFunctionName());
+        $path = '';
+        for ($i = 0; $i < PHPTAL_SUBPATH_RECURSION_LEVEL; $i++) {
+            $path .= '/'.substr($real_path,$i,1);
+        }
+        if (!file_exists($this->getPhpCodeDestination().$path)) {
+            mkdir($this->getPhpCodeDestination().$path, 0777, true);
+        }
+        return $path;
     }
 
     protected function resetPrepared()
