@@ -352,6 +352,11 @@ class PHPTAL_Dom_SaxXmlParser
             $e->hintSrcPosition($this->_file, $this->_line);
             throw $e;
         }
+        catch(PHPTAL_ParserException $e)
+        {
+            $e->hintSrcPosition($this->_file, $this->_line);
+            throw $e;
+        }
         return $builder;
     }
 
