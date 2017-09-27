@@ -50,7 +50,7 @@ class CodeCacheTest extends PHPTAL_TestCase
     private function clearCache()
     {
         $this->assertContains(DIRECTORY_SEPARATOR.'temp_output'.DIRECTORY_SEPARATOR, $this->codeDestination);
-        foreach (glob($this->codeDestination.'tpl_*') as $tpl) {
+        foreach (glob($this->codeDestination.'/*/*/*/tpl_*') as $tpl) {
             $this->assertTrue(unlink($tpl), "Delete $tpl");
         }
     }
@@ -136,8 +136,8 @@ class CodeCacheTest extends PHPTAL_TestCase
         $this->phptal->execute();
 
         $this->assertFalse($this->phptal->testHasParsed, "Reparse!?");
+        $files = glob($this->codeDestination.'*/*/*/tpl_*');
 
-        $files = glob($this->codeDestination.'*');
         $this->assertEquals(2, count($files)); // one for template, one for cache
         foreach ($files as $file) {
             $this->assertFileExists($file);

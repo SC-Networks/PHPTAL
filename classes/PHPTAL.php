@@ -929,8 +929,8 @@ class PHPTAL
         $upperLimit = $this->getPhpCodeDestination() . $this->getFunctionNamePrefix($cacheFilesExpire) . '_';
         $lowerLimit = $this->getPhpCodeDestination() . $this->getFunctionNamePrefix(0);
 
-        // second * gets phptal:cache
-        $cacheFiles = glob($this->getPhpCodeDestination() . 'tpl_????????_*.' . $this->getPhpCodeExtension() . '*');
+        // last * gets phptal:cache
+        $cacheFiles = glob($this->getPhpCodeDestination() .'/*/*/*/tpl_????????_*.' . $this->getPhpCodeExtension() . '*');
 
         if ($cacheFiles) {
             foreach ($cacheFiles as $index => $file) {
