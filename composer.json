@@ -1,5 +1,5 @@
 {
-    "name": "phptal/phptal",
+    "name": "scn/phptal",
     "homepage": "http://phptal.org/",
     "description": "PHPTAL is a templating engine for PHP5 that implements Zope Page Templates syntax",
     "version":"1.3.0",
