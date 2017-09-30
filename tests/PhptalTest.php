@@ -104,7 +104,7 @@ class PhptalTest extends PHPTAL_TestCase
 
         $this->assertRegExp('/^tpl_\d{8}_/', $tpl->getFunctionName());
         $this->assertContains('string', $tpl->getFunctionName());
-        $this->assertNotContains(PHPTAL_VERSION, $tpl->getFunctionName());
+        $this->assertNotContains(PHPTAL::PHPTAL_VERSION, $tpl->getFunctionName());
     }
 
     /**
@@ -125,7 +125,7 @@ class PhptalTest extends PHPTAL_TestCase
         $this->assertEquals('<span>foo value</span>', $res);
         $this->assertRegExp('/^tpl_\d{8}_/', $tpl->getFunctionName());
         $this->assertContains($fakename, $tpl->getFunctionName());
-        $this->assertNotContains(PHPTAL_VERSION, $tpl->getFunctionName());
+        $this->assertNotContains(PHPTAL::PHPTAL_VERSION, $tpl->getFunctionName());
     }
 
     function testStripComments()

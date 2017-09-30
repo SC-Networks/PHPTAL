@@ -1561,16 +1561,6 @@ php:SomeClass::$staticVar
       </para></listitem>
     </itemizedlist>
 
-    <section id="constants">
-      <title>定数</title>
-
-      <para>唯一の定数<constant>PHPTAL_VERSION</constant>が<filename>PHPTAL.php</filename>で定義されています。これは<acronym>PHPTAL</acronym>のバージョンを（<code>X.X.X</code>フォーマットで）含んでいます。</para>
-      <para>
-      古いバージョンには設定のための定数が存在していましたが、それらはすべてメソッドで置き換えられました。
-      </para>
-  </section>
-
-
     <section id="phptal-class">
       <title><classname>PHPTAL</classname>クラス</title>
 

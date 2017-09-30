@@ -1741,16 +1741,6 @@ php:SomeClass::$staticVar
       </para></listitem>
     </itemizedlist>
 
-    <section id="constants">
-      <title>Constants</title>
-
-      <para> The only constant defined in <filename>PHPTAL.php</filename> is <constant>PHPTAL_VERSION</constant>. It contains version of <acronym>PHPTAL</acronym> library installed on your system (in format: <code>X.X.X</code>).</para>
-      <para>
-      In older versions of there were constants for configuration. They have been removed in favor of methods.
-      </para>
-  </section>
-
-
     <section id="phptal-class">
       <title>class <classname>PHPTAL</classname></title>
 

@@ -119,7 +119,7 @@ class PHPTAL_Lint_CLI
     function usage()
     {
         $this->require_phptal();
-        echo "PHPTAL Lint 1.1.3 (PHPTAL ", strtr(PHPTAL_VERSION,"_","."), ")\n";
+        echo "PHPTAL Lint 1.1.3 (PHPTAL ", strtr(PHPTAL::PHPTAL_VERSION,"_","."), ")\n";
 
         echo "Usage: phptal_lint.php [-e extensions] [-i php_file_or_directory] file_or_directory_to_check ...\n";
         echo "  -e comma-separated list of extensions\n";
@@ -178,7 +178,7 @@ class PHPTAL_Lint_CLI
             require_once "PHPTAL.php";
         }
 
-        if (!class_exists('PHPTAL') || !defined('PHPTAL_VERSION')) {
+        if (!class_exists('PHPTAL')) {
             throw new Exception("Your PHPTAL installation is broken or too new for this tool");
         }
     }

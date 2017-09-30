@@ -27,6 +27,7 @@ class CodeCacheTest extends PHPTAL_TestCase
 {
     private $phptal;
     private $codeDestination;
+    private $subpathRecursionLevel = 0;
 
     private function resetPHPTAL()
     {
@@ -49,8 +50,9 @@ class CodeCacheTest extends PHPTAL_TestCase
 
     private function clearCache()
     {
+        $subpath = str_repeat('*/', $this->subpathRecursionLevel);
         $this->assertContains(DIRECTORY_SEPARATOR.'temp_output'.DIRECTORY_SEPARATOR, $this->codeDestination);
-        foreach (glob($this->codeDestination.'/*/*/*/tpl_*') as $tpl) {
+        foreach (glob($this->codeDestination.$subpath.'tpl_*') as $tpl) {
             $this->assertTrue(unlink($tpl), "Delete $tpl");
         }
     }
@@ -123,9 +125,32 @@ class CodeCacheTest extends PHPTAL_TestCase
         $this->assertTrue($this->phptal->testHasParsed, "Reparse");
     }
 
+    function testGarbageRemovalWithSubpathRecursion()
+    {
+        $this->executeGarbageRemovalTest(3);
+    }
+
     function testGarbageRemoval()
     {
+        $this->executeGarbageRemovalTest(0);
+    }
+
+    function testNested()
+    {
+        $this->phptal->setSource('<div phptal:cache="1m per string: 1"> 1 <div phptal:cache="1h per string: 2"> 2 </div> </div>');
+
+        $this->assertEquals(normalize_html('<div> 1 <div> 2 </div> </div>'), normalize_html($this->phptal->execute()), "1st run");
+        $this->assertEquals(normalize_html('<div> 1 <div> 2 </div> </div>'), normalize_html($this->phptal->execute()), "2nd run");
+        $this->assertEquals(normalize_html('<div> 1 <div> 2 </div> </div>'), normalize_html($this->phptal->execute()), "3rd run");
+        $this->assertEquals(normalize_html('<div> 1 <div> 2 </div> </div>'), normalize_html($this->phptal->execute()), "4th run");
+    }
+
+    private function executeGarbageRemovalTest($subpath_recursion)
+    {
+        $this->subpathRecursionLevel = $subpath_recursion;
+
         $src = '<test uniq="'.time().mt_rand().'" phptal:cache="1d" />';
+        $this->phptal->setSubpathRecursionLevel($this->subpathRecursionLevel);
         $this->phptal->setSource($src);
         $this->phptal->execute();
 
@@ -136,7 +161,9 @@ class CodeCacheTest extends PHPTAL_TestCase
         $this->phptal->execute();
 
         $this->assertFalse($this->phptal->testHasParsed, "Reparse!?");
-        $files = glob($this->codeDestination.'*/*/*/tpl_*');
+
+        $subpath = str_repeat('*/', $this->subpathRecursionLevel);
+        $files = glob($this->codeDestination.$subpath.'tpl_*');
 
         $this->assertEquals(2, count($files)); // one for template, one for cache
         foreach ($files as $file) {
@@ -153,15 +180,5 @@ class CodeCacheTest extends PHPTAL_TestCase
         foreach ($files as $file) {
             $this->assertFileNotExists($file);
         }
-    }
-
-    function testNested()
-    {
-        $this->phptal->setSource('<div phptal:cache="1m per string: 1"> 1 <div phptal:cache="1h per string: 2"> 2 </div> </div>');
-
-        $this->assertEquals(normalize_html('<div> 1 <div> 2 </div> </div>'), normalize_html($this->phptal->execute()), "1st run");
-        $this->assertEquals(normalize_html('<div> 1 <div> 2 </div> </div>'), normalize_html($this->phptal->execute()), "2nd run");
-        $this->assertEquals(normalize_html('<div> 1 <div> 2 </div> </div>'), normalize_html($this->phptal->execute()), "3rd run");
-        $this->assertEquals(normalize_html('<div> 1 <div> 2 </div> </div>'), normalize_html($this->phptal->execute()), "4th run");
     }
 }

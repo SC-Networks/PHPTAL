@@ -1651,18 +1651,6 @@ php:SomeClass::$staticVar
       </para></listitem>
     </itemizedlist>
 
-    <section id="constants">
-      <title>Konstanten</title>
-
-      <para>
-        Die einzige Konstante, die in der Datei <filename>PHPTAL.php</filename> definiert ist, ist <constant>PHPTAL_VERSION</constant>. Sie enthält  die Version der <acronym>PHPTAL</acronym>-Bibliothek (Format: <code>X.X.X</code>) die auf dem Rechner installiert ist.
-      </para>
-
-      <para>
-        Die Konfigurationskonstanten aus älteren Versionen sind durch Methoden ersetzt worden.
-      </para>
-    </section>
-
     <section id="configuration">
       <title>Konfigurationsmethoden</title>
 

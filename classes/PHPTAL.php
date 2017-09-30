@@ -13,29 +13,10 @@
  * @link     http://phptal.org/
  */
 
-define('PHPTAL_VERSION', '1_3_0');
-define('PHPTAL_SUBPATH_RECURSION_LEVEL',3);
-
 PHPTAL::autoloadRegister();
 
 /**
  * PHPTAL template entry point.
- *
- * <code>
- * <?php
- * require_once 'PHPTAL.php';
- * try {
- *      $tpl = new PHPTAL('mytemplate.html');
- *      $tpl->title = 'Welcome here';
- *      $tpl->result = range(1, 100);
- *      ...
- *      echo $tpl->execute();
- * }
- * catch (Exception $e) {
- *      echo $e;
- * }
- * ?>
- * </code>
  *
  * @category HTML
  * @package  PHPTAL
@@ -46,6 +27,9 @@ PHPTAL::autoloadRegister();
  */
 class PHPTAL
 {
+
+    const PHPTAL_VERSION = '1_3_0';
+
     //{{{
     /**
      * constants for output mode
@@ -168,6 +152,11 @@ class PHPTAL
      * speeds up calls to external templates
      */
     private $externalMacroTemplatesCache = array();
+
+    /**
+     * @var int
+     */
+    private $subpathRecursionLevel = 0;
 
     //}}}
 
@@ -526,6 +515,16 @@ class PHPTAL
     }
 
     /**
+     * Sets the level of recursion for template cache directories
+     *
+     * @param int $recursion_level
+     */
+    public function setSubpathRecursionLevel($recursion_level)
+    {
+        $this->subpathRecursionLevel = (int) $recursion_level;
+    }
+
+    /**
      * Array with all prefilter objects *or strings* that are names of prefilter classes.
      * (the latter is not implemented in 1.2.1)
      *
@@ -802,7 +801,7 @@ class PHPTAL
     {
         $real_path = md5($this->getFunctionName());
         $path = '';
-        for ($i = 0; $i < PHPTAL_SUBPATH_RECURSION_LEVEL; $i++) {
+        for ($i = 0; $i < $this->subpathRecursionLevel; $i++) {
             $path .= '/'.substr($real_path,$i,1);
         }
         if (!file_exists($this->getPhpCodeDestination().$path)) {
@@ -930,7 +929,14 @@ class PHPTAL
         $lowerLimit = $this->getPhpCodeDestination() . $this->getFunctionNamePrefix(0);
 
         // last * gets phptal:cache
-        $cacheFiles = glob($this->getPhpCodeDestination() .'/*/*/*/tpl_????????_*.' . $this->getPhpCodeExtension() . '*');
+        $cacheFiles = glob(
+            sprintf(
+                '%s%stpl_????????_*.%s*',
+                $this->getPhpCodeDestination(),
+                str_repeat('*/', $this->subpathRecursionLevel),
+                $this->getPhpCodeExtension()
+            )
+        );
 
         if ($cacheFiles) {
             foreach ($cacheFiles as $index => $file) {
@@ -992,7 +998,7 @@ class PHPTAL
             $basename = preg_replace('/\.[a-z]{3,5}$/', '', basename($this->_source->getRealPath()));
             $basename = substr(trim(preg_replace('/[^a-zA-Z0-9]+/', '_', $basename), "_"), 0, 20);
 
-            $hash = md5(PHPTAL_VERSION . PHP_VERSION
+            $hash = md5(static::PHPTAL_VERSION . PHP_VERSION
                     . $this->_source->getRealPath()
                     . $this->getEncoding()
                     . $this->getPrefiltersCacheId()

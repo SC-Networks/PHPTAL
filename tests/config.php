@@ -41,8 +41,7 @@ abstract class PHPTAL_TestCase extends PHPUnit_Framework_TestCase
 
     function setUp()
     {
-        $this->assertTrue(defined('PHPTAL_VERSION'));
-        $this->assertTrue(PHPTAL_VERSION >= '1_2_2');
+        $this->assertTrue(PHPTAL::PHPTAL_VERSION >= '1_2_2');
 
         $this->buffer_level = ob_get_level();
 
