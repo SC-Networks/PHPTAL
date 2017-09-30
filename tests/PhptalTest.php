@@ -239,28 +239,6 @@ class PhptalTest extends PHPTAL_TestCase
         $this->newPHPTAL()->execute();
     }
 
-    function testCreateMethod()
-    {
-        $obj = PHPTAL::create();
-        $this->assertInstanceOf('PHPTAL', $obj);
-
-        try {
-            $obj->execute();
-            $this->fail("Should not execute without template");
-        }
-        catch(PHPTAL_ConfigurationException $e) {
-            $this->assertContains('No template', $e->getMessage());
-        }
-    }
-
-    function testCreateWithFileMethod()
-    {
-        $obj = PHPTAL::create('input/phptal.01.html');
-        $this->assertInstanceOf('PHPTAL', $obj);
-        $obj->getCodePath();
-    }
-
-
     function testDoctypeWithClone()
     {
         $tpl = $this->newPHPTAL();

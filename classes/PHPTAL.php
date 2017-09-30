@@ -28,7 +28,6 @@ class PHPTAL
 
     const PHPTAL_VERSION = '1_3_0';
 
-    //{{{
     /**
      * constants for output mode
      * @see setOutputMode()
@@ -153,8 +152,6 @@ class PHPTAL
      */
     private $subpathRecursionLevel = 0;
 
-    //}}}
-
     /**
      * PHPTAL Constructor.
      *
@@ -178,19 +175,6 @@ class PHPTAL
         } else {
             $this->setPhpCodeDestination('/tmp/');
         }
-    }
-
-    /**
-     * create
-     * returns a new PHPTAL object
-     *
-     * @param string $path Template file path.
-     *
-     * @return PHPTAL
-     */
-    public static function create($path=false)
-    {
-        return new PHPTAL($path);
     }
 
     /**
