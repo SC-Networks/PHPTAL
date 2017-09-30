@@ -13,8 +13,6 @@
  * @link     http://phptal.org/
  */
 
-PHPTAL::autoloadRegister();
-
 /**
  * PHPTAL template entry point.
  *
@@ -1155,57 +1153,6 @@ class PHPTAL
 
         if (!$this->_source) {
             throw new PHPTAL_IOException('Unable to locate template file '.$this->_path);
-        }
-    }
-
-    /**
-     * Suitable for callbacks from SPL autoload
-     *
-     * @param string $class class name to load
-     *
-     * @return void
-     */
-    final public static function autoload($class)
-    {
-        if (version_compare(PHP_VERSION, '5.3', '>=') && __NAMESPACE__) {
-            $class = str_replace(__NAMESPACE__, 'PHPTAL', $class);
-            $class = strtr($class, '\\', '_');
-        }
-
-        if (substr($class, 0, 7) !== 'PHPTAL_') return;
-
-        $path = dirname(__FILE__) . strtr("_".$class, "_", DIRECTORY_SEPARATOR) . '.php';
-
-        require $path;
-    }
-
-    /**
-     * Sets up PHPTAL's autoloader.
-     *
-     * If you have to use your own autoloader to load PHPTAL files,
-     * use spl_autoload_unregister(array('PHPTAL','autoload'));
-     *
-     * @return void
-     */
-    final public static function autoloadRegister()
-    {
-        // spl_autoload_register disables oldschool autoload
-        // even if it was added using spl_autoload_register!
-        // this is intended to preserve old autoloader
-
-        $uses_autoload = function_exists('__autoload')
-            && (!($tmp = spl_autoload_functions()) || ($tmp[0] === '__autoload'));
-
-        // Prepending PHPTAL's autoloader helps if there are other autoloaders
-        // that throw/die when file is not found. Only >5.3 though.
-        if (version_compare(PHP_VERSION, '5.3', '>=')) {
-            spl_autoload_register(array(__CLASS__,'autoload'), false, true);
-        } else {
-            spl_autoload_register(array(__CLASS__,'autoload'));
-        }
-
-        if ($uses_autoload) {
-            spl_autoload_register('__autoload');
         }
     }
 }
