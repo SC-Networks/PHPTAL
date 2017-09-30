@@ -45,11 +45,8 @@ class PHPTAL
     protected $prefilters = array();
 
     /**
-     * Prefilters have been redesigned. Old property is no longer used.
-     *
-     * @deprecated
+     * The postfilter which will get called on every run
      */
-    private $_prefilter = 'REMOVED: DO NOT USE';
     protected $_postfilter = null;
 
     /**
@@ -474,21 +471,6 @@ class PHPTAL
         $this->_translator = $t;
         $t->setEncoding($this->getEncoding());
         return $this;
-    }
-
-
-    /**
-     * Please use addPreFilter instead.
-     *
-     * This method and use of PHPTAL_Filter for prefilters are deprecated.
-     *
-     * @see PHPTAL::addPreFilter()
-     * @deprecated
-     */
-    final public function setPreFilter(PHPTAL_Filter $filter)
-    {
-        $this->resetPrepared();
-        $this->prefilters['_phptal_old_filter_'] = $filter;
     }
 
     /**
@@ -1174,26 +1156,6 @@ class PHPTAL
         if (!$this->_source) {
             throw new PHPTAL_IOException('Unable to locate template file '.$this->_path);
         }
-    }
-
-    /**
-     * Removed
-     *
-     * @deprecated
-     * @return void
-     */
-    final public static function setIncludePath()
-    {
-    }
-
-    /**
-     * Restore include path to state before PHPTAL modified it.
-     *
-     * @deprecated
-     * @return void
-     */
-    final public static function restoreIncludePath()
-    {
     }
 
     /**

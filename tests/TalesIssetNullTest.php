@@ -50,7 +50,7 @@ class TalesIssetNullTest extends PHPTAL_TestCase
         $res = PHPTAL_Context::path($dummy, 'method');
         $this->assertEquals('__call', $res);
 
-        $res = phptal_path($dummy, 'foo');
+        $res = PHPTAL_Context::path($dummy, 'foo');
         $this->assertEquals(null, $res);
     }
 }

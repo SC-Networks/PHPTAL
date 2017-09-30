@@ -19,7 +19,7 @@ class CompressTest extends PHPTAL_TestCase
     {
         $tpl = $this->newPHPTAL();
         if ($html5) $tpl->setOutputMode(PHPTAL::HTML5);
-        $tpl->setPreFilter(new PHPTAL_PreFilter_Compress());
+        $tpl->addPreFilter(new PHPTAL_PreFilter_Compress());
 
         $tpl->setSource($source);
 

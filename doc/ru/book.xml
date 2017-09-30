@@ -1528,7 +1528,7 @@ class MyPostFilter implements PHPTAL_Filter {
 }
 
 $tpl = new PHPTAL('mytemplate.xhtml');
-$tpl->setPreFilter(new MyPreFilter());
+$tpl->addPreFilter(new MyPreFilter());
 $tpl->setPostFilter(new MyPostFilter());
 echo $tpl->execute();
 ?>
