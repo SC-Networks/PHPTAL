@@ -23,7 +23,7 @@
  * @license  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
  * @link     http://phptal.org/
  */
-class PHPTAL
+class PHPTAL implements PhpTalInterface
 {
 
     const PHPTAL_VERSION = '1_3_0';
@@ -38,81 +38,113 @@ class PHPTAL
 
     /**
      * @see getPreFilters()
+     *
+     * @var \PHPTAL_PreFilter[]
      */
-    protected $prefilters = array();
+    protected $prefilters = [];
 
     /**
      * The postfilter which will get called on every run
+     *
+     * @var null|\PHPTAL_Filter
      */
     protected $_postfilter = null;
 
     /**
      *  list of template source repositories given to file source resolver
+     *
+     * @var array
      */
-    protected $_repositories = array();
+    protected $_repositories = [];
 
     /**
      *  template path (path that has been set, not necessarily loaded)
+     *
+     * @var null|string
      */
     protected $_path = null;
 
     /**
      *  template source resolvers (classes that search for templates by name)
+     *
+     *  @var \PHPTAL_SourceResolver[]
      */
-    protected $resolvers = array();
+    protected $resolvers = [];
 
     /**
      *  template source (only set when not working with file)
+     *
+     * @var null|string
      */
     protected $_source = null;
 
     /**
      * destination of PHP intermediate file
+     *
+     * @var null|string
      */
     protected $_codeFile = null;
 
     /**
      * php function generated for the template
+     *
+     * @var null|string
      */
     protected $_functionName = null;
 
     /**
      * set to true when template is ready for execution
+     *
+     * @var bool
      */
     protected $_prepared = false;
 
     /**
      * associative array of phptal:id => PHPTAL_Trigger
+     *
+     * \PHPTAL_Trigger[]
      */
     protected $_triggers = array();
 
     /**
      * i18n translator
+     *
+     * @var null|\PHPTAL_TranslationService
      */
     protected $_translator = null;
 
     /**
      * global execution context
+     *
+     * @var null|\stdClass
      */
     protected $_globalContext = null;
 
     /**
      * current execution context
+     *
+     * @var null|\PHPTAL_Context
      */
     protected $_context = null;
 
     /**
      * list of on-error caught exceptions
+     *
+     * @var \Exception[]
      */
-    protected $_errors = array();
+    protected $_errors = [];
 
     /**
      * encoding used throughout
+     *
+     * @var string
      */
     protected $_encoding = 'UTF-8';
 
     /**
      * type of syntax used in generated templates
+     *
+     * @var int
      */
     protected $_outputMode = PHPTAL::XHTML;
     /**
@@ -123,29 +155,41 @@ class PHPTAL
 
     /**
      * don't use code cache
+     *
+     * @var bool
      */
-    protected $_forceReparse = null;
+    protected $_forceReparse = false;
 
     /**
      * directory where code cache is
      */
     private $_phpCodeDestination;
+
+    /**
+     * @var string
+     */
     private $_phpCodeExtension = 'php';
 
     /**
      * number of days
+     *
+     * @var float
      */
     private $_cacheLifetime = 30;
 
     /**
      * 1/x
+     *
+     * @var int
      */
     private $_cachePurgeFrequency = 30;
 
     /**
      * speeds up calls to external templates
+     *
+     * @var \PhpTalInterface[]
      */
-    private $externalMacroTemplatesCache = array();
+    private $externalMacroTemplatesCache = [];
 
     /**
      * @var int
@@ -153,8 +197,6 @@ class PHPTAL
     private $subpathRecursionLevel = 0;
 
     /**
-     * PHPTAL Constructor.
-     *
      * @param string $path Template file path.
      */
     public function __construct($path=false)
@@ -329,7 +371,7 @@ class PHPTAL
      * Get output mode
      * @see setOutputMode()
      *
-     * @return output mode constant
+     * @return int output mode constant
      */
     public function getOutputMode()
     {
@@ -432,6 +474,8 @@ class PHPTAL
 
     /**
      * Get the value of the force reparse state.
+     *
+     * @return bool
      */
     public function getForceReparse()
     {
@@ -464,7 +508,7 @@ class PHPTAL
      *
      * @param mixed $filter PHPTAL_PreFilter object or name of prefilter to add
      *
-     * @return PHPTAL
+     * @return $this
      */
     final public function addPreFilter($filter)
     {
@@ -482,10 +526,13 @@ class PHPTAL
      * Sets the level of recursion for template cache directories
      *
      * @param int $recursion_level
+     *
+     * @param $this
      */
     public function setSubpathRecursionLevel($recursion_level)
     {
         $this->subpathRecursionLevel = (int) $recursion_level;
+        return $this;
     }
 
     /**
@@ -494,7 +541,7 @@ class PHPTAL
      *
      * Array keys may be non-numeric!
      *
-     * @return array
+     * @return \PHPTAL_PreFilter[]
      */
     protected function getPreFilters()
     {
@@ -527,7 +574,7 @@ class PHPTAL
     /**
      * Instantiate prefilters
      *
-     * @return array of PHPTAL_[Pre]Filter objects
+     * @return \PHPTAL_PreFilter[]
      */
     private function getPreFilterInstances()
     {
@@ -548,6 +595,8 @@ class PHPTAL
      * See PHPTAL_PostFilter class.
      *
      * @param PHPTAL_Filter $filter filter instance
+     *
+     * @return $this
      */
     public function setPostFilter(PHPTAL_Filter $filter)
     {
@@ -557,7 +606,11 @@ class PHPTAL
 
     /**
      * Register a trigger for specified phptal:id.
+     *
      * @param string $id phptal:id to look for
+     * @param PHPTAL_Trigger $trigger
+     *
+     * @return $this
      */
     public function addTrigger($id, PHPTAL_Trigger $trigger)
     {
@@ -570,7 +623,7 @@ class PHPTAL
      *
      * @param string $id phptal:id
      *
-     * @return PHPTAL_Trigger or NULL
+     * @return PHPTAL_Trigger|null
      */
     public function getTrigger($id)
     {
@@ -663,7 +716,7 @@ class PHPTAL
      * Execute and echo template without buffering of the output.
      * This function does not allow postfilters nor DOCTYPE/XML declaration.
      *
-     * @return NULL
+     * @return void
      */
     public function echoExecute()
     {
@@ -694,11 +747,11 @@ class PHPTAL
      *
      * $this is caller's context (the file where execution had originally started)
      *
-     * @param PHPTAL $local_tpl is PHPTAL instance of the file in which macro is defined
+     * @param string $path
+     * @param PhpTalInterface $local_tpl is PHPTAL instance of the file in which macro is defined
      *                          (it will be different from $this if it's external macro call)
-     * @access private
      */
-    final public function _executeMacroOfTemplate($path, PHPTAL $local_tpl)
+    final public function _executeMacroOfTemplate($path, PhpTalInterface $local_tpl)
     {
         // extract macro source file from macro name, if macro path does not
         // contain filename, then the macro is assumed to be local
@@ -740,6 +793,8 @@ class PHPTAL
 
     /**
      * ensure that getCodePath will return up-to-date path
+     *
+     * @return void
      */
     private function setCodeFile()
     {
@@ -749,6 +804,8 @@ class PHPTAL
 
     /**
      * Generate a subpath structure depending on the config
+     *
+     * @return string
      */
     private function getSubPath()
     {
@@ -763,6 +820,9 @@ class PHPTAL
         return $path;
     }
 
+    /**
+     * @return void
+     */
     protected function resetPrepared()
     {
         $this->_prepared = false;
@@ -772,11 +832,13 @@ class PHPTAL
 
     /**
      * Prepare template without executing it.
+     *
+     * @return void
      */
     public function prepare()
     {
         // clear just in case settings changed and cache is out of date
-        $this->externalMacroTemplatesCache = array();
+        $this->externalMacroTemplatesCache = [];
 
         // find the template source file and update function name
         $this->setCodeFile();
@@ -832,6 +894,8 @@ class PHPTAL
 
     /**
      * get how long compiled templates and phptal:cache files are kept, in days
+     *
+     * @return float
      */
     public function getCacheLifetime()
     {
@@ -841,7 +905,9 @@ class PHPTAL
     /**
      * set how long compiled templates and phptal:cache files are kept
      *
-     * @param $days number of days
+     * @param float $days number of days
+     *
+     * @return $this
      */
     public function setCacheLifetime($days)
     {
@@ -852,6 +918,10 @@ class PHPTAL
     /**
      * PHPTAL will scan cache and remove old files on every nth compile
      * Set to 0 to disable cleanups
+     *
+     * @param int $n
+     *
+     * @return $this
      */
     public function setCachePurgeFrequency($n)
     {
@@ -862,6 +932,8 @@ class PHPTAL
     /**
      * how likely cache cleaning can happen
      * @see self::setCachePurgeFrequency()
+     *
+     * @return int
      */
     public function getCachePurgeFrequency()
     {
@@ -872,6 +944,8 @@ class PHPTAL
     /**
      * Removes all compiled templates from cache that
      * are older than getCacheLifetime() days
+     *
+     * @return void
      */
     public function cleanUpGarbage()
     {
@@ -908,6 +982,8 @@ class PHPTAL
     /**
      * Removes content cached with phptal:cache for currently set template
      * Must be called after setSource/setTemplate.
+     *
+     * @return void
      */
     public function cleanUpCache()
     {
@@ -938,6 +1014,7 @@ class PHPTAL
 
     /**
      * Returns the generated template function name.
+     *
      * @return string
      */
     public function getFunctionName()
@@ -987,6 +1064,7 @@ class PHPTAL
 
     /**
      * Returns template translator.
+     *
      * @return PHPTAL_TranslationService
      */
     public function getTranslator()
@@ -997,7 +1075,7 @@ class PHPTAL
     /**
      * Returns array of exceptions caught by tal:on-error attribute.
      *
-     * @return array<Exception>
+     * @return \Exception[]
      */
     public function getErrors()
     {
@@ -1007,8 +1085,9 @@ class PHPTAL
     /**
      * Public for phptal templates, private for user.
      *
+     * @param \Exception $error
+     *
      * @return void
-     * @access private
      */
     public function addError(Exception $error)
     {
@@ -1029,7 +1108,7 @@ class PHPTAL
     /**
      * only for use in generated template code
      *
-     * @access private
+     * @return \stdClass
      */
     public function getGlobalContext()
     {
@@ -1039,7 +1118,7 @@ class PHPTAL
     /**
      * only for use in generated template code
      *
-     * @access private
+     * @return PHPTAL_Context
      */
     final public function pushContext()
     {
@@ -1050,7 +1129,7 @@ class PHPTAL
     /**
      * only for use in generated template code
      *
-     * @access private
+     * @return PHPTAL_Context
      */
     final public function popContext()
     {
@@ -1096,6 +1175,7 @@ class PHPTAL
 
     /**
      * Search template source location.
+     *
      * @return void
      */
     protected function findTemplate()

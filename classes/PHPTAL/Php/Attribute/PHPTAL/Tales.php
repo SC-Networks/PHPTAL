@@ -17,7 +17,7 @@
  * @subpackage Php.attribute.phptal
  * @author Laurent Bedubourg <lbedubourg@motion-twin.com>
  */
-class PHPTAL_Php_Attribute_PHPTAL_TALES extends PHPTAL_Php_Attribute
+class PHPTAL_Php_Attribute_PHPTAL_Tales extends PHPTAL_Php_Attribute
 {
     public function before(PHPTAL_Php_CodeWriter $codewriter)
     {

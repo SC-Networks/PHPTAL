@@ -16,24 +16,7 @@
 error_reporting( E_ALL | E_STRICT );
 assert_options(ASSERT_ACTIVE, 1);
 
-// This is needed to run tests ran individually without run-tests.php script
-if (!class_exists('PHPTAL')) {
-    ob_start();
-
-    // try local copy of PHPTAL first, otherwise it might be testing
-    // PEAR version (or another in include path) causing serious WTF!?s.
-    if (file_exists(dirname(__FILE__).'/../classes/PHPTAL.php')) {
-        require_once dirname(__FILE__).'/../classes/PHPTAL.php';
-    } elseif (file_exists(dirname(__FILE__).'/../PHPTAL.php')) {
-        require_once dirname(__FILE__).'/../PHPTAL.php';
-    } else {
-        require_once "PHPTAL.php";
-    }
-    $out = ob_get_clean();
-    if (strlen($out)) {
-        throw new Exception("Inclusion of PHPTAL causes output: '$out'");
-    }
-}
+require_once 'vendor/autoload.php';
 
 abstract class PHPTAL_TestCase extends PHPUnit_Framework_TestCase
 {
