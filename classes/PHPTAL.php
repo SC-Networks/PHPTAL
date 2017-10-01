@@ -689,17 +689,6 @@ class PHPTAL
     }
 
     /**
-     * Execute a template macro.
-     * Should be used only from within generated template code!
-     *
-     * @param string $path Template macro path
-     */
-    public function executeMacro($path)
-    {
-        $this->_executeMacroOfTemplate($path, $this);
-    }
-
-    /**
      * This is PHPTAL's internal function that handles
      * execution of macros from templates.
      *
