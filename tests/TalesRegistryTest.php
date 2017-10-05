@@ -43,7 +43,7 @@ class TalesRegistryTest extends PHPTAL_TestCase
 
     /**
      * @runInSeparateProcess
-     * @expectedException PHPTAL_UnknownModifierException
+     * @expectedException \PhpTal\Exception\UnknownModifierException
      */
     function testUnregisterFunction()
     {
@@ -54,7 +54,7 @@ class TalesRegistryTest extends PHPTAL_TestCase
     }
 
     /**
-     * @expectedException PHPTAL_ConfigurationException
+     * @expectedException \PhpTal\Exception\ConfigurationException
      */
     function testCantUnregisterNonRegistered()
     {
@@ -62,7 +62,7 @@ class TalesRegistryTest extends PHPTAL_TestCase
     }
 
     /**
-     * @expectedException PHPTAL_ConfigurationException
+     * @expectedException \PhpTal\Exception\ConfigurationException
      */
     function testCantRegisterNonExistant()
     {
@@ -70,7 +70,7 @@ class TalesRegistryTest extends PHPTAL_TestCase
     }
 
     /**
-     * @expectedException PHPTAL_ConfigurationException
+     * @expectedException \PhpTal\Exception\ConfigurationException
      */
     function testCantRegisterTwice()
     {

@@ -13,6 +13,7 @@
  * @link     http://phptal.org/
  */
 
+namespace PhpTal\Exception;
 
 /**
  * Parse error in TALES expression.
@@ -20,6 +21,6 @@
  * @package PHPTAL
  * @subpackage Exception
  */
-class PHPTAL_InvalidVariableNameException extends PHPTAL_Exception
+class InvalidVariableNameException extends PhpTalException
 {
 }

@@ -89,7 +89,7 @@ class PHPTAL_Dom_SaxXmlParser
     public function parseFile(PHPTAL_Dom_DocumentBuilder $builder, $src)
     {
         if (!file_exists($src)) {
-            throw new PHPTAL_IOException("file $src not found");
+            throw new \PhpTal\Exception\IOException("file $src not found");
         }
         return $this->parseString($builder, file_get_contents($src), $src);
     }
@@ -347,12 +347,12 @@ class PHPTAL_Dom_SaxXmlParser
 
             $builder->onDocumentEnd();
         }
-        catch(PHPTAL_TemplateException $e)
+        catch(\PhpTal\Exception\TemplateException $e)
         {
             $e->hintSrcPosition($this->_file, $this->_line);
             throw $e;
         }
-        catch(PHPTAL_ParserException $e)
+        catch(\PhpTal\Exception\ParserException $e)
         {
             $e->hintSrcPosition($this->_file, $this->_line);
             throw $e;
@@ -481,6 +481,6 @@ class PHPTAL_Dom_SaxXmlParser
 
     protected function raiseError($errStr)
     {
-        throw new PHPTAL_ParserException($errStr, $this->_file, $this->_line);
+        throw new \PhpTal\Exception\ParserException($errStr, $this->_file, $this->_line);
     }
 }

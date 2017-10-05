@@ -44,7 +44,7 @@ class CommentTest extends PHPTAL_TestCase
     }
 
     /**
-     * @expectedException PHPTAL_ParserException
+     * @expectedException \PhpTal\Exception\ParserException
      */
     function testNestedComments()
     {
@@ -56,7 +56,7 @@ class CommentTest extends PHPTAL_TestCase
     }
 
     /**
-     * @expectedException PHPTAL_ParserException
+     * @expectedException \PhpTal\Exception\ParserException
      */
     function testDashedComment()
     {

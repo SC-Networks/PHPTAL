@@ -73,12 +73,12 @@ class PhptalPathTest extends PHPTAL_TestCase
 
         try {
             $output = $tpl->execute();
-        } catch (PHPTAL_VariableNotFoundException $E) {
+        } catch (\PhpTal\Exception\VariableNotFoundException $E) {
             $this->assertRegExp("/Array 'details' doesn/", $E->getMessage());
             return;
         }
 
-        $this->fail('Execute must throw PHPTAL_VariableNotFoundException');
+        $this->fail('Execute must throw \PhpTal\Exception\VariableNotFoundException');
     }
 
     function testDefinedButNullProperty()

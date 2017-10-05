@@ -23,7 +23,7 @@ class TalesModeTest extends PHPTAL_TestCase
             $tpl->execute();
             $this->assertTrue(false);
         }
-        catch (PHPTAL_Exception $e)
+        catch (\PhpTal\Exception\PhpTalException $e)
         {
             $this->assertTrue(true);
         }

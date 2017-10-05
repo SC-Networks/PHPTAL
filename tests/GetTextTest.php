@@ -23,7 +23,7 @@ class GetTextTest extends PHPTAL_TestCase
         {
             return new PHPTAL_GetTextTranslator();
         }
-        catch(PHPTAL_Exception $e)
+        catch(\PhpTal\Exception\PhpTalException $e)
         {
             $this->markTestSkipped($e->getMessage());
         }
@@ -49,7 +49,7 @@ class GetTextTest extends PHPTAL_TestCase
         $gettext = $this->getTextTranslator();
         try {
             $gettext->setLanguage('fr_FR', 'fr_FR@euro', 'fr_FR.utf8');
-        } catch(PHPTAL_ConfigurationException $e) {
+        } catch(\PhpTal\Exception\ConfigurationException $e) {
             $this->markTestSkipped($e->getMessage());
         }
         $gettext->addDomain('test');
@@ -67,7 +67,7 @@ class GetTextTest extends PHPTAL_TestCase
         $gettext = $this->getTextTranslator();
         try {
             $gettext->setLanguage('fr_FR', 'fr_FR@euro', 'fr_FR.utf8');
-        } catch(PHPTAL_ConfigurationException $e) {
+        } catch(\PhpTal\Exception\ConfigurationException $e) {
             $this->markTestSkipped($e->getMessage());
         }
         $gettext->setEncoding('UTF-8');
@@ -89,7 +89,7 @@ class GetTextTest extends PHPTAL_TestCase
         $gettext->setEncoding('UTF-8');
         try {
             $gettext->setLanguage('fr_FR', 'fr_FR@euro', 'fr_FR.utf8');
-        } catch(PHPTAL_ConfigurationException $e) {
+        } catch(\PhpTal\Exception\ConfigurationException $e) {
             $this->markTestSkipped($e->getMessage());
         }
         $gettext->addDomain('test');

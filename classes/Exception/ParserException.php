@@ -13,12 +13,14 @@
  * @link     http://phptal.org/
  */
 
+namespace PhpTal\Exception;
+
 /**
  * XML well-formedness errors and alike.
  *
  * @package PHPTAL
  * @subpackage Exception
  */
-class PHPTAL_ParserException extends PHPTAL_TemplateException
+class ParserException extends TemplateException
 {
 }

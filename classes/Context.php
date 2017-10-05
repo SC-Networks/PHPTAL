@@ -114,7 +114,7 @@ class PHPTAL_Context
             if (!$called_from_macro) {
                 echo $doctype;
             } else {
-                throw new PHPTAL_ConfigurationException("Executed macro in file with DOCTYPE when using echoExecute(). This is not supported yet. Remove DOCTYPE or use PHPTAL->execute().");
+                throw new \PhpTal\Exception\ConfigurationException("Executed macro in file with DOCTYPE when using echoExecute(). This is not supported yet. Remove DOCTYPE or use PHPTAL->execute().");
             }
         }
         else if (!$this->_docType) {
@@ -146,7 +146,7 @@ class PHPTAL_Context
             if (!$called_from_macro) {
                 echo $xmldec."\n";
             } else {
-                throw new PHPTAL_ConfigurationException("Executed macro in file with XML declaration when using echoExecute(). This is not supported yet. Remove XML declaration or use PHPTAL->execute().");
+                throw new \PhpTal\Exception\ConfigurationException("Executed macro in file with XML declaration when using echoExecute(). This is not supported yet. Remove XML declaration or use PHPTAL->execute().");
             }
         } else if (!$this->_xmlDeclaration) {
             $this->_xmlDeclaration = $xmldec;
@@ -268,7 +268,7 @@ class PHPTAL_Context
     public function __set($varname, $value)
     {
         if (preg_match('/^_|\s/', $varname)) {
-            throw new PHPTAL_InvalidVariableNameException('Template variable error \''.$varname.'\' must not begin with underscore or contain spaces');
+            throw new \PhpTal\Exception\InvalidVariableNameException('Template variable error \''.$varname.'\' must not begin with underscore or contain spaces');
         }
         $this->$varname = $value;
     }
@@ -305,7 +305,7 @@ class PHPTAL_Context
             return null;
         }
 
-        throw new PHPTAL_VariableNotFoundException("Unable to find variable '$varname' in current scope");
+        throw new \PhpTal\Exception\VariableNotFoundException("Unable to find variable '$varname' in current scope");
     }
 
     /**
@@ -324,12 +324,12 @@ class PHPTAL_Context
         }
 
         if (is_array($base)) {
-            throw new PHPTAL_VariableNotFoundException("Array {$basename}doesn't have key named '$current'$pathinfo");
+            throw new \PhpTal\Exception\VariableNotFoundException("Array {$basename}doesn't have key named '$current'$pathinfo");
         }
         if (is_object($base)) {
-            throw new PHPTAL_VariableNotFoundException(ucfirst(get_class($base))." object {$basename}doesn't have method/property named '$current'$pathinfo");
+            throw new \PhpTal\Exception\VariableNotFoundException(ucfirst(get_class($base))." object {$basename}doesn't have method/property named '$current'$pathinfo");
         }
-        throw new PHPTAL_VariableNotFoundException(trim("Attempt to read property '$current'$pathinfo from ".gettype($base)." value {$basename}"));
+        throw new \PhpTal\Exception\VariableNotFoundException(trim("Attempt to read property '$current'$pathinfo from ".gettype($base)." value {$basename}"));
     }
 
     /**

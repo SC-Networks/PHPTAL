@@ -13,6 +13,7 @@
  * @link     http://phptal.org/
  */
 
+namespace PhpTal\Exception;
 
 /**
  * PHPTAL failed to load template
@@ -20,6 +21,6 @@
  * @package PHPTAL
  * @subpackage Exception
  */
-class PHPTAL_IOException extends PHPTAL_Exception
+class IOException extends PhpTalException
 {
 }

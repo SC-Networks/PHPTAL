@@ -35,7 +35,7 @@ class TemplateRepositoryTest extends PHPTAL_TestCase
     }
 
     /**
-     * @expectedException PHPTAL_IOException
+     * @expectedException \PhpTal\Exception\IOException
      */
     function testFailsIfNoneMatch()
     {

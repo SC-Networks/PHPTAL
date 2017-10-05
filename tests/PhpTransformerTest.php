@@ -144,7 +144,7 @@ class PhpTransformerTest extends PHPTAL_TestCase
     }
 
     /**
-     * @expectedException PHPTAL_ParserException
+     * @expectedException \PhpTal\Exception\ParserException
      */
     function testCatchesInvalidEvaledFieldName()
     {
@@ -155,7 +155,7 @@ class PhpTransformerTest extends PHPTAL_TestCase
     }
 
     /**
-     * @expectedException PHPTAL_ParserException
+     * @expectedException \PhpTal\Exception\ParserException
      */
     function testCatchesInvalidFieldName()
     {
@@ -167,7 +167,7 @@ class PhpTransformerTest extends PHPTAL_TestCase
 
 
     /**
-     * @expectedException PHPTAL_ParserException
+     * @expectedException \PhpTal\Exception\ParserException
      */
     function testCatchesInvalidVarName()
     {
@@ -178,7 +178,7 @@ class PhpTransformerTest extends PHPTAL_TestCase
     }
 
     /**
-     * @expectedException PHPTAL_ParserException
+     * @expectedException \PhpTal\Exception\ParserException
      */
     function testCatchesInvalidNumber()
     {
@@ -189,7 +189,7 @@ class PhpTransformerTest extends PHPTAL_TestCase
     }
 
     /**
-     * @expectedException PHPTAL_ParserException
+     * @expectedException \PhpTal\Exception\ParserException
      */
     function testCatchesInvalidNumber2()
     {

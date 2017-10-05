@@ -102,7 +102,7 @@ class UTF8Test extends PHPTAL_TestCase
 
 
     /**
-     * @expectedException PHPTAL_ParserException
+     * @expectedException \PhpTal\Exception\ParserException
      */
     function testUnexpectedContinuationBytes()
     {
@@ -122,7 +122,7 @@ class UTF8Test extends PHPTAL_TestCase
     }
 
     /**
-     * @expectedException PHPTAL_ParserException
+     * @expectedException \PhpTal\Exception\ParserException
      */
     function testContinuations2()
     {
@@ -136,7 +136,7 @@ class UTF8Test extends PHPTAL_TestCase
     }
 
     /**
-     * @expectedException PHPTAL_ParserException
+     * @expectedException \PhpTal\Exception\ParserException
      */
     function testSequences2()
     {
@@ -150,7 +150,7 @@ class UTF8Test extends PHPTAL_TestCase
     }
 
     /**
-     * @expectedException PHPTAL_ParserException
+     * @expectedException \PhpTal\Exception\ParserException
      */
     function test3ByteSquences()
     {
@@ -162,7 +162,7 @@ class UTF8Test extends PHPTAL_TestCase
     }
 
     /**
-     * @expectedException PHPTAL_ParserException
+     * @expectedException \PhpTal\Exception\ParserException
      */
     function test4ByteSequences()
     {
@@ -176,7 +176,7 @@ class UTF8Test extends PHPTAL_TestCase
     }
 
     /**
-     * @expectedException PHPTAL_ParserException
+     * @expectedException \PhpTal\Exception\ParserException
      */
     function test5ByteSequences()
     {
@@ -194,7 +194,7 @@ class UTF8Test extends PHPTAL_TestCase
     }
 
     /**
-     * @expectedException PHPTAL_ParserException
+     * @expectedException \PhpTal\Exception\ParserException
      */
     function testIncompleteSequence()
     {
@@ -211,7 +211,7 @@ class UTF8Test extends PHPTAL_TestCase
     }
 
     /**
-     * @expectedException PHPTAL_ParserException
+     * @expectedException \PhpTal\Exception\ParserException
      */
     function testLastByteMissing1()
     {
@@ -226,7 +226,7 @@ class UTF8Test extends PHPTAL_TestCase
     }
 
     /**
-     * @expectedException PHPTAL_ParserException
+     * @expectedException \PhpTal\Exception\ParserException
      */
     function testLastByteMissing2()
     {
@@ -240,7 +240,7 @@ class UTF8Test extends PHPTAL_TestCase
     }
 
     /**
-     * @expectedException PHPTAL_ParserException
+     * @expectedException \PhpTal\Exception\ParserException
      */
     function testConcatenation()
     {
@@ -256,7 +256,7 @@ class UTF8Test extends PHPTAL_TestCase
     }
 
     /**
-     * @expectedException PHPTAL_ParserException
+     * @expectedException \PhpTal\Exception\ParserException
      */
     function testImpossibleBytes()
     {
@@ -272,7 +272,7 @@ class UTF8Test extends PHPTAL_TestCase
     }
 
     /**
-     * @expectedException PHPTAL_ParserException
+     * @expectedException \PhpTal\Exception\ParserException
      */
     function testOverlong()
     {
@@ -283,7 +283,7 @@ class UTF8Test extends PHPTAL_TestCase
     }
 
     /**
-     * @expectedException PHPTAL_ParserException
+     * @expectedException \PhpTal\Exception\ParserException
      */
     function testOverlong1()
     {
@@ -294,7 +294,7 @@ class UTF8Test extends PHPTAL_TestCase
     }
 
     /**
-     * @expectedException PHPTAL_ParserException
+     * @expectedException \PhpTal\Exception\ParserException
      */
     function testOverlong2()
     {
@@ -306,7 +306,7 @@ class UTF8Test extends PHPTAL_TestCase
     }
 
     /**
-     * @expectedException PHPTAL_ParserException
+     * @expectedException \PhpTal\Exception\ParserException
      */
     function testOverlong3()
     {
@@ -317,7 +317,7 @@ class UTF8Test extends PHPTAL_TestCase
     }
 
     /**
-     * @expectedException PHPTAL_ParserException
+     * @expectedException \PhpTal\Exception\ParserException
      */
     function testNUL()
     {
@@ -327,7 +327,7 @@ class UTF8Test extends PHPTAL_TestCase
     }
 
     /**
-     * @expectedException PHPTAL_ParserException
+     * @expectedException \PhpTal\Exception\ParserException
      */
     function testNUL2()
     {
@@ -336,7 +336,7 @@ class UTF8Test extends PHPTAL_TestCase
     }
 
     /**
-     * @expectedException PHPTAL_ParserException
+     * @expectedException \PhpTal\Exception\ParserException
      */
     function testUTF16()
     {
@@ -350,7 +350,7 @@ class UTF8Test extends PHPTAL_TestCase
     }
 
     /**
-     * @expectedException PHPTAL_ParserException
+     * @expectedException \PhpTal\Exception\ParserException
      */
     function testUTF16Paired()
     {
@@ -365,7 +365,7 @@ class UTF8Test extends PHPTAL_TestCase
     }
 
     /**
-     * @expectedException PHPTAL_ParserException
+     * @expectedException \PhpTal\Exception\ParserException
      */
     function testIllegalCodePositions()
     {

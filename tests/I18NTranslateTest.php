@@ -19,7 +19,7 @@ require_once 'I18NDummyTranslator.php';
 class I18NTranslateTest extends PHPTAL_TestCase
 {
     /**
-     * @expectedException PHPTAL_ConfigurationException
+     * @expectedException \PhpTal\Exception\ConfigurationException
      */
     function testFailsWhenTranslatorNotSet()
     {
@@ -159,7 +159,7 @@ class I18NTranslateTest extends PHPTAL_TestCase
     }
 
     /**
-     * @expectedException PHPTAL_TemplateException
+     * @expectedException \PhpTal\Exception\TemplateException
      */
     function testRejectsEmptyKey()
     {
@@ -167,7 +167,7 @@ class I18NTranslateTest extends PHPTAL_TestCase
     }
 
     /**
-     * @expectedException PHPTAL_TemplateException
+     * @expectedException \PhpTal\Exception\TemplateException
      */
     function testRejectsEmptyKeyMarkup()
     {

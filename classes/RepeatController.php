@@ -238,7 +238,7 @@ class PHPTAL_RepeatController implements Iterator
                 return is_bool($res) ? $res : $this->groups;
 
             default:
-                throw new PHPTAL_VariableNotFoundException("Unable to find part '$var' in repeat variable");
+                throw new \PhpTal\Exception\VariableNotFoundException("Unable to find part '$var' in repeat variable");
         }
     }
 

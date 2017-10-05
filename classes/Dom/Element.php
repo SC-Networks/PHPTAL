@@ -132,7 +132,7 @@ class PHPTAL_Dom_Element extends PHPTAL_Dom_Node
                 return;
             }
         }
-        throw new PHPTAL_Exception("Given node is not child of ".$this->getQualifiedName());
+        throw new \PhpTal\Exception\PhpTalException("Given node is not child of ".$this->getQualifiedName());
     }
 
     public function replaceChild(PHPTAL_Dom_Node $newElement, PHPTAL_Dom_Node $oldElement)
@@ -148,7 +148,7 @@ class PHPTAL_Dom_Element extends PHPTAL_Dom_Node
                 return;
             }
         }
-        throw new PHPTAL_Exception("Given node is not child of ".$this->getQualifiedName());
+        throw new \PhpTal\Exception\PhpTalException("Given node is not child of ".$this->getQualifiedName());
     }
 
     public function generateCode(PHPTAL_Php_CodeWriter $codewriter)
@@ -183,7 +183,7 @@ class PHPTAL_Dom_Element extends PHPTAL_Dom_Node
 
             $this->generateSurroundFoot($codewriter);
         }
-        catch(PHPTAL_TemplateException $e) {
+        catch(\PhpTal\Exception\TemplateException $e) {
             $e->hintSrcPosition($this->getSourceFile(), $this->getSourceLine());
             throw $e;
         }
@@ -465,7 +465,7 @@ class PHPTAL_Dom_Element extends PHPTAL_Dom_Node
         foreach ($talAttributes as $key => $domattr) {
             $nsattr = PHPTAL_Dom_Defs::getInstance()->getNamespaceAttribute($domattr->getNamespaceURI(), $domattr->getLocalName());
             if (array_key_exists($nsattr->getPriority(), $temp)) {
-                throw new PHPTAL_TemplateException(sprintf("Attribute conflict in < %s > '%s' cannot appear with '%s'",
+                throw new \PhpTal\Exception\TemplateException(sprintf("Attribute conflict in < %s > '%s' cannot appear with '%s'",
                                $this->qualifiedName,
                                $key,
                                $temp[$nsattr->getPriority()][0]->getNamespace()->getPrefix() . ':' . $temp[$nsattr->getPriority()][0]->getLocalName()
@@ -488,7 +488,7 @@ class PHPTAL_Dom_Element extends PHPTAL_Dom_Node
             else if ($nsattr instanceof PHPTAL_NamespaceAttributeContent)
                 $this->contentAttributes[] = $handler;
             else
-                throw new PHPTAL_ParserException("Unknown namespace attribute class ".get_class($nsattr),
+                throw new \PhpTal\Exception\ParserException("Unknown namespace attribute class ".get_class($nsattr),
                             $this->getSourceFile(), $this->getSourceLine());
 
         }
@@ -516,6 +516,6 @@ class PHPTAL_Dom_Element extends PHPTAL_Dom_Node
     }
 
     function setValueEscaped($e) {
-        throw new PHPTAL_Exception("Not supported");
+        throw new \PhpTal\Exception\PhpTalException("Not supported");
     }
 }

@@ -13,12 +13,14 @@
  * @link     http://phptal.org/
  */
 
+namespace PhpTal\Exception;
+
 /**
  * Wrong macro name in metal:use-macro
  *
  * @package PHPTAL
  * @subpackage Exception
  */
-class PHPTAL_MacroMissingException extends PHPTAL_TemplateException
+class MacroMissingException extends TemplateException
 {
 }

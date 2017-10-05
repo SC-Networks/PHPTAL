@@ -25,7 +25,7 @@ class PHPTAL_FileSource implements PHPTAL_Source
     public function __construct($path)
     {
         $this->_path = realpath($path);
-        if ($this->_path === false) throw new PHPTAL_IOException("Unable to find real path of file '$path' (in ".getcwd().')');
+        if ($this->_path === false) throw new \PhpTal\Exception\IOException("Unable to find real path of file '$path' (in ".getcwd().')');
     }
 
     public function getRealPath()
@@ -44,7 +44,7 @@ class PHPTAL_FileSource implements PHPTAL_Source
 
         // file_get_contents returns "" when loading directory!?
         if (false === $content || ("" === $content && is_dir($this->_path))) {
-            throw new PHPTAL_IOException("Unable to load file ".$this->_path);
+            throw new \PhpTal\Exception\IOException("Unable to load file ".$this->_path);
         }
         return $content;
     }

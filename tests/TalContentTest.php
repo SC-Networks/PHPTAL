@@ -132,7 +132,7 @@ EOT;
     }
 
       /**
-       * @expectedException PHPTAL_VariableNotFoundException
+       * @expectedException \PhpTal\Exception\VariableNotFoundException
        */
       function testErrorsThrow()
       {
@@ -142,7 +142,7 @@ EOT;
       }
 
       /**
-       * @expectedException PHPTAL_VariableNotFoundException
+       * @expectedException \PhpTal\Exception\VariableNotFoundException
        */
       function testErrorsThrow2()
       {
@@ -154,7 +154,7 @@ EOT;
       }
 
       /**
-       * @expectedException PHPTAL_VariableNotFoundException
+       * @expectedException \PhpTal\Exception\VariableNotFoundException
        */
       function testErrorsThrow3()
       {
@@ -166,7 +166,7 @@ EOT;
       }
 
       /**
-       * @expectedException PHPTAL_VariableNotFoundException
+       * @expectedException \PhpTal\Exception\VariableNotFoundException
        */
       function testErrorsThrow4()
       {

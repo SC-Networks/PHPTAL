@@ -63,7 +63,7 @@ class EchoExecuteTest extends PHPTAL_TestCase
 
             $this->assertEquals(normalize_html('<?xml version="1.0"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><hello><m>test</m></hello>'), $this->echoExecute($tpl));
         }
-        catch(PHPTAL_ConfigurationException $e)
+        catch(\PhpTal\Exception\ConfigurationException $e)
         {
             // this is fine. Combination of macros and echoExecute is not supported yet (if it were, the test above is valid)
             $this->assertContains("echoExecute", $e->getMessage());

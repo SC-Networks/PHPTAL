@@ -34,7 +34,7 @@ class PHPTAL_GetTextTranslator implements PHPTAL_TranslationService
 
     public function __construct()
     {
-        if (!function_exists('gettext')) throw new PHPTAL_ConfigurationException("Gettext not installed");
+        if (!function_exists('gettext')) throw new \PhpTal\Exception\ConfigurationException("Gettext not installed");
     }
 
     /**
@@ -81,7 +81,7 @@ class PHPTAL_GetTextTranslator implements PHPTAL_TranslationService
             if ($langCode) return $langCode;
         }
 
-        throw new PHPTAL_ConfigurationException('Language(s) code(s) "'.implode(', ', $langs).'" not supported by your system');
+        throw new \PhpTal\Exception\ConfigurationException('Language(s) code(s) "'.implode(', ', $langs).'" not supported by your system');
     }
 
     private function trySettingLanguages($category, array $langs)
@@ -151,7 +151,7 @@ class PHPTAL_GetTextTranslator implements PHPTAL_TranslationService
         while (preg_match('/\${(.*?)\}/sm', $value, $m)) {
             list($src, $var) = $m;
             if (!array_key_exists($var, $this->_vars)) {
-                throw new PHPTAL_VariableNotFoundException('Interpolation error. Translation uses ${'.$var.'}, which is not defined in the template (via i18n:name)');
+                throw new \PhpTal\Exception\VariableNotFoundException('Interpolation error. Translation uses ${'.$var.'}, which is not defined in the template (via i18n:name)');
             }
             $value = str_replace($src, $this->_vars[$var], $value);
         }

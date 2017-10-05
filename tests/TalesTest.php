@@ -185,7 +185,7 @@ class TalesTest extends PHPTAL_TestCase
     }
 
     /**
-     * @expectedException PHPTAL_ParserException
+     * @expectedException \PhpTal\Exception\ParserException
      */
     function testForbidsStatementsInCustomModifiers()
     {
@@ -195,7 +195,7 @@ class TalesTest extends PHPTAL_TestCase
     }
 
     /**
-     * @expectedException PHPTAL_ParserException
+     * @expectedException \PhpTal\Exception\ParserException
      */
     function testThrowsInvalidPath()
     {
@@ -209,7 +209,7 @@ class TalesTest extends PHPTAL_TestCase
             phptal_tales('testidontexist:foo');
             $this->fail();
         }
-        catch(PHPTAL_UnknownModifierException $e)
+        catch(\PhpTal\Exception\UnknownModifierException $e)
         {
             $this->assertEquals('testidontexist', $e->getModifierName());
         }

@@ -85,7 +85,7 @@ class MetalMacroTest extends PHPTAL_TestCase
     }
 
     /**
-     * @expectedException PHPTAL_ParserException
+     * @expectedException \PhpTal\Exception\ParserException
      */
     function testBadMacroNameException()
     {
@@ -95,7 +95,7 @@ class MetalMacroTest extends PHPTAL_TestCase
     }
 
     /**
-     * @expectedException PHPTAL_MacroMissingException
+     * @expectedException \PhpTal\Exception\MacroMissingException
      */
     function testExternalMacroMissingException()
     {
@@ -106,7 +106,7 @@ class MetalMacroTest extends PHPTAL_TestCase
     }
 
     /**
-     * @expectedException PHPTAL_MacroMissingException
+     * @expectedException \PhpTal\Exception\MacroMissingException
      */
     function testMacroMissingException()
     {
@@ -127,7 +127,7 @@ class MetalMacroTest extends PHPTAL_TestCase
     }
 
     /**
-     * @expectedException PHPTAL_Exception
+     * @expectedException \PhpTal\Exception\PhpTalException
      */
     function testMacroRedefinitionIsGraceful()
     {
@@ -154,7 +154,7 @@ class MetalMacroTest extends PHPTAL_TestCase
     }
 
     /**
-     * @expectedException PHPTAL_ParserException
+     * @expectedException \PhpTal\Exception\ParserException
      */
     function testExternalTemplateThrowsError()
     {

@@ -31,7 +31,8 @@
         "phpdocumentor/phpdocumentor": "^2"
     },
     "autoload": {
-        "classmap": ["classes/"]
+        "classmap": ["classes/"],
+	"psr-4": {"PhpTal\\": "classes/"}
     },
     "config": {
         "bin-dir": "tools"

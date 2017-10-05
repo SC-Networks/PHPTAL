@@ -13,6 +13,8 @@
  * @link     http://phptal.org/
  */
 
+namespace PhpTal\Exception;
+
 /**
  * Exception that is related to location within a template.
  * You can check srcFile and srcLine to find source of the error.
@@ -20,7 +22,7 @@
  * @package PHPTAL
  * @subpackage Exception
  */
-class PHPTAL_TemplateException extends PHPTAL_Exception
+class TemplateException extends PhpTalException
 {
     public $srcFile;
     public $srcLine;
@@ -99,7 +101,7 @@ class PHPTAL_TemplateException extends PHPTAL_Exception
                 $eval_line = $tr['line'];
             }
             else if ($eval_line && isset($tr['function'],$tr['args'],$tr['args'][0]) &&
-                $this->isTemplatePath("/".$tr['function'].".php") && $tr['args'][0] instanceof PHPTAL) {
+                $this->isTemplatePath("/".$tr['function'].".php") && $tr['args'][0] instanceof \PHPTAL) {
                 return array($tr['args'][0]->getCodePath(), $eval_line);
             }
         }

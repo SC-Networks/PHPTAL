@@ -78,7 +78,7 @@ class XmlParserTest extends PHPTAL_TestCase
 
 
     /**
-     * @expectedException PHPTAL_ParserException
+     * @expectedException \PhpTal\Exception\ParserException
      */
     public function testRejectsInvalidAttributes1()
     {
@@ -88,7 +88,7 @@ class XmlParserTest extends PHPTAL_TestCase
     }
 
     /**
-     * @expectedException PHPTAL_ParserException
+     * @expectedException \PhpTal\Exception\ParserException
      */
     public function testRejectsInvalidAttributes2()
     {
@@ -138,12 +138,12 @@ class XmlParserTest extends PHPTAL_TestCase
             $parser->parseString($builder = new MyDocumentBuilder(), $src)->getResult();
             $this->assertEquals('<a> ]]&gt; </a>', $builder->result);
         }
-        catch(PHPTAL_ParserException $e)
+        catch(\PhpTal\Exception\ParserException $e)
         { /* ok - rejecting is one way to do it */ }
     }
 
     /**
-     * @expectedException PHPTAL_ParserException
+     * @expectedException \PhpTal\Exception\ParserException
      */
     public function testSelfClosingSyntaxError()
     {
@@ -162,7 +162,7 @@ class XmlParserTest extends PHPTAL_TestCase
             $parser->parseString($builder = new MyDocumentBuilder(), $src)->getResult();
             $this->assertEquals('<a href="?foo=1&amp;bar=baz&amp;copy=true&amp;reg=x"> &amp; ; &#x100; &nbsp; &#10; &amp;--;</a>', $builder->result);
         }
-        catch(PHPTAL_ParserException $e)
+        catch(\PhpTal\Exception\ParserException $e)
         { /* ok - rejecting is one way to do it */ }
     }
 
@@ -182,7 +182,7 @@ class XmlParserTest extends PHPTAL_TestCase
         ");
             $this->fail("Accepted invalid XML");
         }
-        catch(PHPTAL_ParserException $e)
+        catch(\PhpTal\Exception\ParserException $e)
         {
             $this->assertEquals(6, $e->srcLine);
         }
@@ -206,7 +206,7 @@ bar4='baz'
 ");
             $this->fail("Accepted invalid XML");
         }
-        catch(PHPTAL_ParserException $e)
+        catch(\PhpTal\Exception\ParserException $e)
         {
             $this->assertEquals(7, $e->srcLine);
         }
@@ -231,7 +231,7 @@ xxxx/>
 ");
             $this->fail("Accepted invalid XML");
         }
-        catch(PHPTAL_ParserException $e)
+        catch(\PhpTal\Exception\ParserException $e)
         {
             $this->assertEquals(8, $e->srcLine);
         }
@@ -245,7 +245,7 @@ xxxx/>
             $parser->parseString(new PHPTAL_Dom_PHPTALDocumentBuilder(), "<imrootelement/></ishallnotbeclosed>");
             $this->fail("Accepted invalid XML");
         }
-        catch(PHPTAL_ParserException $e)
+        catch(\PhpTal\Exception\ParserException $e)
         {
             $this->assertContains('ishallnotbeclosed', $e->getMessage());
             $this->assertNotContains('imrootelement', $e->getMessage());
@@ -261,7 +261,7 @@ xxxx/>
             $parser->parseString(new PHPTAL_Dom_PHPTALDocumentBuilder(), "<element_a><element_b><element_x/><element_c><element_d><element_e>");
             $this->fail("Accepted invalid XML");
         }
-        catch(PHPTAL_ParserException $e)
+        catch(\PhpTal\Exception\ParserException $e)
         {
             $this->assertNotContains("documentElement", $e->getMessage());
             $this->assertRegExp("/element_e.*element_d.*element_c.*element_b.*element_a/", $e->getMessage());

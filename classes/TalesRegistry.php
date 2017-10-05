@@ -58,12 +58,12 @@ class PHPTAL_TalesRegistry
      *
      * @param string $prefix
      *
-     * @throws PHPTAL_ConfigurationException
+     * @throws \PhpTal\Exception\ConfigurationException
      */
     public function unregisterPrefix($prefix)
     {
         if (!$this->isRegistered($prefix)) {
-            throw new PHPTAL_ConfigurationException("Expression modifier '$prefix' is not registered");
+            throw new \PhpTal\Exception\ConfigurationException("Expression modifier '$prefix' is not registered");
         }
 
         unset($this->_callbacks[$prefix]);
@@ -84,7 +84,7 @@ class PHPTAL_TalesRegistry
             if ($is_fallback) {
                 return; // simply ignored
             }
-            throw new PHPTAL_ConfigurationException("Expression modifier '$prefix' is already registered");
+            throw new \PhpTal\Exception\ConfigurationException("Expression modifier '$prefix' is already registered");
         }
 
         // Check if valid callback
@@ -94,20 +94,20 @@ class PHPTAL_TalesRegistry
             $class = new ReflectionClass($callback[0]);
 
             if (!$class->isSubclassOf('PHPTAL_Tales')) {
-                throw new PHPTAL_ConfigurationException('The class you want to register does not implement "PHPTAL_Tales".');
+                throw new \PhpTal\Exception\ConfigurationException('The class you want to register does not implement "PHPTAL_Tales".');
             }
 
             $method = new ReflectionMethod($callback[0], $callback[1]);
 
             if (!$method->isStatic()) {
-                throw new PHPTAL_ConfigurationException('The method you want to register is not static.');
+                throw new \PhpTal\Exception\ConfigurationException('The method you want to register is not static.');
             }
 
             // maybe we want to check the parameters the method takes
 
         } else {
             if (!function_exists($callback)) {
-                throw new PHPTAL_ConfigurationException('The function you are trying to register does not exist.');
+                throw new \PhpTal\Exception\ConfigurationException('The function you are trying to register does not exist.');
             }
         }
 
@@ -131,11 +131,11 @@ class PHPTAL_TalesRegistry
             $classCallback = explode('.', $typePrefix, 2);
             $callbackName  = null;
             if (!is_callable($classCallback, false, $callbackName)) {
-                throw new PHPTAL_UnknownModifierException("Unknown phptal modifier $typePrefix. Function $callbackName does not exists or is not statically callable", $typePrefix);
+                throw new \PhpTal\Exception\UnknownModifierException("Unknown phptal modifier $typePrefix. Function $callbackName does not exists or is not statically callable", $typePrefix);
             }
             $ref = new ReflectionClass($classCallback[0]);
             if (!$ref->implementsInterface('PHPTAL_Tales')) {
-                throw new PHPTAL_UnknownModifierException("Unable to use phptal modifier $typePrefix as the class $callbackName does not implement the PHPTAL_Tales interface", $typePrefix);
+                throw new \PhpTal\Exception\UnknownModifierException("Unable to use phptal modifier $typePrefix as the class $callbackName does not implement the PHPTAL_Tales interface", $typePrefix);
             }
             return $classCallback;
         }

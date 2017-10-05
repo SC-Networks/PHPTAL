@@ -13,13 +13,15 @@
  * @link     http://phptal.org/
  */
 
+namespace PhpTal\Exception;
+
 /**
  * ${unknown:foo} found in template
  *
  * @package PHPTAL
  * @subpackage Exception
  */
-class PHPTAL_UnknownModifierException extends PHPTAL_TemplateException
+class UnknownModifierException extends TemplateException
 {
     private $modifier_name;
     public function __construct($msg, $modifier_name = null)

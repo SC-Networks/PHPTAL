@@ -165,14 +165,14 @@ class PHPTAL_Php_TalesInternal implements PHPTAL_Tales
         if (preg_match('/^((?:[^$\/]+|\$\$|\${[^}]+}|\$))\/(.+)$/s', $expression, $m))
         {
             if (!self::checkExpressionPart($m[1])) {
-                throw new PHPTAL_ParserException("Invalid TALES path: '$expression', expected '{$m[1]}' to be variable name");
+                throw new \PhpTal\Exception\ParserException("Invalid TALES path: '$expression', expected '{$m[1]}' to be variable name");
             }
 
             $next = self::string($m[1]);
             $expression = self::string($m[2]);
         } else {
             if (!self::checkExpressionPart($expression)) {
-                throw new PHPTAL_ParserException("Invalid TALES path: '$expression', expected variable name. Complex expressions need php: modifier.");
+                throw new \PhpTal\Exception\ParserException("Invalid TALES path: '$expression', expected variable name. Complex expressions need php: modifier.");
             }
 
             $next = self::string($expression);
@@ -395,7 +395,7 @@ class PHPTAL_Php_TalesInternal implements PHPTAL_Tales
      */
     static public function number($src, $nothrow)
     {
-        if (!is_numeric(trim($src))) throw new PHPTAL_ParserException("'$src' is not a number");
+        if (!is_numeric(trim($src))) throw new \PhpTal\Exception\ParserException("'$src' is not a number");
         return trim($src);
     }
 
@@ -485,7 +485,7 @@ class PHPTAL_Php_TalesInternal implements PHPTAL_Tales
         }
 
         $func = 'phptal_tales_'.str_replace('-', '_', $typePrefix);
-        throw new PHPTAL_UnknownModifierException("Unknown phptal modifier '$typePrefix'. Function '$func' does not exist", $typePrefix);
+        throw new \PhpTal\Exception\UnknownModifierException("Unknown phptal modifier '$typePrefix'. Function '$func' does not exist", $typePrefix);
     }
 
     private static function verifyPHPExpressions($typePrefix,$expressions)
@@ -496,7 +496,7 @@ class PHPTAL_Php_TalesInternal implements PHPTAL_Tales
 
         foreach($expressions as $expr) {
             if (preg_match('/;\s*$/', $expr)) {
-                throw new PHPTAL_ParserException("Modifier $typePrefix generated PHP statement rather than expression (don't add semicolons)");
+                throw new \PhpTal\Exception\ParserException("Modifier $typePrefix generated PHP statement rather than expression (don't add semicolons)");
             }
         }
     }

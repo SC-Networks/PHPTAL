@@ -49,7 +49,7 @@ class PHPTAL_Php_CodeWriter
 
     public function recycleTempVariable($var)
     {
-        if (substr($var, 0, 6)!=='$_tmp_') throw new PHPTAL_Exception("Invalid variable recycled");
+        if (substr($var, 0, 6)!=='$_tmp_') throw new \PhpTal\Exception\PhpTalException("Invalid variable recycled");
         $this->temp_recycling[] = $var;
     }
 
@@ -269,7 +269,7 @@ class PHPTAL_Php_CodeWriter
     public function getTranslatorReference()
     {
         if (!$this->_state->isTranslationOn()) {
-            throw new PHPTAL_ConfigurationException("i18n used, but Translator has not been set");
+            throw new \PhpTal\Exception\ConfigurationException("i18n used, but Translator has not been set");
         }
         return '$_translator';
     }
@@ -290,12 +290,12 @@ class PHPTAL_Php_CodeWriter
     {
         if (!count($this->_segments)) {
             if (!$expects) $expects = 'anything';
-            throw new PHPTAL_Exception("Bug: CodeWriter generated end of block without $expects open");
+            throw new \PhpTal\Exception\PhpTalException("Bug: CodeWriter generated end of block without $expects open");
         }
 
         $segment = array_pop($this->_segments);
         if ($expects !== null && $segment !== $expects) {
-            throw new PHPTAL_Exception("Bug: CodeWriter generated end of $expects, but needs to close $segment");
+            throw new \PhpTal\Exception\PhpTalException("Bug: CodeWriter generated end of $expects, but needs to close $segment");
         }
 
         $this->unindent();
@@ -343,7 +343,7 @@ class PHPTAL_Php_CodeWriter
     public function doElseIf($condition)
     {
         if (end($this->_segments) !== 'if') {
-            throw new PHPTAL_Exception("Bug: CodeWriter generated elseif without if");
+            throw new \PhpTal\Exception\PhpTalException("Bug: CodeWriter generated elseif without if");
         }
         $this->unindent();
         $this->pushCode('elseif ('.$condition.'): ');
@@ -353,7 +353,7 @@ class PHPTAL_Php_CodeWriter
     public function doElse()
     {
         if (end($this->_segments) !== 'if') {
-            throw new PHPTAL_Exception("Bug: CodeWriter generated else without if");
+            throw new \PhpTal\Exception\PhpTalException("Bug: CodeWriter generated else without if");
         }
         $this->unindent();
         $this->pushCode('else: ');

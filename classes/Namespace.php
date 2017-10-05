@@ -27,7 +27,7 @@ abstract class PHPTAL_Namespace
     public function __construct($prefix, $namespace_uri)
     {
         if (!$namespace_uri || !$prefix) {
-            throw new PHPTAL_ConfigurationException("Can't create namespace with empty prefix or namespace URI");
+            throw new \PhpTal\Exception\ConfigurationException("Can't create namespace with empty prefix or namespace URI");
         }
 
         $this->_attributes = array();

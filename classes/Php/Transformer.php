@@ -298,7 +298,7 @@ class PHPTAL_Php_Transformer
                     else {
                         $var = substr($str, $mark, $i-$mark);
                         if ($var !== '' && !preg_match('/^[a-z][a-z0-9_\x7f-\xff]*$/i',$var)) {
-                            throw new PHPTAL_ParserException("Invalid field name '$var' in expression php:$str");
+                            throw new \PhpTal\Exception\ParserException("Invalid field name '$var' in expression php:$str");
                         }
                         $result .= $var;
                         if ($eval) { $result .='}'; $eval = false; }
@@ -360,10 +360,10 @@ class PHPTAL_Php_Transformer
                         $var = substr($str, $mark, $i-$mark);
 
                         if (self::isAlpha($c) || $c === '_') {
-                            throw new PHPTAL_ParserException("Syntax error in number '$var$c' in expression php:$str");
+                            throw new \PhpTal\Exception\ParserException("Syntax error in number '$var$c' in expression php:$str");
                         }
                         if (!is_numeric($var)) {
-                            throw new PHPTAL_ParserException("Syntax error in number '$var' in expression php:$str");
+                            throw new \PhpTal\Exception\ParserException("Syntax error in number '$var' in expression php:$str");
                         }
 
                         $result .= $var;

@@ -12,11 +12,14 @@
  * @version  SVN: $Id$
  * @link     http://phptal.org/
  */
+
+namespace PhpTal\Exception;
+
 /**
  * @package PHPTAL
  * @subpackage Exception
  */
-class PHPTAL_Exception extends Exception
+class PhpTalException extends \Exception
 {
 }
 

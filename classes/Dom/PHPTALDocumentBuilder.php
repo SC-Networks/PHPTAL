@@ -54,7 +54,7 @@ class PHPTAL_Dom_PHPTALDocumentBuilder extends PHPTAL_Dom_DocumentBuilder
         if (count($this->_stack) > 0) {
             $left='</'.$this->_current->getQualifiedName().'>';
             for ($i = count($this->_stack)-1; $i>0; $i--) $left .= '</'.$this->_stack[$i]->getQualifiedName().'>';
-            throw new PHPTAL_ParserException("Not all elements were closed before end of the document. Missing: ".$left,
+            throw new \PhpTal\Exception\ParserException("Not all elements were closed before end of the document. Missing: ".$left,
                         $this->file, $this->line);
         }
     }
@@ -67,7 +67,7 @@ class PHPTAL_Dom_PHPTALDocumentBuilder extends PHPTAL_Dom_DocumentBuilder
     public function onXmlDecl($decl)
     {
         if (!$this->encoding) {
-            throw new PHPTAL_Exception("Encoding not set");
+            throw new \PhpTal\Exception\PhpTalException("Encoding not set");
         }
         $this->pushNode(new PHPTAL_Dom_XmlDeclaration($decl, $this->encoding));
     }
@@ -95,7 +95,7 @@ class PHPTAL_Dom_PHPTALDocumentBuilder extends PHPTAL_Dom_DocumentBuilder
             $prefix = $m[1];
             $namespace_uri = $this->_xmlns->prefixToNamespaceURI($prefix);
             if (false === $namespace_uri) {
-                throw new PHPTAL_ParserException("There is no namespace declared for prefix of element < $element_qname >. You must have xmlns:$prefix declaration in the same document.",
+                throw new \PhpTal\Exception\ParserException("There is no namespace declared for prefix of element < $element_qname >. You must have xmlns:$prefix declaration in the same document.",
                             $this->file, $this->line);
             }
         } else {
@@ -110,7 +110,7 @@ class PHPTAL_Dom_PHPTALDocumentBuilder extends PHPTAL_Dom_DocumentBuilder
                 $attr_namespace_uri = $this->_xmlns->prefixToNamespaceURI($prefix);
 
             if (false === $attr_namespace_uri) {
-                    throw new PHPTAL_ParserException("There is no namespace declared for prefix of attribute $qname of element < $element_qname >. You must have xmlns:$prefix declaration in the same document.",
+                    throw new \PhpTal\Exception\ParserException("There is no namespace declared for prefix of attribute $qname of element < $element_qname >. You must have xmlns:$prefix declaration in the same document.",
                             $this->file, $this->line);
             }
             } else {
@@ -120,7 +120,7 @@ class PHPTAL_Dom_PHPTALDocumentBuilder extends PHPTAL_Dom_DocumentBuilder
 
             if ($this->_xmlns->isHandledNamespace($attr_namespace_uri)
                 && !$this->_xmlns->isValidAttributeNS($attr_namespace_uri, $local_name)) {
-                throw new PHPTAL_ParserException("Attribute '$qname' is in '$attr_namespace_uri' namespace, but is not a supported PHPTAL attribute",
+                throw new \PhpTal\Exception\ParserException("Attribute '$qname' is in '$attr_namespace_uri' namespace, but is not a supported PHPTAL attribute",
                             $this->file, $this->line);
             }
 
@@ -141,11 +141,11 @@ class PHPTAL_Dom_PHPTALDocumentBuilder extends PHPTAL_Dom_DocumentBuilder
     public function onElementClose($qname)
     {
         if ($this->_current === $this->documentElement) {
-            throw new PHPTAL_ParserException("Found closing tag for < $qname > where there are no open tags",
+            throw new \PhpTal\Exception\ParserException("Found closing tag for < $qname > where there are no open tags",
                         $this->file, $this->line);
         }
         if ($this->_current->getQualifiedName() != $qname) {
-            throw new PHPTAL_ParserException("Tag closure mismatch, expected < /".$this->_current->getQualifiedName()." > (opened in line ".$this->_current->getSourceLine().") but found < /".$qname." >",
+            throw new \PhpTal\Exception\ParserException("Tag closure mismatch, expected < /".$this->_current->getQualifiedName()." > (opened in line ".$this->_current->getSourceLine().") but found < /".$qname." >",
                         $this->file, $this->line);
         }
         $this->_current = array_pop($this->_stack);

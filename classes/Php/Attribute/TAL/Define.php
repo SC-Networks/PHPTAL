@@ -109,7 +109,7 @@ implements PHPTAL_Php_TalesChainReader
 
     public function talesChainNothingKeyword(PHPTAL_Php_TalesChainExecutor $executor)
     {
-        if (!$this->_chainPartGenerated) throw new PHPTAL_TemplateException("Invalid expression in tal:define", $this->phpelement->getSourceFile(), $this->phpelement->getSourceLine());
+        if (!$this->_chainPartGenerated) throw new \PhpTal\Exception\TemplateException("Invalid expression in tal:define", $this->phpelement->getSourceFile(), $this->phpelement->getSourceLine());
 
         $executor->doElse();
         $this->doDefineVarWith($executor->getCodeWriter(), 'null');
@@ -118,7 +118,7 @@ implements PHPTAL_Php_TalesChainReader
 
     public function talesChainDefaultKeyword(PHPTAL_Php_TalesChainExecutor $executor)
     {
-        if (!$this->_chainPartGenerated) throw new PHPTAL_TemplateException("Invalid expression in tal:define", $this->phpelement->getSourceFile(), $this->phpelement->getSourceLine());
+        if (!$this->_chainPartGenerated) throw new \PhpTal\Exception\TemplateException("Invalid expression in tal:define", $this->phpelement->getSourceFile(), $this->phpelement->getSourceLine());
 
         $executor->doElse();
         $this->bufferizeContent($executor->getCodeWriter());

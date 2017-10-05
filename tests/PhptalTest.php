@@ -167,7 +167,7 @@ class PhptalTest extends PHPTAL_TestCase
             $tpl->setOutputMode('unknown');
             $this->assertTrue(false);
         }
-        catch (PHPTAL_Exception $e)
+        catch (\PhpTal\Exception\PhpTalException $e)
         {
             $this->assertTrue(true);
         }
@@ -197,11 +197,11 @@ class PhptalTest extends PHPTAL_TestCase
             $tpl->execute();
             $this->fail("Executed directory as if it was a template file");
         }
-        catch(PHPTAL_IOException $e) {
+        catch(\PhpTal\Exception\IOException $e) {
             // ok
         }
-        catch(PHPTAL_Exception $e) {
-            $this->fail("Thrown exception ".get_class($e)." (".$e->getMessage().") rather than PHPTAL_IOException");
+        catch(\PhpTal\Exception\PhpTalException $e) {
+            $this->fail("Thrown exception ".get_class($e)." (".$e->getMessage().") rather than \PhpTal\Exception\IOException");
         }
     }
 
@@ -213,7 +213,7 @@ class PhptalTest extends PHPTAL_TestCase
     }
 
     /**
-     * @expectedException PHPTAL_TemplateException
+     * @expectedException \PhpTal\Exception\TemplateException
      */
     function testPHPParseErrorDoesNotStopPHPTAL2()
     {
@@ -232,7 +232,7 @@ class PhptalTest extends PHPTAL_TestCase
     }
 
     /**
-     * @expectedException PHPTAL_ConfigurationException
+     * @expectedException \PhpTal\Exception\ConfigurationException
      */
     function testThrowsIfNoTemplate()
     {

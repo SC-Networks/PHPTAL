@@ -90,7 +90,7 @@ class ReadableErrorTest extends PHPTAL_TestCase
             $res = $tpl->execute();
             $this->fail("Not thrown");
         }
-        catch (PHPTAL_TemplateException $e) {
+        catch (\PhpTal\Exception\TemplateException $e) {
             $msg = $e->getMessage();
             $this->assertInternalType('string',$e->srcFile, $msg);
             $this->assertContains($expected_file ? $expected_file : $file, $e->srcFile, $msg);

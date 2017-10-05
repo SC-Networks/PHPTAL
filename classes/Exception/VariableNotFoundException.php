@@ -13,12 +13,14 @@
  * @link     http://phptal.org/
  */
 
+namespace PhpTal\Exception;
+
 /**
  * Runtime error in TALES expression
  *
  * @package PHPTAL
  * @subpackage Exception
  */
-class PHPTAL_VariableNotFoundException extends PHPTAL_TemplateException
+class VariableNotFoundException extends TemplateException
 {
 }

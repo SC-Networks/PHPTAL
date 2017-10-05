@@ -80,7 +80,7 @@ class ParserTest extends PHPTAL_TestCase
 
             $this->fail("Accepted invalid element name starting with a number");
         }
-        catch(PHPTAL_Exception $e) {}
+        catch(\PhpTal\Exception\PhpTalException $e) {}
     }
 
     public function testIllegalElementNames2()
@@ -91,7 +91,7 @@ class ParserTest extends PHPTAL_TestCase
             $parser->parseString(new PHPTAL_Dom_PHPTALDocumentBuilder(), '<t><element~ /></t>');
             $this->fail("Accepted invalid element name")->getResult();
         }
-        catch(PHPTAL_Exception $e) {}
+        catch(\PhpTal\Exception\PhpTalException $e) {}
     }
 
 }

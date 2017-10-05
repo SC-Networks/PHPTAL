@@ -12,7 +12,9 @@
  * @link     http://phptal.org/
  */
 
-class PHPTAL_ExceptionHandler
+namespace PhpTal;
+
+class ExceptionHandler
 {
     private $encoding;
     function __construct($encoding)
@@ -26,16 +28,16 @@ class PHPTAL_ExceptionHandler
      *
      * Doesn't change exception handler if non-default one is set.
      *
-     * @param Exception e exception to re-throw and display
+     * @param \Exception e exception to re-throw and display
      *
      * @return void
-     * @throws Exception
+     * @throws \Exception
      */
-    public static function handleException(Exception $e, $encoding)
+    public static function handleException(\Exception $e, $encoding)
     {
         // PHPTAL's handler is only useful on fresh HTTP response
         if (PHP_SAPI !== 'cli' && !headers_sent()) {
-            $old_exception_handler = set_exception_handler(array(new PHPTAL_ExceptionHandler($encoding), '_defaultExceptionHandler'));
+            $old_exception_handler = set_exception_handler(array(new ExceptionHandler($encoding), '_defaultExceptionHandler'));
 
             if ($old_exception_handler !== NULL) {
                 restore_exception_handler(); // if there's user's exception handler, let it work
@@ -48,7 +50,7 @@ class PHPTAL_ExceptionHandler
     /**
      * Generates simple error page. Sets appropriate HTTP status to prevent page being indexed.
      *
-     * @param Exception e exception to display
+     * @param \Exception e exception to display
      */
     public function _defaultExceptionHandler($e)
     {

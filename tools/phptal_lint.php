@@ -264,7 +264,7 @@ class PHPTAL_Lint
             $phptal->prepare();
             return self::TEST_OK;
         }
-        catch(PHPTAL_UnknownModifierException $e) {
+        catch(\PhpTal\Exception\UnknownModifierException $e) {
             if ($this->skipUnknownModifiers && is_callable(array($e, 'getModifierName'))) {
                 $this->warnings[] = array(dirname($fullpath), basename($fullpath), "Unknown expression modifier: ".$e->getModifierName()." (use -i to include your custom modifier functions)", $e->getLine());
                 return self::TEST_SKIPPED;

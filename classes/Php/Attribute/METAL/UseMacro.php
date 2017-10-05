@@ -57,7 +57,7 @@ class PHPTAL_Php_Attribute_METAL_UseMacro extends PHPTAL_Php_Attribute
 	if ($defineAttr = $this->phpelement->getAttributeNodeNS(
 		'http://xml.zope.org/namespaces/metal', 'define-macro')) {
 		if ($defineAttr->getValue() == $macroname) 
-            		throw new PHPTAL_TemplateException("Cannot simultaneously define and use macro '$macroname'",
+            		throw new \PhpTal\Exception\TemplateException("Cannot simultaneously define and use macro '$macroname'",
                 		$this->phpelement->getSourceFile(), $this->phpelement->getSourceLine());			
 	}
 

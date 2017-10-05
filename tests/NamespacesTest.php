@@ -78,7 +78,7 @@ class NamespacesTest extends PHPTAL_TestCase
     // different kind of namespace
 
     /**
-     * @expectedException PHPTAL_ConfigurationException
+     * @expectedException \PhpTal\Exception\ConfigurationException
      */
     function testPHPTALNamespaceClassRejectsEmptyNS()
     {
@@ -86,7 +86,7 @@ class NamespacesTest extends PHPTAL_TestCase
     }
 
     /**
-     * @expectedException PHPTAL_ConfigurationException
+     * @expectedException \PhpTal\Exception\ConfigurationException
      */
     function testPHPTALNamespaceClassRejectsEmptyPrefix()
     {

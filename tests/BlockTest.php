@@ -41,7 +41,7 @@ class BlockTest extends PHPTAL_TestCase
     }
 
     /**
-     * @expectedException PHPTAL_ParserException
+     * @expectedException \PhpTal\Exception\ParserException
      */
     function testInvalidNamespaceBlock()
     {

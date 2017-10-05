@@ -13,12 +13,14 @@
  * @link     http://phptal.org/
  */
 
+namespace PhpTal\Exception;
+
 /**
  * You're probably not using PHPTAL class properly
  *
  * @package PHPTAL
  * @subpackage Exception
  */
-class PHPTAL_ConfigurationException extends PHPTAL_Exception
+class ConfigurationException extends PhpTalException
 {
 }

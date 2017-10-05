@@ -289,7 +289,7 @@ EOT;
             // unlike attributes, this isn't going to be escaped, because it gets parsed as a real processing instruction
             $this->assertEquals('<p>test<? print("<x>"); ?>test<?= "&amp;" ?>test</p>', $tpl->execute());
         }
-        catch(PHPTAL_ParserException $e) {/* xml ill-formedness error is ok too */}
+        catch(\PhpTal\Exception\ParserException $e) {/* xml ill-formedness error is ok too */}
         ini_restore('short_open_tag');
     }
 
@@ -304,12 +304,12 @@ EOT;
             // PHP 5.4: short tag <?= is always enabled.
             $this->assertEquals('<p>test<? print("<x>"); ?>test&amp;test</p>', $tpl->execute());
         }
-        catch(PHPTAL_ParserException $e) {/* xml ill-formedness error is ok too */}
+        catch(\PhpTal\Exception\ParserException $e) {/* xml ill-formedness error is ok too */}
         ini_restore('short_open_tag');
     }
 
     /**
-     * @expectedException PHPTAL_VariableNotFoundException
+     * @expectedException \PhpTal\Exception\VariableNotFoundException
      */
     function testErrorsThrow()
     {
@@ -319,7 +319,7 @@ EOT;
     }
 
     /**
-     * @expectedException PHPTAL_VariableNotFoundException
+     * @expectedException \PhpTal\Exception\VariableNotFoundException
      */
     function testErrorsThrow2()
     {
@@ -329,7 +329,7 @@ EOT;
     }
 
     /**
-     * @expectedException PHPTAL_VariableNotFoundException
+     * @expectedException \PhpTal\Exception\VariableNotFoundException
      */
     function testErrorsThrow3()
     {

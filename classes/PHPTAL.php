@@ -361,7 +361,7 @@ class PHPTAL implements PhpTalInterface
         $this->resetPrepared();
 
         if ($mode != PHPTAL::XHTML && $mode != PHPTAL::XML && $mode != PHPTAL::HTML5) {
-            throw new PHPTAL_ConfigurationException('Unsupported output mode '.$mode);
+            throw new \PhpTal\Exception\ConfigurationException('Unsupported output mode '.$mode);
         }
         $this->_outputMode = $mode;
         return $this;
@@ -515,7 +515,7 @@ class PHPTAL implements PhpTalInterface
         $this->resetPrepared();
 
         if (!$filter instanceof PHPTAL_PreFilter) {
-            throw new PHPTAL_ConfigurationException("addPreFilter expects PHPTAL_PreFilter object");
+            throw new \PhpTal\Exception\ConfigurationException("addPreFilter expects PHPTAL_PreFilter object");
         }
 
         $this->prefilters[] = $filter;
@@ -706,7 +706,7 @@ class PHPTAL implements PhpTalInterface
         }
         catch (Exception $e)
         {
-            PHPTAL_ExceptionHandler::handleException($e, $this->getEncoding());
+            PhpTal\ExceptionHandler::handleException($e, $this->getEncoding());
         }
 
         return $res;
@@ -727,7 +727,7 @@ class PHPTAL implements PhpTalInterface
             }
 
             if ($this->_postfilter) {
-                throw new PHPTAL_ConfigurationException("echoExecute() does not support postfilters");
+                throw new \PhpTal\Exception\ConfigurationException("echoExecute() does not support postfilters");
             }
 
             $this->_context->echoDeclarations(true);
@@ -737,7 +737,7 @@ class PHPTAL implements PhpTalInterface
         }
         catch (Exception $e)
         {
-            PHPTAL_ExceptionHandler::handleException($e, $this->getEncoding());
+            PhpTal\ExceptionHandler::handleException($e, $this->getEncoding());
         }
     }
 
@@ -776,7 +776,7 @@ class PHPTAL implements PhpTalInterface
 
             $fun = $tpl->getFunctionName() . '_' . strtr($macroName, "-", "_");
             if (!function_exists($fun)) {
-                throw new PHPTAL_MacroMissingException("Macro '$macroName' is not defined in $file", $this->_source->getRealPath());
+                throw new \PhpTal\Exception\MacroMissingException("Macro '$macroName' is not defined in $file", $this->_source->getRealPath());
             }
 
             $fun($tpl, $this);
@@ -785,7 +785,7 @@ class PHPTAL implements PhpTalInterface
             // call local macro
             $fun = $local_tpl->getFunctionName() . '_' . strtr($path, "-", "_");
             if (!function_exists($fun)) {
-                throw new PHPTAL_MacroMissingException("Macro '$path' is not defined", $local_tpl->_source->getRealPath());
+                throw new \PhpTal\Exception\MacroMissingException("Macro '$path' is not defined", $local_tpl->_source->getRealPath());
             }
             $fun( $local_tpl, $this);
         }
@@ -857,7 +857,7 @@ class PHPTAL implements PhpTalInterface
                 $result = $this->parse();
 
                 if (!file_put_contents($this->getCodePath(), $result)) {
-                    throw new PHPTAL_IOException('Unable to open '.$this->getCodePath().' for writing');
+                    throw new \PhpTal\Exception\IOException('Unable to open '.$this->getCodePath().' for writing');
                 }
 
                 // the awesome thing about eval() is that parse errors don't stop PHP.
@@ -877,7 +877,7 @@ class PHPTAL implements PhpTalInterface
 
                     // greedy .* ensures last match
                     if (preg_match('/.*on line (\d+)$/m', $msg, $m)) $line=$m[1]; else $line=0;
-                    throw new PHPTAL_TemplateException(trim($msg), $this->getCodePath(), $line);
+                    throw new \PhpTal\Exception\TemplateException(trim($msg), $this->getCodePath(), $line);
                 }
                 ob_end_clean();
 
@@ -1160,7 +1160,7 @@ class PHPTAL implements PhpTalInterface
         foreach($prefilters as $prefilter) {
             if ($prefilter instanceof PHPTAL_PreFilter) {
                 if ($prefilter->filterDOM($tree) !== NULL) {
-                    throw new PHPTAL_ConfigurationException("Don't return value from filterDOM()");
+                    throw new \PhpTal\Exception\ConfigurationException("Don't return value from filterDOM()");
                 }
             }
         }
@@ -1181,7 +1181,7 @@ class PHPTAL implements PhpTalInterface
     protected function findTemplate()
     {
         if ($this->_path == false) {
-            throw new PHPTAL_ConfigurationException('No template file specified');
+            throw new \PhpTal\Exception\ConfigurationException('No template file specified');
         }
 
         // template source already defined
@@ -1205,7 +1205,7 @@ class PHPTAL implements PhpTalInterface
         }
 
         if (!$this->_source) {
-            throw new PHPTAL_IOException('Unable to locate template file '.$this->_path);
+            throw new \PhpTal\Exception\IOException('Unable to locate template file '.$this->_path);
         }
     }
 }
