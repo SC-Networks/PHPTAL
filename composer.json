@@ -38,6 +38,11 @@
           "PhpTal\\": "classes/"
         }
     },
+    "autoload-dev": {
+        "classmap": [
+            "classes/", "tests/"
+        ]
+    },
     "config": {
         "platform": {
             "php": "5.6"

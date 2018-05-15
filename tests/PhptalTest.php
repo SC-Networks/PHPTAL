@@ -224,7 +224,11 @@ class PhptalTest extends PHPTAL_TestCase
         try {
             @$tpl->execute(); // if test dies for no apparent reason, the reason is '@'
         }
-        catch(Exception $e) {
+        catch(\Throwable $e) {
+            ob_end_clean();
+            throw $e;
+        }
+        catch(\Exception $e) {
             ob_end_clean();
             throw $e;
         }

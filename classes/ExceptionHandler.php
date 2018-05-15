@@ -14,6 +14,8 @@
 
 namespace PhpTal;
 
+use PhpTal\Exception\TemplateException;
+
 class ExceptionHandler
 {
     private $encoding;
@@ -28,20 +30,29 @@ class ExceptionHandler
      *
      * Doesn't change exception handler if non-default one is set.
      *
-     * @param \Exception e exception to re-throw and display
+     * @param \Exception|\Throwable $e exception to re-throw and display
+     * @param string $encoding
      *
      * @return void
-     * @throws \Exception
+     * @throws TemplateException
+     * @throws \Throwable
      */
-    public static function handleException(\Exception $e, $encoding)
+    public static function handleException($e, $encoding) // todo 7.2 -> $e should be \Throwable
     {
         // PHPTAL's handler is only useful on fresh HTTP response
         if (PHP_SAPI !== 'cli' && !headers_sent()) {
-            $old_exception_handler = set_exception_handler(array(new ExceptionHandler($encoding), '_defaultExceptionHandler'));
+            $old_exception_handler = set_exception_handler([
+                new ExceptionHandler($encoding),
+                '_defaultExceptionHandler'
+            ]);
 
-            if ($old_exception_handler !== NULL) {
+            if ($old_exception_handler !== null) {
                 restore_exception_handler(); // if there's user's exception handler, let it work
             }
+        }
+
+        if (PHP_VERSION_ID >= 70000 && get_class($e) === \ParseError::class) {
+            $e = new TemplateException($e->getMessage());
         }
         throw $e; // throws instead of outputting immediately to support user's try/catch
     }
