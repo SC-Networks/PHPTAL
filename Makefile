@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 .PHONY: all
 
 all::test docs doc

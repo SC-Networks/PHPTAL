@@ -18,6 +18,8 @@
  *
  */
 
+require_once __DIR__ . '/../vendor/autoload.php';
+
 $lint = new PHPTAL_Lint_CLI();
 $lint->main();
 
