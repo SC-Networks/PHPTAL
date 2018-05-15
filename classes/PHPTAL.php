@@ -684,7 +684,12 @@ class PHPTAL implements PhpTalInterface
                 $templateFunction($this, $this->_context);
                 $res = ob_get_clean();
             }
-            catch (Exception $e)
+            catch (\Throwable $e)
+            {
+                ob_end_clean();
+                throw $e;
+            }
+            catch (\Exception $e)
             {
                 ob_end_clean();
                 throw $e;
@@ -704,7 +709,11 @@ class PHPTAL implements PhpTalInterface
                 return $this->_postfilter->filter($res);
             }
         }
-        catch (Exception $e)
+        catch (\Throwable $e)
+        {
+            PhpTal\ExceptionHandler::handleException($e, $this->getEncoding());
+        }
+        catch (\Exception $e)
         {
             PhpTal\ExceptionHandler::handleException($e, $this->getEncoding());
         }
@@ -867,7 +876,11 @@ class PHPTAL implements PhpTalInterface
                 try {
                     eval("?>\n".$result);
                 }
-                catch(Exception $e) {
+                catch(\Throwable $e) {
+                    ob_end_clean();
+                    throw $e;
+                }
+                catch(\Exception $e) {
                     ob_end_clean();
                     throw $e;
                 }

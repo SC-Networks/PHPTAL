@@ -16,7 +16,7 @@
 error_reporting( E_ALL | E_STRICT );
 assert_options(ASSERT_ACTIVE, 1);
 
-require_once 'vendor/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
 abstract class PHPTAL_TestCase extends PHPUnit_Framework_TestCase
 {
