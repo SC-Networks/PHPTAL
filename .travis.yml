@@ -1,15 +1,12 @@
 language: php
 
 php:
-  - 5.2
-  - 5.3.3
-  - 5.3
-  - 5.4
-  - 5.5
+  - 5.6
+  - 7.2
 
 matrix:
   allow_failures:
-    - php: 5.2
+    - php: 7.2
 
 before_script:
   # Make sure the locales used in the tests are installed
@@ -20,5 +17,8 @@ before_script:
   - sudo locale-gen fr_FR.utf8
 
 script:
-  - phpunit -c phpunit.xml
-  - tools/phptal_lint.php -e html tests/input/phptal*.html
+  - composer tests
+  - composer tal-lint
+
+install:
+  - travis_retry composer install --no-interaction --prefer-source
