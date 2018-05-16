@@ -1,8 +1,7 @@
 {
     "name": "scn/phptal",
-    "homepage": "http://phptal.org/",
-    "description": "PHPTAL is a templating engine for PHP5 that implements Zope Page Templates syntax",
-    "version":"1.3.0",
+    "homepage": "https://github.com/SC-Networks/PHPTAL/",
+    "description": "PHPTAL is a templating engine for PHP that implements Zope Page Templates syntax",
     "license": "LGPL-2.1+",
     "type": "library",
     "keywords": [
@@ -11,6 +10,14 @@
         "phptal"
     ],
     "authors": [
+        {
+            "name": "Daniel Jakob",
+            "homepage": "https://www.sc-networks.com"
+        },
+        {
+            "name": "Marcus Schwarz",
+            "homepage": "https://www.sc-networks.com"
+        },
         {
             "name": "Laurent Bédubourg",
             "email": "lbedubourg@motion-twin.com",
@@ -35,12 +42,13 @@
             "classes/"
         ],
         "psr-4": {
-          "PhpTal\\": "classes/"
+            "PhpTal\\": "classes/"
         }
     },
     "autoload-dev": {
         "classmap": [
-            "classes/", "tests/"
+            "classes/",
+            "tests/"
         ]
     },
     "config": {
