@@ -40,15 +40,15 @@
     },
     "autoload": {
         "classmap": [
-            "classes/"
+            "src/"
         ],
         "psr-4": {
-            "PhpTal\\": "classes/"
+            "PhpTal\\": "src/"
         }
     },
     "autoload-dev": {
         "classmap": [
-            "classes/",
+            "src/",
             "tests/"
         ]
     },
