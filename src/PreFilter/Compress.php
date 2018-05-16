@@ -12,12 +12,16 @@
  * @link     http://phptal.org/
  */
 
+namespace PhpTal\PreFilter;
+
+use PhpTal\Dom\XmlDeclaration;
+
 /**
  * Removes all unnecessary whitespace from XHTML documents.
  *
  * extends Normalize only to re-use helper methods
  */
-class PHPTAL_PreFilter_Compress extends PHPTAL_PreFilter_Normalize
+class Compress extends Normalize
 {
     /**
      * keeps track whether last element had trailing whitespace (or didn't need it).
@@ -31,7 +35,7 @@ class PHPTAL_PreFilter_Compress extends PHPTAL_PreFilter_Normalize
      */
     private $most_recent_text_node=null;
 
-    function filterDOM(PHPTAL_Dom_Element $root)
+    function filterDOM(\PhpTal\Dom\Element $root)
     {
         // let xml:space=preserve preserve everything
         if ($root->getAttributeNS("http://www.w3.org/XML/1998/namespace", 'space') == 'preserve') {
@@ -75,7 +79,7 @@ class PHPTAL_PreFilter_Compress extends PHPTAL_PreFilter_Normalize
             $this->most_recent_text_node = null;
 
             // HTML 5 (9.1.2.5) specifies quirk that a first *single* newline in <pre> can be removed
-            if (count($root->childNodes) && $root->childNodes[0] instanceof PHPTAL_Dom_Text) {
+            if (count($root->childNodes) && $root->childNodes[0] instanceof \PhpTal\Dom\Text) {
                 if (preg_match('/^\n[^\n]/', $root->childNodes[0]->getValueEscaped())) {
                     $root->childNodes[0]->setValueEscaped(substr($root->childNodes[0]->getValueEscaped(),1));
                 }
@@ -86,7 +90,7 @@ class PHPTAL_PreFilter_Compress extends PHPTAL_PreFilter_Normalize
 
         foreach ($root->childNodes as $node) {
 
-            if ($node instanceof PHPTAL_Dom_Text) {
+            if ($node instanceof \PhpTal\Dom\Text) {
                 // replaces runs of whitespace with ' '
                 $norm = $this->normalizeSpace($node->getValueEscaped(), $node->getEncoding());
 
@@ -103,11 +107,11 @@ class PHPTAL_PreFilter_Compress extends PHPTAL_PreFilter_Normalize
                     $this->most_recent_text_node = $node;
                     $this->had_space = (substr($norm,-1) == ' ');
                 }
-            } else if ($node instanceof PHPTAL_Dom_Element) {
+            } else if ($node instanceof \PhpTal\Dom\Element) {
                 $this->filterDOM($node);
-            } else if ($node instanceof PHPTAL_Dom_DocumentType || $node instanceof PHPTAL_Dom_XMLDeclaration) {
+            } else if ($node instanceof \PhpTal\Dom\DocumentType || $node instanceof XmlDeclaration) {
                 $this->had_space = true;
-            } else if ($node instanceof PHPTAL_Dom_ProcessingInstruction) {
+            } else if ($node instanceof \PhpTal\Dom\ProcessingInstruction) {
                 // PI may output something requiring spaces
                 $this->most_recent_text_node = null;
                 $this->had_space = false;
@@ -139,7 +143,7 @@ class PHPTAL_PreFilter_Compress extends PHPTAL_PreFilter_Normalize
         'html','head','table','thead','tfoot','select','optgroup','dl','ol','ul','tr','datalist',
     );
 
-    private function hasNoInterelementSpace(PHPTAL_Dom_Element $element)
+    private function hasNoInterelementSpace(\PhpTal\Dom\Element $element)
     {
         if ($element->getLocalName() === 'block'
             && $element->parentNode
@@ -161,7 +165,7 @@ class PHPTAL_PreFilter_Compress extends PHPTAL_PreFilter_Normalize
         'title','tr','ul','details',
     );
 
-    private function breaksLine(PHPTAL_Dom_Element $element)
+    private function breaksLine(\PhpTal\Dom\Element $element)
     {
         if ($element->getAttributeNS('http://xml.zope.org/namespaces/metal','define-macro')) {
             return true;
@@ -186,7 +190,7 @@ class PHPTAL_PreFilter_Compress extends PHPTAL_PreFilter_Normalize
         'select','input','button','img','textarea','output','progress','meter',
     );
 
-    private function isInlineBlock(PHPTAL_Dom_Element $element)
+    private function isInlineBlock(\PhpTal\Dom\Element $element)
     {
         if ($element->getNamespaceURI() !== 'http://www.w3.org/1999/xhtml'
 	        && $element->getNamespaceURI() !== '') {
@@ -199,7 +203,7 @@ class PHPTAL_PreFilter_Compress extends PHPTAL_PreFilter_Normalize
     /**
      * Consistent sorting of attributes might give slightly better gzip performance
      */
-    protected function normalizeAttributes(PHPTAL_Dom_Element $element)
+    protected function normalizeAttributes(\PhpTal\Dom\Element $element)
     {
         parent::normalizeAttributes($element);
 
@@ -243,14 +247,14 @@ class PHPTAL_PreFilter_Compress extends PHPTAL_PreFilter_Normalize
     /**
      * HTML5 doesn't care about boilerplate
      */
-	private function elementSpecificOptimizations(PHPTAL_Dom_Element $element)
+	private function elementSpecificOptimizations(\PhpTal\Dom\Element $element)
 	{
 	    if ($element->getNamespaceURI() !== 'http://www.w3.org/1999/xhtml'
 	     && $element->getNamespaceURI() !== '') {
 	        return;
         }
 
-        if ($this->getPHPTAL()->getOutputMode() !== PHPTAL::HTML5) {
+        if ($this->getPHPTAL()->getOutputMode() !== \PhpTal\PHPTAL::HTML5) {
             return;
         }
 

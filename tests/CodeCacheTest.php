@@ -13,7 +13,7 @@
  */
 
 
-class PHPTAL_TestCodeCache extends PHPTAL
+class PHPTAL_TestCodeCache extends PhpTal\PHPTAL
 {
     public $testHasParsed = false;
     function parse()

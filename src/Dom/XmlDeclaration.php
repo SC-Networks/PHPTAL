@@ -13,14 +13,16 @@
  * @link     http://phptal.org/
  */
 
+namespace PhpTal\Dom;
+
 /**
  * XML declaration node.
  *
  * @package PHPTAL
  */
-class PHPTAL_Dom_XmlDeclaration extends PHPTAL_Dom_Node
+class XmlDeclaration extends \PhpTal\Dom\Node
 {
-    public function generateCode(PHPTAL_Php_CodeWriter $codewriter)
+    public function generateCode(\PhpTal\Php\CodeWriter $codewriter)
     {
         $codewriter->setXmlDeclaration($this->getValueEscaped());
         $codewriter->doXmlDeclaration();

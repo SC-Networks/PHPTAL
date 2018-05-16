@@ -13,6 +13,8 @@
  * @link     http://phptal.org/
  */
 
+namespace PhpTal\Php\Attribute\TAL;
+
 /**
  * TAL Specifications 1.4
  *
@@ -30,15 +32,15 @@
  * @package PHPTAL
  * @author Laurent Bedubourg <lbedubourg@motion-twin.com>
  */
-class PHPTAL_Php_Attribute_TAL_OnError extends PHPTAL_Php_Attribute
+class OnError extends \PhpTal\Php\Attribute
 {
-    public function before(PHPTAL_Php_CodeWriter $codewriter)
+    public function before(\PhpTal\Php\CodeWriter $codewriter)
     {
         $codewriter->doTry();
         $codewriter->pushCode('ob_start()');
     }
 
-    public function after(PHPTAL_Php_CodeWriter $codewriter)
+    public function after(\PhpTal\Php\CodeWriter $codewriter)
     {
         $var = $codewriter->createTempVariable();
 
@@ -51,10 +53,10 @@ class PHPTAL_Php_Attribute_TAL_OnError extends PHPTAL_Php_Attribute
 
         $code = $codewriter->evaluateExpression($expression);
         switch ($code) {
-            case PHPTAL_Php_TalesInternal::NOTHING_KEYWORD:
+            case \PhpTal\Php\TalesInternal::NOTHING_KEYWORD:
                 break;
 
-            case PHPTAL_Php_TalesInternal::DEFAULT_KEYWORD:
+            case \PhpTal\Php\TalesInternal::DEFAULT_KEYWORD:
                 $codewriter->pushHTML('<pre class="phptalError">');
                 $codewriter->doEcho($var);
                 $codewriter->pushHTML('</pre>');

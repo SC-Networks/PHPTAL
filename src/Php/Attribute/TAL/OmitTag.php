@@ -13,6 +13,8 @@
  * @link     http://phptal.org/
  */
 
+namespace PhpTal\Php\Attribute\TAL;
+
 /**
  * TAL Specifications 1.4
  *
@@ -43,10 +45,10 @@
  * @package PHPTAL
  * @author Laurent Bedubourg <lbedubourg@motion-twin.com>
  */
-class PHPTAL_Php_Attribute_TAL_OmitTag extends PHPTAL_Php_Attribute
+class OmitTag extends \PhpTal\Php\Attribute
 {
     private $varname;
-    public function before(PHPTAL_Php_CodeWriter $codewriter)
+    public function before(\PhpTal\Php\CodeWriter $codewriter)
     {
         if (trim($this->expression) == '') {
             $this->phpelement->headFootDisabled = true;
@@ -56,14 +58,13 @@ class PHPTAL_Php_Attribute_TAL_OmitTag extends PHPTAL_Php_Attribute
 
             // print tag header/foot only if condition is false
             $cond = $codewriter->evaluateExpression($this->expression);
-            $this->phpelement->headPrintCondition = '('.$this->varname.' = !phptal_unravel_closure('.$cond.'))';
+            $this->phpelement->headPrintCondition = '('.$this->varname.' = !\PhpTal\Helper::phptal_unravel_closure('.$cond.'))';
             $this->phpelement->footPrintCondition = $this->varname;
         }
     }
 
-    public function after(PHPTAL_Php_CodeWriter $codewriter)
+    public function after(\PhpTal\Php\CodeWriter $codewriter)
     {
         if ($this->varname) $codewriter->recycleTempVariable($this->varname);
     }
 }
-

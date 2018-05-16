@@ -13,6 +13,8 @@
  * @link     http://phptal.org/
  */
 
+namespace PhpTal\Dom;
+
 /**
  * Simple sax like xml parser for PHPTAL
  * ("Dom" in the class name comes from name of the directory, not mode of operation)
@@ -30,7 +32,7 @@
  * @package PHPTAL
  * @see PHPTAL_DOM_DocumentBuilder
  */
-class PHPTAL_Dom_SaxXmlParser
+class SaxXmlParser
 {
     private $_file;
     private $_line;
@@ -85,7 +87,7 @@ class PHPTAL_Dom_SaxXmlParser
         $this->_file = "<string>";
     }
 
-    public function parseFile(PHPTAL_Dom_DocumentBuilder $builder, $src)
+    public function parseFile(\PhpTal\Dom\DocumentBuilder $builder, $src)
     {
         if (!file_exists($src)) {
             throw new \PhpTal\Exception\IOException("file $src not found");
@@ -93,7 +95,7 @@ class PHPTAL_Dom_SaxXmlParser
         return $this->parseString($builder, file_get_contents($src), $src);
     }
 
-    public function parseString(PHPTAL_Dom_DocumentBuilder $builder, $src, $filename = '<string>')
+    public function parseString(\PhpTal\Dom\DocumentBuilder $builder, $src, $filename = '<string>')
     {
         try
         {
@@ -447,7 +449,7 @@ class PHPTAL_Dom_SaxXmlParser
         /* <?php ?> blocks can't reliably work in attributes (due to escaping impossible in XML)
            so they have to be converted into special TALES expression
         */
-        $types = version_compare(PHP_VERSION, '5.4.0') < 0 ? (ini_get('short_open_tag') ? 'php|=|' : 'php') : 'php|=';
+        $types = 'php|=';
         $str = preg_replace_callback("/<\?($types)(.*?)\?>/", array('self', 'convertPHPBlockToTALES'), $str);
 
         // corrects all non-entities and neutralizes potentially problematic CDATA end marker

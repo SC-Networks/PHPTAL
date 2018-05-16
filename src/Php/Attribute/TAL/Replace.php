@@ -12,6 +12,9 @@
  * @version  SVN: $Id$
  * @link     http://phptal.org/
  */
+
+namespace PhpTal\Php\Attribute\TAL;
+
 /**
  * TAL Specifications 1.4
  *
@@ -29,11 +32,11 @@
  * @package PHPTAL
  * @author Laurent Bedubourg <lbedubourg@motion-twin.com>
  */
-class PHPTAL_Php_Attribute_TAL_Replace
-extends PHPTAL_Php_Attribute
-implements PHPTAL_Php_TalesChainReader
+class Replace
+extends \PhpTal\Php\Attribute
+implements \PhpTal\Php\TalesChainReader
 {
-    public function before(PHPTAL_Php_CodeWriter $codewriter)
+    public function before(\PhpTal\Php\CodeWriter $codewriter)
     {
         // tal:replace="" => do nothing and ignore node
         if (trim($this->expression) == "") {
@@ -49,12 +52,12 @@ implements PHPTAL_Php_TalesChainReader
         }
 
         // nothing do nothing
-        if ($code == PHPTAL_Php_TalesInternal::NOTHING_KEYWORD) {
+        if ($code == \PhpTal\Php\TalesInternal::NOTHING_KEYWORD) {
             return;
         }
 
         // default generate default tag content
-        if ($code == PHPTAL_Php_TalesInternal::DEFAULT_KEYWORD) {
+        if ($code == \PhpTal\Php\TalesInternal::DEFAULT_KEYWORD) {
             return $this->generateDefault($codewriter);
         }
 
@@ -62,37 +65,37 @@ implements PHPTAL_Php_TalesChainReader
         $this->doEchoAttribute($codewriter, $code);
     }
 
-    public function after(PHPTAL_Php_CodeWriter $codewriter)
+    public function after(\PhpTal\Php\CodeWriter $codewriter)
     {
     }
 
     /**
      * support expressions like "foo | bar"
      */
-    private function replaceByChainedExpression(PHPTAL_Php_CodeWriter $codewriter, $expArray)
+    private function replaceByChainedExpression(\PhpTal\Php\CodeWriter $codewriter, $expArray)
     {
-        $executor = new PHPTAL_Php_TalesChainExecutor(
+        $executor = new \PhpTal\Php\TalesChainExecutor(
             $codewriter, $expArray, $this
         );
     }
 
-    public function talesChainNothingKeyword(PHPTAL_Php_TalesChainExecutor $executor)
+    public function talesChainNothingKeyword(\PhpTal\Php\TalesChainExecutor $executor)
     {
         $executor->continueChain();
     }
 
-    public function talesChainDefaultKeyword(PHPTAL_Php_TalesChainExecutor $executor)
+    public function talesChainDefaultKeyword(\PhpTal\Php\TalesChainExecutor $executor)
     {
         $executor->doElse();
         $this->generateDefault($executor->getCodeWriter());
         $executor->breakChain();
     }
 
-    public function talesChainPart(PHPTAL_Php_TalesChainExecutor $executor, $exp, $islast)
+    public function talesChainPart(\PhpTal\Php\TalesChainExecutor $executor, $exp, $islast)
     {
         if (!$islast) {
             $var = $executor->getCodeWriter()->createTempVariable();
-            $executor->doIf('!phptal_isempty('.$var.' = '.$exp.')');
+            $executor->doIf('!\PhpTal\Helper::phptal_isempty('.$var.' = '.$exp.')');
             $this->doEchoAttribute($executor->getCodeWriter(), $var);
             $executor->getCodeWriter()->recycleTempVariable($var);
         } else {
@@ -104,7 +107,7 @@ implements PHPTAL_Php_TalesChainReader
     /**
      * don't replace - re-generate default content
      */
-    private function generateDefault(PHPTAL_Php_CodeWriter $codewriter)
+    private function generateDefault(\PhpTal\Php\CodeWriter $codewriter)
     {
         $this->phpelement->generateSurroundHead($codewriter);
         $this->phpelement->generateHead($codewriter);
@@ -113,4 +116,3 @@ implements PHPTAL_Php_TalesChainReader
         $this->phpelement->generateSurroundFoot($codewriter);
     }
 }
-

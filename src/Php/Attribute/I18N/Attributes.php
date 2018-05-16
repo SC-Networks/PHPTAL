@@ -13,6 +13,8 @@
  * @link     http://phptal.org/
  */
 
+namespace PhpTal\Php\Attribute\I18N;
+
 /**
  *  i18n:attributes
  *
@@ -58,9 +60,9 @@
  *
  * @package PHPTAL
  */
-class PHPTAL_Php_Attribute_I18N_Attributes extends PHPTAL_Php_Attribute
+class Attributes extends \PhpTal\Php\Attribute
 {
-    public function before(PHPTAL_Php_CodeWriter $codewriter)
+    public function before(\PhpTal\Php\CodeWriter $codewriter)
     {
         // split attributes to translate
         foreach ($codewriter->splitExpression($this->expression) as $exp) {
@@ -75,9 +77,9 @@ class PHPTAL_Php_Attribute_I18N_Attributes extends PHPTAL_Php_Attribute
                 if (!$attr) throw new \PhpTal\Exception\TemplateException("Unable to translate attribute $qname, because there is no translation key specified",
                                         $this->phpelement->getSourceFile(), $this->phpelement->getSourceLine());
 
-                if ($attr->getReplacedState() === PHPTAL_Dom_Attr::NOT_REPLACED) {
+                if ($attr->getReplacedState() === \PhpTal\Dom\Attr::NOT_REPLACED) {
                     $code = $this->_getTranslationCode($codewriter, $attr->getValue());
-                } elseif ($attr->getReplacedState() === PHPTAL_Dom_Attr::VALUE_REPLACED && $attr->getOverwrittenVariableName()) {
+                } elseif ($attr->getReplacedState() === \PhpTal\Dom\Attr::VALUE_REPLACED && $attr->getOverwrittenVariableName()) {
                     // sadly variables won't be interpolated in this translation
                     $code = 'echo '.$codewriter->escapeCode($codewriter->getTranslatorReference(). '->translate('.$attr->getOverwrittenVariableName().', false)');
                 } else {
@@ -89,21 +91,21 @@ class PHPTAL_Php_Attribute_I18N_Attributes extends PHPTAL_Php_Attribute
         }
     }
 
-    public function after(PHPTAL_Php_CodeWriter $codewriter)
+    public function after(\PhpTal\Php\CodeWriter $codewriter)
     {
     }
 
     /**
      * @param key - unescaped string (not PHP code) for the key
      */
-    private function _getTranslationCode(PHPTAL_Php_CodeWriter $codewriter, $key)
+    private function _getTranslationCode(\PhpTal\Php\CodeWriter $codewriter, $key)
     {
         $code = '';
         if (preg_match_all('/\$\{(.*?)\}/', $key, $m)) {
             array_shift($m);
             $m = array_shift($m);
             foreach ($m as $name) {
-                $code .= "\n".$codewriter->getTranslatorReference(). '->setVar('.$codewriter->str($name).','.PHPTAL_Php_TalesInternal::compileToPHPExpression($name).');'; // allow more complex TAL expressions
+                $code .= "\n".$codewriter->getTranslatorReference(). '->setVar('.$codewriter->str($name).','.\PhpTal\Php\TalesInternal::compileToPHPExpression($name).');'; // allow more complex TAL expressions
             }
             $code .= "\n";
         }
@@ -114,4 +116,3 @@ class PHPTAL_Php_Attribute_I18N_Attributes extends PHPTAL_Php_Attribute
         return $code;
     }
 }
-

@@ -12,13 +12,14 @@
  * @link     http://phptal.org/
  */
 
+namespace PhpTal;
 
 /**
  * Representation of the template 'nothing' keyword
  *
  * @package PHPTAL
  */
-class PHPTAL_NothingKeyword implements PHPTAL_Keywords
+class NothingKeyword implements Keywords
 {
     public function __toString()
     {
@@ -35,4 +36,3 @@ class PHPTAL_NothingKeyword implements PHPTAL_Keywords
         return null;
     }
 }
-?>

@@ -17,13 +17,13 @@
 
 function phptal_tales_custom($src, $nothrow)
 {
-    return 'sprintf("%01.2f", '.PHPTAL_Php_TalesInternal::path($src, $nothrow).')';
+    return 'sprintf("%01.2f", '.\PhpTal\Php\TalesInternal::path($src, $nothrow).')';
 }
 
-class MyTalesClass implements PHPTAL_Tales
+class MyTalesClass implements \PhpTal\Tales
 {
     public static function reverse($exp,$nothrow){
-        return 'strrev('.phptal_tales($exp, $nothrow).')';
+        return 'strrev('.\PhpTal\Php\TalesInternal::compileToPHPExpressions($exp, $nothrow).')';
     }
 }
 
@@ -32,40 +32,40 @@ class TalesTest extends PHPTAL_TestCase
     function testString()
     {
         $src = 'string:foo bar baz';
-        $res = phptal_tales($src);
+        $res = \PhpTal\Php\TalesInternal::compileToPHPExpressions($src);
         $this->assertEquals("'foo bar baz'", $res);
 
         $src = "'foo bar baz'";
-        $res = phptal_tales($src);
+        $res = \PhpTal\Php\TalesInternal::compileToPHPExpressions($src);
         $this->assertEquals("'foo bar baz'", $res);
     }
 
     function testPhp()
     {
         $src = 'php: foo.x[10].doBar()';
-        $res = phptal_tales($src);
+        $res = \PhpTal\Php\TalesInternal::compileToPHPExpressions($src);
         $this->assertEquals('$ctx->foo->x[10]->doBar()', $res);
     }
 
     function testPath()
     {
         $src = 'foo/x/y';
-        $res = phptal_tales($src);
+        $res = \PhpTal\Php\TalesInternal::compileToPHPExpressions($src);
         $this->assertEquals("\$ctx->path(\$ctx->foo, 'x/y')", $res);
     }
 
     function testNot()
     {
         $src = "not: php: foo()";
-        $res = phptal_tales($src);
-        $this->assertEquals("!phptal_true(foo())", $res);
+        $res = \PhpTal\Php\TalesInternal::compileToPHPExpressions($src);
+        $this->assertEquals("!\PhpTal\Helper::phptal_true(foo())", $res);
     }
 
     function testNotVar()
     {
         $src = "not:foo";
-        $res = phptal_tales($src);
-        $this->assertEquals('!phptal_true($ctx->foo)', $res);
+        $res = \PhpTal\Php\TalesInternal::compileToPHPExpressions($src);
+        $this->assertEquals('!\PhpTal\Helper::phptal_true($ctx->foo)', $res);
     }
 
     function testChainedExists()
@@ -78,8 +78,8 @@ class TalesTest extends PHPTAL_TestCase
     function testNotPath()
     {
         $src = "not:foo/bar/baz";
-        $res = phptal_tales($src);
-        $this->assertEquals('!phptal_true($ctx->path($ctx->foo, \'bar/baz\'))', $res);
+        $res = \PhpTal\Php\TalesInternal::compileToPHPExpressions($src);
+        $this->assertEquals('!\PhpTal\Helper::phptal_true($ctx->path($ctx->foo, \'bar/baz\'))', $res);
     }
 
     function testTrue()
@@ -106,48 +106,48 @@ class TalesTest extends PHPTAL_TestCase
     {
         $src = 'custom: some/path';
         $this->assertEquals('sprintf("%01.2f", $ctx->path($ctx->some, \'path\'))',
-                            phptal_tales($src));
+            \PhpTal\Php\TalesInternal::compileToPHPExpressions($src));
     }
 
     function testCustomClass()
     {
         $src = 'MyTalesClass.reverse: some';
-        $this->assertEquals('strrev($ctx->some)', phptal_tales($src));
+        $this->assertEquals('strrev($ctx->some)', \PhpTal\Php\TalesInternal::compileToPHPExpressions($src));
     }
 
     function testTaleNeverReturnsArray()
     {
-        $this->assertInternalType('string', phptal_tale('foo | bar | baz | nothing'));
+        $this->assertInternalType('string', \PhpTal\Php\TalesInternal::compileToPHPExpression('foo | bar | baz | nothing'));
     }
 
     function testTalesReturnsArray()
     {
-        $this->assertInternalType('array', phptal_tales('foo | bar | baz | nothing'));
+        $this->assertInternalType('array', \PhpTal\Php\TalesInternal::compileToPHPExpressions('foo | bar | baz | nothing'));
     }
 
     function testInterpolate1()
     {
-        $this->assertEquals('$ctx->{$ctx->path($ctx->some, \'path\')}', phptal_tales('${some/path}'));
+        $this->assertEquals('$ctx->{$ctx->path($ctx->some, \'path\')}', \PhpTal\Php\TalesInternal::compileToPHPExpressions('${some/path}'));
     }
 
     function testInterpolate2()
     {
-        $this->assertEquals('$ctx->path($ctx->{$ctx->path($ctx->some, \'path\')}, \'meh\')', phptal_tales('${some/path}/meh'));
+        $this->assertEquals('$ctx->path($ctx->{$ctx->path($ctx->some, \'path\')}, \'meh\')', \PhpTal\Php\TalesInternal::compileToPHPExpressions('${some/path}/meh'));
     }
 
     function testInterpolate3()
     {
-        $this->assertEquals('$ctx->path($ctx->meh, $ctx->path($ctx->some, \'path\'))', phptal_tales('meh/${some/path}'));
+        $this->assertEquals('$ctx->path($ctx->meh, $ctx->path($ctx->some, \'path\'))', \PhpTal\Php\TalesInternal::compileToPHPExpressions('meh/${some/path}'));
     }
 
     function testInterpolate4()
     {
-        $this->assertEquals('$ctx->path($ctx->{$ctx->meh}, $ctx->blah)', phptal_tales('${meh}/${blah}'));
+        $this->assertEquals('$ctx->path($ctx->{$ctx->meh}, $ctx->blah)', \PhpTal\Php\TalesInternal::compileToPHPExpressions('${meh}/${blah}'));
     }
 
     function testSuperglobals()
     {
-        $this->assertEquals('$ctx->path($ctx->{\'_GET\'}, \'a\')', phptal_tales('_GET/a'));
+        $this->assertEquals('$ctx->path($ctx->{\'_GET\'}, \'a\')', \PhpTal\Php\TalesInternal::compileToPHPExpressions('_GET/a'));
     }
 
     function testInterpolatedPHP1()
@@ -199,14 +199,14 @@ class TalesTest extends PHPTAL_TestCase
      */
     function testThrowsInvalidPath()
     {
-        phptal_tales("I am not valid expression");
+        \PhpTal\Php\TalesInternal::compileToPHPExpressions("I am not valid expression");
     }
 
     function testThrowsUnknownModifier()
     {
         try
         {
-            phptal_tales('testidontexist:foo');
+            \PhpTal\Php\TalesInternal::compileToPHPExpressions('testidontexist:foo');
             $this->fail();
         }
         catch(\PhpTal\Exception\UnknownModifierException $e)
@@ -218,24 +218,21 @@ class TalesTest extends PHPTAL_TestCase
 
     function testNamespaceFunction()
     {
-        if (version_compare(PHP_VERSION, '5.3', '<')) $this->markTestSkipped();
-        $this->assertEquals('\strlen($ctx->x)', phptal_tales('php:\strlen(x)'));
-        $this->assertEquals('my\len($ctx->x)', phptal_tales('php:my\len(x)'));
-        $this->assertEquals('my\subns\len($ctx->x)', phptal_tales('php:my\subns\len(x)'));
+        $this->assertEquals('\strlen($ctx->x)', \PhpTal\Php\TalesInternal::compileToPHPExpressions('php:\strlen(x)'));
+        $this->assertEquals('my\len($ctx->x)', \PhpTal\Php\TalesInternal::compileToPHPExpressions('php:my\len(x)'));
+        $this->assertEquals('my\subns\len($ctx->x)', \PhpTal\Php\TalesInternal::compileToPHPExpressions('php:my\subns\len(x)'));
     }
 
     function testNamespaceClass()
     {
-        if (version_compare(PHP_VERSION, '5.3', '<')) $this->markTestSkipped();
-        $this->assertEquals('\Foo::strlen($ctx->x)', phptal_tales('php:\Foo::strlen(x)'));
-        $this->assertEquals('My\Foo::strlen($ctx->x)', phptal_tales('php:My\Foo::strlen(x)'));
+        $this->assertEquals('\Foo::strlen($ctx->x)', \PhpTal\Php\TalesInternal::compileToPHPExpressions('php:\Foo::strlen(x)'));
+        $this->assertEquals('My\Foo::strlen($ctx->x)', \PhpTal\Php\TalesInternal::compileToPHPExpressions('php:My\Foo::strlen(x)'));
     }
 
     function testNamespaceConstant()
     {
-        if (version_compare(PHP_VERSION, '5.3', '<')) $this->markTestSkipped();
-        $this->assertEquals('My\Foo::TAU', phptal_tales('php:My\Foo::TAU'));
-        $this->assertEquals('$ctx->date_filter->isFilterApplied(\My\Foo::TODAY)', phptal_tales("php: date_filter.isFilterApplied(\My\Foo::TODAY)"));
+        $this->assertEquals('My\Foo::TAU', \PhpTal\Php\TalesInternal::compileToPHPExpressions('php:My\Foo::TAU'));
+        $this->assertEquals('$ctx->date_filter->isFilterApplied(\My\Foo::TODAY)', \PhpTal\Php\TalesInternal::compileToPHPExpressions("php: date_filter.isFilterApplied(\My\Foo::TODAY)"));
     }
 }
 

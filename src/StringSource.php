@@ -12,12 +12,15 @@
  * @version  SVN: $Id$
  * @link     http://phptal.org/
  */
+
+namespace PhpTal;
+
 /**
  * Fake template source that makes PHPTAL->setString() work
  *
  * @package PHPTAL
  */
-class PHPTAL_StringSource implements PHPTAL_Source
+class StringSource implements Source
 {
     const NO_PATH_PREFIX = '<string ';
 
@@ -48,4 +51,3 @@ class PHPTAL_StringSource implements PHPTAL_Source
         return $this->_realpath;
     }
 }
-

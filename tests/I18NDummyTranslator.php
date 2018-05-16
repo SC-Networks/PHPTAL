@@ -14,7 +14,7 @@
  */
 
 
-class DummyTranslator implements PHPTAL_TranslationService
+class DummyTranslator implements \PhpTal\TranslationService
 {
     public $vars = array();
     public $translations = array();

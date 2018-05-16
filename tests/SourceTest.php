@@ -12,18 +12,18 @@
  * @link     http://phptal.org/
  */
 
-class MyTestResolver implements PHPTAL_SourceResolver
+class MyTestResolver implements \PhpTal\SourceResolver
 {
     public $called=0;
 
     function resolve($path)
     {
         $this->called++;
-        return new PHPTAL_StringSource("<p>found $path</p>");
+        return new \PhpTal\StringSource("<p>found $path</p>");
     }
 }
 
-class MyCustomSourceResolver implements PHPTAL_SourceResolver
+class MyCustomSourceResolver implements \PhpTal\SourceResolver
 {
     function resolve($path)
     {
@@ -31,7 +31,7 @@ class MyCustomSourceResolver implements PHPTAL_SourceResolver
     }
 }
 
-class MyCustomSource implements PHPTAL_Source
+class MyCustomSource implements \PhpTal\Source
 {
     function __construct($path)
     {
@@ -55,7 +55,7 @@ class MyCustomSource implements PHPTAL_Source
     }
 }
 
-class CantFindAThing implements PHPTAL_SourceResolver
+class CantFindAThing implements \PhpTal\SourceResolver
 {
     function resolve($path)
     {

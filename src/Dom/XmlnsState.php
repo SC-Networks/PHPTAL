@@ -12,6 +12,9 @@
  * @version  SVN: $Id$
  * @link     http://phptal.org/
  */
+
+namespace PhpTal\Dom;
+
 /**
  * Stores XMLNS aliases fluctuation in the xml flow.
  *
@@ -22,7 +25,7 @@
  * @package PHPTAL
  * @author Laurent Bedubourg <lbedubourg@motion-twin.com>
  */
-class PHPTAL_Dom_XmlnsState
+class XmlnsState
 {
     /** Create a new XMLNS state inheriting provided aliases. */
     public function __construct(array $prefix_to_uri, $current_default)
@@ -40,19 +43,19 @@ class PHPTAL_Dom_XmlnsState
         if (isset($this->prefix_to_uri[$prefix])) {
             return $this->prefix_to_uri[$prefix];
         } else {
-            return PHPTAL_Dom_Defs::getInstance()->prefixToNamespaceURI($prefix);
+            return \PhpTal\Dom\Defs::getInstance()->prefixToNamespaceURI($prefix);
         }
     }
 
     /** Returns true if $attName is a valid attribute name, false otherwise. */
     public function isValidAttributeNS($namespace_uri, $local_name)
     {
-        return PHPTAL_Dom_Defs::getInstance()->isValidAttributeNS($namespace_uri, $local_name);
+        return \PhpTal\Dom\Defs::getInstance()->isValidAttributeNS($namespace_uri, $local_name);
     }
 
     public function isHandledNamespace($namespace_uri)
     {
-        return PHPTAL_Dom_Defs::getInstance()->isHandledNamespace($namespace_uri);
+        return \PhpTal\Dom\Defs::getInstance()->isHandledNamespace($namespace_uri);
     }
 
     /**
@@ -79,7 +82,7 @@ class PHPTAL_Dom_XmlnsState
         }
 
         if ($changed) {
-            return new PHPTAL_Dom_XmlnsState($prefix_to_uri, $current_default);
+            return new \PhpTal\Dom\XmlnsState($prefix_to_uri, $current_default);
         } else {
             return $this;
         }

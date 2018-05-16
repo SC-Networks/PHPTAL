@@ -13,6 +13,8 @@
  * @link     http://phptal.org/
  */
 
+namespace PhpTal\Php\Attribute\I18N;
+
 /** i18n:name
  *
  * Name the content of the current element for use in interpolation within
@@ -31,16 +33,15 @@
  *
  * @package PHPTAL
  */
-class PHPTAL_Php_Attribute_I18N_Name extends PHPTAL_Php_Attribute
+class Name extends \PhpTal\Php\Attribute
 {
-    public function before(PHPTAL_Php_CodeWriter $codewriter)
+    public function before(\PhpTal\Php\CodeWriter $codewriter)
     {
         $codewriter->pushCode('ob_start()');
     }
 
-    public function after(PHPTAL_Php_CodeWriter $codewriter)
+    public function after(\PhpTal\Php\CodeWriter $codewriter)
     {
         $codewriter->pushCode($codewriter->getTranslatorReference().'->setVar('.$codewriter->str($this->expression).', ob_get_clean())');
     }
 }
-

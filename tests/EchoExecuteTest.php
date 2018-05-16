@@ -16,14 +16,14 @@
 
 class EchoExecuteTest extends PHPTAL_TestCase
 {
-    private function echoExecute(PHPTAL $tpl)
+    private function echoExecute(\PhpTal\PHPTAL $tpl)
     {
         try {
             ob_start();
             $this->assertEquals(0, strlen($tpl->echoExecute()));
             $res = ob_get_clean();
         }
-        catch(Exception $e) {
+        catch(\Exception $e) {
             ob_end_clean();
             throw $e;
         }

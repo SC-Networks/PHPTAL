@@ -12,22 +12,24 @@
  * @version  SVN: $Id$
  * @link     http://phptal.org/
  */
+
+namespace PhpTal\Php\Attribute\PHPTAL;
+
 /**
  * @package PHPTAL
  * @author Laurent Bedubourg <lbedubourg@motion-twin.com>
  */
-class PHPTAL_Php_Attribute_PHPTAL_Debug extends PHPTAL_Php_Attribute
+class Debug extends \PhpTal\Php\Attribute
 {
-    public function before(PHPTAL_Php_CodeWriter $codewriter)
+    public function before(\PhpTal\Php\CodeWriter $codewriter)
     {
         $this->_oldMode = $codewriter->setDebug(true);
     }
 
-    public function after(PHPTAL_Php_CodeWriter $codewriter)
+    public function after(\PhpTal\Php\CodeWriter $codewriter)
     {
         $codewriter->setDebug($this->_oldMode);
     }
 
     private $_oldMode;
 }
-

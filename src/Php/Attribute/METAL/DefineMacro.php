@@ -13,6 +13,8 @@
  * @link     http://phptal.org/
  */
 
+namespace PhpTal\Php\Attribute\METAL;
+
 /**
  * METAL Specification 1.0
  *
@@ -35,9 +37,9 @@
  * @package PHPTAL
  * @author Laurent Bedubourg <lbedubourg@motion-twin.com>
  */
-class PHPTAL_Php_Attribute_METAL_DefineMacro extends PHPTAL_Php_Attribute
+class DefineMacro extends \PhpTal\Php\Attribute
 {
-    public function before(PHPTAL_Php_CodeWriter $codewriter)
+    public function before(\PhpTal\Php\CodeWriter $codewriter)
     {
         $macroname = strtr(trim($this->expression), '-', '_');
         if (!preg_match('/^[a-z0-9_]+$/i', $macroname)) {
@@ -50,7 +52,7 @@ class PHPTAL_Php_Attribute_METAL_DefineMacro extends PHPTAL_Php_Attribute
                 $this->phpelement->getSourceFile(), $this->phpelement->getSourceLine());
         }
 
-        $codewriter->doFunction($macroname, 'PHPTAL $_thistpl, PHPTAL $tpl');
+        $codewriter->doFunction($macroname, '\PhpTal\PHPTAL $_thistpl, \PhpTal\PHPTAL $tpl');
         $codewriter->doSetVar('$tpl', 'clone $tpl');
         $codewriter->doSetVar('$ctx', '$tpl->getContext()');
         $codewriter->doInitTranslator();
@@ -58,9 +60,8 @@ class PHPTAL_Php_Attribute_METAL_DefineMacro extends PHPTAL_Php_Attribute
         $codewriter->doDoctype(true);
     }
 
-    public function after(PHPTAL_Php_CodeWriter $codewriter)
+    public function after(\PhpTal\Php\CodeWriter $codewriter)
     {
         $codewriter->doEnd('function');
     }
 }
-

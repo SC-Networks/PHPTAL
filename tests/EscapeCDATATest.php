@@ -102,7 +102,7 @@ class EscapeCDATATest extends PHPTAL_TestCase {
     function testEscapeCDATAXML()
     {
         $tpl = $this->newPHPTAL();
-        $tpl->setOutputMode(PHPTAL::XML);
+        $tpl->setOutputMode(\PhpTal\PHPTAL::XML);
         $tpl->setSource('<y><![CDATA[${cdata}; ${php:cdata};]]></y>     <y><![CDATA[${structure cdata}]]></y>');
         $tpl->cdata = ']]></x>';
         $res = $tpl->execute();
@@ -115,7 +115,7 @@ class EscapeCDATATest extends PHPTAL_TestCase {
     function testEscapeCDATAXHTML()
     {
         $tpl = $this->newPHPTAL();
-        $tpl->setOutputMode(PHPTAL::XHTML);
+        $tpl->setOutputMode(\PhpTal\PHPTAL::XHTML);
         $tpl->setSource('<script><![CDATA[${cdata}; ${php:cdata};]]></script>     <y><![CDATA[${structure cdata}]]></y>');
         $tpl->cdata = ']]></x>';
         $res = $tpl->execute();
@@ -126,7 +126,7 @@ class EscapeCDATATest extends PHPTAL_TestCase {
     function testEscapeCDATAHTML()
     {
         $tpl = $this->newPHPTAL();
-        $tpl->setOutputMode(PHPTAL::HTML5);
+        $tpl->setOutputMode(\PhpTal\PHPTAL::HTML5);
         $tpl->setSource('<y><![CDATA[${cdata}; ${php:cdata};]]></y>     <y><![CDATA[${structure cdata}]]></y>');
         $tpl->cdata = ']]></x>';
         $res = $tpl->execute();

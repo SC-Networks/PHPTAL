@@ -19,7 +19,7 @@ class PhptalTest extends PHPTAL_TestCase
     function test01()
     {
         $tpl = $this->newPHPTAL('input/phptal.01.html');
-        $tpl->setOutputMode(PHPTAL::XML);
+        $tpl->setOutputMode(\PhpTal\PHPTAL::XML);
         $res = $tpl->execute();
         $this->assertEquals('<dummy/>', $res);
     }
@@ -51,7 +51,7 @@ class PhptalTest extends PHPTAL_TestCase
     {
         $tpl = $this->newPHPTAL('phptal.01.html');
         $tpl->setTemplateRepository('input');
-        $tpl->setOutputMode(PHPTAL::XML);
+        $tpl->setOutputMode(\PhpTal\PHPTAL::XML);
         $res = $tpl->execute();
         $this->assertEquals('<dummy/>', $res);
     }
@@ -60,7 +60,7 @@ class PhptalTest extends PHPTAL_TestCase
     {
         $tpl = $this->newPHPTAL('phptal.01.html');
         $tpl->setTemplateRepository('input/');
-        $tpl->setOutputMode(PHPTAL::XML);
+        $tpl->setOutputMode(\PhpTal\PHPTAL::XML);
         $res = $tpl->execute();
         $this->assertEquals('<dummy/>', $res);
     }
@@ -69,7 +69,7 @@ class PhptalTest extends PHPTAL_TestCase
     {
         $tpl = $this->newPHPTAL('phptal.01.html');
         $tpl->setTemplateRepository(array('bar', 'input/'));
-        $tpl->setOutputMode(PHPTAL::XML);
+        $tpl->setOutputMode(\PhpTal\PHPTAL::XML);
         $res = $tpl->execute();
         $this->assertEquals('<dummy/>', $res);
     }
@@ -78,7 +78,7 @@ class PhptalTest extends PHPTAL_TestCase
     {
         $tpl = $this->newPHPTAL();
         $tpl->setTemplateRepository(array('bar', 'input/'));
-        $tpl->setOutputMode(PHPTAL::XML);
+        $tpl->setOutputMode(\PhpTal\PHPTAL::XML);
         $tpl->setTemplate('phptal.01.html');
         $res = $tpl->execute();
         $this->assertEquals('<dummy/>', $res);
@@ -87,7 +87,7 @@ class PhptalTest extends PHPTAL_TestCase
     function testXmlMode()
     {
         $tpl = $this->newPHPTAL('input/xml.04.xml');
-        $tpl->setOutputMode(PHPTAL::XML);
+        $tpl->setOutputMode(\PhpTal\PHPTAL::XML);
         $res = $tpl->execute();
         $exp = file_get_contents('input/xml.04.xml');
         $this->assertXMLEquals($exp, $res);
@@ -104,7 +104,7 @@ class PhptalTest extends PHPTAL_TestCase
 
         $this->assertRegExp('/^tpl_\d{8}_/', $tpl->getFunctionName());
         $this->assertContains('string', $tpl->getFunctionName());
-        $this->assertNotContains(PHPTAL::PHPTAL_VERSION, $tpl->getFunctionName());
+        $this->assertNotContains(\PhpTal\PHPTAL::PHPTAL_VERSION, $tpl->getFunctionName());
     }
 
     /**
@@ -125,7 +125,7 @@ class PhptalTest extends PHPTAL_TestCase
         $this->assertEquals('<span>foo value</span>', $res);
         $this->assertRegExp('/^tpl_\d{8}_/', $tpl->getFunctionName());
         $this->assertContains($fakename, $tpl->getFunctionName());
-        $this->assertNotContains(PHPTAL::PHPTAL_VERSION, $tpl->getFunctionName());
+        $this->assertNotContains(\PhpTal\PHPTAL::PHPTAL_VERSION, $tpl->getFunctionName());
     }
 
     function testStripComments()

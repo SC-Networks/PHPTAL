@@ -13,13 +13,14 @@
  * @link     http://phptal.org/
  */
 
+namespace PhpTal;
 
 /**
  * Finds template on disk by looking through repositories first
  *
  * @package PHPTAL
  */
-class PHPTAL_FileSourceResolver implements PHPTAL_SourceResolver
+class FileSourceResolver implements SourceResolver
 {
     public function __construct($repositories)
     {
@@ -31,12 +32,12 @@ class PHPTAL_FileSourceResolver implements PHPTAL_SourceResolver
         foreach ($this->_repositories as $repository) {
             $file = $repository . DIRECTORY_SEPARATOR . $path;
             if (file_exists($file)) {
-                return new PHPTAL_FileSource($file);
+                return new FileSource($file);
             }
         }
 
         if (file_exists($path)) {
-            return new PHPTAL_FileSource($path);
+            return new FileSource($path);
         }
 
         return null;

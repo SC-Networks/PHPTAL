@@ -13,11 +13,12 @@
  * @link     http://phptal.org/
  */
 
+namespace PhpTal\Php;
 
 /**
  * @package PHPTAL
  */
-class PHPTAL_Php_State
+class State
 {
     private $debug      = false;
     private $tales_mode = 'tales';
@@ -25,7 +26,7 @@ class PHPTAL_Php_State
     private $output_mode;
     private $phptal;
 
-    function __construct(PHPTAL $phptal)
+    function __construct(\PhpTal\PHPTAL $phptal)
     {
         $this->phptal = $phptal;
         $this->encoding = $phptal->getEncoding();
@@ -97,7 +98,7 @@ class PHPTAL_Php_State
     /**
      * Syntax rules to follow in generated code
      *
-     * @return one of PHPTAL::XHTML, PHPTAL::XML, PHPTAL::HTML5
+     * @return one of \PhpTal\PHPTAL::XHTML, \PhpTal\PHPTAL::XML, \PhpTal\PHPTAL::HTML5
      */
     public function getOutputMode()
     {
@@ -119,9 +120,9 @@ class PHPTAL_Php_State
     public function evaluateExpression($expression)
     {
         if ($this->getTalesMode() === 'php') {
-            return PHPTAL_Php_TalesInternal::php($expression);
+            return TalesInternal::php($expression);
         }
-        return PHPTAL_Php_TalesInternal::compileToPHPExpressions($expression, false);
+        return TalesInternal::compileToPHPExpressions($expression, false);
     }
 
     /**
@@ -131,9 +132,9 @@ class PHPTAL_Php_State
     private function compileTalesToPHPExpression($expression)
     {
         if ($this->getTalesMode() === 'php') {
-            return PHPTAL_Php_TalesInternal::php($expression);
+            return TalesInternal::php($expression);
         }
-        return PHPTAL_Php_TalesInternal::compileToPHPExpression($expression, false);
+        return TalesInternal::compileToPHPExpression($expression, false);
     }
 
     /**
@@ -143,7 +144,7 @@ class PHPTAL_Php_State
      */
     public function interpolateTalesVarsInString($string)
     {
-        return PHPTAL_Php_TalesInternal::parseString($string, false, ($this->getTalesMode() === 'tales') ? '' : 'php:' );
+        return TalesInternal::parseString($string, false, ($this->getTalesMode() === 'tales') ? '' : 'php:' );
     }
 
     /**
@@ -207,9 +208,9 @@ class PHPTAL_Php_State
             }
             if ($format == 'cdata') {
                 // quite complex for an "unescaped" section, isn't it?
-                if ($this->getOutputMode() === PHPTAL::HTML5) {
+                if ($this->getOutputMode() === \PhpTal\PHPTAL::HTML5) {
                     return $dollars."<?php echo str_replace('</','<\\\\/', ".$this->stringify($code).") ?>\n";
-                } elseif ($this->getOutputMode() === PHPTAL::XHTML) {
+                } elseif ($this->getOutputMode() === \PhpTal\PHPTAL::XHTML) {
                     // both XML and HMTL, because people will inevitably send it as text/html :(
                     return $dollars."<?php echo strtr(".$this->stringify($code)." ,array(']]>'=>']]]]><![CDATA[>','</'=>'<\\/')) ?>\n";
                 } else {
@@ -232,7 +233,7 @@ class PHPTAL_Php_State
         if (preg_match('/^\'((?:[^\'{]+|\\\\.)*)\'$/s', $php, $m)) {
             return "'".htmlspecialchars(str_replace('\\\'', "'", $m[1]), ENT_QUOTES, $this->encoding)."'";
         }
-        return 'phptal_escape('.$php.', \''.$this->encoding.'\')';
+        return '\PhpTal\Helper::phptal_escape('.$php.', \''.$this->encoding.'\')';
     }
 
     /**
@@ -247,7 +248,6 @@ class PHPTAL_Php_State
         if (preg_match('/^\'(?>[^\'\\\\]+|\\\\.)*\'$|^\s*"(?>[^"\\\\]+|\\\\.)*"\s*$/s', $php)) {
             return $php;
         }
-        return 'phptal_tostring('.$php.')';
+        return '\PhpTal\Helper::phptal_tostring('.$php.')';
     }
 }
-

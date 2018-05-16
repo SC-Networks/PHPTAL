@@ -15,7 +15,7 @@
 
 
 
-class StupidCacheTrigger implements PHPTAL_Trigger
+class StupidCacheTrigger implements \PhpTal\Trigger
 {
     public $isCaching = false;
     public $cachePath = '';

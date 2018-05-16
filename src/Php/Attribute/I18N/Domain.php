@@ -13,6 +13,8 @@
  * @link     http://phptal.org/
  */
 
+namespace PhpTal\Php\Attribute\I18N;
+
 /**
  * i18n:domain
  *
@@ -23,9 +25,9 @@
  *
  * @package PHPTAL
  */
-class PHPTAL_Php_Attribute_I18N_Domain extends PHPTAL_Php_Attribute
+class Domain extends \PhpTal\Php\Attribute
 {
-    public function before(PHPTAL_Php_CodeWriter $codewriter)
+    public function before(\PhpTal\Php\CodeWriter $codewriter)
     {
         // ensure a domain stack exists or create it
         $codewriter->doIf('!isset($_i18n_domains)');
@@ -39,11 +41,10 @@ class PHPTAL_Php_Attribute_I18N_Domain extends PHPTAL_Php_Attribute
         $codewriter->pushCode($code);
     }
 
-    public function after(PHPTAL_Php_CodeWriter $codewriter)
+    public function after(\PhpTal\Php\CodeWriter $codewriter)
     {
         // restore domain
         $code = $codewriter->getTranslatorReference().'->useDomain(array_pop($_i18n_domains))';
         $codewriter->pushCode($code);
     }
 }
-

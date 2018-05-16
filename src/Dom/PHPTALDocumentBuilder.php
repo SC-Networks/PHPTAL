@@ -13,20 +13,21 @@
  * @link     http://phptal.org/
  */
 
+namespace PhpTal\Dom;
 
 /**
  * DOM Builder
  *
  * @package PHPTAL
  */
-class PHPTAL_Dom_PHPTALDocumentBuilder extends PHPTAL_Dom_DocumentBuilder
+class PHPTALDocumentBuilder extends \PhpTal\Dom\DocumentBuilder
 {
-    private $_xmlns;   /* PHPTAL_Dom_XmlnsState */
+    private $_xmlns;   /* \PhpTal\Dom\XmlnsState */
     private $encoding;
 
     public function __construct()
     {
-        $this->_xmlns = new PHPTAL_Dom_XmlnsState(array(), '');
+        $this->_xmlns = new \PhpTal\Dom\XmlnsState(array(), '');
     }
 
     public function getResult()
@@ -43,7 +44,7 @@ class PHPTAL_Dom_PHPTALDocumentBuilder extends PHPTAL_Dom_DocumentBuilder
 
     public function onDocumentStart()
     {
-        $this->documentElement = new PHPTAL_Dom_Element('documentElement', 'http://xml.zope.org/namespaces/tal', array(), $this->getXmlnsState());
+        $this->documentElement = new \PhpTal\Dom\Element('documentElement', 'http://xml.zope.org/namespaces/tal', array(), $this->getXmlnsState());
         $this->documentElement->setSource($this->file, $this->line);
         $this->_current = $this->documentElement;
     }
@@ -60,7 +61,7 @@ class PHPTAL_Dom_PHPTALDocumentBuilder extends PHPTAL_Dom_DocumentBuilder
 
     public function onDocType($doctype)
     {
-        $this->pushNode(new PHPTAL_Dom_DocumentType($doctype, $this->encoding));
+        $this->pushNode(new \PhpTal\Dom\DocumentType($doctype, $this->encoding));
     }
 
     public function onXmlDecl($decl)
@@ -68,22 +69,22 @@ class PHPTAL_Dom_PHPTALDocumentBuilder extends PHPTAL_Dom_DocumentBuilder
         if (!$this->encoding) {
             throw new \PhpTal\Exception\PhpTalException("Encoding not set");
         }
-        $this->pushNode(new PHPTAL_Dom_XmlDeclaration($decl, $this->encoding));
+        $this->pushNode(new \PhpTal\Dom\XmlDeclaration($decl, $this->encoding));
     }
 
     public function onComment($data)
     {
-        $this->pushNode(new PHPTAL_Dom_Comment($data, $this->encoding));
+        $this->pushNode(new \PhpTal\Dom\Comment($data, $this->encoding));
     }
 
     public function onCDATASection($data)
     {
-        $this->pushNode(new PHPTAL_Dom_CDATASection($data, $this->encoding));
+        $this->pushNode(new \PhpTal\Dom\CDATASection($data, $this->encoding));
     }
 
     public function onProcessingInstruction($data)
     {
-        $this->pushNode(new PHPTAL_Dom_ProcessingInstruction($data, $this->encoding));
+        $this->pushNode(new \PhpTal\Dom\ProcessingInstruction($data, $this->encoding));
     }
 
     public function onElementStart($element_qname, array $attributes)
@@ -123,10 +124,10 @@ class PHPTAL_Dom_PHPTALDocumentBuilder extends PHPTAL_Dom_DocumentBuilder
                             $this->file, $this->line);
             }
 
-            $attrnodes[] = new PHPTAL_Dom_Attr($qname, $attr_namespace_uri, $value, $this->encoding);
+            $attrnodes[] = new \PhpTal\Dom\Attr($qname, $attr_namespace_uri, $value, $this->encoding);
         }
 
-        $node = new PHPTAL_Dom_Element($element_qname, $namespace_uri, $attrnodes, $this->getXmlnsState());
+        $node = new \PhpTal\Dom\Element($element_qname, $namespace_uri, $attrnodes, $this->getXmlnsState());
         $this->pushNode($node);
         $this->_stack[] =  $this->_current;
         $this->_current = $node;
@@ -134,7 +135,7 @@ class PHPTAL_Dom_PHPTALDocumentBuilder extends PHPTAL_Dom_DocumentBuilder
 
     public function onElementData($data)
     {
-        $this->pushNode(new PHPTAL_Dom_Text($data, $this->encoding));
+        $this->pushNode(new \PhpTal\Dom\Text($data, $this->encoding));
     }
 
     public function onElementClose($qname)
@@ -148,12 +149,12 @@ class PHPTAL_Dom_PHPTALDocumentBuilder extends PHPTAL_Dom_DocumentBuilder
                         $this->file, $this->line);
         }
         $this->_current = array_pop($this->_stack);
-        if ($this->_current instanceof PHPTAL_Dom_Element) {
+        if ($this->_current instanceof \PhpTal\Dom\Element) {
             $this->_xmlns = $this->_current->getXmlnsState(); // restore namespace prefixes info to previous state
         }
     }
 
-    private function pushNode(PHPTAL_Dom_Node $node)
+    private function pushNode(\PhpTal\Dom\Node $node)
     {
         $node->setSource($this->file, $this->line);
         $this->_current->appendChild($node);

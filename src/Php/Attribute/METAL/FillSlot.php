@@ -13,6 +13,8 @@
  * @link     http://phptal.org/
  */
 
+namespace PhpTal\Php\Attribute\METAL;
+
 /**
  *  METAL Specification 1.0
  *
@@ -49,16 +51,16 @@
  * @package PHPTAL
  * @author Laurent Bedubourg <lbedubourg@motion-twin.com>
  */
-class PHPTAL_Php_Attribute_METAL_FillSlot extends PHPTAL_Php_Attribute
+class FillSlot extends \PhpTal\Php\Attribute
 {
     private static $uid = 0;
     private $function_name;
 
-    public function before(PHPTAL_Php_CodeWriter $codewriter)
+    public function before(\PhpTal\Php\CodeWriter $codewriter)
     {
         if ($this->shouldUseCallback()) {
             $function_base_name = 'slot_'.preg_replace('/[^a-z0-9]/', '_', $this->expression).'_'.(self::$uid++);
-            $codewriter->doFunction($function_base_name, 'PHPTAL $_thistpl, PHPTAL $tpl');
+            $codewriter->doFunction($function_base_name, '\PhpTal\PHPTAL $_thistpl, \PhpTal\PHPTAL $tpl');
             $this->function_name = $codewriter->getFunctionPrefix().$function_base_name;
 
             $codewriter->doSetVar('$ctx', '$tpl->getContext()');
@@ -69,7 +71,7 @@ class PHPTAL_Php_Attribute_METAL_FillSlot extends PHPTAL_Php_Attribute
         }
     }
 
-    public function after(PHPTAL_Php_CodeWriter $codewriter)
+    public function after(\PhpTal\Php\CodeWriter $codewriter)
     {
         if ($this->function_name !== null) {
             $codewriter->doEnd();
@@ -97,7 +99,7 @@ class PHPTAL_Php_Attribute_METAL_FillSlot extends PHPTAL_Php_Attribute
      *
      * @return rough guess
      */
-    private function estimateNumberOfBytesOutput(PHPTAL_Dom_Element $element, $is_nested_in_repeat)
+    private function estimateNumberOfBytesOutput(\PhpTal\Dom\Element $element, $is_nested_in_repeat)
     {
         // macros don't output anything on their own
         if ($element->hasAttributeNS('http://xml.zope.org/namespaces/metal', 'define-macro')) {
@@ -108,7 +110,7 @@ class PHPTAL_Php_Attribute_METAL_FillSlot extends PHPTAL_Php_Attribute
 
         foreach ($element->getAttributeNodes() as $attr) {
             $estimated_bytes += 4+strlen($attr->getQualifiedName());
-            if ($attr->getReplacedState() === PHPTAL_Dom_Attr::NOT_REPLACED) {
+            if ($attr->getReplacedState() === \PhpTal\Dom\Attr::NOT_REPLACED) {
                 $estimated_bytes += strlen($attr->getValueEscaped()); // this is shoddy for replaced attributes
             }
         }
@@ -121,7 +123,7 @@ class PHPTAL_Php_Attribute_METAL_FillSlot extends PHPTAL_Php_Attribute
             $estimated_bytes += ($has_repeat_attr || $is_nested_in_repeat) ? 500 : 2000;
         } else {
             foreach ($element->childNodes as $node) {
-                if ($node instanceof PHPTAL_Dom_Element) {
+                if ($node instanceof \PhpTal\Dom\Element) {
                     $estimated_bytes += $this->estimateNumberOfBytesOutput($node, $has_repeat_attr || $is_nested_in_repeat);
                 } else {
                     $estimated_bytes += strlen($node->getValueEscaped());

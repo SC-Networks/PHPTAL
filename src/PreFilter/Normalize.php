@@ -12,17 +12,19 @@
  * @link     http://phptal.org/
  */
 
+namespace PhpTal\PreFilter;
+
 /**
  * Collapses conscutive whitespace, trims attributes, merges adjacent text nodes
  */
-class PHPTAL_PreFilter_Normalize extends PHPTAL_PreFilter
+class Normalize extends \PhpTal\PreFilter
 {
     function filter($src)
     {
         return str_replace("\r\n", "\n", $src);
     }
 
-    function filterDOM(PHPTAL_Dom_Element $root)
+    function filterDOM(\PhpTal\Dom\Element $root)
     {
         // let xml:space=preserve preserve attributes as well
         if ($root->getAttributeNS("http://www.w3.org/XML/1998/namespace", 'space') == 'preserve') {
@@ -42,7 +44,7 @@ class PHPTAL_PreFilter_Normalize extends PHPTAL_PreFilter
         foreach ($root->childNodes as $node) {
 
             // CDATA is not normalized by design
-            if ($node instanceof PHPTAL_Dom_Text) {
+            if ($node instanceof \PhpTal\Dom\Text) {
                 $norm = $this->normalizeSpace($node->getValueEscaped(), $node->getEncoding());
                 $node->setValueEscaped($norm);
 
@@ -59,24 +61,24 @@ class PHPTAL_PreFilter_Normalize extends PHPTAL_PreFilter
                 }
             } else {
                 $lastTextNode = null;
-                if ($node instanceof PHPTAL_Dom_Element) {
+                if ($node instanceof \PhpTal\Dom\Element) {
                     $this->filterDOM($node);
                 }
             }
         }
     }
 
-    protected function isSpaceSensitiveInXHTML(PHPTAL_Dom_Element $element)
+    protected function isSpaceSensitiveInXHTML(\PhpTal\Dom\Element $element)
     {
         $ln = $element->getLocalName();
         return ($ln === 'script' || $ln === 'pre' || $ln === 'textarea')
             && ($element->getNamespaceURI() === 'http://www.w3.org/1999/xhtml' || $element->getNamespaceURI() === '');
     }
 
-    protected function findElementToFilter(PHPTAL_Dom_Element $root)
+    protected function findElementToFilter(\PhpTal\Dom\Element $root)
     {
         foreach ($root->childNodes as $node) {
-            if (!$node instanceof PHPTAL_Dom_Element) continue;
+            if (!$node instanceof \PhpTal\Dom\Element) continue;
 
             if ($node->getAttributeNS("http://www.w3.org/XML/1998/namespace", 'space') == 'default') {
                 $this->filterDOM($node);
@@ -94,12 +96,12 @@ class PHPTAL_PreFilter_Normalize extends PHPTAL_PreFilter
         return preg_replace('/[ \t\r\n]+/'.$utf_regex_mod, ' ', $text); // \s removes nbsp
     }
 
-    protected function normalizeAttributes(PHPTAL_Dom_Element $element)
+    protected function normalizeAttributes(\PhpTal\Dom\Element $element)
     {
         foreach ($element->getAttributeNodes() as $attrnode) {
 
             // skip replaced attributes (because getValueEscaped on them is meaningless)
-            if ($attrnode->getReplacedState() !== PHPTAL_Dom_Attr::NOT_REPLACED) continue;
+            if ($attrnode->getReplacedState() !== \PhpTal\Dom\Attr::NOT_REPLACED) continue;
 
             $val = $this->normalizeSpace($attrnode->getValueEscaped(), $attrnode->getEncoding());
             $attrnode->setValueEscaped(trim($val, ' '));

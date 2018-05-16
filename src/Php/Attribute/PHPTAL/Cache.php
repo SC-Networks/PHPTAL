@@ -13,6 +13,8 @@
  * @link     http://phptal.org/
  */
 
+namespace PhpTal\Php\Attribute\PHPTAL;
+
 /**
  *  phptal:cache (note that's not tal:cache) caches element's HTML for a given time. Time is a number with 'd', 'h', 'm' or 's' suffix.
  *  There's optional parameter that defines how cache should be shared. By default cache is not sensitive to template's context at all
@@ -32,11 +34,11 @@
  *
  * @package PHPTAL
 */
-class PHPTAL_Php_Attribute_PHPTAL_Cache extends PHPTAL_Php_Attribute
+class Cache extends \PhpTal\Php\Attribute
 {
     private $cache_filename_var;
 
-    public function before(PHPTAL_Php_CodeWriter $codewriter)
+    public function before(\PhpTal\Php\CodeWriter $codewriter)
     {
         // number or variable name followed by time unit
         // optional per expression
@@ -83,7 +85,7 @@ class PHPTAL_Php_Attribute_PHPTAL_Cache extends PHPTAL_Php_Attribute
         $codewriter->doEval('ob_start()');
     }
 
-    public function after(PHPTAL_Php_CodeWriter $codewriter)
+    public function after(\PhpTal\Php\CodeWriter $codewriter)
     {
         $codewriter->doEval('file_put_contents('.$this->cache_filename_var.', ob_get_flush())');
         $codewriter->doElse();
@@ -93,4 +95,3 @@ class PHPTAL_Php_Attribute_PHPTAL_Cache extends PHPTAL_Php_Attribute
         $codewriter->recycleTempVariable($this->cache_filename_var);
     }
 }
-

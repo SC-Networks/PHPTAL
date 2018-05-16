@@ -13,6 +13,8 @@
  * @link     http://phptal.org/
  */
 
+namespace PhpTal\Php\Attribute\TAL;
+
 /**
  * TAL Specifications 1.4
  *
@@ -65,10 +67,10 @@
  * @package PHPTAL
  * @author Laurent Bedubourg <lbedubourg@motion-twin.com>
  */
-class PHPTAL_Php_Attribute_TAL_Repeat extends PHPTAL_Php_Attribute
+class Repeat extends \PhpTal\Php\Attribute
 {
     private $var;
-    public function before(PHPTAL_Php_CodeWriter $codewriter)
+    public function before(\PhpTal\Php\CodeWriter $codewriter)
     {
         $this->var = $codewriter->createTempVariable();
 
@@ -79,7 +81,7 @@ class PHPTAL_Php_Attribute_TAL_Repeat extends PHPTAL_Php_Attribute
         $code = $codewriter->evaluateExpression($expression);
 
         // instantiate controller using expression
-        $codewriter->doSetVar( $this->var.'->'.$varName, 'new PHPTAL_RepeatController('.$code.')'."\n" );
+        $codewriter->doSetVar( $this->var.'->'.$varName, 'new \PhpTal\RepeatController('.$code.')'."\n" );
 
         $codewriter->pushContext();
 
@@ -87,7 +89,7 @@ class PHPTAL_Php_Attribute_TAL_Repeat extends PHPTAL_Php_Attribute
         $codewriter->doForeach('$ctx->'.$varName, $this->var.'->'.$varName);
     }
 
-    public function after(PHPTAL_Php_CodeWriter $codewriter)
+    public function after(\PhpTal\Php\CodeWriter $codewriter)
     {
         $codewriter->doEnd('foreach');
         $codewriter->popContext();
@@ -95,4 +97,3 @@ class PHPTAL_Php_Attribute_TAL_Repeat extends PHPTAL_Php_Attribute
         $codewriter->recycleTempVariable($this->var);
     }
 }
-

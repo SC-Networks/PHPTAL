@@ -12,13 +12,14 @@
  * @link     http://phptal.org/
  */
 
+namespace PhpTal;
 
 /**
  * Representation of the template 'default' keyword
  *
  * @package PHPTAL
  */
-class PHPTAL_DefaultKeyword implements Countable
+class DefaultKeyword implements \Countable
 {
     public function __toString()
     {
@@ -32,7 +33,6 @@ class PHPTAL_DefaultKeyword implements Countable
 
     public function jsonSerialize()
     {
-        return new stdClass;
+        return new \stdClass;
     }
 }
-?>

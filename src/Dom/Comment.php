@@ -13,12 +13,14 @@
  * @link     http://phptal.org/
  */
 
+namespace PhpTal\Dom;
+
 /**
  * @package PHPTAL
  */
-class PHPTAL_Dom_Comment extends PHPTAL_Dom_Node
+class Comment extends \PhpTal\Dom\Node
 {
-    public function generateCode(PHPTAL_Php_CodeWriter $codewriter)
+    public function generateCode(\PhpTal\Php\CodeWriter $codewriter)
     {
         if (!preg_match('/^\s*!/', $this->getValueEscaped())) {
             $codewriter->pushHTML('<!--'.$this->getValueEscaped().'-->');

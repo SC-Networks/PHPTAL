@@ -13,18 +13,19 @@
  * @link     http://phptal.org/
  */
 
+namespace PhpTal\TalNamespace;
 
 /**
  * @package PHPTAL
  */
-class PHPTAL_Namespace_METAL extends PHPTAL_Namespace_Builtin
+class METAL extends Builtin
 {
     public function __construct()
     {
         parent::__construct('metal', 'http://xml.zope.org/namespaces/metal');
-        $this->addAttribute(new PHPTAL_NamespaceAttributeSurround('define-macro', 1));
-        $this->addAttribute(new PHPTAL_NamespaceAttributeReplace('use-macro', 9));
-        $this->addAttribute(new PHPTAL_NamespaceAttributeSurround('define-slot', 9));
-        $this->addAttribute(new PHPTAL_NamespaceAttributeSurround('fill-slot', 9));
+        $this->addAttribute(new \PhpTal\TalNamespaceAttributeSurround('define-macro', 1));
+        $this->addAttribute(new \PhpTal\TalNamespaceAttributeReplace('use-macro', 9));
+        $this->addAttribute(new \PhpTal\TalNamespaceAttributeSurround('define-slot', 9));
+        $this->addAttribute(new \PhpTal\TalNamespaceAttributeSurround('fill-slot', 9));
     }
 }

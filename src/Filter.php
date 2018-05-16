@@ -13,12 +13,14 @@
  * @link     http://phptal.org/
  */
 
+namespace PhpTal;
+
 /**
- * Objects passed to PHPTAL::setPre/PostFilter() must implement this interface
+ * Objects passed to \PhpTal\PHPTAL::setPre/PostFilter() must implement this interface
  *
  * @package PHPTAL
  */
-interface PHPTAL_Filter
+interface Filter
 {
     /**
      * In prefilter it gets template source file and is expected to return new source.

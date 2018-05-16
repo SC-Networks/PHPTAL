@@ -14,7 +14,7 @@
  */
 
 
-class MyPostFilter implements PHPTAL_Filter
+class MyPostFilter implements \PhpTal\Filter
 {
     public function filter($str)
     {
@@ -25,7 +25,7 @@ class MyPostFilter implements PHPTAL_Filter
     }
 }
 
-class MyPostFilter2 implements PHPTAL_Filter
+class MyPostFilter2 implements \PhpTal\Filter
 {
     public function filter($str)
     {

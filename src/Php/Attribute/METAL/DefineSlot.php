@@ -13,6 +13,8 @@
  * @link     http://phptal.org/
  */
 
+namespace PhpTal\Php\Attribute\METAL;
+
 /**
  * METAL Specification 1.0
  *
@@ -45,11 +47,11 @@
  * @package PHPTAL
  * @author Laurent Bedubourg <lbedubourg@motion-twin.com>
  */
-class PHPTAL_Php_Attribute_METAL_DefineSlot extends PHPTAL_Php_Attribute
+class DefineSlot extends \PhpTal\Php\Attribute
 {
     private $tmp_var;
 
-    public function before(PHPTAL_Php_CodeWriter $codewriter)
+    public function before(\PhpTal\Php\CodeWriter $codewriter)
     {
         $this->tmp_var = $codewriter->createTempVariable();
 
@@ -59,11 +61,10 @@ class PHPTAL_Php_Attribute_METAL_DefineSlot extends PHPTAL_Php_Attribute
         $codewriter->doElse();
     }
 
-    public function after(PHPTAL_Php_CodeWriter $codewriter)
+    public function after(\PhpTal\Php\CodeWriter $codewriter)
     {
         $codewriter->doEnd('if');
 
         $codewriter->recycleTempVariable($this->tmp_var);
     }
 }
-

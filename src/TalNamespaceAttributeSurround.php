@@ -13,10 +13,12 @@
  * @link     http://phptal.org/
  */
 
+namespace PhpTal;
+
 /**
  * This type of attribute wraps element
  * @package PHPTAL
  */
-class PHPTAL_NamespaceAttributeSurround extends PHPTAL_NamespaceAttribute
+class TalNamespaceAttributeSurround extends TalNamespaceAttribute
 {
 }

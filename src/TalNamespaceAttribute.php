@@ -13,6 +13,8 @@
  * @link     http://phptal.org/
  */
 
+namespace PhpTal;
+
 /**
  * Information about TAL attributes (in which order they are executed and how they generate the code)
  *
@@ -58,7 +60,7 @@
  *
  * @package PHPTAL
  */
-abstract class PHPTAL_NamespaceAttribute
+abstract class TalNamespaceAttribute
 {
     /** Attribute name without the namespace: prefix */
     private $local_name;
@@ -66,7 +68,7 @@ abstract class PHPTAL_NamespaceAttribute
     /** [0 - 1000] */
     private $_priority;
 
-    /** PHPTAL_Namespace */
+    /** \PhpTal\TalNamespace */
     private $_namespace;
 
     /**
@@ -89,9 +91,9 @@ abstract class PHPTAL_NamespaceAttribute
 
     public function getPriority() { return $this->_priority; }
     public function getNamespace() { return $this->_namespace; }
-    public function setNamespace(PHPTAL_Namespace $ns) { $this->_namespace = $ns; }
+    public function setNamespace(TalNamespace $ns) { $this->_namespace = $ns; }
 
-    public function createAttributeHandler(PHPTAL_Dom_Element $tag, $expression)
+    public function createAttributeHandler(\PhpTal\Dom\Element $tag, $expression)
     {
         return $this->_namespace->createAttributeHandler($this, $tag, $expression);
     }

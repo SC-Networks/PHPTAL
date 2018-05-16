@@ -13,24 +13,26 @@
  * @link     http://phptal.org/
  */
 
+namespace PhpTal;
+
 /**
  * Global registry of TALES expression modifiers
  *
  * @package PHPTAL
  */
-class PHPTAL_TalesRegistry
+class TalesRegistry
 {
     private static $instance;
 
     /**
      * This is a singleton
      *
-     * @return PHPTAL_TalesRegistry
+     * @return \PhpTal\TalesRegistry
      */
     static public function getInstance()
     {
         if (!self::$instance) {
-            self::$instance = new PHPTAL_TalesRegistry();
+            self::$instance = new TalesRegistry();
         }
 
         return self::$instance;
@@ -38,18 +40,18 @@ class PHPTAL_TalesRegistry
 
     protected function __construct()
     {
-        $this->registerPrefix('not', array('PHPTAL_Php_TalesInternal', 'not'));
-        $this->registerPrefix('path', array('PHPTAL_Php_TalesInternal', 'path'));
-        $this->registerPrefix('string', array('PHPTAL_Php_TalesInternal', 'string'));
-        $this->registerPrefix('php', array('PHPTAL_Php_TalesInternal', 'php'));
-        $this->registerPrefix('phptal-internal-php-block', array('PHPTAL_Php_TalesInternal', 'phptal_internal_php_block'));
-        $this->registerPrefix('exists', array('PHPTAL_Php_TalesInternal', 'exists'));
-        $this->registerPrefix('number', array('PHPTAL_Php_TalesInternal', 'number'));
-        $this->registerPrefix('true', array('PHPTAL_Php_TalesInternal', 'true'));
+        $this->registerPrefix('not', array('\PhpTal\Php\TalesInternal', 'not'));
+        $this->registerPrefix('path', array('\PhpTal\Php\TalesInternal', 'path'));
+        $this->registerPrefix('string', array('\PhpTal\Php\TalesInternal', 'string'));
+        $this->registerPrefix('php', array('\PhpTal\Php\TalesInternal', 'php'));
+        $this->registerPrefix('phptal-internal-php-block', array('\PhpTal\Php\TalesInternal', 'phptal_internal_php_block'));
+        $this->registerPrefix('exists', array('\PhpTal\Php\TalesInternal', 'exists'));
+        $this->registerPrefix('number', array('\PhpTal\Php\TalesInternal', 'number'));
+        $this->registerPrefix('true', array('\PhpTal\Php\TalesInternal', 'true'));
 
         // these are added as fallbacks
-        $this->registerPrefix('json', array('PHPTAL_Php_TalesInternal', 'json'), true);
-        $this->registerPrefix('urlencode', array('PHPTAL_Php_TalesInternal', 'urlencode'), true);
+        $this->registerPrefix('json', array('\PhpTal\Php\TalesInternal', 'json'), true);
+        $this->registerPrefix('urlencode', array('\PhpTal\Php\TalesInternal', 'urlencode'), true);
     }
 
     /**
@@ -90,13 +92,13 @@ class PHPTAL_TalesRegistry
 
         if (is_array($callback)) {
 
-            $class = new ReflectionClass($callback[0]);
+            $class = new \ReflectionClass($callback[0]);
 
-            if (!$class->isSubclassOf('PHPTAL_Tales')) {
-                throw new \PhpTal\Exception\ConfigurationException('The class you want to register does not implement "PHPTAL_Tales".');
+            if (!$class->isSubclassOf(Tales::class)) {
+                throw new \PhpTal\Exception\ConfigurationException('The class you want to register does not implement "\PhpTal\Tales".');
             }
 
-            $method = new ReflectionMethod($callback[0], $callback[1]);
+            $method = new \ReflectionMethod($callback[0], $callback[1]);
 
             if (!$method->isStatic()) {
                 throw new \PhpTal\Exception\ConfigurationException('The method you want to register is not static.');
@@ -132,9 +134,9 @@ class PHPTAL_TalesRegistry
             if (!is_callable($classCallback, false, $callbackName)) {
                 throw new \PhpTal\Exception\UnknownModifierException("Unknown phptal modifier $typePrefix. Function $callbackName does not exists or is not statically callable", $typePrefix);
             }
-            $ref = new ReflectionClass($classCallback[0]);
-            if (!$ref->implementsInterface('PHPTAL_Tales')) {
-                throw new \PhpTal\Exception\UnknownModifierException("Unable to use phptal modifier $typePrefix as the class $callbackName does not implement the PHPTAL_Tales interface", $typePrefix);
+            $ref = new \ReflectionClass($classCallback[0]);
+            if (!$ref->implementsInterface('\PhpTal\Tales')) {
+                throw new \PhpTal\Exception\UnknownModifierException("Unable to use phptal modifier $typePrefix as the class $callbackName does not implement the \PhpTal\Tales interface", $typePrefix);
             }
             return $classCallback;
         }
@@ -145,11 +147,11 @@ class PHPTAL_TalesRegistry
             return $func;
         }
 
-        // The following code is automatically modified in version for PHP 5.3
-        $func = 'PHPTALNAMESPACE\\phptal_tales_'.str_replace('-', '_', $typePrefix);
-        if (function_exists($func)) {
-            return $func;
-        }
+//        // The following code is automatically modified in version for PHP 5.3
+//        $func = 'PHPTALNAMESPACE\\phptal_tales_'.str_replace('-', '_', $typePrefix);
+//        if (function_exists($func)) {
+//            return $func;
+//        }
 
         return null;
     }
@@ -181,4 +183,3 @@ class PHPTAL_TalesRegistry
      */
     private $_callbacks = array();
 }
-

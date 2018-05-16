@@ -14,6 +14,8 @@
  * @link     http://phptal.org/
  */
 
+namespace PhpTal;
+
 /**
  * Stores tal:repeat information during template execution.
  *
@@ -31,7 +33,7 @@
  * @package PHPTAL
  * @author Laurent Bedubourg <lbedubourg@motion-twin.com>
  */
-class PHPTAL_RepeatController implements Iterator
+class RepeatController implements \Iterator
 {
     public $key;
     private $current;
@@ -57,27 +59,27 @@ class PHPTAL_RepeatController implements Iterator
     public function __construct($source)
     {
         if ( is_string($source) ) {
-            $this->iterator = new ArrayIterator( str_split($source) );  // FIXME: invalid for UTF-8 encoding, use preg_match_all('/./u') trick
+            $this->iterator = new \ArrayIterator( str_split($source) );  // FIXME: invalid for UTF-8 encoding, use preg_match_all('/./u') trick
         } elseif ( is_array($source) ) {
-            $this->iterator = new ArrayIterator($source);
-        } elseif ($source instanceof IteratorAggregate) {
+            $this->iterator = new \ArrayIterator($source);
+        } elseif ($source instanceof \IteratorAggregate) {
             $this->iterator = $source->getIterator();
-        } elseif ($source instanceof DOMNodeList) {
+        } elseif ($source instanceof \DOMNodeList) {
             $array = array();
             foreach ($source as $k=>$v) {
                 $array[$k] = $v;
             }
-            $this->iterator = new ArrayIterator($array);
-        } elseif ($source instanceof Iterator) {
+            $this->iterator = new \ArrayIterator($array);
+        } elseif ($source instanceof \Iterator) {
             $this->iterator = $source;
-        } elseif ($source instanceof Traversable) {
-            $this->iterator = new IteratorIterator($source);
-        } elseif ($source instanceof Closure) {
-            $this->iterator = new ArrayIterator( (array) $source() );
-        } elseif ($source instanceof stdClass) {
-            $this->iterator = new ArrayIterator( (array) $source );
+        } elseif ($source instanceof \Traversable) {
+            $this->iterator = new \IteratorIterator($source);
+        } elseif ($source instanceof \Closure) {
+            $this->iterator = new \ArrayIterator( (array) $source() );
+        } elseif ($source instanceof \stdClass) {
+            $this->iterator = new \ArrayIterator( (array) $source );
         } else {
-            $this->iterator = new ArrayIterator( array() );
+            $this->iterator = new \ArrayIterator( array() );
         }
     }
 
@@ -117,7 +119,7 @@ class PHPTAL_RepeatController implements Iterator
     public function length()
     {
         if ($this->length === null) {
-            if ($this->iterator instanceof Countable) {
+            if ($this->iterator instanceof \Countable) {
                 return $this->length = count($this->iterator);
             } elseif ( is_object($this->iterator) ) {
                 // for backwards compatibility with existing PHPTAL templates
@@ -188,7 +190,7 @@ class PHPTAL_RepeatController implements Iterator
     private function initializeGroups()
     {
         if (!$this->uses_groups) {
-            $this->groups = new PHPTAL_RepeatControllerGroups();
+            $this->groups = new \PhpTal\RepeatControllerGroups();
             $this->uses_groups = true;
         }
     }

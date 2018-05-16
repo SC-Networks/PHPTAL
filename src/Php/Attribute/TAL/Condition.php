@@ -13,6 +13,8 @@
  * @link     http://phptal.org/
  */
 
+namespace PhpTal\Php\Attribute\TAL;
+
 /**
  * TAL Specifications 1.4
  *
@@ -29,42 +31,42 @@
  * @package PHPTAL
  * @author Laurent Bedubourg <lbedubourg@motion-twin.com>
  */
-class PHPTAL_Php_Attribute_TAL_Condition
-extends PHPTAL_Php_Attribute
-implements PHPTAL_Php_TalesChainReader
+class Condition
+extends \PhpTal\Php\Attribute
+implements \PhpTal\Php\TalesChainReader
 {
     private $expressions = array();
 
-    public function before(PHPTAL_Php_CodeWriter $codewriter)
+    public function before(\PhpTal\Php\CodeWriter $codewriter)
     {
         $code = $codewriter->evaluateExpression($this->expression);
 
         // If it's a chained expression build a new code path
         if (is_array($code)) {
             $this->expressions = array();
-            $executor = new PHPTAL_Php_TalesChainExecutor($codewriter, $code, $this);
+            $executor = new \PhpTal\Php\TalesChainExecutor($codewriter, $code, $this);
             return;
         }
 
         // Force a falsy condition if the nothing keyword is active
-        if ($code == PHPTAL_Php_TalesInternal::NOTHING_KEYWORD) {
+        if ($code == \PhpTal\Php\TalesInternal::NOTHING_KEYWORD) {
             $code = 'false';
         }
 
-        $codewriter->doIf('phptal_true(' . $code . ')');
+        $codewriter->doIf('\PhpTal\Helper::phptal_true(' . $code . ')');
     }
 
-    public function after(PHPTAL_Php_CodeWriter $codewriter)
+    public function after(\PhpTal\Php\CodeWriter $codewriter)
     {
         $codewriter->doEnd('if');
     }
 
 
-    public function talesChainPart(PHPTAL_Php_TalesChainExecutor $executor, $exp, $islast)
+    public function talesChainPart(\PhpTal\Php\TalesChainExecutor $executor, $exp, $islast)
     {
         // check if the expression is empty
         if ($exp !== 'false') {
-            $this->expressions[] = '!phptal_isempty(' . $exp . ')';
+            $this->expressions[] = '!\PhpTal\Helper::phptal_isempty(' . $exp . ')';
         }
 
         if ($islast) {
@@ -75,14 +77,14 @@ implements PHPTAL_Php_TalesChainReader
         }
     }
 
-    public function talesChainNothingKeyword(PHPTAL_Php_TalesChainExecutor $executor)
+    public function talesChainNothingKeyword(\PhpTal\Php\TalesChainExecutor $executor)
     {
         // end the chain
         $this->talesChainPart($executor, 'false', true);
         $executor->breakChain();
     }
 
-    public function talesChainDefaultKeyword(PHPTAL_Php_TalesChainExecutor $executor)
+    public function talesChainDefaultKeyword(\PhpTal\Php\TalesChainExecutor $executor)
     {
         throw new \PhpTal\Exception\ParserException('\'default\' keyword not allowed on conditional expressions',
                     $this->phpelement->getSourceFile(), $this->phpelement->getSourceLine());

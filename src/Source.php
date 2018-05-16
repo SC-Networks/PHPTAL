@@ -13,12 +13,14 @@
  * @link     http://phptal.org/
  */
 
+namespace PhpTal;
+
 /**
  * You can implement this interface to load templates from various sources (see SourceResolver)
  *
  * @package PHPTAL
  */
-interface PHPTAL_Source
+interface Source
 {
     /**
      * unique path identifying the template source.
@@ -39,7 +41,7 @@ interface PHPTAL_Source
      *    unless you change realPath whenever template changes.
      *  • clearing of cache will be marginally slower.
      *
-     * @return long
+     * @return int
      */
     public function getLastModifiedTime();
 

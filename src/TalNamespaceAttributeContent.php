@@ -13,10 +13,12 @@
  * @link     http://phptal.org/
  */
 
+namespace PhpTal;
+
 /**
  * This type of attribute replaces element's content entirely
  * @package PHPTAL
  */
-class PHPTAL_NamespaceAttributeContent extends PHPTAL_NamespaceAttribute
+class TalNamespaceAttributeContent extends TalNamespaceAttribute
 {
 }

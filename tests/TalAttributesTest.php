@@ -186,7 +186,7 @@ EOT;
         foreach($booleanAttrs as $name) {
             // XHTML
             $tpl = $this->newPHPTAL();
-            $tpl->setOutputMode(PHPTAL::XHTML);
+            $tpl->setOutputMode(\PhpTal\PHPTAL::XHTML);
             $tpl->setSource('<p '.$name.'="123" tal:attributes="'.$name.' attrval"></p>');
             $tpl->attrval = true;
             $res = $tpl->execute();
@@ -196,7 +196,7 @@ EOT;
             $this->assertEquals('<p></p>', $res);
             // HTML5
             $tpl = $this->newPHPTAL();
-            $tpl->setOutputMode(PHPTAL::HTML5);
+            $tpl->setOutputMode(\PhpTal\PHPTAL::HTML5);
             $tpl->setSource('<p '.$name.'="123" tal:attributes="'.$name.' attrval"></p>');
             $tpl->attrval = true;
             $res = $tpl->execute();

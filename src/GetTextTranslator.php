@@ -13,9 +13,10 @@
  * @link     http://phptal.org/
  */
 
+namespace PhpTal;
 
 /**
- * PHPTAL_TranslationService gettext implementation.
+ * \PhpTal\TranslationService gettext implementation.
  *
  * Because gettext is the most common translation library in use, this
  * implementation is shipped with the PHPTAL library.
@@ -25,7 +26,7 @@
  * @package PHPTAL
  * @author Laurent Bedubourg <lbedubourg@motion-twin.com>
  */
-class PHPTAL_GetTextTranslator implements PHPTAL_TranslationService
+class GetTextTranslator implements TranslationService
 {
     private $_vars = array();
     private $_currentDomain;

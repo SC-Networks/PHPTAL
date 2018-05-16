@@ -13,6 +13,8 @@
  * @link     http://phptal.org/
  */
 
+namespace PhpTal\Php\Attribute\I18N;
+
 /**
  * i18n:target
  *
@@ -34,9 +36,8 @@
  *
  * @package PHPTAL
  */
-class PHPTAL_Php_Attribute_I18N_Target extends PHPTAL_Php_Attribute
+class Target extends \PhpTal\Php\Attribute
 {
-    public function before(PHPTAL_Php_CodeWriter $codewriter){}
-    public function after(PHPTAL_Php_CodeWriter $codewriter){}
+    public function before(\PhpTal\Php\CodeWriter $codewriter){}
+    public function after(\PhpTal\Php\CodeWriter $codewriter){}
 }
-

@@ -16,16 +16,16 @@
 
 
 
-class DummyDefinePhpNode extends PHPTAL_Dom_Element {
+class DummyDefinePhpNode extends \PhpTal\Dom\Element {
     function __construct() {}
-    function generateCode(PHPTAL_Php_CodeWriter $codewriter) {}
+    function generateCode(\PhpTal\Php\CodeWriter $codewriter) {}
 }
 
 class TalDefineTest extends PHPTAL_TestCase
 {
     function testExpressionParser()
     {
-        $att = new PHPTAL_Php_Attribute_TAL_Define(new DummyDefinePhpNode(), 'a b');
+        $att = new \PhpTal\Php\Attribute\TAL\Define(new DummyDefinePhpNode(), 'a b');
 
         list($defineScope, $defineVar, $expression) = $att->parseExpression('local a_234z b');
         $this->assertEquals('local', $defineScope);
@@ -158,7 +158,7 @@ class TalDefineTest extends PHPTAL_TestCase
     function testDefineContent()
     {
         $tpl = $this->newPHPTAL('input/tal-define.11.html');
-        $tpl->setOutputMode(PHPTAL::XML);
+        $tpl->setOutputMode(\PhpTal\PHPTAL::XML);
         $res = $tpl->execute();
         $res = normalize_html($res);
         $exp = normalize_html_file('output/tal-define.11.html');
@@ -168,7 +168,7 @@ class TalDefineTest extends PHPTAL_TestCase
     function testDefineAndAttributes()
     {
         $tpl = $this->newPHPTAL('input/tal-define.12.html');
-        $tpl->setOutputMode(PHPTAL::XML);
+        $tpl->setOutputMode(\PhpTal\PHPTAL::XML);
         $res = $tpl->execute();
         $res = normalize_html($res);
         $exp = normalize_html_file('output/tal-define.12.html');
@@ -235,7 +235,7 @@ class TalDefineTest extends PHPTAL_TestCase
     function testGlobalDefineNonEmptySpan()
     {
         $tpl = $this->newPHPTAL();
-        $tpl->setOutputMode(PHPTAL::XML);
+        $tpl->setOutputMode(\PhpTal\PHPTAL::XML);
 
         $tpl->setSource('<div>
            <span tal:define="global x \'ok\'" class="foo" />
@@ -249,7 +249,7 @@ class TalDefineTest extends PHPTAL_TestCase
     function testGlobalDefineNonEmptySpan2()
     {
         $tpl = $this->newPHPTAL();
-        $tpl->setOutputMode(PHPTAL::XML);
+        $tpl->setOutputMode(\PhpTal\PHPTAL::XML);
 
         $tpl->setSource('<div>
            <span tal:define="global x \'ok\'" tal:attributes="class \'foo\'" />
