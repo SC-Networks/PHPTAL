@@ -80,20 +80,6 @@ EOT;
         $this->assertEquals($exp, $res);
     }
 
-    public function testInterpol3b()
-    {
-        $src = <<<EOT
-<span title="<?php echo '\${foo}\${foo}' ?>"></span>
-EOT;
-    $exp = <<<EOT
-<span title="\${foo}\${foo}"></span>
-EOT;
-        $tpl = $this->newPHPTAL()->setSource($src);
-        $tpl->foo = 'foo value';
-        $res = $tpl->execute();
-        $this->assertEquals($exp, $res);
-    }
-
     public function testNoInterpol()
     {
         $src = <<<EOT
@@ -122,24 +108,5 @@ EOT;
         $tpl->foo = 'foo value';
         $res = $tpl->execute();
         $this->assertEquals($exp, $res);
-    }
-
-
-    public function testPHPBlock()
-    {
-        $tpl = $this->newPHPTAL();
-        $tpl->setSource('<p test=\'te&amp;st<?php echo "<x>"; ?>test<?php print("&amp;") ?>test\'/>');
-        $this->assertEquals('<p test="te&amp;st<x>test&amp;test"></p>', $tpl->execute());
-    }
-
-    public function testPHPBlock54()
-    {
-        $tpl = $this->newPHPTAL();
-        $tpl->setSource('<p test=\'te&amp;st noshort<? print("<x>"); ?>test<?= "&amp;" ?>test\'/>');
-        try
-        {
-            $this->assertEquals(normalize_html('<p test="te&amp;st noshort&lt;? print(&quot;&lt;x&gt;&quot;); ?&gt;test&amp;test"></p>'), normalize_html($tpl->execute()));
-        }
-        catch(\PhpTal\Exception\ParserException $e) {/* xml ill-formedness error is ok too */}
     }
 }
