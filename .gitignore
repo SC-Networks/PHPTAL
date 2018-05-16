@@ -8,3 +8,5 @@ build
 /tools/phpdoc
 /tools/phpdoc.php
 /tools/validate-json
+/tools/phpcs
+/tools/phpcbf
