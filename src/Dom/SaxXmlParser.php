@@ -446,23 +446,10 @@ class SaxXmlParser
     {
         $str = str_replace('&apos;', '&#39;', $str); // PHP's html_entity_decode doesn't seem to support that!
 
-        /* <?php ?> blocks can't reliably work in attributes (due to escaping impossible in XML)
-           so they have to be converted into special TALES expression
-        */
-        $types = 'php|=';
-        $str = preg_replace_callback("/<\?($types)(.*?)\?>/", array('self', 'convertPHPBlockToTALES'), $str);
-
         // corrects all non-entities and neutralizes potentially problematic CDATA end marker
         $str = strtr(preg_replace('/&(?!(?:#x?[a-f0-9]+|[a-z][a-z0-9]*);)/i', '&amp;', $str), array('<'=>'&lt;', ']]>'=>']]&gt;'));
 
         return $str;
-    }
-
-    private static function convertPHPBlockToTALES($m)
-    {
-        list(, $type, $code) = $m;
-        if ($type === '=') $code = 'echo '.$code;
-        return '${structure phptal-internal-php-block:'.rawurlencode($code).'}';
     }
 
     public function getSourceFile()

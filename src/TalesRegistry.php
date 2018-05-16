@@ -44,7 +44,6 @@ class TalesRegistry
         $this->registerPrefix('path', array('\PhpTal\Php\TalesInternal', 'path'));
         $this->registerPrefix('string', array('\PhpTal\Php\TalesInternal', 'string'));
         $this->registerPrefix('php', array('\PhpTal\Php\TalesInternal', 'php'));
-        $this->registerPrefix('phptal-internal-php-block', array('\PhpTal\Php\TalesInternal', 'phptal_internal_php_block'));
         $this->registerPrefix('exists', array('\PhpTal\Php\TalesInternal', 'exists'));
         $this->registerPrefix('number', array('\PhpTal\Php\TalesInternal', 'number'));
         $this->registerPrefix('true', array('\PhpTal\Php\TalesInternal', 'true'));

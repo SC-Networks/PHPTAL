@@ -25,12 +25,4 @@ class TalesPhpTest extends PHPTAL_TestCase {
         $exp = normalize_html_file('output/php.html');
         $this->assertEquals($exp, $res);
     }
-
-    function testPHPAttribute()
-    {
-        $tpl = $this->newPHPTAL();
-        $tpl->setSource('<foo bar="<?php  echo  \'baz\' ; ?>"/>');
-        $this->assertEquals('<foo bar="baz"></foo>', $tpl->execute());
-    }
 }
-
