@@ -4,10 +4,10 @@
 all::test docs doc
 
 test::
-	tools/phpunit
+	bin/phpunit
 
 docs::
-	tools/phpdoc -d classes -t docs -p
+	bin/phpdoc -d classes -t docs -p
 
 doc::
 	$(MAKE) $(MFLAGS) -C doc

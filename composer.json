@@ -56,13 +56,10 @@
         "platform": {
             "php": "5.6"
         },
-        "bin-dir": "tools"
+        "bin-dir": "bin"
     },
-    "bin": [
-        "tools/phptal_lint.php"
-    ],
     "scripts": {
-        "tests": "tools/phpunit -c phpunit.xml",
+        "tests": "bin/phpunit -c phpunit.xml",
         "tal-lint": "tools/phptal_lint -e html tests/input/phptal*.html"
     },
     "scripts-descriptions": {
