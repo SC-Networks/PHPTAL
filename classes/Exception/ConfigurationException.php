@@ -19,7 +19,6 @@ namespace PhpTal\Exception;
  * You're probably not using PHPTAL class properly
  *
  * @package PHPTAL
- * @subpackage Exception
  */
 class ConfigurationException extends PhpTalException
 {

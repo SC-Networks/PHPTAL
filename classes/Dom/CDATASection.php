@@ -19,7 +19,6 @@
  * @todo this might be moved to CDATA processing in Element
  *
  * @package PHPTAL
- * @subpackage Dom
  */
 class PHPTAL_Dom_CDATASection extends PHPTAL_Dom_Node
 {

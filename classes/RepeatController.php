@@ -29,7 +29,6 @@
  * 'item' is an instance of this class.
  *
  * @package PHPTAL
- * @subpackage Php
  * @author Laurent Bedubourg <lbedubourg@motion-twin.com>
  */
 class PHPTAL_RepeatController implements Iterator

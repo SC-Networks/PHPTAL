@@ -17,7 +17,6 @@
  * XML declaration node.
  *
  * @package PHPTAL
- * @subpackage Dom
  */
 class PHPTAL_Dom_XmlDeclaration extends PHPTAL_Dom_Node
 {

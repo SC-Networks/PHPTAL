@@ -18,7 +18,6 @@
  * Keeps track of variable contents when using grouping in a path (first/ and last/)
  *
  * @package PHPTAL
- * @subpackage Php
  */
 class PHPTAL_RepeatControllerGroups
 {

@@ -17,7 +17,6 @@
  * processing instructions, including <?php blocks
  *
  * @package PHPTAL
- * @subpackage Dom
  */
 class PHPTAL_Dom_ProcessingInstruction extends PHPTAL_Dom_Node
 {

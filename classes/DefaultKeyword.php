@@ -17,7 +17,6 @@
  * Representation of the template 'default' keyword
  *
  * @package PHPTAL
- * @subpackage Keywords
  */
 class PHPTAL_DefaultKeyword implements Countable
 {

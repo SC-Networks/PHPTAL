@@ -24,7 +24,6 @@
  * and provide custom ones.
  *
  * @package PHPTAL
- * @subpackage Dom
  * @author Laurent Bedubourg <lbedubourg@motion-twin.com>
  */
 class PHPTAL_Dom_Defs

@@ -17,7 +17,6 @@
  * Document doctype representation.
  *
  * @package PHPTAL
- * @subpackage Dom
  */
 class PHPTAL_Dom_DocumentType extends PHPTAL_Dom_Node
 {

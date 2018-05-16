@@ -20,7 +20,6 @@
  * of tal:repeat.
  *
  * @package PHPTAL
- * @subpackage Dom
  * @author Laurent Bedubourg <lbedubourg@motion-twin.com>
  */
 class PHPTAL_Dom_XmlnsState

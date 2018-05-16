@@ -14,7 +14,6 @@
  */
 /**
  * @package PHPTAL
- * @subpackage Php.attribute.tal
  */
 class PHPTAL_Php_Attribute_TAL_Comment extends PHPTAL_Php_Attribute
 {

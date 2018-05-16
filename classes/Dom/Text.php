@@ -18,7 +18,6 @@
  * Document text data representation.
  *
  * @package PHPTAL
- * @subpackage Dom
  */
 class PHPTAL_Dom_Text extends PHPTAL_Dom_Node
 {

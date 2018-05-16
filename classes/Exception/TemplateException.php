@@ -20,7 +20,6 @@ namespace PhpTal\Exception;
  * You can check srcFile and srcLine to find source of the error.
  *
  * @package PHPTAL
- * @subpackage Exception
  */
 class TemplateException extends PhpTalException
 {

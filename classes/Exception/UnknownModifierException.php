@@ -19,7 +19,6 @@ namespace PhpTal\Exception;
  * ${unknown:foo} found in template
  *
  * @package PHPTAL
- * @subpackage Exception
  */
 class UnknownModifierException extends TemplateException
 {

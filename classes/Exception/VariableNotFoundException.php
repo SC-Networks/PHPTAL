@@ -19,7 +19,6 @@ namespace PhpTal\Exception;
  * Runtime error in TALES expression
  *
  * @package PHPTAL
- * @subpackage Exception
  */
 class VariableNotFoundException extends TemplateException
 {
