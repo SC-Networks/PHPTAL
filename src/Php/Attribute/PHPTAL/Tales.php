@@ -12,13 +12,16 @@
  * @version  SVN: $Id$
  * @link     http://phptal.org/
  */
+
+namespace PhpTal\Php\Attribute\PHPTAL;
+
 /**
  * @package PHPTAL
  * @author Laurent Bedubourg <lbedubourg@motion-twin.com>
  */
-class PHPTAL_Php_Attribute_PHPTAL_Tales extends PHPTAL_Php_Attribute
+class Tales extends \PhpTal\Php\Attribute
 {
-    public function before(PHPTAL_Php_CodeWriter $codewriter)
+    public function before(\PhpTal\Php\CodeWriter $codewriter)
     {
         $mode = trim($this->expression);
         $mode = strtolower($mode);
@@ -34,11 +37,10 @@ class PHPTAL_Php_Attribute_PHPTAL_Tales extends PHPTAL_Php_Attribute
         $this->_oldMode = $codewriter->setTalesMode($mode);
     }
 
-    public function after(PHPTAL_Php_CodeWriter $codewriter)
+    public function after(\PhpTal\Php\CodeWriter $codewriter)
     {
         $codewriter->setTalesMode($this->_oldMode);
     }
 
     private $_oldMode;
 }
-

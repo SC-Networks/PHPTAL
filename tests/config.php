@@ -24,7 +24,7 @@ abstract class PHPTAL_TestCase extends PHPUnit_Framework_TestCase
 
     function setUp()
     {
-        $this->assertTrue(PHPTAL::PHPTAL_VERSION >= '1_2_2');
+        $this->assertTrue(\PhpTal\PHPTAL::PHPTAL_VERSION >= '1_2_2');
 
         $this->buffer_level = ob_get_level();
 
@@ -51,9 +51,9 @@ abstract class PHPTAL_TestCase extends PHPUnit_Framework_TestCase
             ob_end_flush(); $unflushed++;
         }
 
-        if (strlen($content)) throw new Exception("Test {$this->getName()} output: $content");
+        if (strlen($content)) throw new \Exception("Test {$this->getName()} output: $content");
 
-        if ($unflushed) throw new Exception("Unflushed buffers: $unflushed");
+        if ($unflushed) throw new \Exception("Unflushed buffers: $unflushed");
     }
 
     /**
@@ -63,19 +63,19 @@ abstract class PHPTAL_TestCase extends PHPUnit_Framework_TestCase
 
     protected function newPHPTAL($tpl = false)
     {
-        $p = new PHPTAL($tpl);
+        $p = new \PhpTal\PHPTAL($tpl);
         $p->setForceReparse(true);
         return $p;
     }
 
     protected function assertXMLEquals($expect, $test)
     {
-        $doc = new DOMDocument();
+        $doc = new \DOMDocument();
         $this->assertTrue($doc->loadXML($expect), "Can load $expect");
         $doc->normalize();
         $expect = $doc->saveXML();
 
-        $doc = new DOMDocument();
+        $doc = new \DOMDocument();
         $this->assertTrue($doc->loadXML($test), "Can load $test");
         $doc->normalize();
         $test = $doc->saveXML();

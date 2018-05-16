@@ -16,7 +16,7 @@
 
 
 if (!class_exists('Test_PHPTAL_Namespace', false)) {
-    class Test_PHPTAL_Namespace extends PHPTAL_Namespace_Builtin
+    class Test_PHPTAL_Namespace extends \PhpTal\TalNamespace\Builtin
     {
     }
 }

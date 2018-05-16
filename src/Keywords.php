@@ -12,14 +12,14 @@
  * @link     http://phptal.org/
  */
 
+namespace PhpTal;
 
 /**
  * Interface for template keywords
  *
  * @package PHPTAL
  */
-interface PHPTAL_Keywords extends Countable
+interface Keywords extends \Countable
 {
     public function __toString();
 }
-?>

@@ -17,22 +17,6 @@
 
 class TalesClosuresTest extends PHPTAL_TestCase
 {
-    function testClosure()
-    {
-        if (version_compare("5.3", PHP_VERSION, ">")) $this->markTestSkipped();
-
-        $tpl = $this->newPHPTAL();
-
-        /* 5.2 can't parse it */
-        eval('
-        $tpl->closure = function(){return array("testif"=>array("works"=>"fine"));};
-        ');
-
-        $tpl->setSource("<x tal:content='closure/testif/works'/>");
-
-        $this->assertEquals("<x>fine</x>", $tpl->execute());
-    }
-
     function testInvoke()
     {
         $tpl = $this->newPHPTAL();

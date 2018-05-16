@@ -13,6 +13,7 @@
  * @link     http://phptal.org/
  */
 
+namespace PhpTal\Dom;
 
 /**
  * PHPTAL constants.
@@ -26,7 +27,7 @@
  * @package PHPTAL
  * @author Laurent Bedubourg <lbedubourg@motion-twin.com>
  */
-class PHPTAL_Dom_Defs
+class Defs
 {
     /**
      * this is a singleton
@@ -34,17 +35,17 @@ class PHPTAL_Dom_Defs
     public static function getInstance()
     {
         if (!self::$_instance) {
-            self::$_instance = new PHPTAL_Dom_Defs();
+            self::$_instance = new Defs();
         }
         return self::$_instance;
     }
 
     protected function __construct()
     {
-        $this->registerNamespace(new PHPTAL_Namespace_TAL());
-        $this->registerNamespace(new PHPTAL_Namespace_METAL());
-        $this->registerNamespace(new PHPTAL_Namespace_I18N());
-        $this->registerNamespace(new PHPTAL_Namespace_PHPTAL());
+        $this->registerNamespace(new \PhpTal\TalNamespace\TAL());
+        $this->registerNamespace(new \PhpTal\TalNamespace\METAL());
+        $this->registerNamespace(new \PhpTal\TalNamespace\I18N());
+        $this->registerNamespace(new \PhpTal\TalNamespace\PHPTAL());
     }
 
     /**
@@ -155,9 +156,9 @@ class PHPTAL_Dom_Defs
     }
 
     /**
-     * Register a PHPTAL_Namespace and its attribute into PHPTAL.
+     * Register a \PhpTal\TalNamespace and its attribute into PHPTAL.
      */
-    public function registerNamespace(PHPTAL_Namespace $ns)
+    public function registerNamespace(\PhpTal\TalNamespace $ns)
     {
         $this->namespaces_by_uri[$ns->getNamespaceURI()] = $ns;
         $this->prefix_to_uri[$ns->getPrefix()] = $ns->getNamespaceURI();
@@ -171,7 +172,7 @@ class PHPTAL_Dom_Defs
     private static $_instance = null;
     private $_dictionary = array();
     /**
-     * list of PHPTAL_Namespace objects
+     * list of \PhpTal\TalNamespace objects
      */
     private $namespaces_by_uri = array();
     private $prefix_to_uri = array(

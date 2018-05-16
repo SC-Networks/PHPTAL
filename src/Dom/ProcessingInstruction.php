@@ -13,14 +13,16 @@
  * @link     http://phptal.org/
  */
 
+namespace PhpTal\Dom;
+
 /**
  * processing instructions, including <?php blocks
  *
  * @package PHPTAL
  */
-class PHPTAL_Dom_ProcessingInstruction extends PHPTAL_Dom_Node
+class ProcessingInstruction extends \PhpTal\Dom\Node
 {
-    public function generateCode(PHPTAL_Php_CodeWriter $codewriter)
+    public function generateCode(\PhpTal\Php\CodeWriter $codewriter)
     {
         if (preg_match('/^<\?(?:php|[=\s])/i', $this->getValueEscaped())) {
             // block will be executed as PHP

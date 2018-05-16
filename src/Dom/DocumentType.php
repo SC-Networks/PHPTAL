@@ -13,16 +13,18 @@
  * @link     http://phptal.org/
  */
 
+namespace PhpTal\Dom;
+
 /**
  * Document doctype representation.
  *
  * @package PHPTAL
  */
-class PHPTAL_Dom_DocumentType extends PHPTAL_Dom_Node
+class DocumentType extends \PhpTal\Dom\Node
 {
-    public function generateCode(PHPTAL_Php_CodeWriter $codewriter)
+    public function generateCode(\PhpTal\Php\CodeWriter $codewriter)
     {
-        if ($codewriter->getOutputMode() === PHPTAL::HTML5) {
+        if ($codewriter->getOutputMode() === \PhpTal\PHPTAL::HTML5) {
             $codewriter->setDocType('<!DOCTYPE html>');
         } else {
             $codewriter->setDocType($this->getValueEscaped());

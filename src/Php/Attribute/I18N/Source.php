@@ -13,6 +13,7 @@
  * @link     http://phptal.org/
  */
 
+namespace PhpTal\Php\Attribute\I18N;
 
 /**
  * i18n:source
@@ -24,9 +25,9 @@
  *
  * @package PHPTAL
  */
-class PHPTAL_Php_Attribute_I18N_Source extends PHPTAL_Php_Attribute
+class Source extends \PhpTal\Php\Attribute
 {
-    public function before(PHPTAL_Php_CodeWriter $codewriter)
+    public function before(\PhpTal\Php\CodeWriter $codewriter)
     {
         // ensure that a sources stack exists or create it
         $codewriter->doIf('!isset($_i18n_sources)');
@@ -37,11 +38,10 @@ class PHPTAL_Php_Attribute_I18N_Source extends PHPTAL_Php_Attribute
         $codewriter->pushCode('$_i18n_sources[] = ' . $codewriter->getTranslatorReference(). '->setSource('.$codewriter->str($this->expression).')');
     }
 
-    public function after(PHPTAL_Php_CodeWriter $codewriter)
+    public function after(\PhpTal\Php\CodeWriter $codewriter)
     {
         // restore source
         $code = $codewriter->getTranslatorReference().'->setSource(array_pop($_i18n_sources))';
         $codewriter->pushCode($code);
     }
 }
-

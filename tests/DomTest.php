@@ -19,8 +19,8 @@ class DOMTest extends PHPTAL_TestCase
 {
     private function newElement($name = 'foo', $ns = '')
     {
-        $xmlns = new PHPTAL_Dom_XmlnsState(array(), '');
-        return new PHPTAL_Dom_Element($name, $ns, array(), $xmlns);
+        $xmlns = new \PhpTal\Dom\XmlnsState(array(), '');
+        return new \PhpTal\Dom\Element($name, $ns, array(), $xmlns);
     }
 
     function testAppendChild()

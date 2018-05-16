@@ -13,23 +13,28 @@
  * @link     http://phptal.org/
  */
 
+namespace PhpTal\TalNamespace;
+
+use PhpTal\TalNamespaceAttributeContent;
+use PhpTal\TalNamespaceAttributeReplace;
+use PhpTal\TalNamespaceAttributeSurround;
 
 /**
  * @package PHPTAL
  */
-class PHPTAL_Namespace_TAL extends PHPTAL_Namespace_Builtin
+class TAL extends Builtin
 {
     public function __construct()
     {
         parent::__construct('tal', 'http://xml.zope.org/namespaces/tal');
-        $this->addAttribute(new PHPTAL_NamespaceAttributeSurround('define', 4));
-        $this->addAttribute(new PHPTAL_NamespaceAttributeSurround('condition', 6));
-        $this->addAttribute(new PHPTAL_NamespaceAttributeSurround('repeat', 8));
-        $this->addAttribute(new PHPTAL_NamespaceAttributeContent('content', 11));
-        $this->addAttribute(new PHPTAL_NamespaceAttributeReplace('replace', 9));
-        $this->addAttribute(new PHPTAL_NamespaceAttributeSurround('attributes', 9));
-        $this->addAttribute(new PHPTAL_NamespaceAttributeSurround('omit-tag', 0));
-        $this->addAttribute(new PHPTAL_NamespaceAttributeSurround('comment', 12));
-        $this->addAttribute(new PHPTAL_NamespaceAttributeSurround('on-error', 2));
+        $this->addAttribute(new TalNamespaceAttributeSurround('define', 4));
+        $this->addAttribute(new TalNamespaceAttributeSurround('condition', 6));
+        $this->addAttribute(new TalNamespaceAttributeSurround('repeat', 8));
+        $this->addAttribute(new TalNamespaceAttributeContent('content', 11));
+        $this->addAttribute(new TalNamespaceAttributeReplace('replace', 9));
+        $this->addAttribute(new TalNamespaceAttributeSurround('attributes', 9));
+        $this->addAttribute(new TalNamespaceAttributeSurround('omit-tag', 0));
+        $this->addAttribute(new TalNamespaceAttributeSurround('comment', 12));
+        $this->addAttribute(new TalNamespaceAttributeSurround('on-error', 2));
     }
 }

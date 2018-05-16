@@ -118,7 +118,7 @@ class PHPTAL_Lint_CLI
 
     function usage()
     {
-        echo "PHPTAL Lint 1.1.3 (PHPTAL ", strtr(PHPTAL::PHPTAL_VERSION,"_","."), ")\n";
+        echo "PHPTAL Lint 1.1.3 (PHPTAL ", strtr(\PhpTal\PHPTAL::PHPTAL_VERSION,"_","."), ")\n";
 
         echo "Usage: phptal_lint.php [-e extensions] [-i php_file_or_directory] file_or_directory_to_check ...\n";
         echo "  -e comma-separated list of extensions\n";
@@ -242,7 +242,7 @@ class PHPTAL_Lint
     {
         try {
             $this->checked ++;
-            $phptal = new PHPTAL($fullpath);
+            $phptal = new \PhpTal\PHPTAL($fullpath);
             $phptal->setForceReparse(true);
             $phptal->prepare();
             return self::TEST_OK;

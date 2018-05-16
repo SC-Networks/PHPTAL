@@ -15,9 +15,9 @@
 
 
 
-class DummyPhpNode extends PHPTAL_Dom_Element {
+class DummyPhpNode extends \PhpTal\Dom\Element {
     function __construct() {}
-    function generateCode(PHPTAL_Php_CodeWriter $codewriter) {}
+    function generateCode(\PhpTal\Php\CodeWriter $codewriter) {}
 }
 
 class TalCommentTest extends PHPTAL_TestCase
@@ -25,15 +25,15 @@ class TalCommentTest extends PHPTAL_TestCase
     function setUp()
     {
         parent::setUp();
-        $state = new PHPTAL_Php_State($this->newPHPTAL());
-        $this->_gen = new PHPTAL_Php_CodeWriter($state);
+        $state = new \PhpTal\Php\State($this->newPHPTAL());
+        $this->_gen = new \PhpTal\Php\CodeWriter($state);
         $this->_tag = new DummyPhpNode();
         $this->_tag->codewriter = $this->_gen;
     }
 
     private function newComment($expr)
     {
-        return $this->_att = new PHPTAL_Php_Attribute_TAL_Comment($this->_tag, $expr);
+        return $this->_att = new \PhpTal\Php\Attribute\TAL\Comment($this->_tag, $expr);
     }
 
     function testComment()

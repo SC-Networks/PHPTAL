@@ -13,15 +13,17 @@
  * @link     http://phptal.org/
  */
 
+namespace PhpTal\Dom;
+
 /**
  * DOM Builder
  *
  * @package PHPTAL
  */
-abstract class PHPTAL_Dom_DocumentBuilder
+abstract class DocumentBuilder
 {
-    protected $_stack;   /* array<PHPTAL_Dom_Node> */
-    protected $_current; /* PHPTAL_Dom_Node */
+    protected $_stack;   /* array<\PhpTal\Dom\Node> */
+    protected $_current; /* \PhpTal\Dom\Node */
 
     protected $file, $line;
 

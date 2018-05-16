@@ -13,6 +13,8 @@
  * @link     http://phptal.org/
  */
 
+namespace PhpTal\Php;
+
 /**
  * Base class for all PHPTAL attributes.
  *
@@ -24,7 +26,7 @@
  * @package PHPTAL
  * @author Laurent Bedubourg <lbedubourg@motion-twin.com>
  */
-abstract class PHPTAL_Php_Attribute
+abstract class Attribute
 {
     const ECHO_TEXT = 'text';
     const ECHO_STRUCTURE = 'structure';
@@ -38,14 +40,14 @@ abstract class PHPTAL_Php_Attribute
     /**
      * Called before element printing.
      */
-    abstract function before(PHPTAL_Php_CodeWriter $codewriter);
+    abstract function before(CodeWriter $codewriter);
 
     /**
      * Called after element printing.
      */
-    abstract function after(PHPTAL_Php_CodeWriter $codewriter);
+    abstract function after(CodeWriter $codewriter);
 
-    function __construct(PHPTAL_Dom_Element $phpelement, $expression)
+    function __construct(\PhpTal\Dom\Element $phpelement, $expression)
     {
         $this->expression = $expression;
         $this->phpelement = $phpelement;
@@ -73,7 +75,7 @@ abstract class PHPTAL_Php_Attribute
         return trim($expression);
     }
 
-    protected function doEchoAttribute(PHPTAL_Php_CodeWriter $codewriter, $code)
+    protected function doEchoAttribute(CodeWriter $codewriter, $code)
     {
         if ($this->_echoType === self::ECHO_TEXT)
             $codewriter->doEcho($code);
@@ -92,6 +94,6 @@ abstract class PHPTAL_Php_Attribute
         return array($exp, null);
     }
 
-    protected $_echoType = PHPTAL_Php_Attribute::ECHO_TEXT;
+    protected $_echoType = Attribute::ECHO_TEXT;
 }
 

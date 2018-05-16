@@ -13,12 +13,14 @@
  * @link     http://phptal.org/
  */
 
+namespace PhpTal\Dom;
+
 /**
  * Document node abstract class.
  *
  * @package PHPTAL
  */
-abstract class PHPTAL_Dom_Node
+abstract class Node
 {
     public $parentNode;
 
@@ -94,11 +96,10 @@ abstract class PHPTAL_Dom_Node
     /**
      * use CodeWriter to compile this element to PHP code
      */
-    public abstract function generateCode(PHPTAL_Php_CodeWriter $gen);
+    public abstract function generateCode(\PhpTal\Php\CodeWriter $gen);
 
     function __toString()
     {
         return " “".$this->getValue()."” ";
     }
 }
-

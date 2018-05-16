@@ -211,7 +211,7 @@ class MetalSlotTest extends PHPTAL_TestCase
         ');
 
         $res = $tpl->execute();
-        $this->assertGreaterThan(PHPTAL_Php_Attribute_METAL_FillSlot::CALLBACK_THRESHOLD, strlen($res));
+        $this->assertGreaterThan(\PhpTal\Php\Attribute\METAL\FillSlot::CALLBACK_THRESHOLD, strlen($res));
 
         $tpl_php_source = file_get_contents($tpl->getCodePath());
 

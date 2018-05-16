@@ -13,10 +13,12 @@
  * @link     http://phptal.org/
  */
 
+namespace PhpTal;
+
 /**
  * @package PHPTAL
  */
-interface PHPTAL_TranslationService
+interface TranslationService
 {
     /**
      * Set the target language for translations.

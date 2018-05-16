@@ -13,6 +13,8 @@
  * @link     http://phptal.org/
  */
 
+namespace PhpTal\Php\Attribute\I18N;
+
 /**
  * ZPTInternationalizationSupport
  *
@@ -26,14 +28,14 @@
  *
  * @package PHPTAL
  */
-class PHPTAL_Php_Attribute_I18N_Translate extends PHPTAL_Php_Attribute_TAL_Content
+class Translate extends \PhpTal\Php\Attribute\TAL\Content
 {
-    public function before(PHPTAL_Php_CodeWriter $codewriter)
+    public function before(\PhpTal\Php\CodeWriter $codewriter)
     {
         $escape = true;
-        $this->_echoType = PHPTAL_Php_Attribute::ECHO_TEXT;
+        $this->_echoType = \PhpTal\Php\Attribute::ECHO_TEXT;
         if (preg_match('/^(text|structure)(?:\s+(.*)|\s*$)/', $this->expression, $m)) {
-            if ($m[1]=='structure') { $escape=false; $this->_echoType = PHPTAL_Php_Attribute::ECHO_STRUCTURE; }
+            if ($m[1]=='structure') { $escape=false; $this->_echoType = \PhpTal\Php\Attribute::ECHO_STRUCTURE; }
             $this->expression = isset($m[2])?$m[2]:'';
         }
 
@@ -60,19 +62,19 @@ class PHPTAL_Php_Attribute_I18N_Translate extends PHPTAL_Php_Attribute_TAL_Conte
         $codewriter->pushCode('echo '.$codewriter->getTranslatorReference().'->translate('.$code.','.($escape ? 'true':'false').');');
     }
 
-    public function after(PHPTAL_Php_CodeWriter $codewriter)
+    public function after(\PhpTal\Php\CodeWriter $codewriter)
     {
     }
 
-    public function talesChainPart(PHPTAL_Php_TalesChainExecutor $executor, $exp, $islast)
+    public function talesChainPart(\PhpTal\Php\TalesChainExecutor $executor, $exp, $islast)
     {
         $codewriter = $executor->getCodeWriter();
 
-        $escape = !($this->_echoType == PHPTAL_Php_Attribute::ECHO_STRUCTURE);
+        $escape = !($this->_echoType == \PhpTal\Php\Attribute::ECHO_STRUCTURE);
         $exp = $codewriter->getTranslatorReference()."->translate($exp, " . ($escape ? 'true':'false') . ')';
         if (!$islast) {
             $var = $codewriter->createTempVariable();
-            $executor->doIf('!phptal_isempty('.$var.' = '.$exp.')');
+            $executor->doIf('!\PhpTal\Helper::phptal_isempty('.$var.' = '.$exp.')');
             $codewriter->pushCode("echo $var");
             $codewriter->recycleTempVariable($var);
         } else {
@@ -81,17 +83,17 @@ class PHPTAL_Php_Attribute_I18N_Translate extends PHPTAL_Php_Attribute_TAL_Conte
         }
     }
 
-    private function _getTranslationKey(PHPTAL_Dom_Node $tag, $preserve_tags, $encoding)
+    private function _getTranslationKey(\PhpTal\Dom\Node $tag, $preserve_tags, $encoding)
     {
         $result = '';
         foreach ($tag->childNodes as $child) {
-            if ($child instanceof PHPTAL_Dom_Text) {
+            if ($child instanceof \PhpTal\Dom\Text) {
                 if ($preserve_tags) {
                     $result .= $child->getValueEscaped();
                 } else {
                     $result .= $child->getValue($encoding);
                 }
-            } elseif ($child instanceof PHPTAL_Dom_Element) {
+            } elseif ($child instanceof \PhpTal\Dom\Element) {
                 if ($attr = $child->getAttributeNodeNS('http://xml.zope.org/namespaces/i18n', 'name')) {
                     $result .= '${' . $attr->getValue() . '}';
                 } else {
@@ -99,7 +101,7 @@ class PHPTAL_Php_Attribute_I18N_Translate extends PHPTAL_Php_Attribute_TAL_Conte
                     if ($preserve_tags) {
                         $result .= '<'.$child->getQualifiedName();
                         foreach ($child->getAttributeNodes() as $attr) {
-                            if ($attr->getReplacedState() === PHPTAL_Dom_Attr::HIDDEN) continue;
+                            if ($attr->getReplacedState() === \PhpTal\Dom\Attr::HIDDEN) continue;
 
                             $result .= ' '.$attr->getQualifiedName().'="'.$attr->getValueEscaped().'"';
                         }
@@ -113,10 +115,10 @@ class PHPTAL_Php_Attribute_I18N_Translate extends PHPTAL_Php_Attribute_TAL_Conte
         return $result;
     }
 
-    private function _prepareNames(PHPTAL_Php_CodeWriter $codewriter, PHPTAL_Dom_Node $tag)
+    private function _prepareNames(\PhpTal\Php\CodeWriter $codewriter, \PhpTal\Dom\Node $tag)
     {
         foreach ($tag->childNodes as $child) {
-            if ($child instanceof PHPTAL_Dom_Element) {
+            if ($child instanceof \PhpTal\Dom\Element) {
                 if ($child->hasAttributeNS('http://xml.zope.org/namespaces/i18n', 'name')) {
                     $child->generateCode($codewriter);
                 } else {
@@ -126,4 +128,3 @@ class PHPTAL_Php_Attribute_I18N_Translate extends PHPTAL_Php_Attribute_TAL_Conte
         }
     }
 }
-

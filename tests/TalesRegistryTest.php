@@ -17,13 +17,13 @@ class TalesRegistryTest extends PHPTAL_TestCase
 {
     function testInstance()
     {
-        $this->assertSame(PHPTAL_TalesRegistry::getInstance(), PHPTAL_TalesRegistry::getInstance());
-        $this->assertInstanceOf('PHPTAL_TalesRegistry',PHPTAL_TalesRegistry::getInstance());
+        $this->assertSame(\PhpTal\TalesRegistry::getInstance(), \PhpTal\TalesRegistry::getInstance());
+        $this->assertInstanceOf('\PhpTal\TalesRegistry',\PhpTal\TalesRegistry::getInstance());
     }
 
     function testRegisterFunction()
     {
-        PHPTAL_TalesRegistry::getInstance()->registerPrefix('registry_test', 'registry_test_callback');
+        \PhpTal\TalesRegistry::getInstance()->registerPrefix('registry_test', 'registry_test_callback');
 
         $this->assertEquals('<p>ok1</p>', $this->newPHPTAL()->setSource('<p tal:content="registry_test:number:1"/>')->execute());
     }
@@ -48,8 +48,8 @@ class TalesRegistryTest extends PHPTAL_TestCase
     function testUnregisterFunction()
     {
         $test_prefix = 'testprefix';
-        PHPTAL_TalesRegistry::getInstance()->registerPrefix($test_prefix, 'registry_test_callback3');
-        PHPTAL_TalesRegistry::getInstance()->unregisterPrefix($test_prefix);
+        \PhpTal\TalesRegistry::getInstance()->registerPrefix($test_prefix, 'registry_test_callback3');
+        \PhpTal\TalesRegistry::getInstance()->unregisterPrefix($test_prefix);
         $this->newPHPTAL()->setSource('<p tal:content="'.$test_prefix.':"/>')->execute();
     }
 
@@ -58,7 +58,7 @@ class TalesRegistryTest extends PHPTAL_TestCase
      */
     function testCantUnregisterNonRegistered()
     {
-        PHPTAL_TalesRegistry::getInstance()->unregisterPrefix('doesnotexist');
+        \PhpTal\TalesRegistry::getInstance()->unregisterPrefix('doesnotexist');
     }
 
     /**
@@ -66,7 +66,7 @@ class TalesRegistryTest extends PHPTAL_TestCase
      */
     function testCantRegisterNonExistant()
     {
-        PHPTAL_TalesRegistry::getInstance()->registerPrefix('registry_test_2', 'doesnotexist');
+        \PhpTal\TalesRegistry::getInstance()->registerPrefix('registry_test_2', 'doesnotexist');
     }
 
     /**
@@ -74,40 +74,40 @@ class TalesRegistryTest extends PHPTAL_TestCase
      */
     function testCantRegisterTwice()
     {
-        PHPTAL_TalesRegistry::getInstance()->registerPrefix('registry_test_3', 'registry_test_callback');
-        PHPTAL_TalesRegistry::getInstance()->registerPrefix('registry_test_3', 'registry_test_callback');
+        \PhpTal\TalesRegistry::getInstance()->registerPrefix('registry_test_3', 'registry_test_callback');
+        \PhpTal\TalesRegistry::getInstance()->registerPrefix('registry_test_3', 'registry_test_callback');
     }
 
     function testCanRegisterFallbackTwice()
     {
-        PHPTAL_TalesRegistry::getInstance()->registerPrefix('registry_test_4', 'registry_test_callback', true);
-        PHPTAL_TalesRegistry::getInstance()->registerPrefix('registry_test_4', 'registry_test_callback', true);
+        \PhpTal\TalesRegistry::getInstance()->registerPrefix('registry_test_4', 'registry_test_callback', true);
+        \PhpTal\TalesRegistry::getInstance()->registerPrefix('registry_test_4', 'registry_test_callback', true);
     }
 
     function testCanRegisterOverFallback()
     {
-        PHPTAL_TalesRegistry::getInstance()->registerPrefix('registry_test_5', 'registry_test_callback', true);
-        PHPTAL_TalesRegistry::getInstance()->registerPrefix('registry_test_5', 'registry_test_callback2');
+        \PhpTal\TalesRegistry::getInstance()->registerPrefix('registry_test_5', 'registry_test_callback', true);
+        \PhpTal\TalesRegistry::getInstance()->registerPrefix('registry_test_5', 'registry_test_callback2');
     }
 
     function testCanRegisterFallbackOverRegistered()
     {
-        PHPTAL_TalesRegistry::getInstance()->registerPrefix('registry_test_6', 'registry_test_callback2');
-        PHPTAL_TalesRegistry::getInstance()->registerPrefix('registry_test_6', 'registry_test_callback', true);
+        \PhpTal\TalesRegistry::getInstance()->registerPrefix('registry_test_6', 'registry_test_callback2');
+        \PhpTal\TalesRegistry::getInstance()->registerPrefix('registry_test_6', 'registry_test_callback', true);
     }
 }
 
 function registry_test_callback($arg, $nothrow)
 {
-    return '"ok" . ' . phptal_tales($arg);
+    return '"ok" . ' . \PhpTal\Php\TalesInternal::compileToPHPExpressions($arg);
 }
 
 function registry_test_callback2($arg, $nothrow)
 {
-    return '"ok2" . ' . phptal_tales($arg);
+    return '"ok2" . ' . \PhpTal\Php\TalesInternal::compileToPHPExpressions($arg);
 }
 
 function registry_test_callback3($arg, $nothrow)
 {
-    return '"ok3" . ' . phptal_tales($arg);
+    return '"ok3" . ' . \PhpTal\Php\TalesInternal::compileToPHPExpressions($arg);
 }

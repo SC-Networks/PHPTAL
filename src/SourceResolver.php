@@ -13,13 +13,15 @@
  * @link     http://phptal.org/
  */
 
+namespace PhpTal;
+
 /**
  * @package PHPTAL
  */
-interface PHPTAL_SourceResolver
+interface SourceResolver
 {
     /**
-     * Returns PHPTAL_Source or null.
+     * Returns Source or null.
      */
     public function resolve($path);
 }

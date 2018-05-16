@@ -12,13 +12,14 @@
  * @link     http://phptal.org/
  */
 
+namespace PhpTal;
 
 /**
  * Interface for Triggers (phptal:id)
  *
  * @package PHPTAL
  */
-interface PHPTAL_Trigger
+interface Trigger
 {
     const SKIPTAG = 1;
     const PROCEED = 2;

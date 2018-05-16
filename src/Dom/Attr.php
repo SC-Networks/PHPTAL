@@ -13,12 +13,14 @@
  * @link     http://phptal.org/
  */
 
+namespace PhpTal\Dom;
+
 /**
  * node that represents element's attribute
  *
  * @package PHPTAL
  */
-class PHPTAL_Dom_Attr
+class Attr
 {
     private $value_escaped, $qualified_name, $namespace_uri, $encoding;
     /**

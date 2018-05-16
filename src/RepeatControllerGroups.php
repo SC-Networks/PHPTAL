@@ -14,12 +14,14 @@
  * @link     http://phptal.org/
  */
 
+namespace PhpTal;
+
 /**
  * Keeps track of variable contents when using grouping in a path (first/ and last/)
  *
  * @package PHPTAL
  */
-class PHPTAL_RepeatControllerGroups
+class RepeatControllerGroups
 {
     protected $dict = array();
     protected $cache = array();
@@ -123,7 +125,7 @@ class PHPTAL_RepeatControllerGroups
      *
      * @return Mixed    An object/array if the path is not over or a boolean
      *
-     * @todo    replace the PHPTAL_Context::path() with custom code
+     * @todo    replace the Context::path() with custom code
      */
     public function __get($var)
     {
@@ -135,7 +137,7 @@ class PHPTAL_RepeatControllerGroups
         }
 
         // Find the requested variable
-        $value = PHPTAL_Context::path($this->data, $var, true);
+        $value = Context::path($this->data, $var, true);
 
         // Check if it's an object or an array
         if ( is_array($value) || is_object($value) ) {

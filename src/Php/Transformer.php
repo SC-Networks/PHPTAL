@@ -13,6 +13,8 @@
  * @link     http://phptal.org/
  */
 
+namespace PhpTal\Php;
+
 /**
  * Tranform php: expressions into their php equivalent.
  *
@@ -27,13 +29,13 @@
  *
  * example:
  *
- *      $res = PHPTAL_Php_Transformer::transform('a.b.c[x]', '$ctx->');
+ *      $res = \PhpTal\Php\Transformer::transform('a.b.c[x]', '$ctx->');
  *      $res == '$ctx->a->b->c[$ctx->x]';
  *
  * @package PHPTAL
  * @author Laurent Bedubourg <lbedubourg@motion-twin.com>
  */
-class PHPTAL_Php_Transformer
+class Transformer
 {
     const ST_WHITE  = -1; // start of string or whitespace
     const ST_NONE   = 0;  // pass through (operators, parens, etc.)
@@ -414,4 +416,3 @@ class PHPTAL_Php_Transformer
         'eq'  => '==',
     );
 }
-

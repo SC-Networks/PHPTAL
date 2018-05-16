@@ -12,14 +12,17 @@
  * @version  SVN: $Id$
  * @link     http://phptal.org/
  */
+
+namespace PhpTal\Php\Attribute\PHPTAL;
+
 /**
  * @package PHPTAL
  * @author Laurent Bedubourg <lbedubourg@motion-twin.com>
  */
-class PHPTAL_Php_Attribute_PHPTAL_Id extends PHPTAL_Php_Attribute
+class Id extends \PhpTal\Php\Attribute
 {
     private $var;
-    public function before(PHPTAL_Php_CodeWriter $codewriter)
+    public function before(\PhpTal\Php\CodeWriter $codewriter)
     {
         // retrieve trigger
         $this->var = $codewriter->createTempVariable();
@@ -32,10 +35,10 @@ class PHPTAL_Php_Attribute_PHPTAL_Id extends PHPTAL_Php_Attribute
         // if trigger found and trigger tells to proceed, we execute
         // the node content
         $codewriter->doIf($this->var.' &&
-            '.$this->var.'->start('.$codewriter->str($this->expression).', $tpl) === PHPTAL_Trigger::PROCEED');
+            '.$this->var.'->start('.$codewriter->str($this->expression).', $tpl) === \PhpTal\Trigger::PROCEED');
     }
 
-    public function after(PHPTAL_Php_CodeWriter $codewriter)
+    public function after(\PhpTal\Php\CodeWriter $codewriter)
     {
         // end of if PROCEED
         $codewriter->doEnd('if');
@@ -49,4 +52,3 @@ class PHPTAL_Php_Attribute_PHPTAL_Id extends PHPTAL_Php_Attribute
         $codewriter->recycleTempVariable($this->var);
     }
 }
-

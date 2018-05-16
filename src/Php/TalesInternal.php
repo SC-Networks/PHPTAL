@@ -14,6 +14,7 @@
  * @link     http://phptal.org/
  */
 
+namespace PhpTal\Php;
 
 /**
  * TALES Specification 1.3
@@ -47,14 +48,14 @@
 /**
  * @package PHPTAL
  */
-class PHPTAL_Php_TalesInternal implements PHPTAL_Tales
+class TalesInternal implements \PhpTal\Tales
 {
-    const DEFAULT_KEYWORD = 'new PHPTAL_DefaultKeyword';
-    const NOTHING_KEYWORD = 'new PHPTAL_NothingKeyword';
+    const DEFAULT_KEYWORD = 'new \PhpTal\DefaultKeyword';
+    const NOTHING_KEYWORD = 'new \PhpTal\NothingKeyword';
 
     static public function true($src, $nothrow)
     {
-        return 'phptal_true(' . self::compileToPHPExpression($src, true) . ')';
+        return '\PhpTal\Helper::phptal_true(' . self::compileToPHPExpression($src, true) . ')';
     }
 
     /**
@@ -83,7 +84,7 @@ class PHPTAL_Php_TalesInternal implements PHPTAL_Tales
      */
     static public function not($expression, $nothrow)
     {
-        return '!phptal_true(' . self::compileToPHPExpression($expression, $nothrow) . ')';
+        return '!\PhpTal\Helper::phptal_true(' . self::compileToPHPExpression($expression, $nothrow) . ')';
     }
 
 
@@ -190,9 +191,9 @@ class PHPTAL_Php_TalesInternal implements PHPTAL_Tales
             return '$ctx->'.$next;
         }
 
-        // otherwise we have to call PHPTAL_Context::path() to resolve the path at runtime
-        // extract the first part of the expression (it will be the PHPTAL_Context::path()
-        // $base and pass the remaining of the path to PHPTAL_Context::path()
+        // otherwise we have to call Context::path() to resolve the path at runtime
+        // extract the first part of the expression (it will be the Context::path()
+        // $base and pass the remaining of the path to Context::path()
         return '$ctx->path($ctx->'.$next.', '.$expression.')';
     }
 
@@ -351,7 +352,7 @@ class PHPTAL_Php_TalesInternal implements PHPTAL_Tales
      */
     static public function php($src)
     {
-        return PHPTAL_Php_Transformer::transform($src, '$ctx->');
+        return \PhpTal\Php\Transformer::transform($src, '$ctx->');
     }
 
     /**
@@ -403,7 +404,7 @@ class PHPTAL_Php_TalesInternal implements PHPTAL_Tales
      */
     static public function json($src, $nothrow)
     {
-        return 'json_encode('.phptal_tale($src,$nothrow).')';
+        return 'json_encode('.static::compileToPHPExpression($src,$nothrow).')';
     }
 
     /**
@@ -411,14 +412,14 @@ class PHPTAL_Php_TalesInternal implements PHPTAL_Tales
      */
     static public function urlencode($src, $nothrow)
     {
-        return 'rawurlencode('.phptal_tale($src,$nothrow).')';
+        return 'rawurlencode('.static::compileToPHPExpression($src,$nothrow).')';
     }
 
     /**
      * translates TALES expression with alternatives into single PHP expression.
      * Identical to compileToPHPExpressions() for singular expressions.
      *
-     * @see PHPTAL_Php_TalesInternal::compileToPHPExpressions()
+     * @see \PhpTal\Php\TalesInternal::compileToPHPExpressions()
      * @return string
      */
     public static function compileToPHPExpression($expression, $nothrow=false)
@@ -442,7 +443,7 @@ class PHPTAL_Php_TalesInternal implements PHPTAL_Tales
 
         $expr = array_shift($array);
 
-        return "(!phptal_isempty(\$_tmp5=$expr) && (\$ctx->noThrow(false)||1)?\$_tmp5:".self::convertExpressionsToExpression($array, $nothrow).')';
+        return "(!\PhpTal\Helper::phptal_isempty(\$_tmp5=$expr) && (\$ctx->noThrow(false)||1)?\$_tmp5:".self::convertExpressionsToExpression($array, $nothrow).')';
     }
 
     /**
@@ -450,7 +451,7 @@ class PHPTAL_Php_TalesInternal implements PHPTAL_Tales
      * e.g. "string:foo${bar}" may be transformed to "'foo'.phptal_escape($ctx->bar)"
      *
      * Expressions with alternatives ("foo | bar") will cause it to return array
-     * Use PHPTAL_Php_TalesInternal::compileToPHPExpression() if you always want string.
+     * Use \PhpTal\Php\TalesInternal::compileToPHPExpression() if you always want string.
      *
      * @param bool $nothrow if true, invalid expression will return NULL (at run time) rather than throwing exception
      *
@@ -475,7 +476,7 @@ class PHPTAL_Php_TalesInternal implements PHPTAL_Tales
         }
 
         // is a registered TALES expression modifier
-        $callback = PHPTAL_TalesRegistry::getInstance()->getCallback($typePrefix);
+        $callback = \PhpTal\TalesRegistry::getInstance()->getCallback($typePrefix);
         if ($callback !== NULL)
         {
             $result = call_user_func($callback, $expression, $nothrow);

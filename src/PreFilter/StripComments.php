@@ -12,21 +12,23 @@
  * @link     http://phptal.org/
  */
 
-class PHPTAL_PreFilter_StripComments extends PHPTAL_PreFilter
+namespace PhpTal\PreFilter;
+
+class StripComments extends \PhpTal\PreFilter
 {
-    function filterDOM(PHPTAL_Dom_Element $element)
+    function filterDOM(\PhpTal\Dom\Element $element)
     {
-        $defs = PHPTAL_Dom_Defs::getInstance();
+        $defs = \PhpTal\Dom\Defs::getInstance();
 
         foreach ($element->childNodes as $node) {
-            if ($node instanceof PHPTAL_Dom_Comment) {
+            if ($node instanceof \PhpTal\Dom\Comment) {
                 if ($defs->isCDATAElementInHTML($element->getNamespaceURI(), $element->getLocalName())) {
-                    $textNode = new PHPTAL_Dom_CDATASection($node->getValueEscaped(), $node->getEncoding());
+                    $textNode = new \PhpTal\Dom\CDATASection($node->getValueEscaped(), $node->getEncoding());
                     $node->parentNode->replaceChild($textNode, $node);
                 } else {
                     $node->parentNode->removeChild($node);
                 }
-            } else if ($node instanceof PHPTAL_Dom_Element) {
+            } else if ($node instanceof \PhpTal\Dom\Element) {
                 $this->filterDOM($node);
             }
         }

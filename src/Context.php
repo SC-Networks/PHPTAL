@@ -13,12 +13,14 @@
  * @link     http://phptal.org/
  */
 
+namespace PhpTal;
+
 /**
  * This class handles template execution context.
  * Holds template variables and carries state/scope across macro executions.
  *
  */
-class PHPTAL_Context
+class Context
 {
     public $repeat;
     public $_xmlDeclaration;
@@ -32,7 +34,7 @@ class PHPTAL_Context
 
     public function __construct()
     {
-        $this->repeat = new stdClass();
+        $this->repeat = new \stdClass();
     }
 
     public function __clone()
@@ -45,7 +47,7 @@ class PHPTAL_Context
      *
      * @return void
      */
-    public function setParent(PHPTAL_Context $parent)
+    public function setParent(Context $parent)
     {
         $this->_parentContext = $parent;
     }
@@ -56,7 +58,7 @@ class PHPTAL_Context
      *
      * @return void
      */
-    public function setGlobal(stdClass $globalContext)
+    public function setGlobal(\stdClass $globalContext)
     {
         $this->_globalContext = $globalContext;
     }
@@ -309,7 +311,7 @@ class PHPTAL_Context
     }
 
     /**
-     * helper method for PHPTAL_Context::path()
+     * helper method for Context::path()
      *
      * @access private
      */
@@ -354,7 +356,7 @@ class PHPTAL_Context
     {
         if ($base === null) {
             if ($nothrow) return null;
-            PHPTAL_Context::pathError($base, $path, $path, $path);
+            Context::pathError($base, $path, $path, $path);
         }
 
         $chunks  = explode('/', $path);
@@ -381,12 +383,12 @@ class PHPTAL_Context
                     continue;
                 }
 
-                if ($base instanceof ArrayAccess && $base->offsetExists($current)) {
+                if ($base instanceof \ArrayAccess && $base->offsetExists($current)) {
                     $base = $base->offsetGet($current);
                     continue;
                 }
 
-                if (($current === 'length' || $current === 'size') && $base instanceof Countable) {
+                if (($current === 'length' || $current === 'size') && $base instanceof \Countable) {
                     $base = count($base);
                     continue;
                 }
@@ -414,11 +416,11 @@ class PHPTAL_Context
                         $base = $base->__call($current, array());
                         continue;
                     }
-                    catch(BadMethodCallException $e) {}
+                    catch(\BadMethodCallException $e) {}
                 }
 
                 if (is_callable($base)) {
-                    $base = phptal_unravel_closure($base);
+                    $base = Helper::phptal_unravel_closure($base);
                     $i--;
                     continue;
                 }
@@ -427,7 +429,7 @@ class PHPTAL_Context
                     return null;
                 }
 
-                PHPTAL_Context::pathError($base, $path, $current, $prev);
+                static::pathError($base, $path, $current, $prev);
             }
 
             // array handling
@@ -447,7 +449,7 @@ class PHPTAL_Context
                 if ($nothrow)
                     return null;
 
-                PHPTAL_Context::pathError($base, $path, $current, $prev);
+                static::pathError($base, $path, $current, $prev);
             }
 
             // string handling
@@ -470,101 +472,9 @@ class PHPTAL_Context
             if ($nothrow)
                 return null;
 
-            PHPTAL_Context::pathError($base, $path, $current, $prev);
+            static::pathError($base, $path, $current, $prev);
         }
 
         return $base;
     }
-}
-
-/**
- * @see PHPTAL_Context::path()
- * @deprecated
- */
-function phptal_path($base, $path, $nothrow=false)
-{
-    return PHPTAL_Context::path($base, $path, $nothrow);
-}
-
-/**
- * helper function for chained expressions
- *
- * @param mixed $var value to check
- * @return bool
- * @access private
- */
-function phptal_isempty($var)
-{
-    return $var === null || $var === false || $var === ''
-           || ((is_array($var) || $var instanceof Countable) && count($var)===0);
-}
-
-/**
- * helper function for conditional expressions
- *
- * @param mixed $var value to check
- * @return bool
- * @access private
- */
-function phptal_true($var)
-{
-    $var = phptal_unravel_closure($var);
-    return $var && (!$var instanceof Countable || count($var));
-}
-
-/**
- * convert to string and html-escape given value (of any type)
- *
- * @access private
- */
-function phptal_escape($var, $encoding)
-{
-    if (is_string($var)) {
-        return htmlspecialchars($var, ENT_QUOTES, $encoding);
-    }
-    return htmlspecialchars(phptal_tostring($var), ENT_QUOTES, $encoding);
-}
-
-/**
- * convert anything to string
- *
- * @access private
- */
-function phptal_tostring($var)
-{
-    if (is_string($var)) {
-        return $var;
-    } elseif (is_bool($var)) {
-        return (int)$var;
-    } elseif (is_array($var)) {
-        return implode(', ', array_map('phptal_tostring', $var));
-    } elseif ($var instanceof SimpleXMLElement) {
-
-        /* There is no sane way to tell apart element and attribute nodes
-           in SimpleXML, so here's a guess that if something has no attributes
-           or children, and doesn't output <, then it's an attribute */
-
-        $xml = $var->asXML();
-        if ($xml[0] === '<' || $var->attributes() || $var->children()) {
-            return $xml;
-        }
-    }
-    return (string)phptal_unravel_closure($var);
-}
-
-/**
- * unravel the provided expression if it is a closure
- *
- * This will call the base expression and its result
- * as long as it is a Closure.  Once the base (non-Closure)
- * value is found it is returned.
- *
- * This function has no effect on non-Closure expressions
- */
-function phptal_unravel_closure($var)
-{
-    while (is_object($var) && is_callable($var)) {
-        $var = call_user_func($var);
-    }
-    return $var;
 }

@@ -12,18 +12,20 @@
  * @version  SVN: $Id$
  * @link     http://phptal.org/
  */
+
+namespace PhpTal\Php\Attribute\TAL;
+
 /**
  * @package PHPTAL
  */
-class PHPTAL_Php_Attribute_TAL_Comment extends PHPTAL_Php_Attribute
+class Comment extends \PhpTal\Php\Attribute
 {
-    public function before(PHPTAL_Php_CodeWriter $codewriter)
+    public function before(\PhpTal\Php\CodeWriter $codewriter)
     {
         $codewriter->doComment($this->expression);
     }
 
-    public function after(PHPTAL_Php_CodeWriter $codewriter)
+    public function after(\PhpTal\Php\CodeWriter $codewriter)
     {
     }
 }
-

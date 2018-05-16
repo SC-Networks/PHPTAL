@@ -13,6 +13,8 @@
  * @link     http://phptal.org/
  */
 
+namespace PhpTal\Php\Attribute\TAL;
+
 /**
  * TAL spec 1.4 for tal:define content
  *
@@ -33,9 +35,9 @@
  * @package PHPTAL
  * @author Laurent Bedubourg <lbedubourg@motion-twin.com>
  */
-class PHPTAL_Php_Attribute_TAL_Define
-extends PHPTAL_Php_Attribute
-implements PHPTAL_Php_TalesChainReader
+class Define
+extends \PhpTal\Php\Attribute
+implements \PhpTal\Php\TalesChainReader
 {
     private $tmp_content_var;
     private $_buffered = false;
@@ -47,7 +49,7 @@ implements PHPTAL_Php_TalesChainReader
      */
     private $_chainPartGenerated=false;
 
-    public function before(PHPTAL_Php_CodeWriter $codewriter)
+    public function before(\PhpTal\Php\CodeWriter $codewriter)
     {
         $expressions = $codewriter->splitExpression($this->expression);
         $definesAnyNonGlobalVars = false;
@@ -78,7 +80,7 @@ implements PHPTAL_Php_TalesChainReader
             $code = $codewriter->evaluateExpression($expression);
             if (is_array($code)) {
                 $this->chainedDefine($codewriter, $code);
-            } elseif ( $code == PHPTAL_Php_TalesInternal::NOTHING_KEYWORD) {
+            } elseif ( $code == \PhpTal\Php\TalesInternal::NOTHING_KEYWORD) {
                 $this->doDefineVarWith($codewriter, 'null');
             } else {
                 $this->doDefineVarWith($codewriter, $code);
@@ -91,7 +93,7 @@ implements PHPTAL_Php_TalesChainReader
         }
     }
 
-    public function after(PHPTAL_Php_CodeWriter $codewriter)
+    public function after(\PhpTal\Php\CodeWriter $codewriter)
     {
         if ($this->tmp_content_var) $codewriter->recycleTempVariable($this->tmp_content_var);
         if ($this->_pushedContext) {
@@ -99,14 +101,14 @@ implements PHPTAL_Php_TalesChainReader
         }
     }
 
-    private function chainedDefine(PHPTAL_Php_CodeWriter $codewriter, $parts)
+    private function chainedDefine(\PhpTal\Php\CodeWriter $codewriter, $parts)
     {
-        $executor = new PHPTAL_Php_TalesChainExecutor(
+        $executor = new \PhpTal\Php\TalesChainExecutor(
             $codewriter, $parts, $this
         );
     }
 
-    public function talesChainNothingKeyword(PHPTAL_Php_TalesChainExecutor $executor)
+    public function talesChainNothingKeyword(\PhpTal\Php\TalesChainExecutor $executor)
     {
         if (!$this->_chainPartGenerated) throw new \PhpTal\Exception\TemplateException("Invalid expression in tal:define", $this->phpelement->getSourceFile(), $this->phpelement->getSourceLine());
 
@@ -115,7 +117,7 @@ implements PHPTAL_Php_TalesChainReader
         $executor->breakChain();
     }
 
-    public function talesChainDefaultKeyword(PHPTAL_Php_TalesChainExecutor $executor)
+    public function talesChainDefaultKeyword(\PhpTal\Php\TalesChainExecutor $executor)
     {
         if (!$this->_chainPartGenerated) throw new \PhpTal\Exception\TemplateException("Invalid expression in tal:define", $this->phpelement->getSourceFile(), $this->phpelement->getSourceLine());
 
@@ -124,7 +126,7 @@ implements PHPTAL_Php_TalesChainReader
         $executor->breakChain();
     }
 
-    public function talesChainPart(PHPTAL_Php_TalesChainExecutor $executor, $exp, $islast)
+    public function talesChainPart(\PhpTal\Php\TalesChainExecutor $executor, $exp, $islast)
     {
         $this->_chainPartGenerated=true;
 
@@ -168,7 +170,7 @@ implements PHPTAL_Php_TalesChainReader
         return array($defineScope, $defineVar, $exp);
     }
 
-    private function bufferizeContent(PHPTAL_Php_CodeWriter $codewriter)
+    private function bufferizeContent(\PhpTal\Php\CodeWriter $codewriter)
     {
         if (!$this->_buffered) {
             $this->tmp_content_var = $codewriter->createTempVariable();
@@ -180,7 +182,7 @@ implements PHPTAL_Php_TalesChainReader
         $this->doDefineVarWith($codewriter, $this->tmp_content_var);
     }
 
-    private function doDefineVarWith(PHPTAL_Php_CodeWriter $codewriter, $code)
+    private function doDefineVarWith(\PhpTal\Php\CodeWriter $codewriter, $code)
     {
         if ($this->_defineScope == 'global') {
             $codewriter->doSetVar('$tpl->getGlobalContext()->'.$this->_defineVar, $code);
@@ -189,4 +191,3 @@ implements PHPTAL_Php_TalesChainReader
         }
     }
 }
-

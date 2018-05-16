@@ -75,7 +75,7 @@ class XHTMLModeTest extends PHPTAL_TestCase
         );
         foreach($emptyElements as $name) {
             $tpl = $this->newPHPTAL();
-            $tpl->setOutputMode(PHPTAL::XHTML);
+            $tpl->setOutputMode(\PhpTal\PHPTAL::XHTML);
             $tpl->setSource('<'.$name.'>foo</'.$name.'>');
             $res = $tpl->execute();
             $this->assertEquals('<'.$name.'/>', $res);

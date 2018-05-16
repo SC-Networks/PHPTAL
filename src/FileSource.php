@@ -13,12 +13,14 @@
  * @link     http://phptal.org/
  */
 
+namespace PhpTal;
+
 /**
  * Reads template from the filesystem
  *
  * @package PHPTAL
  */
-class PHPTAL_FileSource implements PHPTAL_Source
+class FileSource implements Source
 {
     private $_path;
 

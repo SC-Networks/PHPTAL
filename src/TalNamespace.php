@@ -13,12 +13,13 @@
  * @link     http://phptal.org/
  */
 
+namespace PhpTal;
 
 /**
- * @see PHPTAL_NamespaceAttribute
+ * @see \PhpTal\TalNamespaceAttribute
  * @package PHPTAL
  */
-abstract class PHPTAL_Namespace
+abstract class TalNamespace
 {
     private $prefix, $namespace_uri;
     protected $_attributes;
@@ -54,7 +55,7 @@ abstract class PHPTAL_Namespace
         return $this->_attributes[strtolower($attributeName)];
     }
 
-    public function addAttribute(PHPTAL_NamespaceAttribute $attribute)
+    public function addAttribute(TalNamespaceAttribute $attribute)
     {
         $attribute->setNamespace($this);
         $this->_attributes[strtolower($attribute->getLocalName())] = $attribute;
@@ -65,5 +66,5 @@ abstract class PHPTAL_Namespace
         return $this->_attributes;
     }
 
-    abstract public function createAttributeHandler(PHPTAL_NamespaceAttribute $att, PHPTAL_Dom_Element $tag, $expression);
+    abstract public function createAttributeHandler(TalNamespaceAttribute $att, \PhpTal\Dom\Element $tag, $expression);
 }

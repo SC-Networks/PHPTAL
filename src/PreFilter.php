@@ -12,6 +12,8 @@
  * @link     http://phptal.org/
  */
 
+namespace PhpTal;
+
 /**
  * Base class for prefilters.
  *
@@ -21,7 +23,7 @@
  *
  * @package PHPTAL
  */
-abstract class PHPTAL_PreFilter implements PHPTAL_Filter
+abstract class PreFilter implements Filter
 {
     /**
      * @see getPHPTAL()
@@ -36,11 +38,11 @@ abstract class PHPTAL_PreFilter implements PHPTAL_Filter
      *
      * Default implementation does nothing. Override it.
      *
-     * @param DOMElement $node PHP5 DOM node to modify in place
+     * @param \DOMElement $node PHP5 DOM node to modify in place
      *
      * @return void
      */
-    public function filterElement(DOMElement $node)
+    public function filterElement(\DOMElement $node)
     {
     }
 
@@ -50,13 +52,13 @@ abstract class PHPTAL_PreFilter implements PHPTAL_Filter
      *
      * Default implementation does nothing. Override it.
      *
-     * @see PHPTAL_Dom_Element class for methods and fields available.
+     * @see \PhpTal\Dom\Element class for methods and fields available.
      *
-     * @param PHPTAL_Dom_Element $root PHPTAL DOM node to modify in place
+     * @param \PhpTal\Dom\Element $root PHPTAL DOM node to modify in place
      *
      * @return void
      */
-    public function filterDOM(PHPTAL_Dom_Element $root)
+    public function filterDOM(\PhpTal\Dom\Element $root)
     {
     }
 
@@ -67,11 +69,11 @@ abstract class PHPTAL_PreFilter implements PHPTAL_Filter
      *
      * Default implementation calls filterDOM(). Override it.
      *
-     * @param PHPTAL_Dom_Element $node PHPTAL DOM node to modify in place
+     * @param \PhpTal\Dom\Element $node PHPTAL DOM node to modify in place
      *
      * @return void
      */
-    public function filterDOMFragment(PHPTAL_Dom_Element $node)
+    public function filterDOMFragment(\PhpTal\Dom\Element $node)
     {
         $this->filterDOM($node);
     }
@@ -128,5 +130,3 @@ abstract class PHPTAL_PreFilter implements PHPTAL_Filter
         $this->phptal = $phptal;
     }
 }
-
-

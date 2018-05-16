@@ -13,15 +13,16 @@
  * @link     http://phptal.org/
  */
 
+namespace PhpTal\Dom;
 
 /**
  * Document text data representation.
  *
  * @package PHPTAL
  */
-class PHPTAL_Dom_Text extends PHPTAL_Dom_Node
+class Text extends \PhpTal\Dom\Node
 {
-    public function generateCode(PHPTAL_Php_CodeWriter $codewriter)
+    public function generateCode(\PhpTal\Php\CodeWriter $codewriter)
     {
         if ($this->getValueEscaped() !== '') {
             $codewriter->pushHTML($codewriter->interpolateHTML($this->getValueEscaped()));

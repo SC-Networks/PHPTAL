@@ -13,16 +13,17 @@
  * @link     http://phptal.org/
  */
 
+namespace PhpTal\Php;
 
 /**
  * @package PHPTAL
  */
-class PHPTAL_Php_TalesChainExecutor
+class TalesChainExecutor
 {
     const CHAIN_BREAK = 1;
     const CHAIN_CONT  = 2;
 
-    public function __construct(PHPTAL_Php_CodeWriter $codewriter, array $chain, PHPTAL_Php_TalesChainReader $reader)
+    public function __construct(\PhpTal\Php\CodeWriter $codewriter, array $chain, TalesChainReader $reader)
     {
         $this->_chain = $chain;
         $this->_chainStarted = false;
@@ -70,9 +71,9 @@ class PHPTAL_Php_TalesChainExecutor
         foreach ($this->_chain as $key => $exp) {
             $this->_state = 0;
 
-            if ($exp == PHPTAL_Php_TalesInternal::NOTHING_KEYWORD) {
+            if ($exp == TalesInternal::NOTHING_KEYWORD) {
                 $this->_reader->talesChainNothingKeyword($this);
-            } elseif ($exp == PHPTAL_Php_TalesInternal::DEFAULT_KEYWORD) {
+            } elseif ($exp == TalesInternal::DEFAULT_KEYWORD) {
                 $this->_reader->talesChainDefaultKeyword($this);
             } else {
                 $this->_reader->talesChainPart($this, $exp, $lastkey === $key);

@@ -18,8 +18,8 @@ class CompressTest extends PHPTAL_TestCase
     private function assertStrips($expect,$source, $html5 = false)
     {
         $tpl = $this->newPHPTAL();
-        if ($html5) $tpl->setOutputMode(PHPTAL::HTML5);
-        $tpl->addPreFilter(new PHPTAL_PreFilter_Compress());
+        if ($html5) $tpl->setOutputMode(\PhpTal\PHPTAL::HTML5);
+        $tpl->addPreFilter(new \PhpTal\PreFilter\Compress());
 
         $tpl->setSource($source);
 

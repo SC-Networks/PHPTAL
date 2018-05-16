@@ -13,18 +13,19 @@
  * @link     http://phptal.org/
  */
 
+namespace PhpTal\TalNamespace;
 
 /**
  * @package PHPTAL
  */
-class PHPTAL_Namespace_PHPTAL extends PHPTAL_Namespace_Builtin
+class PHPTAL extends Builtin
 {
     public function __construct()
     {
         parent::__construct('phptal', 'http://phptal.org/ns/phptal');
-        $this->addAttribute(new PHPTAL_NamespaceAttributeSurround('tales', -1));
-        $this->addAttribute(new PHPTAL_NamespaceAttributeSurround('debug', -2));
-        $this->addAttribute(new PHPTAL_NamespaceAttributeSurround('id', 7));
-        $this->addAttribute(new PHPTAL_NamespaceAttributeSurround('cache', -3));
+        $this->addAttribute(new \PhpTal\TalNamespaceAttributeSurround('tales', -1));
+        $this->addAttribute(new \PhpTal\TalNamespaceAttributeSurround('debug', -2));
+        $this->addAttribute(new \PhpTal\TalNamespaceAttributeSurround('id', 7));
+        $this->addAttribute(new \PhpTal\TalNamespaceAttributeSurround('cache', -3));
     }
 }

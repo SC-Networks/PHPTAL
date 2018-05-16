@@ -1,5 +1,7 @@
 <?php
 
+namespace PhpTal;
+
 /**
  * Interface: PhpTalInterface
  */
@@ -54,11 +56,11 @@ interface PhpTalInterface {
     /**
      * Specify how to look for templates.
      *
-     * @param PHPTAL_SourceResolver $resolver instance of resolver
+     * @param \PhpTal\SourceResolver $resolver instance of resolver
      *
      * @return $this
      */
-    public function addSourceResolver(PHPTAL_SourceResolver $resolver);
+    public function addSourceResolver(SourceResolver $resolver);
 
     /**
      * Ignore XML/XHTML comments on parsing.
@@ -79,7 +81,7 @@ interface PhpTalInterface {
      * XML output mode outputs XML without such modifications
      * and is neccessary to generate RSS feeds properly.
      *
-     * @param int $mode (PHPTAL::XML, PHPTAL::XHTML or PHPTAL::HTML5).
+     * @param int $mode (\PhpTal\PHPTAL::XML, \PhpTal\PHPTAL::XHTML or \PhpTal\PHPTAL::HTML5).
      *
      * @return $this
      */
@@ -169,20 +171,20 @@ interface PhpTalInterface {
      * This sets encoding used by the translator, so be sure to use encoding-dependent
      * features of the translator (e.g. addDomain) _after_ calling setTranslator.
      *
-     * @param PHPTAL_TranslationService $t instance
+     * @param TranslationService $t instance
      *
      * @return $this
      */
-    public function setTranslator(PHPTAL_TranslationService $t);
+    public function setTranslator(TranslationService $t);
 
     /**
      * Add new prefilter to filter chain.
      * Prefilters are called only once template is compiled.
      *
-     * PreFilters must inherit PHPTAL_PreFilter class.
+     * PreFilters must inherit PreFilter class.
      * (in future this method will allow string with filter name instead of object)
      *
-     * @param mixed $filter PHPTAL_PreFilter object or name of prefilter to add
+     * @param mixed $filter PreFilter object or name of prefilter to add
      *
      * @return $this
      */
@@ -203,9 +205,9 @@ interface PhpTalInterface {
      *
      * See PHPTAL_PostFilter class.
      *
-     * @param PHPTAL_Filter $filter filter instance
+     * @param Filter $filter filter instance
      */
-    public function setPostFilter(PHPTAL_Filter $filter);
+    public function setPostFilter(Filter $filter);
 
     /**
      * Register a trigger for specified phptal:id.
@@ -214,14 +216,14 @@ interface PhpTalInterface {
      *
      * @return $this
      */
-    public function addTrigger($id, PHPTAL_Trigger $trigger);
+    public function addTrigger($id, \PhpTal\Trigger $trigger);
 
     /**
      * Returns trigger for specified phptal:id.
      *
      * @param string $id phptal:id
      *
-     * @return PHPTAL_Trigger|null
+     * @return \PhpTal\Trigger|null
      */
     public function getTrigger($id);
 
@@ -239,7 +241,7 @@ interface PhpTalInterface {
     /**
      * Set a context variable.
      *
-     * @see PHPTAL::__set()
+     * @see \PhpTal\PHPTAL::__set()
      * @param string $varname name of the variable
      * @param mixed $value value of the variable
      *
@@ -349,7 +351,7 @@ interface PhpTalInterface {
     /**
      * Returns template translator.
      *
-     * @return PHPTAL_TranslationService
+     * @return TranslationService
      */
     public function getTranslator();
 
@@ -373,7 +375,7 @@ interface PhpTalInterface {
      * Returns current context object.
      * Use only in Triggers.
      *
-     * @return PHPTAL_Context
+     * @return Context
      */
     public function getContext();
 
@@ -387,14 +389,14 @@ interface PhpTalInterface {
     /**
      * only for use in generated template code
      *
-     * @return PHPTAL_Context
+     * @return Context
      */
     public function pushContext();
 
     /**
      * only for use in generated template code
      *
-     * @return PHPTAL_Context
+     * @return Context
      */
     public function popContext();
 }

@@ -13,6 +13,8 @@
  * @link     http://phptal.org/
  */
 
+namespace PhpTal\Php\Attribute\METAL;
+
 /**
  * METAL Specification 1.0
  *
@@ -33,7 +35,7 @@
  * @package PHPTAL
  * @author Laurent Bedubourg <lbedubourg@motion-twin.com>
  */
-class PHPTAL_Php_Attribute_METAL_UseMacro extends PHPTAL_Php_Attribute
+class UseMacro extends \PhpTal\Php\Attribute
 {
     static $ALLOWED_ATTRIBUTES = array(
         'fill-slot'=>'http://xml.zope.org/namespaces/metal',
@@ -41,7 +43,7 @@ class PHPTAL_Php_Attribute_METAL_UseMacro extends PHPTAL_Php_Attribute
         'define'=>'http://xml.zope.org/namespaces/tal',
     );
 
-    public function before(PHPTAL_Php_CodeWriter $codewriter)
+    public function before(\PhpTal\Php\CodeWriter $codewriter)
     {
         $this->pushSlots($codewriter);
 
@@ -75,7 +77,7 @@ class PHPTAL_Php_Attribute_METAL_UseMacro extends PHPTAL_Php_Attribute
         $this->popSlots($codewriter);
     }
 
-    public function after(PHPTAL_Php_CodeWriter $codewriter)
+    public function after(\PhpTal\Php\CodeWriter $codewriter)
     {
     }
 
@@ -92,7 +94,7 @@ class PHPTAL_Php_Attribute_METAL_UseMacro extends PHPTAL_Php_Attribute
      * for the general layout, fill the menu slot and let caller templates
      * fill the parent content slot without interfering.
      */
-    private function pushSlots(PHPTAL_Php_CodeWriter $codewriter)
+    private function pushSlots(\PhpTal\Php\CodeWriter $codewriter)
     {
         if (!$this->phpelement->hasAttributeNS('http://xml.zope.org/namespaces/metal', 'define-macro')) {
             $codewriter->pushCode('$ctx->pushSlots()');
@@ -103,7 +105,7 @@ class PHPTAL_Php_Attribute_METAL_UseMacro extends PHPTAL_Php_Attribute
      * generate code that pops macro slots
      * (restore slots if not inherited macro)
      */
-    private function popSlots(PHPTAL_Php_CodeWriter $codewriter)
+    private function popSlots(\PhpTal\Php\CodeWriter $codewriter)
     {
         if (!$this->phpelement->hasAttributeNS('http://xml.zope.org/namespaces/metal', 'define-macro')) {
             $codewriter->pushCode('$ctx->popSlots()');
@@ -113,9 +115,9 @@ class PHPTAL_Php_Attribute_METAL_UseMacro extends PHPTAL_Php_Attribute
     /**
      * recursively generates code for slots
      */
-    private function generateFillSlots(PHPTAL_Php_CodeWriter $codewriter, PHPTAL_Dom_Node $phpelement)
+    private function generateFillSlots(\PhpTal\Php\CodeWriter $codewriter, \PhpTal\Dom\Node $phpelement)
     {
-        if (false == ($phpelement instanceof PHPTAL_Dom_Element)) {
+        if (false == ($phpelement instanceof \PhpTal\Dom\Element)) {
             return;
         }
 

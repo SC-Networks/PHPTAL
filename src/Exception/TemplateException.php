@@ -100,7 +100,7 @@ class TemplateException extends PhpTalException
                 $eval_line = $tr['line'];
             }
             else if ($eval_line && isset($tr['function'],$tr['args'],$tr['args'][0]) &&
-                $this->isTemplatePath("/".$tr['function'].".php") && $tr['args'][0] instanceof \PHPTAL) {
+                $this->isTemplatePath("/".$tr['function'].".php") && $tr['args'][0] instanceof \PhpTal\PHPTAL) {
                 return array($tr['args'][0]->getCodePath(), $eval_line);
             }
         }

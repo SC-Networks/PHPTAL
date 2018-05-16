@@ -13,12 +13,14 @@
  * @link     http://phptal.org/
  */
 
+namespace PhpTal\TalNamespace;
+
 /**
  * @package PHPTAL
  */
-class PHPTAL_Namespace_Builtin extends PHPTAL_Namespace
+class Builtin extends \PhpTal\TalNamespace
 {
-    public function createAttributeHandler(PHPTAL_NamespaceAttribute $att, PHPTAL_Dom_Element $tag, $expression)
+    public function createAttributeHandler(\PhpTal\TalNamespaceAttribute $att, \PhpTal\Dom\Element $tag, $expression)
     {
         $name = $att->getLocalName();
 
@@ -26,12 +28,8 @@ class PHPTAL_Namespace_Builtin extends PHPTAL_Namespace
         $name = str_replace(' ', '', ucwords(strtr($name, '-', ' ')));
 
         // case is important when using autoload on case-sensitive filesystems
-        if (version_compare(PHP_VERSION, '5.3', '>=') && __NAMESPACE__) {
-            $class = 'PHPTALNAMESPACE\\Php\\Attribute\\'.strtoupper($this->getPrefix()).'\\'.$name;
-        } else {
-            $class = 'PHPTAL_Php_Attribute_'.strtoupper($this->getPrefix()).'_'.$name;
-        }
-        $result = new $class($tag, $expression);
-        return $result;
+            $class = 'PhpTal\\Php\\Attribute\\'.strtoupper($this->getPrefix()).'\\'.$name;
+
+        return new $class($tag, $expression);
     }
 }

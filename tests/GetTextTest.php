@@ -21,7 +21,7 @@ class GetTextTest extends PHPTAL_TestCase
     {
         try
         {
-            return new PHPTAL_GetTextTranslator();
+            return new \PhpTal\GetTextTranslator();
         }
         catch(\PhpTal\Exception\PhpTalException $e)
         {

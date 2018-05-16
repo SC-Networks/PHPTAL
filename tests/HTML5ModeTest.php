@@ -19,7 +19,7 @@ class HTML5ModeTest extends PHPTAL_TestCase
     function testCDATAScript()
     {
         $tpl = $this->newPHPTAL();
-        $tpl->setOutputMode(PHPTAL::HTML5);
+        $tpl->setOutputMode(\PhpTal\PHPTAL::HTML5);
         $tpl->setSource('<!DOCTYPE html><script><![CDATA[
             if (2 < 5) {
                 alert("</foo>");
@@ -32,14 +32,14 @@ class HTML5ModeTest extends PHPTAL_TestCase
     function testCDATAContent()
     {
         $tpl = $this->newPHPTAL();
-        $tpl->setOutputMode(PHPTAL::HTML5);
+        $tpl->setOutputMode(\PhpTal\PHPTAL::HTML5);
         $tpl->setSource('<!DOCTYPE html><p><![CDATA[<hello>]]></p>');
         $this->assertHTMLEquals('<!DOCTYPE html><p>&lt;hello&gt;</p>', $tpl->execute());
     }
 
     function testRemovesXHTMLNS()
     {
-        $tpl = $this->newPHPTAL()->setOutputMode(PHPTAL::HTML5)->setSource('
+        $tpl = $this->newPHPTAL()->setOutputMode(\PhpTal\PHPTAL::HTML5)->setSource('
         <html     xmlns="http://www.w3.org/1999/xhtml">
             <x:head  xmlns:x="http://www.w3.org/1999/xhtml"/></html>
             ');
@@ -51,7 +51,7 @@ class HTML5ModeTest extends PHPTAL_TestCase
     function testDoctype()
     {
         $tpl = $this->newPHPTAL();
-        $tpl->setOutputMode(PHPTAL::HTML5);
+        $tpl->setOutputMode(\PhpTal\PHPTAL::HTML5);
         $tpl->setSource('<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><p><![CDATA[<hello>]]></p>');
         $this->assertHTMLEquals('<!DOCTYPE html><p>&lt;hello&gt;</p>', $tpl->execute());
     }
@@ -59,7 +59,7 @@ class HTML5ModeTest extends PHPTAL_TestCase
     function testProlog()
     {
         $tpl = $this->newPHPTAL();
-        $tpl->setOutputMode(PHPTAL::HTML5);
+        $tpl->setOutputMode(\PhpTal\PHPTAL::HTML5);
         $tpl->setSource('<?xml version="1.0"?><!DOCTYPE html><p><![CDATA[<hello>]]></p>');
         $this->assertHTMLEquals('<!DOCTYPE html><p>&lt;hello&gt;</p>', $tpl->execute());
     }
@@ -67,13 +67,13 @@ class HTML5ModeTest extends PHPTAL_TestCase
     function testAttr()
     {
         $this->assertEquals('<html url=http://example.com/?test#test foo=" foo" bar=/bar quz="quz/"></html>',
-            $this->newPHPTAL()->setOutputMode(PHPTAL::HTML5)->setSource('<html url="http://example.com/?test#test" foo=" foo" bar="/bar" quz="quz/"></html>')->execute());
+            $this->newPHPTAL()->setOutputMode(\PhpTal\PHPTAL::HTML5)->setSource('<html url="http://example.com/?test#test" foo=" foo" bar="/bar" quz="quz/"></html>')->execute());
     }
 
     function testEmpty()
     {
         $tpl = $this->newPHPTAL();
-        $tpl->setOutputMode(PHPTAL::HTML5);
+        $tpl->setOutputMode(\PhpTal\PHPTAL::HTML5);
         $tpl->setSource('<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml">
         <head>
             <title tal:content="nonexistant | nothing" />
@@ -129,7 +129,7 @@ class HTML5ModeTest extends PHPTAL_TestCase
         );
         foreach($emptyElements as $name) {
             $tpl = $this->newPHPTAL();
-            $tpl->setOutputMode(PHPTAL::HTML5);
+            $tpl->setOutputMode(\PhpTal\PHPTAL::HTML5);
             $tpl->setSource('<'.$name.' id="123">foo</'.$name.'>');
             $res = $tpl->execute();
             $this->assertEquals('<'.$name.' id=123>', $res);
@@ -139,7 +139,7 @@ class HTML5ModeTest extends PHPTAL_TestCase
     function testBoolean()
     {
         $tpl = $this->newPHPTAL();
-        $tpl->setOutputMode(PHPTAL::HTML5);
+        $tpl->setOutputMode(\PhpTal\PHPTAL::HTML5);
         $tpl->setSource('
         <html xmlns="http://www.w3.org/1999/xhtml">
         <body>
@@ -177,11 +177,11 @@ class HTML5ModeTest extends PHPTAL_TestCase
    function testMixedModes()
    {
        $tpl = $this->newPHPTAL();
-       $tpl->setOutputMode(PHPTAL::HTML5);
+       $tpl->setOutputMode(\PhpTal\PHPTAL::HTML5);
        $tpl->setSource('<input checked="checked"/>');
        $this->assertEquals('<input checked>',$tpl->execute());
 
-       $tpl->setOutputMode(PHPTAL::XHTML);
+       $tpl->setOutputMode(\PhpTal\PHPTAL::XHTML);
        $this->assertEquals('<input checked="checked"/>',$tpl->execute());
    }
 
