@@ -1,10 +1,9 @@
 
 # PHPTAL - Template Attribute Language for PHP
 
-[![Monthly Downloads](https://poser.pugx.org/phptal/phptal/d/monthly)](https://packagist.org/packages/phptal/phptal)
-[![License](https://poser.pugx.org/phptal/phptal/license)](LICENSE)
-[![Build Status](https://travis-ci.org/phptal/PHPTAL.svg?branch=master)](https://travis-ci.org/phptal/PHPTAL)
-[![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/phptal/PHPTAL/badges/quality-score.png)](https://scrutinizer-ci.com/g/phptal/PHPTAL/)
+[![Monthly Downloads](https://poser.pugx.org/scn/phptal/d/monthly)](https://packagist.org/packages/scn/phptal)
+[![License](https://poser.pugx.org/scn/phptal/license)](LICENSE)
+[![Build Status](https://travis-ci.org/SC-Networks/PHPTAL.svg?branch=master)](https://travis-ci.org/SC-Networks/PHPTAL)
 
 Requirements
 ============
@@ -17,31 +16,18 @@ Composer install (recommended)
 ==============================
 
 You can install this package by using [Composer](http://getcomposer.org).
-Link to Packagist: https://packagist.org/packages/phptal/phptal
+Link to Packagist: https://packagist.org/packages/scn/phptal
 
 ```sh
-composer require phptal/phptal
+composer require scn/phptal
 ```
-
-Manual install
-==============
-
-Get the latest PHPTAL tarball from https://github.com/phptal/PHPTAL/releases
-
-    tar zxvf PHPTAL-X.X.X.tar.gz
-    mv PHPTAL-X.X.X/PHPTAL* /path/to/your/php/include/path/
-
-Changelog
-=========
-
-[Please see the projects releases page](https://github.com/phptal/PHPTAL/releases)
 
 Getting the latest development version
 ======================================
 
 You can find the latest development version on github:
 
-	https://github.com/phptal/PHPTAL
+	https://github.com/SC-Networks/PHPTAL
 
 Addition development requirements (optional)
 ============================================
