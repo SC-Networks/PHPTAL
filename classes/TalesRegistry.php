@@ -17,7 +17,6 @@
  * Global registry of TALES expression modifiers
  *
  * @package PHPTAL
- * @subpackage Php
  */
 class PHPTAL_TalesRegistry
 {

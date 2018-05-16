@@ -63,7 +63,6 @@
  *
  *
  * @package PHPTAL
- * @subpackage Php.attribute.tal
  * @author Laurent Bedubourg <lbedubourg@motion-twin.com>
  */
 class PHPTAL_Php_Attribute_TAL_Repeat extends PHPTAL_Php_Attribute

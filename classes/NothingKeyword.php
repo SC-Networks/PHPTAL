@@ -17,7 +17,6 @@
  * Representation of the template 'nothing' keyword
  *
  * @package PHPTAL
- * @subpackage Keywords
  */
 class PHPTAL_NothingKeyword implements PHPTAL_Keywords
 {

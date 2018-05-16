@@ -31,7 +31,6 @@
  *      $res == '$ctx->a->b->c[$ctx->x]';
  *
  * @package PHPTAL
- * @subpackage Php
  * @author Laurent Bedubourg <lbedubourg@motion-twin.com>
  */
 class PHPTAL_Php_Transformer

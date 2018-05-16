@@ -28,7 +28,6 @@
  * and there are ill-formed templates "in the wild" because of this.
  *
  * @package PHPTAL
- * @subpackage Dom
  * @see PHPTAL_DOM_DocumentBuilder
  */
 class PHPTAL_Dom_SaxXmlParser

@@ -16,7 +16,6 @@
  * Helps generate php representation of a template.
  *
  * @package PHPTAL
- * @subpackage Php
  * @author Laurent Bedubourg <lbedubourg@motion-twin.com>
  */
 class PHPTAL_Php_CodeWriter

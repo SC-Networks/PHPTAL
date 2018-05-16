@@ -19,7 +19,6 @@ namespace PhpTal\Exception;
  * PHPTAL failed to load template
  *
  * @package PHPTAL
- * @subpackage Exception
  */
 class IOException extends PhpTalException
 {

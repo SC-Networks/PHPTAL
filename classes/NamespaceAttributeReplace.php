@@ -16,7 +16,6 @@
 /**
  * This type of attribute replaces element entirely
  * @package PHPTAL
- * @subpackage Namespace
  */
 class PHPTAL_NamespaceAttributeReplace extends PHPTAL_NamespaceAttribute
 {

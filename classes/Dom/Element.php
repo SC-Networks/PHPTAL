@@ -18,7 +18,6 @@
  * Document Tag representation.
  *
  * @package PHPTAL
- * @subpackage Dom
  */
 class PHPTAL_Dom_Element extends PHPTAL_Dom_Node
 {

@@ -16,7 +16,6 @@
 
 /**
  * @package PHPTAL
- * @subpackage Namespace
  */
 class PHPTAL_Namespace_METAL extends PHPTAL_Namespace_Builtin
 {

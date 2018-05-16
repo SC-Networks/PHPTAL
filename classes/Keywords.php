@@ -17,7 +17,6 @@
  * Interface for template keywords
  *
  * @package PHPTAL
- * @subpackage Keywords
  */
 interface PHPTAL_Keywords extends Countable
 {

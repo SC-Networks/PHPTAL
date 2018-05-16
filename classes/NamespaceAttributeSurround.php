@@ -16,7 +16,6 @@
 /**
  * This type of attribute wraps element
  * @package PHPTAL
- * @subpackage Namespace
  */
 class PHPTAL_NamespaceAttributeSurround extends PHPTAL_NamespaceAttribute
 {

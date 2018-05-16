@@ -16,7 +16,6 @@
 
 /**
  * @package PHPTAL
- * @subpackage Php
  */
 class PHPTAL_Php_State
 {

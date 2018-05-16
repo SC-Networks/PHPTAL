@@ -19,7 +19,6 @@ namespace PhpTal\Exception;
  * Wrong macro name in metal:use-macro
  *
  * @package PHPTAL
- * @subpackage Exception
  */
 class MacroMissingException extends TemplateException
 {

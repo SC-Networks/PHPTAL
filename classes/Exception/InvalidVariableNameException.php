@@ -19,7 +19,6 @@ namespace PhpTal\Exception;
  * Parse error in TALES expression.
  *
  * @package PHPTAL
- * @subpackage Exception
  */
 class InvalidVariableNameException extends PhpTalException
 {

@@ -17,7 +17,6 @@
 /**
  * @see PHPTAL_NamespaceAttribute
  * @package PHPTAL
- * @subpackage Namespace
  */
 abstract class PHPTAL_Namespace
 {

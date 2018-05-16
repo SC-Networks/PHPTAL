@@ -47,7 +47,6 @@
  *
  *
  * @package PHPTAL
- * @subpackage Php.attribute.metal
  * @author Laurent Bedubourg <lbedubourg@motion-twin.com>
  */
 class PHPTAL_Php_Attribute_METAL_FillSlot extends PHPTAL_Php_Attribute

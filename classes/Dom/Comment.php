@@ -15,7 +15,6 @@
 
 /**
  * @package PHPTAL
- * @subpackage Dom
  */
 class PHPTAL_Dom_Comment extends PHPTAL_Dom_Node
 {

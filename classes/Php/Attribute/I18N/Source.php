@@ -23,7 +23,6 @@
  *
  *
  * @package PHPTAL
- * @subpackage Php.attribute.i18n
  */
 class PHPTAL_Php_Attribute_I18N_Source extends PHPTAL_Php_Attribute
 {

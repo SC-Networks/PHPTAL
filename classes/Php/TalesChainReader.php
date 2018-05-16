@@ -15,7 +15,6 @@
 
 /**
  * @package PHPTAL
- * @subpackage Php
  */
 interface PHPTAL_Php_TalesChainReader
 {

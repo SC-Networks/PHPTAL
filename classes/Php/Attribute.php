@@ -22,7 +22,6 @@
  * An attribute must implements start() and end().
  *
  * @package PHPTAL
- * @subpackage Php
  * @author Laurent Bedubourg <lbedubourg@motion-twin.com>
  */
 abstract class PHPTAL_Php_Attribute

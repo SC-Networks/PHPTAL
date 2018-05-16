@@ -20,7 +20,6 @@
  * Methods suitable for modifiers must be static.
  *
  * @package PHPTAL
- * @subpackage Php
  */
 interface PHPTAL_Tales
 {

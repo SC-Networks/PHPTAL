@@ -17,7 +17,6 @@
  * DOM Builder
  *
  * @package PHPTAL
- * @subpackage Dom
  */
 abstract class PHPTAL_Dom_DocumentBuilder
 {

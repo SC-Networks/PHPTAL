@@ -31,7 +31,6 @@
  *  <ul phptal:cache="1d per object/id">...</ul> <!-- <ul> be cached for one day, separately for each object. -->
  *
  * @package PHPTAL
- * @subpackage Php.attribute.phptal
 */
 class PHPTAL_Php_Attribute_PHPTAL_Cache extends PHPTAL_Php_Attribute
 {

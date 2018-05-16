@@ -19,7 +19,6 @@ namespace PhpTal\Exception;
  * XML well-formedness errors and alike.
  *
  * @package PHPTAL
- * @subpackage Exception
  */
 class ParserException extends TemplateException
 {
