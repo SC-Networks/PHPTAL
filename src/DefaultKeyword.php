@@ -8,7 +8,6 @@
  * @package  PHPTAL
  * @author Andrew Crites <explosion-pills@aysites.com>
  * @license  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
- * @version  SVN: $Id$
  * @link     http://phptal.org/
  */
 
@@ -21,18 +20,27 @@ namespace PhpTal;
  */
 class DefaultKeyword implements \Countable
 {
+    /**
+     * @return string
+     */
     public function __toString()
     {
         return "''";
     }
 
+    /**
+     * @return int
+     */
     public function count()
     {
         return 1;
     }
 
+    /**
+     * @return \stdClass
+     */
     public function jsonSerialize()
     {
-        return new \stdClass;
+        return new \stdClass();
     }
 }

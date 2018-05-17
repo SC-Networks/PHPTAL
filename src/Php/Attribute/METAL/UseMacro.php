@@ -9,7 +9,6 @@
  * @author   Laurent Bedubourg <lbedubourg@motion-twin.com>
  * @author   Kornel Lesiński <kornel@aardvarkmedia.co.uk>
  * @license  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
- * @version  SVN: $Id$
  * @link     http://phptal.org/
  */
 
@@ -71,7 +70,7 @@ class UseMacro extends \PhpTal\Php\Attribute
         // external macro or ${macroname}, use PHPTAL at runtime to resolve it
         else {
             $code = $codewriter->interpolateTalesVarsInString($this->expression);
-            $codewriter->pushCode('$tpl->_executeMacroOfTemplate('.$code.', $_thistpl)');
+            $codewriter->pushCode('$tpl->executeMacroOfTemplate('.$code.', $_thistpl)');
         }
 
         $this->popSlots($codewriter);
