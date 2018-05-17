@@ -20,8 +20,11 @@ namespace PhpTal;
  *
  * @package PHPTAL
  */
-class FileSourceResolver implements SourceResolver
+class FileSourceResolver implements SourceResolverInterface
 {
+
+    private $_repositories;
+
     public function __construct($repositories)
     {
         $this->_repositories = $repositories;
@@ -42,6 +45,4 @@ class FileSourceResolver implements SourceResolver
 
         return null;
     }
-
-    private $_repositories;
 }

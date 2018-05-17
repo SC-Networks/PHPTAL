@@ -26,7 +26,7 @@ namespace PhpTal;
  * @package PHPTAL
  * @author Laurent Bedubourg <lbedubourg@motion-twin.com>
  */
-class GetTextTranslator implements TranslationService
+class GetTextTranslator implements TranslationServiceInterface
 {
     private $_vars = array();
     private $_currentDomain;

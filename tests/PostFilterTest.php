@@ -14,7 +14,7 @@
  */
 
 
-class MyPostFilter implements \PhpTal\Filter
+class MyPostFilter implements \PhpTal\FilterInterface
 {
     public function filter($str)
     {
@@ -25,7 +25,7 @@ class MyPostFilter implements \PhpTal\Filter
     }
 }
 
-class MyPostFilter2 implements \PhpTal\Filter
+class MyPostFilter2 implements \PhpTal\FilterInterface
 {
     public function filter($str)
     {

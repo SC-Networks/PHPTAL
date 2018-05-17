@@ -91,9 +91,7 @@ class RepeatControllerGroups
     public function last($data)
     {
         if ( !is_array($data) && !is_object($data) && !is_null($data) ) {
-
             if ( !isset($this->cache['L']) ) {
-
                 $hash = md5($data);
 
                 if (empty($this->dict['L'])) {
@@ -155,7 +153,6 @@ class RepeatControllerGroups
 
         // If we don't know about this var store in the dictionary
         if ( !isset($this->cache[$path]) ) {
-
             if ( !isset($this->dict[$path]) ) {
                 $this->dict[$path] = $hash;
                 $res = $this->branch === 'F';
@@ -173,7 +170,6 @@ class RepeatControllerGroups
         }
 
         return $this->cache[$path];
-
     }
 
     /**

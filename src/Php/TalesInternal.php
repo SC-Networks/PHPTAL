@@ -48,7 +48,7 @@ namespace PhpTal\Php;
 /**
  * @package PHPTAL
  */
-class TalesInternal implements \PhpTal\Tales
+class TalesInternal implements \PhpTal\TalesInterface
 {
     const DEFAULT_KEYWORD = 'new \PhpTal\DefaultKeyword';
     const NOTHING_KEYWORD = 'new \PhpTal\NothingKeyword';

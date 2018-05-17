@@ -19,6 +19,7 @@ use PhpTal\Exception\TemplateException;
 class ExceptionHandler
 {
     private $encoding;
+
     function __construct($encoding)
     {
         $this->encoding = $encoding;

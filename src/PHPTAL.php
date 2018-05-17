@@ -102,16 +102,16 @@ class PHPTAL implements PhpTalInterface
     protected $_prepared = false;
 
     /**
-     * associative array of phptal:id => \PhpTal\Trigger
+     * associative array of phptal:id => \PhpTal\TriggerInterface
      *
-     * \\PhpTal\Trigger[]
+     * \PhpTal\TriggerInterface[]
      */
     protected $_triggers = array();
 
     /**
      * i18n translator
      *
-     * @var null|\PhpTal\TranslationService
+     * @var null|\PhpTal\TranslationServiceInterface
      */
     protected $_translator = null;
 
@@ -315,11 +315,11 @@ class PHPTAL implements PhpTalInterface
     /**
      * Specify how to look for templates.
      *
-     * @param SourceResolver $resolver instance of resolver
+     * @param SourceResolverInterface $resolver instance of resolver
      *
      * @return $this
      */
-    public function addSourceResolver(SourceResolver $resolver)
+    public function addSourceResolver(SourceResolverInterface $resolver)
     {
         $this->resolvers[] = $resolver;
         return $this;
@@ -401,8 +401,6 @@ class PHPTAL implements PhpTalInterface
 
     /**
      * Get input and ouput encoding.
-     *
-     * @param string $enc example: 'UTF-8'
      *
      * @return $this
      */
@@ -490,11 +488,11 @@ class PHPTAL implements PhpTalInterface
      * This sets encoding used by the translator, so be sure to use encoding-dependent
      * features of the translator (e.g. addDomain) _after_ calling setTranslator.
      *
-     * @param TranslationService $t instance
+     * @param TranslationServiceInterface $t instance
      *
      * @return $this
      */
-    public function setTranslator(TranslationService $t)
+    public function setTranslator(TranslationServiceInterface $t)
     {
         $this->_translator = $t;
         $t->setEncoding($this->getEncoding());
@@ -564,7 +562,7 @@ class PHPTAL implements PhpTalInterface
         foreach($this->getPreFilters() as $key => $prefilter) {
             if ($prefilter instanceof PreFilter) {
                 $cacheid .= $key.$prefilter->getCacheId();
-            } elseif ($prefilter instanceof Filter) {
+            } elseif ($prefilter instanceof FilterInterface) {
                 $cacheid .= $key.get_class($prefilter);
             } else {
                 $cacheid .= $key.$prefilter;
@@ -596,11 +594,11 @@ class PHPTAL implements PhpTalInterface
      *
      * See PHPTAL_PostFilter class.
      *
-     * @param \PhpTal\Filter $filter filter instance
+     * @param \PhpTal\FilterInterface $filter filter instance
      *
      * @return $this
      */
-    public function setPostFilter(Filter $filter)
+    public function setPostFilter(FilterInterface $filter)
     {
         $this->_postfilter = $filter;
         return $this;
@@ -610,11 +608,11 @@ class PHPTAL implements PhpTalInterface
      * Register a trigger for specified phptal:id.
      *
      * @param string $id phptal:id to look for
-     * @param \PhpTal\Trigger $trigger
+     * @param \PhpTal\TriggerInterface $trigger
      *
      * @return $this
      */
-    public function addTrigger($id, \PhpTal\Trigger $trigger)
+    public function addTrigger($id, \PhpTal\TriggerInterface $trigger)
     {
         $this->_triggers[$id] = $trigger;
         return $this;
@@ -625,7 +623,7 @@ class PHPTAL implements PhpTalInterface
      *
      * @param string $id phptal:id
      *
-     * @return \PhpTal\Trigger|null
+     * @return \PhpTal\TriggerInterface|null
      */
     public function getTrigger($id)
     {
@@ -1080,7 +1078,7 @@ class PHPTAL implements PhpTalInterface
     /**
      * Returns template translator.
      *
-     * @return \PhpTal\TranslationService
+     * @return \PhpTal\TranslationServiceInterface
      */
     public function getTranslator()
     {

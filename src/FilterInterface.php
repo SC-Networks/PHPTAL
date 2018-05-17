@@ -20,7 +20,7 @@ namespace PhpTal;
  *
  * @package PHPTAL
  */
-interface Filter
+interface FilterInterface
 {
     /**
      * In prefilter it gets template source file and is expected to return new source.
@@ -31,4 +31,3 @@ interface Filter
      */
     public function filter($str);
 }
-

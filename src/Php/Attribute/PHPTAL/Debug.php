@@ -21,6 +21,9 @@ namespace PhpTal\Php\Attribute\PHPTAL;
  */
 class Debug extends \PhpTal\Php\Attribute
 {
+
+    private $_oldMode;
+
     public function before(\PhpTal\Php\CodeWriter $codewriter)
     {
         $this->_oldMode = $codewriter->setDebug(true);
@@ -30,6 +33,4 @@ class Debug extends \PhpTal\Php\Attribute
     {
         $codewriter->setDebug($this->_oldMode);
     }
-
-    private $_oldMode;
 }

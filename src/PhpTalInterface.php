@@ -56,11 +56,11 @@ interface PhpTalInterface {
     /**
      * Specify how to look for templates.
      *
-     * @param \PhpTal\SourceResolver $resolver instance of resolver
+     * @param \PhpTal\SourceResolverInterface $resolver instance of resolver
      *
      * @return $this
      */
-    public function addSourceResolver(SourceResolver $resolver);
+    public function addSourceResolver(SourceResolverInterface $resolver);
 
     /**
      * Ignore XML/XHTML comments on parsing.
@@ -106,8 +106,6 @@ interface PhpTalInterface {
 
     /**
      * Get input and ouput encoding.
-     *
-     * @param string $enc example: 'UTF-8'
      *
      * @return string
      */
@@ -171,11 +169,11 @@ interface PhpTalInterface {
      * This sets encoding used by the translator, so be sure to use encoding-dependent
      * features of the translator (e.g. addDomain) _after_ calling setTranslator.
      *
-     * @param TranslationService $t instance
+     * @param TranslationServiceInterface $t instance
      *
      * @return $this
      */
-    public function setTranslator(TranslationService $t);
+    public function setTranslator(TranslationServiceInterface $t);
 
     /**
      * Add new prefilter to filter chain.
@@ -205,9 +203,9 @@ interface PhpTalInterface {
      *
      * See PHPTAL_PostFilter class.
      *
-     * @param Filter $filter filter instance
+     * @param FilterInterface $filter filter instance
      */
-    public function setPostFilter(Filter $filter);
+    public function setPostFilter(FilterInterface $filter);
 
     /**
      * Register a trigger for specified phptal:id.
@@ -216,14 +214,14 @@ interface PhpTalInterface {
      *
      * @return $this
      */
-    public function addTrigger($id, \PhpTal\Trigger $trigger);
+    public function addTrigger($id, \PhpTal\TriggerInterface $trigger);
 
     /**
      * Returns trigger for specified phptal:id.
      *
      * @param string $id phptal:id
      *
-     * @return \PhpTal\Trigger|null
+     * @return \PhpTal\TriggerInterface|null
      */
     public function getTrigger($id);
 
@@ -351,7 +349,7 @@ interface PhpTalInterface {
     /**
      * Returns template translator.
      *
-     * @return TranslationService
+     * @return TranslationServiceInterface
      */
     public function getTranslator();
 

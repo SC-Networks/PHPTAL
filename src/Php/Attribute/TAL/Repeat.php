@@ -70,6 +70,7 @@ namespace PhpTal\Php\Attribute\TAL;
 class Repeat extends \PhpTal\Php\Attribute
 {
     private $var;
+
     public function before(\PhpTal\Php\CodeWriter $codewriter)
     {
         $this->var = $codewriter->createTempVariable();

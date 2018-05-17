@@ -21,10 +21,12 @@ namespace PhpTal\Php\Attribute\PHPTAL;
  */
 class Tales extends \PhpTal\Php\Attribute
 {
+
+    private $_oldMode;
+
     public function before(\PhpTal\Php\CodeWriter $codewriter)
     {
-        $mode = trim($this->expression);
-        $mode = strtolower($mode);
+        $mode = strtolower(trim($this->expression));
 
         if ($mode == '' || $mode == 'default')
             $mode = 'tales';
@@ -41,6 +43,4 @@ class Tales extends \PhpTal\Php\Attribute
     {
         $codewriter->setTalesMode($this->_oldMode);
     }
-
-    private $_oldMode;
 }

@@ -34,4 +34,3 @@ class Data extends \PhpTal\Php\Attribute
     public function before(\PhpTal\Php\CodeWriter $codewriter){}
     public function after(\PhpTal\Php\CodeWriter $codewriter){}
 }
-

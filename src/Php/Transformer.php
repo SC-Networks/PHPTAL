@@ -48,6 +48,22 @@ class Transformer
     const ST_STATIC = 7;  // class::[$]static|const
     const ST_DEFINE = 8;  // @MY_DEFINE
 
+
+    /**
+     * @var array
+     */
+    private static $TranslationTable = [
+        'not' => '!',
+        'ne'  => '!=',
+        'and' => '&&',
+        'or'  => '||',
+        'lt'  => '<',
+        'gt'  => '>',
+        'ge'  => '>=',
+        'le'  => '<=',
+        'eq'  => '==',
+    ];
+
     /**
      * transform PHPTAL's php-like syntax into real PHP
      */
@@ -56,8 +72,6 @@ class Transformer
         $len = strlen($str);
         $state = self::ST_WHITE;
         $result = '';
-        $i = 0;
-        $inString = false;
         $backslashed = false;
         $instanceof = false;
         $eval = false;
@@ -103,13 +117,11 @@ class Transformer
                     elseif ($c === '"') {
                         $state = self::ST_ESTR;
                         $mark = $i;
-                        $inString = true;
                     }
                     // begining of single quoted string
                     elseif ($c === '\'') {
                         $state = self::ST_STR;
                         $mark = $i;
-                        $inString = true;
                     }
                     // closing a method, an array access or an evaluation
                     elseif ($c === ')' || $c === ']' || $c === '}') {
@@ -157,7 +169,6 @@ class Transformer
                     // end of string, back to none state
                     elseif ($c === '\'') {
                         $result .= substr($str, $mark, $i-$mark+1);
-                        $inString = false;
                         $state = self::ST_NONE;
                     }
                     break;
@@ -172,7 +183,6 @@ class Transformer
                     // end of string, back to none state
                     elseif ($c === '"') {
                         $result .= substr($str, $mark, $i-$mark+1);
-                        $inString = false;
                         $state = self::ST_NONE;
                     }
                     // instring interpolation, search } and transform the
@@ -403,16 +413,4 @@ class Transformer
     {
         return self::isAlpha($c) || ($c >= '0' && $c <= '9') || $c === '_' || $c === '\\';
     }
-
-    private static $TranslationTable = array(
-        'not' => '!',
-        'ne'  => '!=',
-        'and' => '&&',
-        'or'  => '||',
-        'lt'  => '<',
-        'gt'  => '>',
-        'ge'  => '>=',
-        'le'  => '<=',
-        'eq'  => '==',
-    );
 }

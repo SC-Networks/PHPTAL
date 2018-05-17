@@ -35,9 +35,7 @@ namespace PhpTal\Php\Attribute\TAL;
  * @package PHPTAL
  * @author Laurent Bedubourg <lbedubourg@motion-twin.com>
  */
-class Define
-extends \PhpTal\Php\Attribute
-implements \PhpTal\Php\TalesChainReader
+class Define extends \PhpTal\Php\Attribute implements \PhpTal\Php\TalesChainReaderInterface
 {
     private $tmp_content_var;
     private $_buffered = false;

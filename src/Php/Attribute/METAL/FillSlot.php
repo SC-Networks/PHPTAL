@@ -53,6 +53,9 @@ namespace PhpTal\Php\Attribute\METAL;
  */
 class FillSlot extends \PhpTal\Php\Attribute
 {
+    // rough guess
+    const CALLBACK_THRESHOLD = 10000;
+
     private static $uid = 0;
     private $function_name;
 
@@ -80,9 +83,6 @@ class FillSlot extends \PhpTal\Php\Attribute
             $codewriter->pushCode('$ctx->fillSlot('.$codewriter->str($this->expression).', ob_get_clean())');
         }
     }
-
-    // rough guess
-    const CALLBACK_THRESHOLD = 10000;
 
     /**
      * inspects contents of the element to decide whether callback makes sense

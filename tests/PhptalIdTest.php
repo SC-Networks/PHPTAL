@@ -15,7 +15,7 @@
 
 
 
-class MyTrigger implements \PhpTal\Trigger
+class MyTrigger implements \PhpTal\TriggerInterface
 {
     public $useCache = false;
     private $_cache  = null;
@@ -24,12 +24,12 @@ class MyTrigger implements \PhpTal\Trigger
     {
         if ($this->_cache !== null) {
             $this->useCache = true;
-            return \PhpTal\Trigger::SKIPTAG;
+            return \PhpTal\TriggerInterface::SKIPTAG;
         }
 
         $this->useCache = false;
         ob_start();
-        return \PhpTal\Trigger::PROCEED;
+        return \PhpTal\TriggerInterface::PROCEED;
     }
 
     public function end($id, $tpl)

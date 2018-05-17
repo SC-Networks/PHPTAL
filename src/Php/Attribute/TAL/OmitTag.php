@@ -48,6 +48,7 @@ namespace PhpTal\Php\Attribute\TAL;
 class OmitTag extends \PhpTal\Php\Attribute
 {
     private $varname;
+
     public function before(\PhpTal\Php\CodeWriter $codewriter)
     {
         if (trim($this->expression) == '') {

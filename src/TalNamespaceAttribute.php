@@ -62,23 +62,29 @@ namespace PhpTal;
  */
 abstract class TalNamespaceAttribute
 {
-    /** Attribute name without the namespace: prefix */
+    /**
+     * @var string Attribute name without the namespace: prefix
+     */
     private $local_name;
 
-    /** [0 - 1000] */
-    private $_priority;
-
-    /** \PhpTal\TalNamespace */
-    private $_namespace;
+    /**
+     * @var int [0 - 1000]
+     */
+    private $priority;
 
     /**
-     * @param string $name The attribute name
+     * @var \PhpTal\TalNamespace
+     */
+    private $namespace;
+
+    /**
+     * @param string $local_name The attribute name
      * @param int $priority Attribute execution priority
      */
     public function __construct($local_name, $priority)
     {
         $this->local_name = $local_name;
-        $this->_priority = $priority;
+        $this->priority = $priority;
     }
 
     /**
@@ -89,12 +95,38 @@ abstract class TalNamespaceAttribute
         return $this->local_name;
     }
 
-    public function getPriority() { return $this->_priority; }
-    public function getNamespace() { return $this->_namespace; }
-    public function setNamespace(TalNamespace $ns) { $this->_namespace = $ns; }
-
-    public function createAttributeHandler(\PhpTal\Dom\Element $tag, $expression)
+    /**
+     * @return int
+     */
+    public function getPriority()
     {
-        return $this->_namespace->createAttributeHandler($this, $tag, $expression);
+        return $this->priority;
+    }
+
+    /**
+     * @return TalNamespace
+     */
+    public function getNamespace()
+    {
+        return $this->namespace;
+    }
+
+    /**
+     * @param TalNamespace $ns
+     * @return void
+     */
+    public function setNamespace(TalNamespace $ns)
+    {
+        $this->namespace = $ns;
+    }
+
+    /**
+     * @param Dom\Element $tag
+     * @param $expression
+     * @return mixed
+     */
+    public function createAttributeHandler(Dom\Element $tag, $expression)
+    {
+        return $this->namespace->createAttributeHandler($this, $tag, $expression);
     }
 }

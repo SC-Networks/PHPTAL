@@ -16,7 +16,7 @@ namespace PhpTal\PreFilter;
 
 class StripComments extends \PhpTal\PreFilter
 {
-    function filterDOM(\PhpTal\Dom\Element $element)
+    public function filterDOM(\PhpTal\Dom\Element $element)
     {
         $defs = \PhpTal\Dom\Defs::getInstance();
 

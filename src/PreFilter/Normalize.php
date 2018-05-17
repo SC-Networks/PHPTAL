@@ -19,12 +19,12 @@ namespace PhpTal\PreFilter;
  */
 class Normalize extends \PhpTal\PreFilter
 {
-    function filter($src)
+    public function filter($src)
     {
         return str_replace("\r\n", "\n", $src);
     }
 
-    function filterDOM(\PhpTal\Dom\Element $root)
+    public function filterDOM(\PhpTal\Dom\Element $root)
     {
         // let xml:space=preserve preserve attributes as well
         if ($root->getAttributeNS("http://www.w3.org/XML/1998/namespace", 'space') == 'preserve') {

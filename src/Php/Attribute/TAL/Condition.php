@@ -31,9 +31,7 @@ namespace PhpTal\Php\Attribute\TAL;
  * @package PHPTAL
  * @author Laurent Bedubourg <lbedubourg@motion-twin.com>
  */
-class Condition
-extends \PhpTal\Php\Attribute
-implements \PhpTal\Php\TalesChainReader
+class Condition extends \PhpTal\Php\Attribute implements \PhpTal\Php\TalesChainReaderInterface
 {
     private $expressions = array();
 
@@ -89,6 +87,4 @@ implements \PhpTal\Php\TalesChainReader
         throw new \PhpTal\Exception\ParserException('\'default\' keyword not allowed on conditional expressions',
                     $this->phpelement->getSourceFile(), $this->phpelement->getSourceLine());
     }
-
 }
-

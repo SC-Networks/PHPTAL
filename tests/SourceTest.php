@@ -12,7 +12,7 @@
  * @link     http://phptal.org/
  */
 
-class MyTestResolver implements \PhpTal\SourceResolver
+class MyTestResolver implements \PhpTal\SourceResolverInterface
 {
     public $called=0;
 
@@ -23,7 +23,7 @@ class MyTestResolver implements \PhpTal\SourceResolver
     }
 }
 
-class MyCustomSourceResolver implements \PhpTal\SourceResolver
+class MyCustomSourceResolver implements \PhpTal\SourceResolverInterface
 {
     function resolve($path)
     {
@@ -31,7 +31,7 @@ class MyCustomSourceResolver implements \PhpTal\SourceResolver
     }
 }
 
-class MyCustomSource implements \PhpTal\Source
+class MyCustomSource implements \PhpTal\SourceInterface
 {
     function __construct($path)
     {
@@ -55,7 +55,7 @@ class MyCustomSource implements \PhpTal\Source
     }
 }
 
-class CantFindAThing implements \PhpTal\SourceResolver
+class CantFindAThing implements \PhpTal\SourceResolverInterface
 {
     function resolve($path)
     {

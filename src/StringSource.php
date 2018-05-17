@@ -20,7 +20,7 @@ namespace PhpTal;
  *
  * @package PHPTAL
  */
-class StringSource implements Source
+class StringSource implements SourceInterface
 {
     const NO_PATH_PREFIX = '<string ';
 
