@@ -9,7 +9,6 @@
  * @author   Laurent Bedubourg <lbedubourg@motion-twin.com>
  * @author   Kornel Lesiński <kornel@aardvarkmedia.co.uk>
  * @license  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
- * @version  SVN: $Id$
  * @link     http://phptal.org/
  */
 
@@ -22,31 +21,51 @@ namespace PhpTal;
  */
 class FileSource implements SourceInterface
 {
-    private $_path;
+    /**
+     * @var string
+     */
+    private $path;
 
+    /**
+     * FileSource constructor.
+     * @param string $path
+     * @throws Exception\IOException
+     */
     public function __construct($path)
     {
-        $this->_path = realpath($path);
-        if ($this->_path === false) throw new \PhpTal\Exception\IOException("Unable to find real path of file '$path' (in ".getcwd().')');
+        $this->path = realpath($path);
+        if ($this->path === false) {
+            throw new Exception\IOException("Unable to find real path of file '$path' (in " . getcwd() . ')');
+        }
     }
 
+    /**
+     * @return string
+     */
     public function getRealPath()
     {
-        return $this->_path;
+        return $this->path;
     }
 
+    /**
+     * @return bool|int
+     */
     public function getLastModifiedTime()
     {
-        return filemtime($this->_path);
+        return filemtime($this->path);
     }
 
+    /**
+     * @return string
+     * @throws Exception\IOException
+     */
     public function getData()
     {
-        $content = file_get_contents($this->_path);
+        $content = file_get_contents($this->path);
 
         // file_get_contents returns "" when loading directory!?
-        if (false === $content || ("" === $content && is_dir($this->_path))) {
-            throw new \PhpTal\Exception\IOException("Unable to load file ".$this->_path);
+        if (false === $content || ('' === $content && is_dir($this->path))) {
+            throw new Exception\IOException('Unable to load file ' . $this->path);
         }
         return $content;
     }

@@ -8,7 +8,6 @@
  * @package  PHPTAL
  * @author   Kornel Lesiński <kornel@aardvarkmedia.co.uk>
  * @license  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
- * @version  SVN: $Id: $
  * @link     http://phptal.org/
  */
 
@@ -18,9 +17,16 @@ use PhpTal\Exception\TemplateException;
 
 class ExceptionHandler
 {
+    /**
+     * @var string
+     */
     private $encoding;
 
-    function __construct($encoding)
+    /**
+     * ExceptionHandler constructor.
+     * @param string $encoding
+     */
+    public function __construct($encoding)
     {
         $this->encoding = $encoding;
     }
@@ -31,20 +37,20 @@ class ExceptionHandler
      *
      * Doesn't change exception handler if non-default one is set.
      *
-     * @param \Exception|\Throwable $e exception to re-throw and display
+     * @param \Throwable $e exception to re-throw and display
      * @param string $encoding
      *
      * @return void
      * @throws TemplateException
      * @throws \Throwable
      */
-    public static function handleException($e, $encoding) // todo 7.2 -> $e should be \Throwable
+    public static function handleException($e, $encoding) // todo php7 -> $e should be \Throwable
     {
         // PHPTAL's handler is only useful on fresh HTTP response
         if (PHP_SAPI !== 'cli' && !headers_sent()) {
             $old_exception_handler = set_exception_handler([
                 new ExceptionHandler($encoding),
-                '_defaultExceptionHandler'
+                'defaultExceptionHandler'
             ]);
 
             if ($old_exception_handler !== null) {
@@ -62,34 +68,35 @@ class ExceptionHandler
     /**
      * Generates simple error page. Sets appropriate HTTP status to prevent page being indexed.
      *
-     * @param \Exception e exception to display
+     * @param \Exception $e exception to display
      */
-    public function _defaultExceptionHandler($e)
+    public function defaultExceptionHandler($e)  // todo php7 -> typehint should be \Throwable
     {
         if (!headers_sent()) {
             header('HTTP/1.1 500 PHPTAL Exception');
-            header('Content-Type:text/html;charset='.$this->encoding);
+            header('Content-Type:text/html;charset=' . $this->encoding);
         }
 
         $line = $e->getFile();
         if ($e->getLine()) {
-            $line .= ' line '.$e->getLine();
+            $line .= ' line ' . $e->getLine();
         }
 
         if (ini_get('display_errors')) {
-            $title = get_class($e).': '.htmlspecialchars($e->getMessage());
-            $body = "<p><strong>\n".htmlspecialchars($e->getMessage()).'</strong></p>' .
-                    '<p>In '.htmlspecialchars($line)."</p><pre>\n".htmlspecialchars($e->getTraceAsString()).'</pre>';
+            $title = get_class($e) . ': ' . htmlspecialchars($e->getMessage(), ENT_COMPAT);
+            $body = "<p><strong>\n" . htmlspecialchars($e->getMessage(), ENT_COMPAT) . '</strong></p>' .
+                '<p>In ' . htmlspecialchars($line, ENT_COMPAT) . "</p><pre>\n" .
+                htmlspecialchars($e->getTraceAsString(), ENT_COMPAT) . '</pre>';
         } else {
-            $title = "PHPTAL Exception";
-            $body = "<p>This page cannot be displayed.</p><hr/>" .
-                    "<p><small>Enable <code>display_errors</code> to see detailed message.</small></p>";
+            $title = 'PHPTAL Exception';
+            $body = '<p>This page cannot be displayed.</p><hr/>' .
+                '<p><small>Enable <code>display_errors</code> to see detailed message.</small></p>';
         }
 
         echo "<!DOCTYPE html><html xmlns='http://www.w3.org/1999/xhtml'><head><style>body{font-family:sans-serif}</style><title>\n";
-        echo $title.'</title></head><body><h1>PHPTAL Exception</h1>'.$body;
-        error_log($e->getMessage().' in '.$line);
-        echo '</body></html>'.str_repeat('    ', 100)."\n"; // IE won't display error pages < 512b
+        echo $title . '</title></head><body><h1>PHPTAL Exception</h1>' . $body;
+        error_log($e->getMessage() . ' in ' . $line);
+        echo '</body></html>' . str_repeat('    ', 100) . "\n"; // IE won't display error pages < 512b
         exit(1);
     }
 }

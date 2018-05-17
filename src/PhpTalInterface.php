@@ -5,7 +5,8 @@ namespace PhpTal;
 /**
  * Interface: PhpTalInterface
  */
-interface PhpTalInterface {
+interface PhpTalInterface
+{
 
     /**
      * Set template from file path.
@@ -182,11 +183,11 @@ interface PhpTalInterface {
      * PreFilters must inherit PreFilter class.
      * (in future this method will allow string with filter name instead of object)
      *
-     * @param mixed $filter PreFilter object or name of prefilter to add
+     * @param PreFilter $filter PreFilter object or name of prefilter to add
      *
      * @return $this
      */
-    public function addPreFilter($filter);
+    public function addPreFilter(PreFilter $filter);
 
     /**
      * Sets the level of recursion for template cache directories
@@ -271,7 +272,7 @@ interface PhpTalInterface {
      * @param PhpTalInterface $local_tpl is PHPTAL instance of the file in which macro is defined
      *                          (it will be different from $this if it's external macro call)
      */
-    public function _executeMacroOfTemplate($path, PhpTalInterface $local_tpl);
+    public function executeMacroOfTemplate($path, PhpTalInterface $local_tpl);
 
 
     /**
@@ -280,13 +281,6 @@ interface PhpTalInterface {
      * @return void
      */
     public function prepare();
-
-    /**
-     * get how long compiled templates and phptal:cache files are kept, in days
-     *
-     * @return float
-     */
-    public function getCacheLifetime();
 
     /**
      * set how long compiled templates and phptal:cache files are kept
@@ -304,14 +298,6 @@ interface PhpTalInterface {
      * @return $this
      */
     public function setCachePurgeFrequency($n);
-
-    /**
-     * how likely cache cleaning can happen
-     * @see self::setCachePurgeFrequency()
-     *
-     * @return int
-     */
-    public function getCachePurgeFrequency();
 
     /**
      * Removes all compiled templates from cache that
@@ -397,4 +383,9 @@ interface PhpTalInterface {
      * @return Context
      */
     public function popContext();
+
+    /**
+     * @return StringSource
+     */
+    public function getSource();
 }

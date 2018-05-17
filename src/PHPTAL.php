@@ -9,7 +9,6 @@
  * @author   Laurent Bedubourg <lbedubourg@motion-twin.com>
  * @author   Kornel Lesiński <kornel@aardvarkmedia.co.uk>
  * @license  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
- * @version  SVN: $Id$
  * @link     http://phptal.org/
  */
 
@@ -41,117 +40,114 @@ class PHPTAL implements PhpTalInterface
     /**
      * @see getPreFilters()
      *
-     * @var \\PhpTal\PreFilter[]
+     * @var PreFilter[]
      */
     protected $prefilters = [];
 
     /**
      * The postfilter which will get called on every run
      *
-     * @var null|\\PhpTal\Filter
+     * @var FilterInterface
      */
-    protected $_postfilter = null;
+    protected $postfilter;
 
     /**
      *  list of template source repositories given to file source resolver
      *
-     * @var array
+     * @var string[]
      */
-    protected $_repositories = [];
+    protected $repositories = [];
 
     /**
      *  template path (path that has been set, not necessarily loaded)
      *
-     * @var null|string
+     * @var string
      */
-    protected $_path = null;
+    protected $path;
 
     /**
      *  template source resolvers (classes that search for templates by name)
      *
-     *  @var \\PhpTal\SourceResolver[]
+     *  @var SourceResolverInterface[]
      */
     protected $resolvers = [];
 
     /**
      *  template source (only set when not working with file)
      *
-     * @var null|string
+     * @var StringSource
      */
-    protected $_source = null;
+    protected $source;
 
     /**
      * destination of PHP intermediate file
      *
-     * @var null|string
+     * @var string
      */
-    protected $_codeFile = null;
+    protected $codeFile;
 
     /**
      * php function generated for the template
      *
-     * @var null|string
+     * @var string
      */
-    protected $_functionName = null;
+    protected $functionName;
 
     /**
      * set to true when template is ready for execution
      *
      * @var bool
      */
-    protected $_prepared = false;
+    protected $prepared = false;
 
     /**
      * associative array of phptal:id => \PhpTal\TriggerInterface
      *
-     * \PhpTal\TriggerInterface[]
+     * @var TriggerInterface[]
      */
-    protected $_triggers = array();
+    protected $triggers = [];
 
     /**
      * i18n translator
      *
-     * @var null|\PhpTal\TranslationServiceInterface
+     * @var TranslationServiceInterface
      */
-    protected $_translator = null;
+    protected $translator;
 
     /**
      * global execution context
      *
-     * @var null|\stdClass
+     * @var \stdClass
      */
-    protected $_globalContext = null;
+    protected $globalContext;
 
     /**
      * current execution context
      *
-     * @var null|Context
+     * @var Context
      */
-    protected $_context = null;
+    protected $context;
 
     /**
      * list of on-error caught exceptions
      *
      * @var \Exception[]
      */
-    protected $_errors = [];
+    protected $errors = [];
 
     /**
      * encoding used throughout
      *
      * @var string
      */
-    protected $_encoding = 'UTF-8';
+    protected $encoding = 'UTF-8';
 
     /**
      * type of syntax used in generated templates
      *
      * @var int
      */
-    protected $_outputMode = self::XHTML;
-    /**
-     * should all comments be stripped
-     */
+    protected $outputMode = self::XHTML;
 
     // configuration properties
 
@@ -160,36 +156,38 @@ class PHPTAL implements PhpTalInterface
      *
      * @var bool
      */
-    protected $_forceReparse = false;
+    protected $forceReparse = false;
 
     /**
      * directory where code cache is
+     *
+     * @var string
      */
-    private $_phpCodeDestination;
+    private $phpCodeDestination;
 
     /**
      * @var string
      */
-    private $_phpCodeExtension = 'php';
+    private $phpCodeExtension = 'php';
 
     /**
      * number of days
      *
      * @var float
      */
-    private $_cacheLifetime = 30;
+    private $cacheLifetime = 30;
 
     /**
      * 1/x
      *
      * @var int
      */
-    private $_cachePurgeFrequency = 30;
+    private $cachePurgeFrequency = 30;
 
     /**
      * speeds up calls to external templates
      *
-     * @var \PhpTal\PhpTalInterface[]
+     * @var PhpTalInterface[]
      */
     private $externalMacroTemplatesCache = [];
 
@@ -201,24 +199,14 @@ class PHPTAL implements PhpTalInterface
     /**
      * @param string $path Template file path.
      */
-    public function __construct($path=false)
+    public function __construct($path = null)
     {
-        $this->_path = $path;
-        $this->_globalContext = new \stdClass();
-        $this->_context = new Context();
-        $this->_context->setGlobal($this->_globalContext);
+        $this->path = $path;
+        $this->globalContext = new \stdClass();
+        $this->context = new Context();
+        $this->context->setGlobal($this->globalContext);
 
-        if (function_exists('sys_get_temp_dir')) {
-            $this->setPhpCodeDestination(sys_get_temp_dir());
-        } elseif (substr(PHP_OS, 0, 3) == 'WIN') {
-            if (file_exists('c:\\WINNT\\Temp\\')) {
-                $this->setPhpCodeDestination('c:\\WINNT\\Temp\\');
-            } else {
-                $this->setPhpCodeDestination('c:\\WINDOWS\\Temp\\');
-            }
-        } else {
-            $this->setPhpCodeDestination('/tmp/');
-        }
+        $this->setPhpCodeDestination(sys_get_temp_dir());
     }
 
     /**
@@ -228,7 +216,7 @@ class PHPTAL implements PhpTalInterface
      */
     public function __clone()
     {
-        $this->_context = $this->_context->pushContext();
+        $this->context = $this->context->pushContext();
     }
 
     /**
@@ -241,13 +229,13 @@ class PHPTAL implements PhpTalInterface
      */
     public function setTemplate($path)
     {
-        $this->_prepared = false;
-        $this->_functionName = null;
-        $this->_codeFile = null;
-        $this->_path = $path;
-        $this->_source = null;
-        $this->_context->_docType = null;
-        $this->_context->_xmlDeclaration = null;
+        $this->prepared = false;
+        $this->functionName = null;
+        $this->codeFile = null;
+        $this->path = $path;
+        $this->source = null;
+        $this->context->_docType = null;
+        $this->context->_xmlDeclaration = null;
         return $this;
     }
 
@@ -264,13 +252,13 @@ class PHPTAL implements PhpTalInterface
      */
     public function setSource($src, $path = null)
     {
-        $this->_prepared = false;
-        $this->_functionName = null;
-        $this->_codeFile = null;
-        $this->_source = new \PhpTal\StringSource($src, $path);
-        $this->_path = $this->_source->getRealPath();
-        $this->_context->_docType = null;
-        $this->_context->_xmlDeclaration = null;
+        $this->prepared = false;
+        $this->functionName = null;
+        $this->codeFile = null;
+        $this->source = new StringSource($src, $path);
+        $this->path = $this->source->getRealPath();
+        $this->context->_docType = null;
+        $this->context->_xmlDeclaration = null;
         return $this;
     }
 
@@ -284,9 +272,9 @@ class PHPTAL implements PhpTalInterface
     public function setTemplateRepository($rep)
     {
         if (is_array($rep)) {
-            $this->_repositories = $rep;
+            $this->repositories = $rep;
         } else {
-            $this->_repositories[] = $rep;
+            $this->repositories[] = $rep;
         }
         return $this;
     }
@@ -298,7 +286,7 @@ class PHPTAL implements PhpTalInterface
      */
     public function getTemplateRepositories()
     {
-        return $this->_repositories;
+        return $this->repositories;
     }
 
     /**
@@ -308,7 +296,7 @@ class PHPTAL implements PhpTalInterface
      */
     public function clearTemplateRepositories()
     {
-        $this->_repositories = array();
+        $this->repositories = [];
         return $this;
     }
 
@@ -338,7 +326,7 @@ class PHPTAL implements PhpTalInterface
         $this->resetPrepared();
 
         if ($bool) {
-            $this->prefilters['_phptal_strip_comments_'] = new \PhpTal\PreFilter\StripComments();
+            $this->prefilters['_phptal_strip_comments_'] = new PreFilter\StripComments();
         } else {
             unset($this->prefilters['_phptal_strip_comments_']);
         }
@@ -357,15 +345,16 @@ class PHPTAL implements PhpTalInterface
      * @param int $mode (\PhpTal\PHPTAL::XML, \PhpTal\PHPTAL::XHTML or \PhpTal\PHPTAL::HTML5).
      *
      * @return $this
+     * @throws Exception\ConfigurationException
      */
     public function setOutputMode($mode)
     {
         $this->resetPrepared();
 
-        if ($mode != static::XHTML && $mode != static::XML && $mode != static::HTML5) {
-            throw new \PhpTal\Exception\ConfigurationException('Unsupported output mode '.$mode);
+        if ($mode !== static::XHTML && $mode !== static::XML && $mode !== static::HTML5) {
+            throw new Exception\ConfigurationException('Unsupported output mode ' . $mode);
         }
-        $this->_outputMode = $mode;
+        $this->outputMode = $mode;
         return $this;
     }
 
@@ -377,7 +366,7 @@ class PHPTAL implements PhpTalInterface
      */
     public function getOutputMode()
     {
-        return $this->_outputMode;
+        return $this->outputMode;
     }
 
     /**
@@ -390,9 +379,11 @@ class PHPTAL implements PhpTalInterface
     public function setEncoding($enc)
     {
         $enc = strtoupper($enc);
-        if ($enc != $this->_encoding) {
-            $this->_encoding = $enc;
-            if ($this->_translator) $this->_translator->setEncoding($enc);
+        if ($enc !== $this->encoding) {
+            $this->encoding = $enc;
+            if ($this->translator) {
+                $this->translator->setEncoding($enc);
+            }
 
             $this->resetPrepared();
         }
@@ -402,11 +393,11 @@ class PHPTAL implements PhpTalInterface
     /**
      * Get input and ouput encoding.
      *
-     * @return $this
+     * @return string
      */
     public function getEncoding()
     {
-        return $this->_encoding;
+        return $this->encoding;
     }
 
     /**
@@ -419,7 +410,7 @@ class PHPTAL implements PhpTalInterface
      */
     public function setPhpCodeDestination($path)
     {
-        $this->_phpCodeDestination = rtrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+        $this->phpCodeDestination = rtrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
         $this->resetPrepared();
         return $this;
     }
@@ -431,7 +422,7 @@ class PHPTAL implements PhpTalInterface
      */
     public function getPhpCodeDestination()
     {
-        return $this->_phpCodeDestination;
+        return $this->phpCodeDestination;
     }
 
     /**
@@ -443,7 +434,7 @@ class PHPTAL implements PhpTalInterface
      */
     public function setPhpCodeExtension($extension)
     {
-        $this->_phpCodeExtension = $extension;
+        $this->phpCodeExtension = $extension;
         $this->resetPrepared();
         return $this;
     }
@@ -453,7 +444,7 @@ class PHPTAL implements PhpTalInterface
      */
     public function getPhpCodeExtension()
     {
-        return $this->_phpCodeExtension;
+        return $this->phpCodeExtension;
     }
 
     /**
@@ -468,7 +459,7 @@ class PHPTAL implements PhpTalInterface
      */
     public function setForceReparse($bool)
     {
-        $this->_forceReparse = (bool) $bool;
+        $this->forceReparse = (bool) $bool;
         return $this;
     }
 
@@ -479,7 +470,7 @@ class PHPTAL implements PhpTalInterface
      */
     public function getForceReparse()
     {
-        return $this->_forceReparse;
+        return $this->forceReparse;
     }
 
     /**
@@ -494,7 +485,7 @@ class PHPTAL implements PhpTalInterface
      */
     public function setTranslator(TranslationServiceInterface $t)
     {
-        $this->_translator = $t;
+        $this->translator = $t;
         $t->setEncoding($this->getEncoding());
         return $this;
     }
@@ -503,21 +494,17 @@ class PHPTAL implements PhpTalInterface
      * Add new prefilter to filter chain.
      * Prefilters are called only once template is compiled.
      *
-     * PreFilters must inherit \PhpTal\PreFilter class.
+     * PreFilters must inherit PreFilter class.
      * (in future this method will allow string with filter name instead of object)
      *
-     * @param mixed $filter \PhpTal\PreFilter object or name of prefilter to add
+     * @param PreFilter $filter PreFilter object or name of prefilter to add
      *
      * @return $this
+     * @throws Exception\ConfigurationException
      */
-    final public function addPreFilter($filter)
+    final public function addPreFilter(PreFilter $filter)
     {
         $this->resetPrepared();
-
-        if (!$filter instanceof PreFilter) {
-            throw new \PhpTal\Exception\ConfigurationException("addPreFilter expects \PhpTal\PreFilter object");
-        }
-
         $this->prefilters[] = $filter;
         return $this;
     }
@@ -527,7 +514,7 @@ class PHPTAL implements PhpTalInterface
      *
      * @param int $recursion_level
      *
-     * @param $this
+     * @return self
      */
     public function setSubpathRecursionLevel($recursion_level)
     {
@@ -541,7 +528,7 @@ class PHPTAL implements PhpTalInterface
      *
      * Array keys may be non-numeric!
      *
-     * @return \\PhpTal\PreFilter[]
+     * @return PreFilter[]
      */
     protected function getPreFilters()
     {
@@ -559,10 +546,12 @@ class PHPTAL implements PhpTalInterface
     private function getPreFiltersCacheId()
     {
         $cacheid = '';
-        foreach($this->getPreFilters() as $key => $prefilter) {
+        foreach ($this->getPreFilters() as $key => $prefilter) {
             if ($prefilter instanceof PreFilter) {
                 $cacheid .= $key.$prefilter->getCacheId();
-            } elseif ($prefilter instanceof FilterInterface) {
+            } elseif ($prefilter instanceof FilterInterface) { // todo this should never happen, as $prefilter is
+                                                               // todo supposed to be an instance of PreFilter,
+                                                               // todo according to docblock (and new type hint...)
                 $cacheid .= $key.get_class($prefilter);
             } else {
                 $cacheid .= $key.$prefilter;
@@ -574,13 +563,13 @@ class PHPTAL implements PhpTalInterface
     /**
      * Instantiate prefilters
      *
-     * @return \\PhpTal\PreFilter[]
+     * @return PreFilter[]
      */
     private function getPreFilterInstances()
     {
         $prefilters = $this->getPreFilters();
 
-        foreach($prefilters as $prefilter) {
+        foreach ($prefilters as $prefilter) {
             if ($prefilter instanceof PreFilter) {
                 $prefilter->setPHPTAL($this);
             }
@@ -600,7 +589,7 @@ class PHPTAL implements PhpTalInterface
      */
     public function setPostFilter(FilterInterface $filter)
     {
-        $this->_postfilter = $filter;
+        $this->postfilter = $filter;
         return $this;
     }
 
@@ -608,13 +597,13 @@ class PHPTAL implements PhpTalInterface
      * Register a trigger for specified phptal:id.
      *
      * @param string $id phptal:id to look for
-     * @param \PhpTal\TriggerInterface $trigger
+     * @param TriggerInterface $trigger
      *
      * @return $this
      */
-    public function addTrigger($id, \PhpTal\TriggerInterface $trigger)
+    public function addTrigger($id, TriggerInterface $trigger)
     {
-        $this->_triggers[$id] = $trigger;
+        $this->triggers[$id] = $trigger;
         return $this;
     }
 
@@ -623,12 +612,12 @@ class PHPTAL implements PhpTalInterface
      *
      * @param string $id phptal:id
      *
-     * @return \PhpTal\TriggerInterface|null
+     * @return TriggerInterface|null
      */
     public function getTrigger($id)
     {
-        if (array_key_exists($id, $this->_triggers)) {
-            return $this->_triggers[$id];
+        if (array_key_exists($id, $this->triggers)) {
+            return $this->triggers[$id];
         }
         return null;
     }
@@ -641,10 +630,11 @@ class PHPTAL implements PhpTalInterface
      * @param mixed $value
      *
      * @return void
+     * @throws Exception\InvalidVariableNameException
      */
     public function __set($varname, $value)
     {
-        $this->_context->__set($varname, $value);
+        $this->context->__set($varname, $value);
     }
 
     /**
@@ -655,10 +645,11 @@ class PHPTAL implements PhpTalInterface
      * @param mixed $value value of the variable
      *
      * @return $this
+     * @throws Exception\InvalidVariableNameException
      */
     public function set($varname, $value)
     {
-        $this->_context->__set($varname, $value);
+        $this->context->__set($varname, $value);
         return $this;
     }
 
@@ -666,55 +657,48 @@ class PHPTAL implements PhpTalInterface
      * Execute the template code and return generated markup.
      *
      * @return string
+     * @throws Exception\TemplateException
+     * @throws \Throwable
      */
     public function execute()
     {
-        try
-        {
-            if (!$this->_prepared) {
+        try {
+            if (!$this->prepared) {
                 // includes generated template PHP code
                 $this->prepare();
             }
-            $this->_context->echoDeclarations(false);
+            $this->context->echoDeclarations(false);
 
             $templateFunction = $this->getFunctionName();
 
             try {
                 ob_start();
-                $templateFunction($this, $this->_context);
+                $templateFunction($this, $this->context);
                 $res = ob_get_clean();
-            }
-            catch (\Throwable $e)
-            {
+            } catch (\Throwable $e) {
                 ob_end_clean();
                 throw $e;
-            }
-            catch (\Exception $e)
-            {
+            } catch (\Exception $e) {
                 ob_end_clean();
                 throw $e;
             }
 
             // unshift doctype
-            if ($this->_context->_docType) {
-                $res = $this->_context->_docType . $res;
+            if ($this->context->_docType) {
+                $res = $this->context->_docType . $res;
             }
 
             // unshift xml declaration
-            if ($this->_context->_xmlDeclaration) {
-                $res = $this->_context->_xmlDeclaration . "\n" . $res;
+            if ($this->context->_xmlDeclaration) {
+                $res = $this->context->_xmlDeclaration . "\n" . $res;
             }
 
-            if ($this->_postfilter) {
-                return $this->_postfilter->filter($res);
+            if ($this->postfilter !== null) {
+                return $this->postfilter->filter($res);
             }
-        }
-        catch (\Throwable $e)
-        {
+        } catch (\Throwable $e) {
             ExceptionHandler::handleException($e, $this->getEncoding());
-        }
-        catch (\Exception $e)
-        {
+        } catch (\Exception $e) {
             ExceptionHandler::handleException($e, $this->getEncoding());
         }
 
@@ -726,26 +710,26 @@ class PHPTAL implements PhpTalInterface
      * This function does not allow postfilters nor DOCTYPE/XML declaration.
      *
      * @return void
+     * @throws Exception\TemplateException
+     * @throws \Throwable
      */
     public function echoExecute()
     {
         try {
-            if (!$this->_prepared) {
+            if (!$this->prepared) {
                 // includes generated template PHP code
                 $this->prepare();
             }
 
-            if ($this->_postfilter) {
-                throw new \PhpTal\Exception\ConfigurationException("echoExecute() does not support postfilters");
+            if ($this->postfilter !== null) {
+                throw new Exception\ConfigurationException('echoExecute() does not support postfilters');
             }
 
-            $this->_context->echoDeclarations(true);
+            $this->context->echoDeclarations(true);
 
             $templateFunction = $this->getFunctionName();
-            $templateFunction($this, $this->_context);
-        }
-        catch (\Exception $e)
-        {
+            $templateFunction($this, $this->context);
+        } catch (\Exception $e) {
             ExceptionHandler::handleException($e, $this->getEncoding());
         }
     }
@@ -759,8 +743,12 @@ class PHPTAL implements PhpTalInterface
      * @param string $path
      * @param PhpTalInterface $local_tpl is PHPTAL instance of the file in which macro is defined
      *                          (it will be different from $this if it's external macro call)
+     * @throws Exception\IOException
+     * @throws Exception\MacroMissingException
+     * @throws Exception\TemplateException
+     * @throws \Throwable
      */
-    final public function _executeMacroOfTemplate($path, PhpTalInterface $local_tpl)
+    final public function executeMacroOfTemplate($path, PhpTalInterface $local_tpl)
     {
         // extract macro source file from macro name, if macro path does not
         // contain filename, then the macro is assumed to be local
@@ -772,31 +760,36 @@ class PHPTAL implements PhpTalInterface
                 $tpl = $this->externalMacroTemplatesCache[$file];
             } else {
                 $tpl = clone $this;
-                array_unshift($tpl->_repositories, dirname($this->_source->getRealPath()));
+                array_unshift($tpl->repositories, dirname($this->source->getRealPath()));
                 $tpl->setTemplate($file);
                 $tpl->prepare();
 
                 // keep it small (typically only 1 or 2 external files are used)
                 if (count($this->externalMacroTemplatesCache) > 10) {
-                    $this->externalMacroTemplatesCache = array();
+                    $this->externalMacroTemplatesCache = [];
                 }
                 $this->externalMacroTemplatesCache[$file] = $tpl;
             }
 
-            $fun = $tpl->getFunctionName() . '_' . strtr($macroName, "-", "_");
+            $fun = $tpl->getFunctionName() . '_' . str_replace('-', '_', $macroName);
             if (!function_exists($fun)) {
-                throw new \PhpTal\Exception\MacroMissingException("Macro '$macroName' is not defined in $file", $this->_source->getRealPath());
+                throw new Exception\MacroMissingException(
+                    "Macro '$macroName' is not defined in $file",
+                    $this->getSource()->getRealPath()
+                );
             }
 
             $fun($tpl, $this);
-
         } else {
             // call local macro
-            $fun = $local_tpl->getFunctionName() . '_' . strtr($path, "-", "_");
+            $fun = $local_tpl->getFunctionName() . '_' . str_replace('-', '_', $path);
             if (!function_exists($fun)) {
-                throw new \PhpTal\Exception\MacroMissingException("Macro '$path' is not defined", $local_tpl->_source->getRealPath());
+                throw new Exception\MacroMissingException(
+                    "Macro '$path' is not defined",
+                    $local_tpl->getSource()->getRealPath()
+                );
             }
-            $fun( $local_tpl, $this);
+            $fun($local_tpl, $this);
         }
     }
 
@@ -804,11 +797,14 @@ class PHPTAL implements PhpTalInterface
      * ensure that getCodePath will return up-to-date path
      *
      * @return void
+     * @throws Exception\ConfigurationException
+     * @throws Exception\IOException
      */
     private function setCodeFile()
     {
         $this->findTemplate();
-        $this->_codeFile = $this->getPhpCodeDestination() . $this->getSubPath() . '/'  . $this->getFunctionName() . '.' . $this->getPhpCodeExtension();
+        $this->codeFile = $this->getPhpCodeDestination() . $this->getSubPath() . '/'  . $this->getFunctionName()
+            . '.' . $this->getPhpCodeExtension();
     }
 
     /**
@@ -821,10 +817,10 @@ class PHPTAL implements PhpTalInterface
         $real_path = md5($this->getFunctionName());
         $path = '';
         for ($i = 0; $i < $this->subpathRecursionLevel; $i++) {
-            $path .= '/'.substr($real_path,$i,1);
+            $path .= '/' . substr($real_path, $i, 1);
         }
-        if (!file_exists($this->getPhpCodeDestination().$path)) {
-            mkdir($this->getPhpCodeDestination().$path, 0777, true);
+        if (!file_exists($this->getPhpCodeDestination() . $path)) {
+            mkdir($this->getPhpCodeDestination() . $path, 0777, true);
         }
         return $path;
     }
@@ -834,15 +830,19 @@ class PHPTAL implements PhpTalInterface
      */
     protected function resetPrepared()
     {
-        $this->_prepared = false;
-        $this->_functionName = null;
-        $this->_codeFile = null;
+        $this->prepared = false;
+        $this->functionName = null;
+        $this->codeFile = null;
     }
 
     /**
      * Prepare template without executing it.
      *
-     * @return void
+     * @return self
+     * @throws Exception\ConfigurationException
+     * @throws Exception\IOException
+     * @throws Exception\TemplateException
+     * @throws \Throwable
      */
     public function prepare()
     {
@@ -856,17 +856,16 @@ class PHPTAL implements PhpTalInterface
             // parse template if php generated code does not exists or template
             // source file modified since last generation or force reparse is set
             if ($this->getForceReparse() || !file_exists($this->getCodePath())) {
-
                 // i'm not sure where that belongs, but not in normal path of execution
                 // because some sites have _a lot_ of files in temp
-                if ($this->getCachePurgeFrequency() && mt_rand()%$this->getCachePurgeFrequency() == 0) {
+                if ($this->getCachePurgeFrequency() && mt_rand() % $this->getCachePurgeFrequency() === 0) {
                     $this->cleanUpGarbage();
                 }
 
                 $result = $this->parse();
 
                 if (!file_put_contents($this->getCodePath(), $result)) {
-                    throw new \PhpTal\Exception\IOException('Unable to open '.$this->getCodePath().' for writing');
+                    throw new Exception\IOException('Unable to open '.$this->getCodePath().' for writing');
                 }
 
                 // the awesome thing about eval() is that parse errors don't stop PHP.
@@ -875,12 +874,10 @@ class PHPTAL implements PhpTalInterface
                 ob_start();
                 try {
                     eval("?>\n".$result);
-                }
-                catch(\Throwable $e) {
+                } catch (\Throwable $e) {
                     ob_end_clean();
                     throw $e;
-                }
-                catch(\Exception $e) {
+                } catch (\Exception $e) {
                     ob_end_clean();
                     throw $e;
                 }
@@ -889,11 +886,10 @@ class PHPTAL implements PhpTalInterface
                     $msg = str_replace('eval()\'d code', $this->getCodePath(), ob_get_clean());
 
                     // greedy .* ensures last match
-                    if (preg_match('/.*on line (\d+)$/m', $msg, $m)) $line=$m[1]; else $line=0;
-                    throw new \PhpTal\Exception\TemplateException(trim($msg), $this->getCodePath(), $line);
+                    $line = preg_match('/.*on line (\d+)$/m', $msg, $m) ? $m[1] : 0;
+                    throw new Exception\TemplateException(trim($msg), $this->getCodePath(), $line);
                 }
                 ob_end_clean();
-
             } else {
                 // eval trick is used only on first run,
                 // just in case it causes any problems with opcode accelerators
@@ -901,7 +897,7 @@ class PHPTAL implements PhpTalInterface
             }
         }
 
-        $this->_prepared = true;
+        $this->prepared = true;
         return $this;
     }
 
@@ -910,9 +906,9 @@ class PHPTAL implements PhpTalInterface
      *
      * @return float
      */
-    public function getCacheLifetime()
+    private function getCacheLifetime()
     {
-        return $this->_cacheLifetime;
+        return $this->cacheLifetime;
     }
 
     /**
@@ -924,7 +920,7 @@ class PHPTAL implements PhpTalInterface
      */
     public function setCacheLifetime($days)
     {
-        $this->_cacheLifetime = max(0.5, $days);
+        $this->cacheLifetime = max(0.5, $days);
         return $this;
     }
 
@@ -938,7 +934,7 @@ class PHPTAL implements PhpTalInterface
      */
     public function setCachePurgeFrequency($n)
     {
-        $this->_cachePurgeFrequency = (int)$n;
+        $this->cachePurgeFrequency = (int) $n;
         return $this;
     }
 
@@ -948,9 +944,9 @@ class PHPTAL implements PhpTalInterface
      *
      * @return int
      */
-    public function getCachePurgeFrequency()
+    private function getCachePurgeFrequency()
     {
-        return $this->_cachePurgeFrequency;
+        return $this->cachePurgeFrequency;
     }
 
 
@@ -980,9 +976,8 @@ class PHPTAL implements PhpTalInterface
 
         if ($cacheFiles) {
             foreach ($cacheFiles as $index => $file) {
-
                 // comparison here skips filenames that are certainly too new
-                if (strcmp($file, $upperLimit) <= 0 || substr($file, 0, strlen($lowerLimit)) === $lowerLimit) {
+                if (strcmp($file, $upperLimit) <= 0 || strpos($file, $lowerLimit) === 0) {
                     $time = filemtime($file);
                     if ($time && $time < $cacheFilesExpire) {
                         @unlink($file);
@@ -997,6 +992,9 @@ class PHPTAL implements PhpTalInterface
      * Must be called after setSource/setTemplate.
      *
      * @return void
+     * @throws Exception\ConfigurationException
+     * @throws Exception\IOException
+     * @deprecated seems to be used in tests only
      */
     public function cleanUpCache()
     {
@@ -1004,11 +1002,13 @@ class PHPTAL implements PhpTalInterface
         $cacheFiles = glob($filename . '?*');
         if ($cacheFiles) {
             foreach ($cacheFiles as $file) {
-                if (substr($file, 0, strlen($filename)) !== $filename) continue; // safety net
+                if (strpos($file, $filename) !== 0) {
+                    continue;
+                } // safety net
                 @unlink($file);
             }
         }
-        $this->_prepared = false;
+        $this->prepared = false;
     }
 
     /**
@@ -1018,11 +1018,15 @@ class PHPTAL implements PhpTalInterface
      * generated by temporary templates or more simply for debug.
      *
      * @return string
+     * @throws Exception\ConfigurationException
+     * @throws Exception\IOException
      */
     public function getCodePath()
     {
-        if (!$this->_codeFile) $this->setCodeFile();
-        return $this->_codeFile;
+        if (!$this->codeFile) {
+            $this->setCodeFile();
+        }
+        return $this->codeFile;
     }
 
     /**
@@ -1035,29 +1039,29 @@ class PHPTAL implements PhpTalInterface
        // function name is used as base for caching, so it must be unique for
        // every combination of settings that changes code in compiled template
 
-       if (!$this->_functionName) {
-
+        if (!$this->functionName) {
             // just to make tempalte name recognizable
-            $basename = preg_replace('/\.[a-z]{3,5}$/', '', basename($this->_source->getRealPath()));
-            $basename = substr(trim(preg_replace('/[^a-zA-Z0-9]+/', '_', $basename), "_"), 0, 20);
+            $basename = preg_replace('/\.[a-z]{3,5}$/', '', basename($this->source->getRealPath()));
+            $basename = substr(trim(preg_replace('/[^a-zA-Z0-9]+/', '_', $basename), '_'), 0, 20);
 
-            $hash = md5(static::PHPTAL_VERSION . PHP_VERSION
-                    . $this->_source->getRealPath()
-                    . $this->getEncoding()
-                    . $this->getPrefiltersCacheId()
-                    . $this->getOutputMode(),
-                    true
-                    );
+            $hash = md5(
+                static::PHPTAL_VERSION . PHP_VERSION
+                . $this->source->getRealPath()
+                . $this->getEncoding()
+                . $this->getPreFiltersCacheId()
+                . $this->getOutputMode(),
+                true
+            );
 
             // uses base64 rather than hex to make filename shorter.
             // there is loss of some bits due to name constraints and case-insensivity,
             // but that's still over 110 bits in addition to basename and timestamp.
-            $hash = strtr(rtrim(base64_encode($hash),"="),"+/=","_A_");
+            $hash = strtr(rtrim(base64_encode($hash), '='), '+/=', '_A_');
 
-            $this->_functionName = $this->getFunctionNamePrefix($this->_source->getLastModifiedTime()) .
+            $this->functionName = $this->getFunctionNamePrefix($this->source->getLastModifiedTime()) .
                                    $basename . '__' . $hash;
         }
-        return $this->_functionName;
+        return $this->functionName;
     }
 
     /**
@@ -1072,17 +1076,17 @@ class PHPTAL implements PhpTalInterface
     {
         // tpl_ prefix and last modified time must not be changed,
         // because cache cleanup relies on that
-        return 'tpl_' . sprintf("%08x", $timestamp) .'_';
+        return 'tpl_' . sprintf('%08x', $timestamp) . '_';
     }
 
     /**
      * Returns template translator.
      *
-     * @return \PhpTal\TranslationServiceInterface
+     * @return TranslationServiceInterface
      */
     public function getTranslator()
     {
-        return $this->_translator;
+        return $this->translator;
     }
 
     /**
@@ -1092,7 +1096,7 @@ class PHPTAL implements PhpTalInterface
      */
     public function getErrors()
     {
-        return $this->_errors;
+        return $this->errors;
     }
 
     /**
@@ -1104,7 +1108,7 @@ class PHPTAL implements PhpTalInterface
      */
     public function addError(\Exception $error)
     {
-        $this->_errors[] =  $error;
+        $this->errors[] = $error;
     }
 
     /**
@@ -1115,7 +1119,7 @@ class PHPTAL implements PhpTalInterface
      */
     public function getContext()
     {
-        return $this->_context;
+        return $this->context;
     }
 
     /**
@@ -1125,7 +1129,7 @@ class PHPTAL implements PhpTalInterface
      */
     public function getGlobalContext()
     {
-        return $this->_globalContext;
+        return $this->globalContext;
     }
 
     /**
@@ -1135,8 +1139,8 @@ class PHPTAL implements PhpTalInterface
      */
     final public function pushContext()
     {
-        $this->_context = $this->_context->pushContext();
-        return $this->_context;
+        $this->context = $this->context->pushContext();
+        return $this->context;
     }
 
     /**
@@ -1146,41 +1150,42 @@ class PHPTAL implements PhpTalInterface
      */
     final public function popContext()
     {
-        $this->_context = $this->_context->popContext();
-        return $this->_context;
+        $this->context = $this->context->popContext();
+        return $this->context;
     }
 
     /**
      * Parse currently set template, prefilter and generate PHP code.
      *
      * @return string (compiled PHP code)
+     * @throws Exception\ConfigurationException
+     * @throws Exception\ParserException
+     * @throws Exception\TemplateException
      */
     protected function parse()
     {
-        $data = $this->_source->getData();
+        $data = $this->source->getData();
 
         $prefilters = $this->getPreFilterInstances();
-        foreach($prefilters as $prefilter) {
+        foreach ($prefilters as $prefilter) {
             $data = $prefilter->filter($data);
         }
 
-        $realpath = $this->_source->getRealPath();
-        $parser = new \PhpTal\Dom\SaxXmlParser($this->_encoding);
+        $realpath = $this->source->getRealPath();
+        $parser = new Dom\SaxXmlParser($this->encoding);
 
-        $builder = new \PhpTal\Dom\PHPTALDocumentBuilder();
+        $builder = new Dom\PHPTALDocumentBuilder();
         $tree = $parser->parseString($builder, $data, $realpath)->getResult();
 
-        foreach($prefilters as $prefilter) {
-            if ($prefilter instanceof \PhpTal\PreFilter) {
-                if ($prefilter->filterDOM($tree) !== NULL) {
-                    throw new \PhpTal\Exception\ConfigurationException("Don't return value from filterDOM()");
-                }
+        foreach ($prefilters as $prefilter) {
+            if ($prefilter instanceof PreFilter && $prefilter->filterDOM($tree) !== null) {
+                throw new Exception\ConfigurationException("Don't return value from filterDOM()");
             }
         }
 
-        $state = new \PhpTal\Php\State($this);
+        $state = new Php\State($this);
 
-        $codewriter = new \PhpTal\Php\CodeWriter($state);
+        $codewriter = new Php\CodeWriter($state);
         $codewriter->doTemplateFile($this->getFunctionName(), $tree);
 
         return $codewriter->getResult();
@@ -1190,35 +1195,45 @@ class PHPTAL implements PhpTalInterface
      * Search template source location.
      *
      * @return void
+     * @throws Exception\ConfigurationException
+     * @throws Exception\IOException
      */
     protected function findTemplate()
     {
-        if ($this->_path == false) {
-            throw new \PhpTal\Exception\ConfigurationException('No template file specified');
+        if ($this->path === false) {
+            throw new Exception\ConfigurationException('No template file specified');
         }
 
         // template source already defined
-        if ($this->_source) {
+        if ($this->source) {
             return;
         }
 
-        if (!$this->resolvers && !$this->_repositories) {
-            $this->_source = new FileSource($this->_path);
+        if ($this->resolvers === [] && !$this->repositories) {
+            $this->source = new FileSource($this->path);
         } else {
             foreach ($this->resolvers as $resolver) {
-                $source = $resolver->resolve($this->_path);
+                $source = $resolver->resolve($this->path);
                 if ($source) {
-                    $this->_source = $source;
+                    $this->source = $source;
                     return;
                 }
             }
 
-            $resolver = new FileSourceResolver($this->_repositories);
-            $this->_source = $resolver->resolve($this->_path);
+            $resolver = new FileSourceResolver($this->repositories);
+            $this->source = $resolver->resolve($this->path);
         }
 
-        if (!$this->_source) {
-            throw new \PhpTal\Exception\IOException('Unable to locate template file '.$this->_path);
+        if (!$this->source) {
+            throw new Exception\IOException('Unable to locate template file '.$this->path);
         }
+    }
+
+    /**
+     * @return StringSource
+     */
+    public function getSource()
+    {
+        return $this->source;
     }
 }
