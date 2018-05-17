@@ -14,7 +14,7 @@
  */
 
 
-class DummyTranslator implements \PhpTal\TranslationService
+class DummyTranslator implements \PhpTal\TranslationServiceInterface
 {
     public $vars = array();
     public $translations = array();

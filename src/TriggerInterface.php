@@ -6,7 +6,7 @@
  *
  * @category HTML
  * @package  PHPTAL
- * @author Andrew Crites <explosion-pills@aysites.com>
+ * @author   Laurent Bedubourg <lbedubourg@motion-twin.com>
  * @license  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
  * @version  SVN: $Id$
  * @link     http://phptal.org/
@@ -15,11 +15,16 @@
 namespace PhpTal;
 
 /**
- * Interface for template keywords
+ * Interface for Triggers (phptal:id)
  *
  * @package PHPTAL
  */
-interface Keywords extends \Countable
+interface TriggerInterface
 {
-    public function __toString();
+    const SKIPTAG = 1;
+    const PROCEED = 2;
+
+    public function start($id, $tpl);
+
+    public function end($id, $tpl);
 }

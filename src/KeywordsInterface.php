@@ -6,8 +6,7 @@
  *
  * @category HTML
  * @package  PHPTAL
- * @author   Laurent Bedubourg <lbedubourg@motion-twin.com>
- * @author   Kornel Lesiński <kornel@aardvarkmedia.co.uk>
+ * @author Andrew Crites <explosion-pills@aysites.com>
  * @license  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
  * @version  SVN: $Id$
  * @link     http://phptal.org/
@@ -16,12 +15,11 @@
 namespace PhpTal;
 
 /**
+ * Interface for template keywords
+ *
  * @package PHPTAL
  */
-interface SourceResolver
+interface KeywordsInterface extends \Countable
 {
-    /**
-     * Returns Source or null.
-     */
-    public function resolve($path);
+    public function __toString();
 }

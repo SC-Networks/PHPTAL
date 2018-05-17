@@ -31,6 +31,8 @@ abstract class Attribute
     const ECHO_TEXT = 'text';
     const ECHO_STRUCTURE = 'structure';
 
+    protected $_echoType = Attribute::ECHO_TEXT;
+
     /** Attribute value specified by the element. */
     protected $expression;
 
@@ -93,7 +95,4 @@ abstract class Attribute
         // (dest)
         return array($exp, null);
     }
-
-    protected $_echoType = Attribute::ECHO_TEXT;
 }
-

@@ -20,7 +20,7 @@ namespace PhpTal;
  *
  * @package PHPTAL
  */
-class FileSource implements Source
+class FileSource implements SourceInterface
 {
     private $_path;
 

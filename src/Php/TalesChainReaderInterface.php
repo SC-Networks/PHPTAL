@@ -13,15 +13,14 @@
  * @link     http://phptal.org/
  */
 
-namespace PhpTal;
+namespace PhpTal\Php;
 
 /**
- * You can implement this interface to create custom tales modifiers
- *
- * Methods suitable for modifiers must be static.
- *
  * @package PHPTAL
  */
-interface Tales
+interface TalesChainReaderInterface
 {
+    public function talesChainNothingKeyword(TalesChainExecutor $executor);
+    public function talesChainDefaultKeyword(TalesChainExecutor $executor);
+    public function talesChainPart(TalesChainExecutor $executor, $expression, $islast);
 }

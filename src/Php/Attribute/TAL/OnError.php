@@ -71,4 +71,3 @@ class OnError extends \PhpTal\Php\Attribute
         $codewriter->recycleTempVariable($var);
     }
 }
-

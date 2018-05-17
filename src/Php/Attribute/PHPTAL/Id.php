@@ -22,6 +22,7 @@ namespace PhpTal\Php\Attribute\PHPTAL;
 class Id extends \PhpTal\Php\Attribute
 {
     private $var;
+
     public function before(\PhpTal\Php\CodeWriter $codewriter)
     {
         // retrieve trigger
@@ -35,7 +36,7 @@ class Id extends \PhpTal\Php\Attribute
         // if trigger found and trigger tells to proceed, we execute
         // the node content
         $codewriter->doIf($this->var.' &&
-            '.$this->var.'->start('.$codewriter->str($this->expression).', $tpl) === \PhpTal\Trigger::PROCEED');
+            '.$this->var.'->start('.$codewriter->str($this->expression).', $tpl) === \PhpTal\TriggerInterface::PROCEED');
     }
 
     public function after(\PhpTal\Php\CodeWriter $codewriter)

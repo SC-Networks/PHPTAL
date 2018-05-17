@@ -38,6 +38,17 @@ class CodeWriter
     private $known_functions = array();
 
 
+    private $_state;
+    private $_result = "";
+    private $_indentation = 0;
+    private $_codeBuffer = array();
+    private $_htmlBuffer = array();
+    private $_segments = array();
+    private $_contexts = array();
+    private $_functionPrefix = "";
+    private $_doctype = "";
+    private $_xmldeclaration = "";
+
     public function __construct(State $state)
     {
         $this->_state = $state;
@@ -494,15 +505,4 @@ class CodeWriter
         $this->_htmlBuffer = $oldContext->_htmlBuffer;
         $this->_segments = $oldContext->_segments;
     }
-
-    private $_state;
-    private $_result = "";
-    private $_indentation = 0;
-    private $_codeBuffer = array();
-    private $_htmlBuffer = array();
-    private $_segments = array();
-    private $_contexts = array();
-    private $_functionPrefix = "";
-    private $_doctype = "";
-    private $_xmldeclaration = "";
 }

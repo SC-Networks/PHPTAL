@@ -20,6 +20,13 @@ namespace PhpTal\TalNamespace;
  */
 class Builtin extends \PhpTal\TalNamespace
 {
+    /**
+     * @param \PhpTal\TalNamespaceAttribute $att
+     * @param \PhpTal\Dom\Element $tag
+     * @param mixed $expression
+     *
+     * @return \PhpTal\Php\Attribute
+     */
     public function createAttributeHandler(\PhpTal\TalNamespaceAttribute $att, \PhpTal\Dom\Element $tag, $expression)
     {
         $name = $att->getLocalName();

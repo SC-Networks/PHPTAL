@@ -23,7 +23,7 @@ namespace PhpTal;
  *
  * @package PHPTAL
  */
-abstract class PreFilter implements Filter
+abstract class PreFilter implements FilterInterface
 {
     /**
      * @see getPHPTAL()
@@ -125,7 +125,7 @@ abstract class PreFilter implements Filter
      *
      * @param PHPTAL $phptal instance
      */
-    final function setPHPTAL(PHPTAL $phptal)
+    final public function setPHPTAL(PHPTAL $phptal)
     {
         $this->phptal = $phptal;
     }

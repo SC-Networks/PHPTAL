@@ -19,7 +19,7 @@ namespace PhpTal;
  *
  * @package PHPTAL
  */
-class NothingKeyword implements Keywords
+class NothingKeyword implements KeywordsInterface
 {
     public function __toString()
     {

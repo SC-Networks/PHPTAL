@@ -7,6 +7,7 @@
  * @category HTML
  * @package  PHPTAL
  * @author   Laurent Bedubourg <lbedubourg@motion-twin.com>
+ * @author   Kornel Lesiński <kornel@aardvarkmedia.co.uk>
  * @license  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
  * @version  SVN: $Id$
  * @link     http://phptal.org/
@@ -15,16 +16,12 @@
 namespace PhpTal;
 
 /**
- * Interface for Triggers (phptal:id)
+ * You can implement this interface to create custom tales modifiers
+ *
+ * Methods suitable for modifiers must be static.
  *
  * @package PHPTAL
  */
-interface Trigger
+interface TalesInterface
 {
-    const SKIPTAG = 1;
-    const PROCEED = 2;
-
-    public function start($id, $tpl);
-
-    public function end($id, $tpl);
 }

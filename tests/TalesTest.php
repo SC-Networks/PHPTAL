@@ -20,7 +20,7 @@ function phptal_tales_custom($src, $nothrow)
     return 'sprintf("%01.2f", '.\PhpTal\Php\TalesInternal::path($src, $nothrow).')';
 }
 
-class MyTalesClass implements \PhpTal\Tales
+class MyTalesClass implements \PhpTal\TalesInterface
 {
     public static function reverse($exp,$nothrow){
         return 'strrev('.\PhpTal\Php\TalesInternal::compileToPHPExpressions($exp, $nothrow).')';

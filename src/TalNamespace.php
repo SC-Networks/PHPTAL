@@ -21,50 +21,95 @@ namespace PhpTal;
  */
 abstract class TalNamespace
 {
-    private $prefix, $namespace_uri;
-    protected $_attributes;
+    /**
+     * @var string
+     */
+    private $prefix;
 
+    /**
+     * @var string
+     */
+    private $namespace_uri;
+
+    /**
+     * @var array
+     */
+    protected $attributes;
+
+    /**
+     * TalNamespace constructor.
+     * @param $prefix
+     * @param $namespace_uri
+     * @throws Exception\ConfigurationException
+     */
     public function __construct($prefix, $namespace_uri)
     {
         if (!$namespace_uri || !$prefix) {
-            throw new \PhpTal\Exception\ConfigurationException("Can't create namespace with empty prefix or namespace URI");
+            throw new Exception\ConfigurationException("Can't create namespace with empty prefix or namespace URI");
         }
 
-        $this->_attributes = array();
+        $this->attributes = [];
         $this->prefix = $prefix;
         $this->namespace_uri = $namespace_uri;
     }
 
+    /**
+     * @return string
+     */
     public function getPrefix()
     {
         return $this->prefix;
     }
 
+    /**
+     * @return string
+     */
     public function getNamespaceURI()
     {
         return $this->namespace_uri;
     }
 
+    /**
+     * @param $attributeName
+     * @return bool
+     */
     public function hasAttribute($attributeName)
     {
-        return array_key_exists(strtolower($attributeName), $this->_attributes);
+        return array_key_exists(strtolower($attributeName), $this->attributes);
     }
 
+    /**
+     * @param $attributeName
+     * @return mixed
+     */
     public function getAttribute($attributeName)
     {
-        return $this->_attributes[strtolower($attributeName)];
+        return $this->attributes[strtolower($attributeName)];
     }
 
+    /**
+     * @param TalNamespaceAttribute $attribute
+     * @return void
+     */
     public function addAttribute(TalNamespaceAttribute $attribute)
     {
         $attribute->setNamespace($this);
-        $this->_attributes[strtolower($attribute->getLocalName())] = $attribute;
+        $this->attributes[strtolower($attribute->getLocalName())] = $attribute;
     }
 
+    /**
+     * @return array
+     */
     public function getAttributes()
     {
-        return $this->_attributes;
+        return $this->attributes;
     }
 
-    abstract public function createAttributeHandler(TalNamespaceAttribute $att, \PhpTal\Dom\Element $tag, $expression);
+    /**
+     * @param TalNamespaceAttribute $att
+     * @param Dom\Element $tag
+     * @param mixed $expression
+     * @return Php\Attribute
+     */
+    abstract public function createAttributeHandler(TalNamespaceAttribute $att, Dom\Element $tag, $expression);
 }

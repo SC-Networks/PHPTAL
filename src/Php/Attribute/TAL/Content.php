@@ -29,9 +29,7 @@ namespace PhpTal\Php\Attribute\TAL;
  * @package PHPTAL
  * @author Laurent Bedubourg <lbedubourg@motion-twin.com>
  */
-class Content
-extends \PhpTal\Php\Attribute
-implements \PhpTal\Php\TalesChainReader
+class Content extends \PhpTal\Php\Attribute implements \PhpTal\Php\TalesChainReaderInterface
 {
     public function before(\PhpTal\Php\CodeWriter $codewriter)
     {

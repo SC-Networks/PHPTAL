@@ -35,9 +35,7 @@ namespace PhpTal\Php\Attribute\TAL;
  * @package PHPTAL
  * @author Laurent Bedubourg <lbedubourg@motion-twin.com>
  */
-class Attributes
-extends \PhpTal\Php\Attribute
-implements \PhpTal\Php\TalesChainReader
+class Attributes extends \PhpTal\Php\Attribute implements \PhpTal\Php\TalesChainReaderInterface
 {
     /** before creates several variables that need to be freed in after */
     private $vars_to_recycle = array();

@@ -20,7 +20,7 @@ namespace PhpTal;
  *
  * @package PHPTAL
  */
-interface Source
+interface SourceInterface
 {
     /**
      * unique path identifying the template source.

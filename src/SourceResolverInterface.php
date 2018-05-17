@@ -13,14 +13,15 @@
  * @link     http://phptal.org/
  */
 
-namespace PhpTal\Php;
+namespace PhpTal;
 
 /**
  * @package PHPTAL
  */
-interface TalesChainReader
+interface SourceResolverInterface
 {
-    public function talesChainNothingKeyword(TalesChainExecutor $executor);
-    public function talesChainDefaultKeyword(TalesChainExecutor $executor);
-    public function talesChainPart(TalesChainExecutor $executor, $expression, $islast);
+    /**
+     * Returns Source or null.
+     */
+    public function resolve($path);
 }

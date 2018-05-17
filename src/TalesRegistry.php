@@ -25,6 +25,11 @@ class TalesRegistry
     private static $instance;
 
     /**
+     * {callback, bool is_fallback}
+     */
+    private $_callbacks = [];
+
+    /**
      * This is a singleton
      *
      * @return \PhpTal\TalesRegistry
@@ -93,7 +98,7 @@ class TalesRegistry
 
             $class = new \ReflectionClass($callback[0]);
 
-            if (!$class->isSubclassOf(Tales::class)) {
+            if (!$class->isSubclassOf(TalesInterface::class)) {
                 throw new \PhpTal\Exception\ConfigurationException('The class you want to register does not implement "\PhpTal\Tales".');
             }
 
@@ -116,12 +121,14 @@ class TalesRegistry
 
     /**
      * true if given prefix is taken
+     *
+     * @param string $prefix
+     *
+     * @return bool
      */
-    public function isRegistered($prefix)
+    private function isRegistered($prefix)
     {
-        if (array_key_exists($prefix, $this->_callbacks)) {
-            return true;
-        }
+        return array_key_exists($prefix, $this->_callbacks);
     }
 
     private function findUnregisteredCallback($typePrefix)
@@ -134,7 +141,7 @@ class TalesRegistry
                 throw new \PhpTal\Exception\UnknownModifierException("Unknown phptal modifier $typePrefix. Function $callbackName does not exists or is not statically callable", $typePrefix);
             }
             $ref = new \ReflectionClass($classCallback[0]);
-            if (!$ref->implementsInterface('\PhpTal\Tales')) {
+            if (!$ref->implementsInterface('\PhpTal\TalesInterface')) {
                 throw new \PhpTal\Exception\UnknownModifierException("Unable to use phptal modifier $typePrefix as the class $callbackName does not implement the \PhpTal\Tales interface", $typePrefix);
             }
             return $classCallback;
@@ -145,12 +152,6 @@ class TalesRegistry
         if (function_exists($func)) {
             return $func;
         }
-
-//        // The following code is automatically modified in version for PHP 5.3
-//        $func = 'PHPTALNAMESPACE\\phptal_tales_'.str_replace('-', '_', $typePrefix);
-//        if (function_exists($func)) {
-//            return $func;
-//        }
 
         return null;
     }
@@ -176,9 +177,4 @@ class TalesRegistry
 
         return null;
     }
-
-    /**
-     * {callback, bool is_fallback}
-     */
-    private $_callbacks = array();
 }
