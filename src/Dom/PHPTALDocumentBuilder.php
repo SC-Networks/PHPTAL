@@ -14,6 +14,8 @@
 
 namespace PhpTal\Dom;
 
+use PhpTal\TalNamespace\Builtin;
+
 /**
  * DOM Builder
  *
@@ -43,7 +45,7 @@ class PHPTALDocumentBuilder extends \PhpTal\Dom\DocumentBuilder
 
     public function onDocumentStart()
     {
-        $this->documentElement = new \PhpTal\Dom\Element('documentElement', 'http://xml.zope.org/namespaces/tal', array(), $this->getXmlnsState());
+        $this->documentElement = new \PhpTal\Dom\Element('documentElement', Builtin::NS_TAL, array(), $this->getXmlnsState());
         $this->documentElement->setSource($this->file, $this->line);
         $this->_current = $this->documentElement;
     }

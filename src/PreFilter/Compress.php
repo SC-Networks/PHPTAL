@@ -14,6 +14,7 @@
 namespace PhpTal\PreFilter;
 
 use PhpTal\Dom\XmlDeclaration;
+use PhpTal\TalNamespace\Builtin;
 
 /**
  * Removes all unnecessary whitespace from XHTML documents.
@@ -37,14 +38,14 @@ class Compress extends Normalize
     function filterDOM(\PhpTal\Dom\Element $root)
     {
         // let xml:space=preserve preserve everything
-        if ($root->getAttributeNS("http://www.w3.org/XML/1998/namespace", 'space') == 'preserve') {
+        if ($root->getAttributeNS(Builtin::NS_XML, 'space') == 'preserve') {
             $this->most_recent_text_node = null;
             $this->findElementToFilter($root);
             return;
         }
 
         // tal:replace makes element behave like text
-        if ($root->getAttributeNS('http://xml.zope.org/namespaces/tal','replace')) {
+        if ($root->getAttributeNS(Builtin::NS_TAL,'replace')) {
             $this->most_recent_text_node = null;
             $this->had_space = false;
             return;
@@ -58,7 +59,7 @@ class Compress extends Normalize
 
         // mostly block-level elements
         // if element is conditional, it may not always break the line
-        $breaks_line = $no_spaces || ($this->breaksLine($root) && !$root->getAttributeNS('http://xml.zope.org/namespaces/tal','condition'));
+        $breaks_line = $no_spaces || ($this->breaksLine($root) && !$root->getAttributeNS(Builtin::NS_TAL,'condition'));
 
         // start tag newline
         if ($breaks_line) {
@@ -118,12 +119,12 @@ class Compress extends Normalize
         }
 
         // repeated element may need trailing space.
-        if (!$breaks_line && $root->getAttributeNS('http://xml.zope.org/namespaces/tal','repeat')) {
+        if (!$breaks_line && $root->getAttributeNS(Builtin::NS_TAL,'repeat')) {
             $this->most_recent_text_node = null;
         }
 
         // tal:content may replace element with something without space
-        if (!$breaks_line && $root->getAttributeNS('http://xml.zope.org/namespaces/tal','content')) {
+        if (!$breaks_line && $root->getAttributeNS(Builtin::NS_TAL,'content')) {
             $this->had_space = false;
             $this->most_recent_text_node = null;
         }
@@ -146,12 +147,12 @@ class Compress extends Normalize
     {
         if ($element->getLocalName() === 'block'
             && $element->parentNode
-            && $element->getNamespaceURI() === 'http://xml.zope.org/namespaces/tal') {
+            && $element->getNamespaceURI() === Builtin::NS_TAL) {
             return $this->hasNoInterelementSpace($element->parentNode);
         }
 
         return in_array($element->getLocalName(), self::$no_interelement_space)
-            && ($element->getNamespaceURI() === 'http://www.w3.org/1999/xhtml' || $element->getNamespaceURI() === '');
+            && ($element->getNamespaceURI() === Builtin::NS_XHTML || $element->getNamespaceURI() === '');
     }
 
     /**
@@ -166,7 +167,7 @@ class Compress extends Normalize
 
     private function breaksLine(\PhpTal\Dom\Element $element)
     {
-        if ($element->getAttributeNS('http://xml.zope.org/namespaces/metal','define-macro')) {
+        if ($element->getAttributeNS(Builtin::NS_METAL,'define-macro')) {
             return true;
         }
 
@@ -174,7 +175,7 @@ class Compress extends Normalize
             return true;
         }
 
-        if ($element->getNamespaceURI() !== 'http://www.w3.org/1999/xhtml'
+        if ($element->getNamespaceURI() !== Builtin::NS_XHTML
 	        && $element->getNamespaceURI() !== '') {
 	        return false;
         }
@@ -191,7 +192,7 @@ class Compress extends Normalize
 
     private function isInlineBlock(\PhpTal\Dom\Element $element)
     {
-        if ($element->getNamespaceURI() !== 'http://www.w3.org/1999/xhtml'
+        if ($element->getNamespaceURI() !== Builtin::NS_XHTML
 	        && $element->getNamespaceURI() !== '') {
 	        return false;
         }
@@ -248,7 +249,7 @@ class Compress extends Normalize
      */
 	private function elementSpecificOptimizations(\PhpTal\Dom\Element $element)
 	{
-	    if ($element->getNamespaceURI() !== 'http://www.w3.org/1999/xhtml'
+	    if ($element->getNamespaceURI() !== Builtin::NS_XHTML
 	     && $element->getNamespaceURI() !== '') {
 	        return;
         }

@@ -25,7 +25,7 @@ class TAL extends Builtin
 {
     public function __construct()
     {
-        parent::__construct('tal', 'http://xml.zope.org/namespaces/tal');
+        parent::__construct('tal', Builtin::NS_TAL);
         $this->addAttribute(new TalNamespaceAttributeSurround('define', 4));
         $this->addAttribute(new TalNamespaceAttributeSurround('condition', 6));
         $this->addAttribute(new TalNamespaceAttributeSurround('repeat', 8));

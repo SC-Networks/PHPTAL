@@ -14,6 +14,8 @@
 
 namespace PhpTal\Php\Attribute\TAL;
 
+use PhpTal\TalNamespace\Builtin;
+
 /**
  * TAL Specifications 1.4
  *
@@ -79,7 +81,7 @@ class Attributes extends \PhpTal\Php\Attribute implements \PhpTal\Php\TalesChain
         }
 
         // i18n needs to read replaced value of the attribute, which is not possible if attribute is completely replaced with conditional code
-        if ($this->phpelement->hasAttributeNS('http://xml.zope.org/namespaces/i18n', 'attributes')) {
+        if ($this->phpelement->hasAttributeNS(Builtin::NS_I18N, 'attributes')) {
             $this->prepareAttributeUnconditional($codewriter, $qname, $code);
         } else {
             $this->prepareAttributeConditional($codewriter, $qname, $code);

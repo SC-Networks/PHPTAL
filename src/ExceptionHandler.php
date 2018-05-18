@@ -14,6 +14,7 @@
 namespace PhpTal;
 
 use PhpTal\Exception\TemplateException;
+use PhpTal\TalNamespace\Builtin;
 
 class ExceptionHandler
 {
@@ -93,7 +94,7 @@ class ExceptionHandler
                 '<p><small>Enable <code>display_errors</code> to see detailed message.</small></p>';
         }
 
-        echo "<!DOCTYPE html><html xmlns='http://www.w3.org/1999/xhtml'><head><style>body{font-family:sans-serif}</style><title>\n";
+        echo "<!DOCTYPE html><html xmlns='" . Builtin::NS_XHTML . "'><head><style>body{font-family:sans-serif}</style><title>\n";
         echo $title . '</title></head><body><h1>PHPTAL Exception</h1>' . $body;
         error_log($e->getMessage() . ' in ' . $line);
         echo '</body></html>' . str_repeat('    ', 100) . "\n"; // IE won't display error pages < 512b

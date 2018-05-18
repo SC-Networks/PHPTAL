@@ -14,6 +14,8 @@
 
 namespace PhpTal\Dom;
 
+use PhpTal\TalNamespace\Builtin;
+
 /**
  * Stores XMLNS aliases fluctuation in the xml flow.
  *
@@ -35,8 +37,8 @@ class XmlnsState
 
     public function prefixToNamespaceURI($prefix)
     {
-        if ($prefix === 'xmlns') return 'http://www.w3.org/2000/xmlns/';
-        if ($prefix === 'xml') return 'http://www.w3.org/XML/1998/namespace';
+        if ($prefix === 'xmlns') return Builtin::NS_XMLNS;
+        if ($prefix === 'xml') return Builtin::NS_XML;
 
         // domdefs provides fallback for all known phptal ns
         if (isset($this->prefix_to_uri[$prefix])) {

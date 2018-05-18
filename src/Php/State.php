@@ -97,7 +97,7 @@ class State
     /**
      * Syntax rules to follow in generated code
      *
-     * @return one of \PhpTal\PHPTAL::XHTML, \PhpTal\PHPTAL::XML, \PhpTal\PHPTAL::HTML5
+     * @return int one of \PhpTal\PHPTAL::XHTML, \PhpTal\PHPTAL::XML, \PhpTal\PHPTAL::HTML5
      */
     public function getOutputMode()
     {
@@ -140,6 +140,8 @@ class State
      * returns PHP code that generates given string, including dynamic replacements
      *
      * It's almost unused.
+     *
+     * @return string
      */
     public function interpolateTalesVarsInString($string)
     {
@@ -148,6 +150,8 @@ class State
 
     /**
      * replaces ${} in string, expecting HTML-encoded input and HTML-escapes output
+     *
+     * @return string
      */
     public function interpolateTalesVarsInHTML($src)
     {
@@ -167,6 +171,8 @@ class State
      * replaces ${} in string, expecting CDATA (basically unescaped) input,
      * generates output protected against breaking out of CDATA in XML/HTML
      * (depending on current output mode).
+     *
+     * @return string
      */
     public function interpolateTalesVarsInCDATA($src)
     {
@@ -224,7 +230,7 @@ class State
      * expects PHP code and returns PHP code that will generate escaped string
      * Optimizes case when PHP string is given.
      *
-     * @return php code
+     * @return string php code
      */
     public function htmlchars($php)
     {
@@ -239,7 +245,7 @@ class State
      * allow proper printing of any object
      * (without escaping - for use with structure keyword)
      *
-     * @return php code
+     * @return string php code
      */
     public function stringify($php)
     {

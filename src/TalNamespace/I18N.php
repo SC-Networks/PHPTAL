@@ -21,7 +21,7 @@ class I18N extends Builtin
 {
     public function __construct()
     {
-        parent::__construct('i18n', 'http://xml.zope.org/namespaces/i18n');
+        parent::__construct('i18n', Builtin::NS_I18N);
         $this->addAttribute(new \PhpTal\TalNamespaceAttributeContent('translate', 5));
         $this->addAttribute(new \PhpTal\TalNamespaceAttributeSurround('name', 5));
         $this->addAttribute(new \PhpTal\TalNamespaceAttributeSurround('attributes', 10));

@@ -14,6 +14,8 @@
 
 namespace PhpTal\Php\Attribute\I18N;
 
+use PhpTal\TalNamespace\Builtin;
+
 /**
  * ZPTInternationalizationSupport
  *
@@ -93,7 +95,7 @@ class Translate extends \PhpTal\Php\Attribute\TAL\Content
                     $result .= $child->getValue($encoding);
                 }
             } elseif ($child instanceof \PhpTal\Dom\Element) {
-                if ($attr = $child->getAttributeNodeNS('http://xml.zope.org/namespaces/i18n', 'name')) {
+                if ($attr = $child->getAttributeNodeNS(Builtin::NS_I18N, 'name')) {
                     $result .= '${' . $attr->getValue() . '}';
                 } else {
 
@@ -118,7 +120,7 @@ class Translate extends \PhpTal\Php\Attribute\TAL\Content
     {
         foreach ($tag->childNodes as $child) {
             if ($child instanceof \PhpTal\Dom\Element) {
-                if ($child->hasAttributeNS('http://xml.zope.org/namespaces/i18n', 'name')) {
+                if ($child->hasAttributeNS(Builtin::NS_I18N, 'name')) {
                     $child->generateCode($codewriter);
                 } else {
                     $this->_prepareNames($codewriter, $child);
