@@ -1,0 +1,26 @@
+build:
+    nodes:
+        analysis:
+            project_setup:
+                override:
+                    - 'true'
+            tests:
+                override:
+                    - php-scrutinizer-run
+                    -
+                        command: phpcs-run
+                    -
+                        command: 'bin/phpunit --coverage-clover=some-file'
+                        coverage:
+                            file: 'some-file'
+                            format: 'clover'
+filter:
+    excluded_paths:
+        - 'tests/*'
+checks:
+    php: true
+coding_style:
+    php:
+        spaces:
+            around_operators:
+                additive: false
