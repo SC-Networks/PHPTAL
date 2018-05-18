@@ -19,6 +19,14 @@ namespace PhpTal\TalNamespace;
  */
 class Builtin extends \PhpTal\TalNamespace
 {
+
+    const NS_METAL = 'http://xml.zope.org/namespaces/metal';
+    const NS_TAL = 'http://xml.zope.org/namespaces/tal';
+    const NS_I18N = 'http://xml.zope.org/namespaces/i18n';
+    const NS_XML = 'http://www.w3.org/XML/1998/namespace';
+    const NS_XMLNS = 'http://www.w3.org/2000/xmlns/';
+    const NS_XHTML = 'http://www.w3.org/1999/xhtml';
+
     /**
      * @param \PhpTal\TalNamespaceAttribute $att
      * @param \PhpTal\Dom\Element $tag

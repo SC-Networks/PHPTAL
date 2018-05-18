@@ -9,6 +9,7 @@ build:
                     - php-scrutinizer-run
                     -
                         command: phpcs-run
+                        use_website_config: false
                     -
                         command: 'bin/phpunit --coverage-clover=some-file'
                         coverage:
@@ -19,8 +20,3 @@ filter:
         - 'tests/*'
 checks:
     php: true
-coding_style:
-    php:
-        spaces:
-            around_operators:
-                additive: false

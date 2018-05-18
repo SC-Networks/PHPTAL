@@ -14,6 +14,8 @@
 
 namespace PhpTal\Dom;
 
+use PhpTal\TalNamespace\Builtin;
+
 /**
  * PHPTAL constants.
  *
@@ -57,7 +59,7 @@ class Defs
      */
     public function isEmptyTagNS($namespace_uri, $local_name)
     {
-        return ($namespace_uri === 'http://www.w3.org/1999/xhtml' || $namespace_uri === '')
+        return ($namespace_uri === Builtin::NS_XHTML || $namespace_uri === '')
             && in_array(strtolower($local_name), self::$XHTML_EMPTY_TAGS);
     }
 
@@ -105,7 +107,7 @@ class Defs
     public function isCDATAElementInHTML($namespace_uri, $local_name)
     {
         return ($local_name === 'script' || $local_name === 'style')
-            && ($namespace_uri === 'http://www.w3.org/1999/xhtml' || $namespace_uri === '');
+            && ($namespace_uri === Builtin::NS_XHTML || $namespace_uri === '');
     }
 
     /**
@@ -168,16 +170,16 @@ class Defs
         }
     }
 
-    private static $_instance = null;
+    private static $_instance;
     private $_dictionary = array();
     /**
      * list of \PhpTal\TalNamespace objects
      */
     private $namespaces_by_uri = array();
-    private $prefix_to_uri = array(
-        'xml'=>'http://www.w3.org/XML/1998/namespace',
-        'xmlns'=>'http://www.w3.org/2000/xmlns/',
-    );
+    private $prefix_to_uri = [
+        'xml' => Builtin::NS_XML,
+        'xmlns' => Builtin::NS_XMLNS,
+    ];
 
     /**
      * This array contains XHTML tags that must be echoed in a &lt;tag/&gt; form

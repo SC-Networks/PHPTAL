@@ -21,21 +21,64 @@ namespace PhpTal;
  */
 class Context
 {
+    /**
+     * @var \stdClass
+     */
     public $repeat;
-    public $_xmlDeclaration;
-    public $_docType;
-    private $_nothrow;
-    private $_slots = array();
-    private $_slotsStack = array();
-    private $_parentContext = null;
-    private $_globalContext = null;
-    private $_echoDeclarations = false;
 
+    /**
+     * @var string
+     */
+    public $xmlDeclaration;
+
+    /**
+     * @var string
+     */
+    public $docType;
+
+    /**
+     * @var bool
+     */
+    private $nothrow;
+
+
+    /**
+     * @var array TODO What type?
+     */
+    private $slots = [];
+
+    /**
+     * @var array
+     */
+    private $slotsStack = [];
+
+    /**
+     * @var Context
+     */
+    private $parentContext;
+
+    /**
+     * @var \stdClass
+     */
+    private $globalContext;
+
+    /**
+     * @var bool
+     */
+    private $echoDeclarations = false;
+
+    /**
+     * Context constructor.
+     */
     public function __construct()
     {
         $this->repeat = new \stdClass();
     }
 
+    /**
+     * @return void
+     * @todo ????
+     */
     public function __clone()
     {
         $this->repeat = clone $this->repeat;
@@ -44,22 +87,26 @@ class Context
     /**
      * will switch to this context when popContext() is called
      *
+     * @param Context $parent
+     *
      * @return void
      */
     public function setParent(Context $parent)
     {
-        $this->_parentContext = $parent;
+        $this->parentContext = $parent;
     }
 
     /**
      * set stdClass object which has property of every global variable
      * It can use __isset() and __get() [none of them or both]
      *
+     * @param \stdClass $globalContext
+     *
      * @return void
      */
     public function setGlobal(\stdClass $globalContext)
     {
-        $this->_globalContext = $globalContext;
+        $this->globalContext = $globalContext;
     }
 
     /**
@@ -81,7 +128,7 @@ class Context
      */
     public function popContext()
     {
-        return $this->_parentContext;
+        return $this->parentContext;
     }
 
     /**
@@ -89,7 +136,7 @@ class Context
      */
     public function echoDeclarations($tf)
     {
-        $this->_echoDeclarations = $tf;
+        $this->echoDeclarations = $tf;
     }
 
     /**
@@ -101,25 +148,29 @@ class Context
      * @param bool $called_from_macro will do nothing if _echoDeclarations is also set
      *
      * @return void
+     * @throws Exception\ConfigurationException
      */
-    public function setDocType($doctype,$called_from_macro)
+    public function setDocType($doctype, $called_from_macro)
     {
-        // FIXME: this is temporary workaround for problem of DOCTYPE disappearing in cloned PHPTAL object (because clone keeps _parentContext)
-        if (!$this->_docType) {
-            $this->_docType = $doctype;
+        // FIXME: this is temporary workaround for problem of DOCTYPE disappearing in cloned
+        // FIXME: PHPTAL object (because clone keeps _parentContext)
+        if (!$this->docType) {
+            $this->docType = $doctype;
         }
 
-        if ($this->_parentContext) {
-            $this->_parentContext->setDocType($doctype, $called_from_macro);
-        } else if ($this->_echoDeclarations) {
+        if ($this->parentContext) {
+            $this->parentContext->setDocType($doctype, $called_from_macro);
+        } elseif ($this->echoDeclarations) {
             if (!$called_from_macro) {
                 echo $doctype;
             } else {
-                throw new \PhpTal\Exception\ConfigurationException("Executed macro in file with DOCTYPE when using echoExecute(). This is not supported yet. Remove DOCTYPE or use PHPTAL->execute().");
+                throw new Exception\ConfigurationException(
+                    'Executed macro in file with DOCTYPE when using echoExecute(). This is not supported yet. ' .
+                    'Remove DOCTYPE or use PHPTAL->execute().'
+                );
             }
-        }
-        else if (!$this->_docType) {
-            $this->_docType = $doctype;
+        } elseif (!$this->docType) {
+            $this->docType = $doctype;
         }
     }
 
@@ -130,27 +181,32 @@ class Context
      * (main template or any macro template source containing an xml
      * declaration)
      *
+     * @param string $xmldec
      * @param bool $called_from_macro will do nothing if _echoDeclarations is also set
      *
      * @return void
+     * @throws Exception\ConfigurationException
      */
     public function setXmlDeclaration($xmldec, $called_from_macro)
     {
         // FIXME
-        if (!$this->_xmlDeclaration) {
-            $this->_xmlDeclaration = $xmldec;
+        if (!$this->xmlDeclaration) {
+            $this->xmlDeclaration = $xmldec;
         }
 
-        if ($this->_parentContext) {
-            $this->_parentContext->setXmlDeclaration($xmldec, $called_from_macro);
-        } else if ($this->_echoDeclarations) {
+        if ($this->parentContext) {
+            $this->parentContext->setXmlDeclaration($xmldec, $called_from_macro);
+        } elseif ($this->echoDeclarations) {
             if (!$called_from_macro) {
-                echo $xmldec."\n";
+                echo $xmldec . "\n";
             } else {
-                throw new \PhpTal\Exception\ConfigurationException("Executed macro in file with XML declaration when using echoExecute(). This is not supported yet. Remove XML declaration or use PHPTAL->execute().");
+                throw new Exception\ConfigurationException(
+                    'Executed macro in file with XML declaration when using echoExecute(). This is not supported yet.' .
+                    ' Remove XML declaration or use PHPTAL->execute().'
+                );
             }
-        } else if (!$this->_xmlDeclaration) {
-            $this->_xmlDeclaration = $xmldec;
+        } elseif (!$this->xmlDeclaration) {
+            $this->xmlDeclaration = $xmldec;
         }
     }
 
@@ -158,21 +214,25 @@ class Context
      * Activate or deactivate exception throwing during unknown path
      * resolution.
      *
+     * @param bool $bool
+     *
      * @return void
      */
     public function noThrow($bool)
     {
-        $this->_nothrow = $bool;
+        $this->nothrow = $bool;
     }
 
     /**
      * Returns true if specified slot is filled.
      *
+     * @param string $key
+     *
      * @return bool
      */
     public function hasSlot($key)
     {
-        return isset($this->_slots[$key]) || ($this->_parentContext && $this->_parentContext->hasSlot($key));
+        return isset($this->slots[$key]) || ($this->parentContext && $this->parentContext->hasSlot($key));
     }
 
     /**
@@ -180,20 +240,26 @@ class Context
      *
      * Use echoSlot() whenever you just want to output the slot
      *
+     * @param string $key
+     *
      * @return string
      */
     public function getSlot($key)
     {
-        if (isset($this->_slots[$key])) {
-            if (is_string($this->_slots[$key])) {
-                return $this->_slots[$key];
+        if (isset($this->slots[$key])) {
+            if (is_string($this->slots[$key])) {
+                return $this->slots[$key];
             }
             ob_start();
-            call_user_func($this->_slots[$key][0], $this->_slots[$key][1], $this->_slots[$key][2]);
+            call_user_func($this->slots[$key][0], $this->slots[$key][1], $this->slots[$key][2]);
             return ob_get_clean();
-        } else if ($this->_parentContext) {
-            return $this->_parentContext->getSlot($key);
         }
+
+        if ($this->parentContext) {
+            return $this->parentContext->getSlot($key);
+        }
+
+        return '';
     }
 
     /**
@@ -201,42 +267,55 @@ class Context
      *
      * Equivalent of echo $this->getSlot();
      *
+     * @param string $key
+     *
      * @return string
      */
     public function echoSlot($key)
     {
-        if (isset($this->_slots[$key])) {
-            if (is_string($this->_slots[$key])) {
-                echo $this->_slots[$key];
+        if (isset($this->slots[$key])) {
+            if (is_string($this->slots[$key])) {
+                echo $this->slots[$key];
             } else {
-                call_user_func($this->_slots[$key][0], $this->_slots[$key][1], $this->_slots[$key][2]);
+                call_user_func($this->slots[$key][0], $this->slots[$key][1], $this->slots[$key][2]);
             }
-        } else if ($this->_parentContext) {
-            return $this->_parentContext->echoSlot($key);
+        } elseif ($this->parentContext) {
+            return $this->parentContext->echoSlot($key);
         }
+
+        return '';
     }
 
     /**
      * Fill a macro slot.
      *
+     * @param string $key
+     * @param string $content TODO Really string?
      * @return void
      */
     public function fillSlot($key, $content)
     {
-        $this->_slots[$key] = $content;
-        if ($this->_parentContext) {
+        $this->slots[$key] = $content;
+        if ($this->parentContext) {
             // Works around bug with tal:define popping context after fillslot
-            $this->_parentContext->_slots[$key] = $content;
+            $this->parentContext->slots[$key] = $content;
         }
     }
 
-    public function fillSlotCallback($key, $callback, $_thistpl, $tpl)
+    /**
+     * @param string $key
+     * @param callable $callback
+     * @param string $_thistpl
+     * @param string $tpl
+     *
+     * @return void
+     */
+    public function fillSlotCallback($key, callable $callback, $_thistpl, $tpl)
     {
-        assert(is_callable($callback));
-        $this->_slots[$key] = array($callback, $_thistpl, $tpl);
-        if ($this->_parentContext) {
+        $this->slots[$key] = [$callback, $_thistpl, $tpl];
+        if ($this->parentContext) {
             // Works around bug with tal:define popping context after fillslot
-            $this->_parentContext->_slots[$key] = array($callback, $_thistpl, $tpl);
+            $this->parentContext->slots[$key] = [$callback, $_thistpl, $tpl];
         }
     }
 
@@ -247,8 +326,8 @@ class Context
      */
     public function pushSlots()
     {
-        $this->_slotsStack[] =  $this->_slots;
-        $this->_slots = array();
+        $this->slotsStack[] = $this->slots;
+        $this->slots = [];
     }
 
     /**
@@ -258,79 +337,103 @@ class Context
      */
     public function popSlots()
     {
-        $this->_slots = array_pop($this->_slotsStack);
+        $this->slots = array_pop($this->slotsStack);
     }
 
     /**
      * Context setter.
      *
+     * @param string $varname
+     * @param mixed $value
+     *
      * @return void
+     * @throws Exception\InvalidVariableNameException
      */
     public function __set($varname, $value)
     {
         if (preg_match('/^_|\s/', $varname)) {
-            throw new \PhpTal\Exception\InvalidVariableNameException('Template variable error \''.$varname.'\' must not begin with underscore or contain spaces');
+            throw new Exception\InvalidVariableNameException(
+                'Template variable error \'' . $varname . '\' must not begin with underscore or contain spaces'
+            );
         }
         $this->$varname = $value;
     }
 
     /**
+     * @param string $varname
+     *
      * @return bool
      */
     public function __isset($varname)
     {
         // it doesn't need to check isset($this->$varname), because PHP does that _before_ calling __isset()
-        return isset($this->_globalContext->$varname) || defined($varname);
+        return isset($this->globalContext->$varname) || defined($varname);
     }
 
     /**
      * Context getter.
      * If variable doesn't exist, it will throw an exception, unless noThrow(true) has been called
      *
+     * @param string $varname
+     *
      * @return mixed
+     * @throws Exception\VariableNotFoundException
      */
     public function __get($varname)
     {
         // PHP checks public properties first, there's no need to support them here
 
         // must use isset() to allow custom global contexts with __isset()/__get()
-        if (isset($this->_globalContext->$varname)) {
-            return $this->_globalContext->$varname;
+        if (isset($this->globalContext->$varname)) {
+            return $this->globalContext->$varname;
         }
 
         if (defined($varname)) {
             return constant($varname);
         }
 
-        if ($this->_nothrow) {
+        if ($this->nothrow) {
             return null;
         }
 
-        throw new \PhpTal\Exception\VariableNotFoundException("Unable to find variable '$varname' in current scope");
+        throw new Exception\VariableNotFoundException('Unable to find variable \'$varname\' in current scope');
     }
 
     /**
      * helper method for Context::path()
      *
-     * @access private
+     * @param mixed $base
+     * @param string $path
+     * @param string $current
+     * @param string $basename
+     * @throws Exception\VariableNotFoundException
      */
     private static function pathError($base, $path, $current, $basename)
     {
         if ($current !== $path) {
             $pathinfo = " (in path '.../$path')";
-        } else $pathinfo = '';
+        } else {
+            $pathinfo = '';
+        }
 
         if (!empty($basename)) {
-            $basename = "'" . $basename . "' ";
+            $basename = "'" . $basename . "'";
         }
 
         if (is_array($base)) {
-            throw new \PhpTal\Exception\VariableNotFoundException("Array {$basename}doesn't have key named '$current'$pathinfo");
+            throw new Exception\VariableNotFoundException(
+                "Array {$basename} doesn't have key named '$current' $pathinfo"
+            );
         }
         if (is_object($base)) {
-            throw new \PhpTal\Exception\VariableNotFoundException(ucfirst(get_class($base))." object {$basename}doesn't have method/property named '$current'$pathinfo");
+            throw new Exception\VariableNotFoundException(
+                ucfirst(get_class($base)) .
+                " object {$basename} doesn't have method/property named '$current' $pathinfo"
+            );
         }
-        throw new \PhpTal\Exception\VariableNotFoundException(trim("Attempt to read property '$current'$pathinfo from ".gettype($base)." value {$basename}"));
+        throw new Exception\VariableNotFoundException(
+            trim("Attempt to read property '$current' $pathinfo from " . gettype($base) . " value {$basename}")
+        );
     }
 
     /**
@@ -342,35 +445,37 @@ class Context
      *
      * This function will become non-static in the future
      *
-     * @param mixed  $base    first element of the path ($ctx)
-     * @param string $path    rest of the path
-     * @param bool   $nothrow is used by phptal_exists(). Prevents this function from
+     * @param mixed $base first element of the path ($ctx)
+     * @param string $path rest of the path
+     * @param bool $nothrow is used by phptal_exists(). Prevents this function from
      * throwing an exception when a part of the path cannot be resolved, null is
      * returned instead.
      *
-     * @access private
      * @return mixed
+     * @throws Exception\VariableNotFoundException
      */
-    public static function path($base, $path, $nothrow=false)
+    public static function path($base, $path, $nothrow = false)
     {
         if ($base === null) {
-            if ($nothrow) return null;
-            Context::pathError($base, $path, $path, $path);
+            if ($nothrow) {
+                return null;
+            }
+            static::pathError($base, $path, $path, $path);
         }
 
-        $chunks  = explode('/', $path);
+        $chunks = explode('/', $path);
         $current = null;
-        $prev    = null;
-        for ($i = 0; $i < count($chunks); $i++) {
+        $prev = null;
+        for ($i = 0, $iMax = count($chunks); $i < $iMax; $i++) {
             if ($current != $chunks[$i]) { // if not $i-- before continue;
-                $prev    = $current;
+                $prev = $current;
                 $current = $chunks[$i];
             }
 
             // object handling
             if (is_object($base)) {
-
-                // look for method. Both method_exists and is_callable are required because of __call() and protected methods
+                // look for method. Both method_exists and is_callable are required
+                // because of __call() and protected methods
                 if (method_exists($base, $current) && is_callable(array($base, $current))) {
                     $base = $base->$current();
                     continue;
@@ -398,11 +503,10 @@ class Context
                         $base = $base->$current;
                         continue;
                     }
-                }
-                // ask __get and discard if it returns null
+                } // ask __get and discard if it returns null
                 elseif (method_exists($base, '__get')) {
                     $tmp = $base->$current;
-                    if (null !== $tmp) {
+                    if ($tmp !== null) {
                         $base = $tmp;
                         continue;
                     }
@@ -410,12 +514,11 @@ class Context
 
                 // magic method call
                 if (method_exists($base, '__call')) {
-                    try
-                    {
-                        $base = $base->__call($current, array());
+                    try {
+                        $base = $base->__call($current, []);
                         continue;
+                    } catch (\BadMethodCallException $e) {
                     }
-                    catch(\BadMethodCallException $e) {}
                 }
 
                 if (is_callable($base)) {
@@ -440,13 +543,14 @@ class Context
                 }
 
                 // virtual methods provided by phptal
-                if ($current == 'length' || $current == 'size') {
+                if ($current === 'length' || $current === 'size') {
                     $base = count($base);
                     continue;
                 }
 
-                if ($nothrow)
+                if ($nothrow) {
                     return null;
+                }
 
                 static::pathError($base, $path, $current, $prev);
             }
@@ -454,7 +558,7 @@ class Context
             // string handling
             if (is_string($base)) {
                 // virtual methods provided by phptal
-                if ($current == 'length' || $current == 'size') {
+                if ($current === 'length' || $current === 'size') {
                     $base = strlen($base);
                     continue;
                 }
@@ -468,8 +572,9 @@ class Context
 
             // if this point is reached, then the part cannot be resolved
 
-            if ($nothrow)
+            if ($nothrow) {
                 return null;
+            }
 
             static::pathError($base, $path, $current, $prev);
         }

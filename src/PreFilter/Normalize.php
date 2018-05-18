@@ -13,6 +13,8 @@
 
 namespace PhpTal\PreFilter;
 
+use PhpTal\TalNamespace\Builtin;
+
 /**
  * Collapses conscutive whitespace, trims attributes, merges adjacent text nodes
  */
@@ -26,7 +28,7 @@ class Normalize extends \PhpTal\PreFilter
     public function filterDOM(\PhpTal\Dom\Element $root)
     {
         // let xml:space=preserve preserve attributes as well
-        if ($root->getAttributeNS("http://www.w3.org/XML/1998/namespace", 'space') == 'preserve') {
+        if ($root->getAttributeNS(Builtin::NS_XML, 'space') == 'preserve') {
             $this->findElementToFilter($root);
             return;
         }
@@ -71,7 +73,7 @@ class Normalize extends \PhpTal\PreFilter
     {
         $ln = $element->getLocalName();
         return ($ln === 'script' || $ln === 'pre' || $ln === 'textarea')
-            && ($element->getNamespaceURI() === 'http://www.w3.org/1999/xhtml' || $element->getNamespaceURI() === '');
+            && ($element->getNamespaceURI() === Builtin::NS_XHTML || $element->getNamespaceURI() === '');
     }
 
     protected function findElementToFilter(\PhpTal\Dom\Element $root)
@@ -79,7 +81,7 @@ class Normalize extends \PhpTal\PreFilter
         foreach ($root->childNodes as $node) {
             if (!$node instanceof \PhpTal\Dom\Element) continue;
 
-            if ($node->getAttributeNS("http://www.w3.org/XML/1998/namespace", 'space') == 'default') {
+            if ($node->getAttributeNS(Builtin::NS_XML, 'space') == 'default') {
                 $this->filterDOM($node);
             }
         }

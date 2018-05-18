@@ -21,6 +21,9 @@ namespace PhpTal\Dom;
  */
 abstract class Node
 {
+    /**
+     * @var Element
+     */
     public $parentNode;
 
     private $value_escaped, $source_file, $source_line, $encoding;

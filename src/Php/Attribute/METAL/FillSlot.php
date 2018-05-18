@@ -14,6 +14,13 @@
 
 namespace PhpTal\Php\Attribute\METAL;
 
+use PhpTal\Dom\Attr;
+use PhpTal\Dom\Element;
+use PhpTal\Dom\Node;
+use PhpTal\Php\Attribute;
+use PhpTal\Php\CodeWriter;
+use PhpTal\TalNamespace\Builtin;
+
 /**
  *  METAL Specification 1.0
  *
@@ -50,20 +57,31 @@ namespace PhpTal\Php\Attribute\METAL;
  * @package PHPTAL
  * @author Laurent Bedubourg <lbedubourg@motion-twin.com>
  */
-class FillSlot extends \PhpTal\Php\Attribute
+class FillSlot extends Attribute
 {
-    // rough guess
     const CALLBACK_THRESHOLD = 10000;
 
+    /**
+     * @var int
+     */
     private static $uid = 0;
+
+    /**
+     * @var string
+     */
     private $function_name;
 
-    public function before(\PhpTal\Php\CodeWriter $codewriter)
+    /**
+     * Called before element printing.
+     *
+     * @param CodeWriter $codewriter
+     */
+    public function before(CodeWriter $codewriter)
     {
         if ($this->shouldUseCallback()) {
-            $function_base_name = 'slot_'.preg_replace('/[^a-z0-9]/', '_', $this->expression).'_'.(self::$uid++);
+            $function_base_name = 'slot_' . preg_replace('/[^a-z0-9]/', '_', $this->expression) . '_' . (self::$uid++);
             $codewriter->doFunction($function_base_name, '\PhpTal\PHPTAL $_thistpl, \PhpTal\PHPTAL $tpl');
-            $this->function_name = $codewriter->getFunctionPrefix().$function_base_name;
+            $this->function_name = $codewriter->getFunctionPrefix() . $function_base_name;
 
             $codewriter->doSetVar('$ctx', '$tpl->getContext()');
             $codewriter->doInitTranslator();
@@ -73,13 +91,23 @@ class FillSlot extends \PhpTal\Php\Attribute
         }
     }
 
-    public function after(\PhpTal\Php\CodeWriter $codewriter)
+    /**
+     * Called after element printing.
+     *
+     * @param CodeWriter $codewriter
+     *
+     * @throws \PhpTal\Exception\PhpTalException
+     */
+    public function after(CodeWriter $codewriter)
     {
         if ($this->function_name !== null) {
             $codewriter->doEnd();
-            $codewriter->pushCode('$ctx->fillSlotCallback('.$codewriter->str($this->expression).', '.$codewriter->str($this->function_name).', $_thistpl, clone $tpl)');
+            $codewriter->pushCode(
+                '$ctx->fillSlotCallback(' . $codewriter->str($this->expression) . ', '
+                . $codewriter->str($this->function_name) . ', $_thistpl, clone $tpl)'
+            );
         } else {
-            $codewriter->pushCode('$ctx->fillSlot('.$codewriter->str($this->expression).', ob_get_clean())');
+            $codewriter->pushCode('$ctx->fillSlot(' . $codewriter->str($this->expression) . ', ob_get_clean())');
         }
     }
 
@@ -94,51 +122,57 @@ class FillSlot extends \PhpTal\Php\Attribute
     }
 
     /**
+     * @param Element $element
      * @param bool $is_nested_in_repeat true if any parent element has tal:repeat
      *
-     * @return rough guess
+     * @return int
      */
-    private function estimateNumberOfBytesOutput(\PhpTal\Dom\Element $element, $is_nested_in_repeat)
+    private function estimateNumberOfBytesOutput(Element $element, $is_nested_in_repeat)
     {
         // macros don't output anything on their own
-        if ($element->hasAttributeNS('http://xml.zope.org/namespaces/metal', 'define-macro')) {
+        if ($element->hasAttributeNS(Builtin::NS_METAL, 'define-macro')) {
             return 0;
         }
 
-        $estimated_bytes = 2*(3+strlen($element->getQualifiedName()));
+        $estimated_bytes = 2 * (3 + strlen($element->getQualifiedName()));
 
         foreach ($element->getAttributeNodes() as $attr) {
-            $estimated_bytes += 4+strlen($attr->getQualifiedName());
-            if ($attr->getReplacedState() === \PhpTal\Dom\Attr::NOT_REPLACED) {
+            $estimated_bytes += 4 + strlen($attr->getQualifiedName());
+            if ($attr->getReplacedState() === Attr::NOT_REPLACED) {
                 $estimated_bytes += strlen($attr->getValueEscaped()); // this is shoddy for replaced attributes
             }
         }
 
-        $has_repeat_attr = $element->hasAttributeNS('http://xml.zope.org/namespaces/tal', 'repeat');
+        $has_repeat_attr = $element->hasAttributeNS(Builtin::NS_TAL, 'repeat');
+        $isRepeating = $has_repeat_attr || $is_nested_in_repeat;
 
-        if ($element->hasAttributeNS('http://xml.zope.org/namespaces/tal', 'content') ||
-            $element->hasAttributeNS('http://xml.zope.org/namespaces/tal', 'replace')) {
+        if ($element->hasAttributeNS(Builtin::NS_TAL, 'content') ||
+            $element->hasAttributeNS(Builtin::NS_TAL, 'replace')) {
             // assume that output in loops is shorter (e.g. table rows) than outside (main content)
-            $estimated_bytes += ($has_repeat_attr || $is_nested_in_repeat) ? 500 : 2000;
+            $estimated_bytes += $isRepeating ? 500 : 2000;
         } else {
             foreach ($element->childNodes as $node) {
-                if ($node instanceof \PhpTal\Dom\Element) {
-                    $estimated_bytes += $this->estimateNumberOfBytesOutput($node, $has_repeat_attr || $is_nested_in_repeat);
+                if ($node instanceof Element) {
+                    $estimated_bytes += $this->estimateNumberOfBytesOutput(
+                        $node,
+                        $isRepeating
+                    );
                 } else {
+                    /** @var Node $node */
                     $estimated_bytes += strlen($node->getValueEscaped());
                 }
             }
         }
 
-        if ($element->hasAttributeNS('http://xml.zope.org/namespaces/metal', 'use-macro')) {
-            $estimated_bytes += ($has_repeat_attr || $is_nested_in_repeat) ? 500 : 2000;
+        if ($element->hasAttributeNS(Builtin::NS_METAL, 'use-macro')) {
+            $estimated_bytes += $isRepeating ? 500 : 2000;
         }
 
-        if ($element->hasAttributeNS('http://xml.zope.org/namespaces/tal', 'condition')) {
+        if ($element->hasAttributeNS(Builtin::NS_TAL, 'condition')) {
             $estimated_bytes /= 2; // naively assuming 50% chance, that works well with if/else pattern
         }
 
-        if ($element->hasAttributeNS('http://xml.zope.org/namespaces/tal', 'repeat')) {
+        if ($element->hasAttributeNS(Builtin::NS_TAL, 'repeat')) {
             // assume people don't write big nested loops
             $estimated_bytes *= $is_nested_in_repeat ? 5 : 10;
         }

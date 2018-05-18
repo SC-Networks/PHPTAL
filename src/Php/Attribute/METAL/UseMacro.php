@@ -14,6 +14,8 @@
 
 namespace PhpTal\Php\Attribute\METAL;
 
+use PhpTal\TalNamespace\Builtin;
+
 /**
  * METAL Specification 1.0
  *
@@ -36,11 +38,11 @@ namespace PhpTal\Php\Attribute\METAL;
  */
 class UseMacro extends \PhpTal\Php\Attribute
 {
-    static $ALLOWED_ATTRIBUTES = array(
-        'fill-slot'=>'http://xml.zope.org/namespaces/metal',
-        'define-macro'=>'http://xml.zope.org/namespaces/metal',
-        'define'=>'http://xml.zope.org/namespaces/tal',
-    );
+    static $ALLOWED_ATTRIBUTES = [
+        'fill-slot' => Builtin::NS_METAL,
+        'define-macro' => Builtin::NS_METAL,
+        'define' => Builtin::NS_TAL,
+    ];
 
     public function before(\PhpTal\Php\CodeWriter $codewriter)
     {
@@ -55,7 +57,7 @@ class UseMacro extends \PhpTal\Php\Attribute
 	// throw error if attempting to define and use macro at same time
 	// [should perhaps be a TemplateException? but I don't know how to set that up...]
 	if ($defineAttr = $this->phpelement->getAttributeNodeNS(
-		'http://xml.zope.org/namespaces/metal', 'define-macro')) {
+        Builtin::NS_METAL, 'define-macro')) {
 		if ($defineAttr->getValue() == $macroname) 
             		throw new \PhpTal\Exception\TemplateException("Cannot simultaneously define and use macro '$macroname'",
                 		$this->phpelement->getSourceFile(), $this->phpelement->getSourceLine());			
@@ -95,7 +97,7 @@ class UseMacro extends \PhpTal\Php\Attribute
      */
     private function pushSlots(\PhpTal\Php\CodeWriter $codewriter)
     {
-        if (!$this->phpelement->hasAttributeNS('http://xml.zope.org/namespaces/metal', 'define-macro')) {
+        if (!$this->phpelement->hasAttributeNS(Builtin::NS_METAL, 'define-macro')) {
             $codewriter->pushCode('$ctx->pushSlots()');
         }
     }
@@ -106,7 +108,7 @@ class UseMacro extends \PhpTal\Php\Attribute
      */
     private function popSlots(\PhpTal\Php\CodeWriter $codewriter)
     {
-        if (!$this->phpelement->hasAttributeNS('http://xml.zope.org/namespaces/metal', 'define-macro')) {
+        if (!$this->phpelement->hasAttributeNS(Builtin::NS_METAL, 'define-macro')) {
             $codewriter->pushCode('$ctx->popSlots()');
         }
     }

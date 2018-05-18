@@ -21,7 +21,7 @@ class METAL extends Builtin
 {
     public function __construct()
     {
-        parent::__construct('metal', 'http://xml.zope.org/namespaces/metal');
+        parent::__construct('metal', Builtin::NS_METAL);
         $this->addAttribute(new \PhpTal\TalNamespaceAttributeSurround('define-macro', 1));
         $this->addAttribute(new \PhpTal\TalNamespaceAttributeReplace('use-macro', 9));
         $this->addAttribute(new \PhpTal\TalNamespaceAttributeSurround('define-slot', 9));
