@@ -1,0 +1,18 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>metal:define-macro</title><link rel="stylesheet" type="text/css" href="https://phptal.org/nifty.css" /><meta name="generator" content="DocBook XSL Stylesheets V1.79.1" /><link rel="home" href="index.html" title="PHPTAL Manual" /><link rel="up" href="metal.html" title="METAL namespace" /><link rel="prev" href="metal.html" title="METAL namespace" /><link rel="next" href="metal-use-macro.html" title="metal:use-macro" /><link rel="article" href="introduction.html" title="Introduction" /><link rel="article" href="whyusephptal.html" title="Why use PHPTAL" /><link rel="article" href="installation.html" title="Installation" /><link rel="article" href="firstexample.html" title="First example" /><link rel="article" href="attributelanguage.html" title="Template Attribute Language" /><link rel="article" href="phpintegration.html" title="PHP Integration" /><link rel="appendix" href="sysadmin.html" title="Appendix A. Note for system administrators" /><link rel="appendix" href="usefullinks.html" title="Appendix B. Useful links" /><link rel="appendix" href="greetings.html" title="Appendix C. Greetings" /></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><td><a rel="prev" href="metal.html">Prev</a></td><th><div class="breadcrumbs"><span class="breadcrumb-link"><a href="attributelanguage.html">Template Attribute Language</a></span> › <span class="breadcrumb-link"><a href="metal.html">
+        <acronym class="acronym">METAL</acronym> namespace
+      </a></span> › <span class="breadcrumb-node">
+          <code class="sgmltag-element">metal:define-macro</code>
+        </span></div></th><td align="right"><a rel="next" href="metal-use-macro.html">Next</a></td></tr></table></div><div class="section" id="metal-define-macro"><div class="titlepage"><div><div><h3 class="title">
+          <code class="sgmltag-element">metal:define-macro</code>
+        </h3></div></div></div><p>        This attribute declares a macro. Think of macros as library of        small templates which can be reused in any other template.        </p><div class="informalexample"><pre class="programlisting"><code class="xml">
+            &lt;div metal:define-macro="main_menu"&gt;&lt;ul&gt;&lt;li&gt;&lt;a href="/"&gt;home&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="/products"&gt;products&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="/contact"&gt;contact&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;&lt;div&gt;
+    Last modified:
+    &lt;span tal:content="mdate"&gt;page modification date&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;
+
+          </code></pre></div><p>        Macros inherit all variables from their caller. In the above example,        the variable '
+          <code class="varname">mdate</code>' depends on the template that calls the        macro.        
+        </p></div><div class="navfooter"><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="metal.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="metal.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="metal-use-macro.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">
+        <acronym class="acronym">METAL</acronym> namespace
+       </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> 
+          <code class="sgmltag-element">metal:use-macro</code>
+        </td></tr></table></div></body></html>

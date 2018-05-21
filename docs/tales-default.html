@@ -1,0 +1,20 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>default</title><link rel="stylesheet" type="text/css" href="https://phptal.org/nifty.css" /><meta name="generator" content="DocBook XSL Stylesheets V1.79.1" /><link rel="home" href="index.html" title="PHPTAL Manual" /><link rel="up" href="phptales.html" title="PHPTALES" /><link rel="prev" href="tales-true.html" title="true:" /><link rel="next" href="tales-structure.html" title="structure" /><link rel="article" href="introduction.html" title="Introduction" /><link rel="article" href="whyusephptal.html" title="Why use PHPTAL" /><link rel="article" href="installation.html" title="Installation" /><link rel="article" href="firstexample.html" title="First example" /><link rel="article" href="attributelanguage.html" title="Template Attribute Language" /><link rel="article" href="phpintegration.html" title="PHP Integration" /><link rel="appendix" href="sysadmin.html" title="Appendix A. Note for system administrators" /><link rel="appendix" href="usefullinks.html" title="Appendix B. Useful links" /><link rel="appendix" href="greetings.html" title="Appendix C. Greetings" /></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><td><a rel="prev" href="tales-true.html">Prev</a></td><th><div class="breadcrumbs"><span class="breadcrumb-link"><a href="attributelanguage.html">Template Attribute Language</a></span> › <span class="breadcrumb-link"><a href="phptales.html">
+        <acronym class="acronym">PHPTALES</acronym>
+      </a></span> › <span class="breadcrumb-node">
+          <code class="code">default</code>
+        </span></div></th><td align="right"><a rel="next" href="tales-structure.html">Next</a></td></tr></table></div><div class="section" id="tales-default"><div class="titlepage"><div><div><h3 class="title">
+          <code class="code">default</code>
+        </h3></div></div></div><p>        This is not an expression but a keyword, allowing template        designers to keep the content of a tag as an alternative value        if an error occurs, or if something is not defined.        </p><div class="informalexample"><pre class="programlisting"><code class="xml">
+            &lt;span tal:define="myVar path/to/possible/var | default"&gt;
+  default my var value
+&lt;/span&gt;&lt;span tal:content="some/var | other/path | default"&gt;
+  no some/var and no other/path found here
+&lt;/span&gt;&lt;a href="unknown.xhtml" title="Unknown page" tal:attributes="href item/href | default; title item/title | default" tal:content="item/title | default"&gt;Unknown page&lt;/a&gt;
+
+          </code></pre></div><p>        Above examples introduce the '
+          <code class="literal">|</code>' character that allows the        definition of alternatives for defines or prints.        
+        </p></div><div class="navfooter"><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="tales-true.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="phptales.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="tales-structure.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">
+          <code class="code">true:</code>
+         </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> 
+          <code class="code">structure</code>
+        </td></tr></table></div></body></html>

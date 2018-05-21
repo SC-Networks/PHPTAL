@@ -1,0 +1,69 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>PHP Integration</title><link rel="stylesheet" type="text/css" href="https://phptal.org/nifty.css" /><meta name="generator" content="DocBook XSL Stylesheets V1.79.1" /><link rel="home" href="index.html" title="PHPTAL Manual" /><link rel="up" href="index.html" title="PHPTAL Manual" /><link rel="prev" href="expression-chains.html" title="Expression chains" /><link rel="next" href="phptal-class.html" title="class PHPTAL" /><link rel="article" href="introduction.html" title="Introduction" /><link rel="article" href="whyusephptal.html" title="Why use PHPTAL" /><link rel="article" href="installation.html" title="Installation" /><link rel="article" href="firstexample.html" title="First example" /><link rel="article" href="attributelanguage.html" title="Template Attribute Language" /><link rel="article" href="phpintegration.html" title="PHP Integration" /><link rel="appendix" href="sysadmin.html" title="Appendix A. Note for system administrators" /><link rel="appendix" href="usefullinks.html" title="Appendix B. Useful links" /><link rel="appendix" href="greetings.html" title="Appendix C. Greetings" /><link rel="section" href="phptal-class.html" title="class PHPTAL" /><link rel="section" href="prefilters.html" title="class PHPTAL_PreFilter" /><link rel="section" href="phptal-dom.html" title="PHPTAL DOM" /><link rel="section" href="filter-interface.html" title="interface PHPTAL_Filter" /><link rel="section" href="trigger-interface.html" title="interface PHPTAL_Trigger" /><link rel="section" href="translation-interface.html" title="interface PHPTAL_TranslationService" /><link rel="section" href="gettext.html" title="Working with gettext" /><link rel="section" href="custom-modifiers.html" title="Creating custom expression modifiers" /></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><td><a rel="prev" href="expression-chains.html">Prev</a></td><th><div class="breadcrumbs"><span class="breadcrumb-link"><a href="index.html">PHPTAL Manual</a></span> › <span class="breadcrumb-node">
+      <acronym class="acronym">PHP</acronym> Integration
+    </span></div></th><td align="right"><a rel="next" href="phptal-class.html">Next</a></td></tr></table></div><div class="article" id="phpintegration"><div class="titlepage"><div><div><h1 class="title">
+      <acronym class="acronym">PHP</acronym> Integration
+    </h1></div></div><hr /></div><div class="toc"><p><strong>Table of Contents</strong></p><ol class="toc"><li><span class="section"><a href="phptal-class.html">class 
+        <code class="classname">PHPTAL</code>
+      </a></span><ol><li><span class="section"><a href="configuration.html">Configuration methods</a></span><ol><li><span class="section"><a href="configuration.html#set-output-mode">
+            <code class="methodname">setOutputMode(
+              <em class="replaceable"><code>mode</code></em>)
+            </code>
+          </a></span></li><li><span class="section"><a href="configuration.html#set-encoding">
+            <code class="methodname">setEncoding(
+              <em class="replaceable"><code>encoding</code></em>)
+            </code>
+          </a></span></li><li><span class="section"><a href="configuration.html#config-methods">Other methods</a></span></li></ol></li><li><span class="section"><a href="execute.html">
+          <code class="methodname">execute()</code> method
+        </a></span></li><li><span class="section"><a href="echo-execute.html">
+          <code class="methodname">echoExecute()</code> method
+        </a></span></li><li><span class="section"><a href="add-prefilter.html">
+          <code class="methodname">addPreFilter()</code> method
+        </a></span></li></ol></li><li><span class="section"><a href="prefilters.html">class 
+        <code class="classname">PHPTAL_PreFilter</code>
+      </a></span></li><li><span class="section"><a href="phptal-dom.html">PHPTAL DOM</a></span></li><li><span class="section"><a href="filter-interface.html">interface 
+        <code class="classname">PHPTAL_Filter</code>
+      </a></span></li><li><span class="section"><a href="trigger-interface.html">interface 
+        <code class="classname">PHPTAL_Trigger</code>
+      </a></span></li><li><span class="section"><a href="translation-interface.html">interface 
+        <code class="classname">PHPTAL_TranslationService</code>
+      </a></span><ol><li><span class="section"><a href="i18n-setlanguage.html">method 
+          <code class="methodname">setLanguage(
+            <em class="replaceable"><code>…</code></em>)
+          </code>
+        </a></span></li><li><span class="section"><a href="i18n-usedomain.html">method 
+          <code class="methodname">useDomain(
+            <em class="replaceable"><code>$domain</code></em>)
+          </code>
+        </a></span></li><li><span class="section"><a href="i18n-setvar.html">method 
+          <code class="methodname">setVar(
+            <em class="replaceable"><code>$key</code></em>,
+            <em class="replaceable"><code>$value</code></em>)
+          </code>
+        </a></span></li><li><span class="section"><a href="i18n-translatekey.html">method 
+          <code class="methodname">translate(
+            <em class="replaceable"><code>$key</code></em>)
+          </code>
+        </a></span></li><li><span class="section"><a href="i18n-setencoding.html">method 
+          <code class="methodname">setEncoding(
+            <em class="replaceable"><code>$encoding</code></em>)
+          </code>
+        </a></span></li></ol></li><li><span class="section"><a href="gettext.html">Working with gettext</a></span><ol><li><span class="section"><a href="gettext.html#i18n-directory">Creating the translation directory structure</a></span></li><li><span class="section"><a href="gettext.html#po-files">Portable Object files</a></span></li><li><span class="section"><a href="gettext.html#i18n-domains">Translation Domain</a></span></li><li><span class="section"><a href="gettext.html#php-in-phptal">Using Translator in 
+          <acronym class="acronym">PHP</acronym>
+        </a></span></li><li><span class="section"><a href="gettext.html#var-interpolation">Variable interpolation</a></span></li></ol></li><li><span class="section"><a href="custom-modifiers.html">Creating custom expression modifiers</a></span></li></ol></div><p>    This section is aimed at 
+      <acronym class="acronym">PHP</acronym> developers and explains how to use and    customize 
+      <acronym class="acronym">PHPTAL</acronym> behaviors for simple and advanced usage.    
+    </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
+          <code class="classname">PHPTAL</code>: the main 
+          <acronym class="acronym">PHPTAL</acronym> class. It is used to load and execute templates.      
+        </p></li><li class="listitem"><p>
+          <code class="classname">PHPTAL_Filter</code>: filtering template sources and 
+          <acronym class="acronym">PHPTAL</acronym> output.      
+        </p></li><li class="listitem"><p>
+          <code class="classname">PHPTAL_Trigger</code>: handles output of elements with 
+          <code class="sgmltag-element">phptal:id</code>.      
+        </p></li><li class="listitem"><p>
+          <code class="classname">PHPTAL_TranslationService</code>: for replacing the built-in 
+          <code class="constant">gettext</code> support      with your own internationalization system.      
+        </p></li></ul></div></div><div class="navfooter"><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="expression-chains.html">Prev</a> </td><td width="20%" align="center"> </td><td width="40%" align="right"> <a accesskey="n" href="phptal-class.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Expression chains </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> class 
+        <code class="classname">PHPTAL</code>
+      </td></tr></table></div></body></html>

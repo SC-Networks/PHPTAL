@@ -1,0 +1,70 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>Template Attribute Language</title><link rel="stylesheet" type="text/css" href="https://phptal.org/nifty.css" /><meta name="generator" content="DocBook XSL Stylesheets V1.79.1" /><link rel="home" href="index.html" title="PHPTAL Manual" /><link rel="up" href="index.html" title="PHPTAL Manual" /><link rel="prev" href="firstexample.html" title="First example" /><link rel="next" href="variableRefs.html" title="Referencing variables with ${}" /><link rel="article" href="introduction.html" title="Introduction" /><link rel="article" href="whyusephptal.html" title="Why use PHPTAL" /><link rel="article" href="installation.html" title="Installation" /><link rel="article" href="firstexample.html" title="First example" /><link rel="article" href="attributelanguage.html" title="Template Attribute Language" /><link rel="article" href="phpintegration.html" title="PHP Integration" /><link rel="appendix" href="sysadmin.html" title="Appendix A. Note for system administrators" /><link rel="appendix" href="usefullinks.html" title="Appendix B. Useful links" /><link rel="appendix" href="greetings.html" title="Appendix C. Greetings" /><link rel="section" href="variableRefs.html" title="Referencing variables with ${}" /><link rel="section" href="attributes.html" title="Attribute priority" /><link rel="section" href="tal-namespace.html" title="TAL namespace" /><link rel="section" href="metal.html" title="METAL namespace" /><link rel="section" href="i18n.html" title="I18N namespace" /><link rel="section" href="phptal-namespace.html" title="PHPTAL namespace" /><link rel="section" href="phptal-blocks.html" title="tal:block" /><link rel="section" href="phptales.html" title="PHPTALES" /></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><td><a rel="prev" href="firstexample.html">Prev</a></td><th><div class="breadcrumbs"><span class="breadcrumb-link"><a href="index.html">PHPTAL Manual</a></span> › <span class="breadcrumb-node">Template Attribute Language</span></div></th><td align="right"><a rel="next" href="variableRefs.html">Next</a></td></tr></table></div><div class="article" id="attributelanguage"><div class="titlepage"><div><div><h1 class="title">Template Attribute Language</h1></div></div><hr /></div><div class="toc"><p><strong>Table of Contents</strong></p><ol class="toc"><li><span class="section"><a href="variableRefs.html">Referencing variables with ${}</a></span></li><li><span class="section"><a href="attributes.html">Attribute priority</a></span></li><li><span class="section"><a href="tal-namespace.html">
+        <acronym class="acronym">TAL</acronym> namespace
+      </a></span><ol><li><span class="section"><a href="tal-define.html">
+          <code class="sgmltag-element">tal:define</code>
+        </a></span></li><li><span class="section"><a href="tal-condition.html">
+          <code class="sgmltag-element">tal:condition</code>
+        </a></span></li><li><span class="section"><a href="tal-repeat.html">
+          <code class="sgmltag-element">tal:repeat</code>
+        </a></span></li><li><span class="section"><a href="tal-omit-tag.html">
+          <code class="sgmltag-element">tal:omit-tag</code>
+        </a></span></li><li><span class="section"><a href="tal-replace.html">
+          <code class="sgmltag-element">tal:replace</code>
+        </a></span></li><li><span class="section"><a href="tal-content.html">
+          <code class="sgmltag-element">tal:content</code>
+        </a></span></li><li><span class="section"><a href="tal-attributes.html">
+          <code class="sgmltag-element">tal:attributes</code>
+        </a></span><ol><li><span class="section"><a href="tal-attributes.html#optional-attrs">Optional attributes</a></span></li></ol></li><li><span class="section"><a href="tal-on-error.html">
+          <code class="sgmltag-element">tal:on-error</code>
+        </a></span></li></ol></li><li><span class="section"><a href="metal.html">
+        <acronym class="acronym">METAL</acronym> namespace
+      </a></span><ol><li><span class="section"><a href="metal-define-macro.html">
+          <code class="sgmltag-element">metal:define-macro</code>
+        </a></span></li><li><span class="section"><a href="metal-use-macro.html">
+          <code class="sgmltag-element">metal:use-macro</code>
+        </a></span></li><li><span class="section"><a href="metal-define-slot.html">
+          <code class="sgmltag-element">metal:define-slot</code>
+        </a></span></li><li><span class="section"><a href="metal-fill-slot.html">
+          <code class="sgmltag-element">metal:fill-slot</code>
+        </a></span></li></ol></li><li><span class="section"><a href="i18n.html">
+        <acronym class="acronym">I18N</acronym> namespace
+      </a></span><ol><li><span class="section"><a href="i18n-translate.html">
+          <code class="sgmltag-element">i18n:translate</code>
+        </a></span></li><li><span class="section"><a href="i18n-attributes.html">
+          <code class="sgmltag-element">i18n:attributes</code>
+        </a></span></li><li><span class="section"><a href="i18n-name.html">
+          <code class="sgmltag-element">i18n:name</code>
+        </a></span></li><li><span class="section"><a href="xhtml-in-translations.html">
+          <acronym class="acronym">XHTML</acronym> in translations
+        </a></span></li></ol></li><li><span class="section"><a href="phptal-namespace.html">
+        <acronym class="acronym">PHPTAL</acronym> namespace
+      </a></span><ol><li><span class="section"><a href="phptal-debug.html">
+          <code class="sgmltag-element">phptal:debug</code>
+        </a></span></li><li><span class="section"><a href="phptal-cache.html">
+          <code class="sgmltag-element">phptal:cache</code>
+        </a></span><ol><li><span class="section"><a href="phptal-cache.html#cache-refresh">Instant refreshing</a></span></li><li><span class="section"><a href="phptal-cache.html#cache-limits">Limitations:</a></span></li></ol></li><li><span class="section"><a href="phptal-tales.html">
+          <code class="sgmltag-element">phptal:tales</code>
+        </a></span></li></ol></li><li><span class="section"><a href="phptal-blocks.html">
+        <code class="sgmltag-element">tal:block</code>
+      </a></span></li><li><span class="section"><a href="phptales.html">
+        <acronym class="acronym">PHPTALES</acronym>
+      </a></span><ol><li><span class="section"><a href="tales-path.html">path:</a></span></li><li><span class="section"><a href="conditional.html">Alternative 
+          <acronym class="acronym">PHP</acronym> operator syntax
+        </a></span></li><li><span class="section"><a href="tales-string.html">
+          <code class="code">string:</code>
+        </a></span></li><li><span class="section"><a href="tales-php.html">
+          <code class="code">php:</code>
+        </a></span></li><li><span class="section"><a href="tales-not.html">
+          <code class="code">not:</code>
+        </a></span></li><li><span class="section"><a href="tales-exists.html">
+          <code class="code">exists:</code>
+        </a></span></li><li><span class="section"><a href="tales-true.html">
+          <code class="code">true:</code>
+        </a></span></li><li><span class="section"><a href="tales-default.html">
+          <code class="code">default</code>
+        </a></span></li><li><span class="section"><a href="tales-structure.html">
+          <code class="code">structure</code>
+        </a></span></li><li><span class="section"><a href="expression-chains.html">Expression chains</a></span></li></ol></li></ol></div><p>    This section describes 
+      <acronym class="acronym">TAL</acronym> and its extensions. It mainly targets    template designers but must be read by 
+      <acronym class="acronym">PHP</acronym> integrators as well.    
+    </p></div><div class="navfooter"><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="firstexample.html">Prev</a> </td><td width="20%" align="center"> </td><td width="40%" align="right"> <a accesskey="n" href="variableRefs.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">First example </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> Referencing variables with ${}</td></tr></table></div></body></html>

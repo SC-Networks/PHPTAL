@@ -1,0 +1,26 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>Attribute priority</title><link rel="stylesheet" type="text/css" href="https://phptal.org/nifty.css" /><meta name="generator" content="DocBook XSL Stylesheets V1.79.1" /><link rel="home" href="index.html" title="PHPTAL Manual" /><link rel="up" href="attributelanguage.html" title="Template Attribute Language" /><link rel="prev" href="variableRefs.html" title="Referencing variables with ${}" /><link rel="next" href="tal-namespace.html" title="TAL namespace" /><link rel="article" href="introduction.html" title="Introduction" /><link rel="article" href="whyusephptal.html" title="Why use PHPTAL" /><link rel="article" href="installation.html" title="Installation" /><link rel="article" href="firstexample.html" title="First example" /><link rel="article" href="attributelanguage.html" title="Template Attribute Language" /><link rel="article" href="phpintegration.html" title="PHP Integration" /><link rel="appendix" href="sysadmin.html" title="Appendix A. Note for system administrators" /><link rel="appendix" href="usefullinks.html" title="Appendix B. Useful links" /><link rel="appendix" href="greetings.html" title="Appendix C. Greetings" /></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><td><a rel="prev" href="variableRefs.html">Prev</a></td><th><div class="breadcrumbs"><span class="breadcrumb-link"><a href="attributelanguage.html">Template Attribute Language</a></span> › <span class="breadcrumb-node">Attribute priority</span></div></th><td align="right"><a rel="next" href="tal-namespace.html">Next</a></td></tr></table></div><div class="section" id="attributes"><div class="titlepage"><div><div><h2 class="title" style="clear: both">Attribute priority</h2></div></div></div><p>      It is important to note that the order of declaration of      attributes is irrelevant.      </p><p>      For example,      </p><div class="informalexample"><pre class="programlisting"><code class="xml">
+          &lt;span tal:define="usersList application/listUsers" tal:condition="somecondition" tal:repeat="user usersList"&gt;…&lt;/span&gt;
+
+        </code></pre></div><p>      Is 
+        <span class="emphasis"><em>exactly</em></span> the same as:      
+      </p><div class="informalexample"><pre class="programlisting"><code class="xml">
+          &lt;span tal:repeat="user usersList" tal:condition="somecondition" tal:define="usersList application/listUsers"&gt;…&lt;/span&gt;
+
+        </code></pre></div><p>      Priority is the same as described by the 
+        <acronym class="acronym">TAL</acronym> specification:      
+      </p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p>
+            <code class="sgmltag-element">define</code>
+          </p></li><li class="listitem"><p>
+            <code class="sgmltag-element">condition</code>
+          </p></li><li class="listitem"><p>
+            <code class="sgmltag-element">repeat</code>
+          </p></li><li class="listitem"><p>
+            <code class="sgmltag-element">content</code> or 
+            <code class="sgmltag-element">replace</code>
+          </p></li><li class="listitem"><p>
+            <code class="sgmltag-element">attributes</code>
+          </p></li><li class="listitem"><p>
+            <code class="sgmltag-element">omit-tag</code>
+          </p></li></ol></div></div><div class="navfooter"><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="variableRefs.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="attributelanguage.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="tal-namespace.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Referencing variables with ${} </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> 
+        <acronym class="acronym">TAL</acronym> namespace
+      </td></tr></table></div></body></html>

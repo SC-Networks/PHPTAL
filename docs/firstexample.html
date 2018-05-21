@@ -1,0 +1,62 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>First example</title><link rel="stylesheet" type="text/css" href="https://phptal.org/nifty.css" /><meta name="generator" content="DocBook XSL Stylesheets V1.79.1" /><link rel="home" href="index.html" title="PHPTAL Manual" /><link rel="up" href="index.html" title="PHPTAL Manual" /><link rel="prev" href="installation.html" title="Installation" /><link rel="next" href="attributelanguage.html" title="Template Attribute Language" /><link rel="article" href="introduction.html" title="Introduction" /><link rel="article" href="whyusephptal.html" title="Why use PHPTAL" /><link rel="article" href="installation.html" title="Installation" /><link rel="article" href="firstexample.html" title="First example" /><link rel="article" href="attributelanguage.html" title="Template Attribute Language" /><link rel="article" href="phpintegration.html" title="PHP Integration" /><link rel="appendix" href="sysadmin.html" title="Appendix A. Note for system administrators" /><link rel="appendix" href="usefullinks.html" title="Appendix B. Useful links" /><link rel="appendix" href="greetings.html" title="Appendix C. Greetings" /></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><td><a rel="prev" href="installation.html">Prev</a></td><th><div class="breadcrumbs"><span class="breadcrumb-link"><a href="index.html">PHPTAL Manual</a></span> › <span class="breadcrumb-node">First example</span></div></th><td align="right"><a rel="next" href="attributelanguage.html">Next</a></td></tr></table></div><div class="article" id="firstexample"><div class="titlepage"><div><div><h1 class="title">First example</h1></div></div><hr /></div><p>    To get a first impression of 
+      <acronym class="acronym">PHPTAL</acronym> usage, a simple example is    better than many words.    
+    </p><p>    Your template is a valid 
+      <acronym class="acronym">XML</acronym>/
+      <acronym class="acronym">HTML</acronym> document (with a root element).    Here's a file named '
+      <code class="filename">my_template_file.xhtml</code>'.    
+    </p><div class="informalexample"><pre class="programlisting"><code class="xml">
+        
+        &lt;?xml version="1.0"?&gt;&lt;html&gt;&lt;head&gt;&lt;title tal:content="title"&gt;
+      Place for the page title
+    &lt;/title&gt;&lt;/head&gt;&lt;body&gt;&lt;h1 tal:content="title"&gt;sample title&lt;/h1&gt;&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;Name&lt;/th&gt;&lt;th&gt;Phone&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;&lt;tbody&gt;&lt;tr tal:repeat="person people"&gt;&lt;td tal:content="person/name"&gt;person's name&lt;/td&gt;&lt;td tal:content="person/phone"&gt;person's phone&lt;/td&gt;&lt;/tr&gt;&lt;tr tal:replace=""&gt;&lt;td&gt;sample name&lt;/td&gt;&lt;td&gt;sample phone&lt;/td&gt;&lt;/tr&gt;&lt;tr tal:replace=""&gt;&lt;td&gt;sample name&lt;/td&gt;&lt;td&gt;sample phone&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/body&gt;&lt;/html&gt;
+
+      </code></pre></div><p>    In 
+      <acronym class="acronym">PHP</acronym>, you just have to include the 
+      <acronym class="acronym">PHPTAL</acronym> library, and maybe    configure a few variables to customize the template system.    
+    </p><div class="informalexample"><pre class="programlisting"><code class="php">
+        &lt;?php
+// create a new template object
+$template = new PhpTal\PHPTAL('my_template_file.xhtml');
+
+// the Person class
+class Person {
+    public $name;
+    public $phone;
+
+    function Person($name, $phone) {
+        $this-&gt;name = $name;
+        $this-&gt;phone = $phone;
+    }
+}
+
+// let's create an array of objects for test purpose
+$people = array();
+$people[] = new Person("foo", "01-344-121-021");
+$people[] = new Person("bar", "05-999-165-541");
+$people[] = new Person("baz", "01-389-321-024");
+$people[] = new Person("quz", "05-321-378-654");
+
+// put some data into the template context
+$template-&gt;title = 'The title value';
+$template-&gt;people = $people;
+
+// execute the template
+try {
+    echo $template-&gt;execute();
+}
+catch (Exception $e){
+    echo $e;
+}
+?&gt;
+
+      </code></pre></div><p>    If you execute the 
+      <acronym class="acronym">PHP</acronym> script, you will obtain something similar to    what follows.    
+    </p><div class="informalexample"><pre class="programlisting"><code class="xml">
+        
+        &lt;?xml version="1.0"?&gt;&lt;html&gt;&lt;head&gt;&lt;title&gt;The title value&lt;/title&gt;&lt;/head&gt;&lt;body&gt;&lt;h1&gt;The title value&lt;/h1&gt;&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;Name&lt;/th&gt;&lt;th&gt;Phone&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;foo&lt;/td&gt;&lt;td&gt;01-344-121-021&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;bar&lt;/td&gt;&lt;td&gt;05-999-165-541&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;baz&lt;/td&gt;&lt;td&gt;01-389-321-024&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;quz&lt;/td&gt;&lt;td&gt;05-321-378-654&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/body&gt;&lt;/html&gt;
+
+      </code></pre></div><p>
+      <acronym class="acronym">PHPTAL</acronym> doesn't care much about line breaks and indentation in files it reads and generates. If you want source code of generated 
+      <acronym class="acronym">HTML</acronym> files to be pretty (with line breaks and perfect indentation), then you might need to postprocess it with 
+      <acronym class="acronym">HTML</acronym> Tidy.    
+    </p></div><div class="navfooter"><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="installation.html">Prev</a> </td><td width="20%" align="center"> </td><td width="40%" align="right"> <a accesskey="n" href="attributelanguage.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Installation </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> Template Attribute Language</td></tr></table></div></body></html>

@@ -1,0 +1,126 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>Configuration methods</title><link rel="stylesheet" type="text/css" href="https://phptal.org/nifty.css" /><meta name="generator" content="DocBook XSL Stylesheets V1.79.1" /><link rel="home" href="index.html" title="PHPTAL Manual" /><link rel="up" href="phptal-class.html" title="class PHPTAL" /><link rel="prev" href="phptal-class.html" title="class PHPTAL" /><link rel="next" href="execute.html" title="execute() method" /><link rel="article" href="introduction.html" title="Introduction" /><link rel="article" href="whyusephptal.html" title="Why use PHPTAL" /><link rel="article" href="installation.html" title="Installation" /><link rel="article" href="firstexample.html" title="First example" /><link rel="article" href="attributelanguage.html" title="Template Attribute Language" /><link rel="article" href="phpintegration.html" title="PHP Integration" /><link rel="appendix" href="sysadmin.html" title="Appendix A. Note for system administrators" /><link rel="appendix" href="usefullinks.html" title="Appendix B. Useful links" /><link rel="appendix" href="greetings.html" title="Appendix C. Greetings" /><link rel="subsection" href="configuration.html#set-output-mode" title="setOutputMode( mode)" /><link rel="subsection" href="configuration.html#set-encoding" title="setEncoding( encoding)" /><link rel="subsection" href="configuration.html#config-methods" title="Other methods" /></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><td><a rel="prev" href="phptal-class.html">Prev</a></td><th><div class="breadcrumbs"><span class="breadcrumb-link"><a href="phpintegration.html">
+      <acronym class="acronym">PHP</acronym> Integration
+    </a></span> › <span class="breadcrumb-link"><a href="phptal-class.html">class 
+        <code class="classname">PHPTAL</code>
+      </a></span> › <span class="breadcrumb-node">Configuration methods</span></div></th><td align="right"><a rel="next" href="execute.html">Next</a></td></tr></table></div><div class="section" id="configuration"><div class="titlepage"><div><div><h3 class="title">Configuration methods</h3></div></div></div><p>
+          <acronym class="acronym">PHPTAL</acronym> tries to use best defaults possible and you shouldn't 
+          <span class="emphasis"><em>need</em></span> to change any of the settings.
+        </p><p>All of these are methods of the 
+          <code class="classname">PHPTAL</code> class. 
+          <code class="methodname">set
+            <em class="replaceable"><code>*</code></em>
+          </code> methods return instance of their class, so you can chain them:
+        </p><div class="informalexample"><pre class="programlisting"><code class="php">
+            &lt;?php
+echo $phptal-&gt;setPhpCodeDestination('/tmp/phptal')-&gt;setOutputMode(PHPTAL::XML)-&gt;setTemplate('tpl.zpt')-&gt;execute();
+?&gt;
+          </code></pre></div><p>is the same as:</p><div class="informalexample"><pre class="programlisting"><code class="php">
+            &lt;?php
+$phptal-&gt;setPhpCodeDestination('/tmp/phptal');
+$phptal-&gt;setOutputMode(PHPTAL::XML);
+$phptal-&gt;setTemplate('tpl.zpt');
+echo $phptal-&gt;execute();
+?&gt;
+          </code></pre></div><p>There are other 
+          <code class="methodname">set
+            <em class="replaceable"><code>*</code></em>
+          </code> methods for filters, internationalization, etc. They have been described in other sections of this manual.
+        </p><div class="section" id="set-output-mode"><div class="titlepage"><div><div><h4 class="title">
+            <code class="methodname">setOutputMode(
+              <em class="replaceable"><code>mode</code></em>)
+            </code>
+          </h4></div></div></div><p>Changes what syntax is used when generating elements. Valid modes are:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term">
+                <code class="constant">PHPTAL::XHTML</code>
+              </span></dt><dd><p>In this mode (which is default) PHPTAL will output XHTML in a way that is backwards-compatible with 
+                  <acronym class="acronym">HTML</acronym> browsers.
+                </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>Empty elements will be forced to use self-closing form (
+                      <code class="sgmltag-element">&lt;img/&gt;</code>, 
+                      <code class="sgmltag-element">&lt;link/&gt;</code>), and non-empty elements will always have closing tag.
+                    </p><div class="warning"><h4 class="title">Warning</h4><p>XHTML output mode changes 
+                        <code class="sgmltag-element">&lt;link&gt;</code> element in way that is incompatible with RSS. Use XML output mode to generate RSS feeds or use Atom.
+                      </p></div></li><li class="listitem"><p>Boolean attributes (
+                      <code class="sgmltag-element">checked</code>, 
+                      <code class="sgmltag-element">selected</code>, etc.) will always have value required by the XHTML specification (it simplifies use of 
+                      <code class="sgmltag-element">tal:attributes</code>).
+                    </p></li><li class="listitem"><p>
+                      <code class="code">&lt;![CDATA[</code> blocks will be added or removed automatically and will use special escaping syntax that is safe in both XML and HTML.
+                    </p><div class="tip"><h4 class="title">Tip</h4><p>If you're 
+                        <span class="emphasis"><em>always</em></span> sending XHTML as 
+                        <code class="code">application/xhtml+xml</code>, then it's better to use XML output mode.
+                      </p></div></li></ul></div></dd><dt><span class="term">
+                <code class="constant">PHPTAL::HTML5</code>
+              </span></dt><dd><p>This mode generates documents that have best compatibility with 
+                  <code class="code">text/html</code> parsing in current web browsers, but are not XML.
+                </p><p>PHPTAL will change DOCTYPEs to 
+                  <code class="sgmltag-element">&lt;!DOCTYPE html&gt;</code>. Namespace declarations, name prefixes, explicit 
+                  <code class="sgmltag-element">CDATA</code> sections and other HTML-incompatible constructs will be omitted.
+                </p><div class="note"><h4 class="title">Note</h4><p>
+                        This mode is 
+                    <span class="emphasis"><em>not</em></span> a "tag soup". PHPTAL will close all elements properly and quote attributes when it's necessary. Output will be properly formatted HTML 5, and fully backwards-compatible with current HTML 4 browsers.
+                  
+                  </p></div></dd><dt><span class="term">
+                <code class="constant">PHPTAL::XML</code>
+              </span></dt><dd><p>This mode outputs "pure" XML without compatibility with 
+                  <code class="code">text/html</code> parsing. Use this mode when generating feeds, SVG, MathML, RDF and other XML files.
+                </p></dd></dl></div></div><div class="section" id="set-encoding"><div class="titlepage"><div><div><h4 class="title">
+            <code class="methodname">setEncoding(
+              <em class="replaceable"><code>encoding</code></em>)
+            </code>
+          </h4></div></div></div><p>Specify character encoding used by your templates. The default is 
+            <acronym class="acronym">UTF-8</acronym>.
+                      
+          </p><p>
+            <acronym class="acronym">PHPTAL</acronym> assumes that encoding of all templates and generated documents is the same. BOM (Byte Order Marker) is removed from UTF-8 documents.
+          </p><div class="note"><h4 class="title">Note</h4><p>
+              <acronym class="acronym">PHPTAL</acronym> does not read encoding from XML files and never converts character encodings.
+            </p></div><div class="tip"><h4 class="title">Tip</h4><p>Save yourself trouble and always use 
+              <acronym class="acronym">UTF-8</acronym> for everything.
+            </p></div></div><div class="section" id="config-methods"><div class="titlepage"><div><div><h4 class="title">Other methods</h4></div></div></div><div class="simplesect" id="set-template-repository"><div class="titlepage"><div><div><h5 class="title">
+              <code class="methodname">setTemplateRepository(
+                <em class="replaceable"><code>string_or_array</code></em>)
+              </code>
+            </h5></div></div></div><p>Specifies where to look for templates. If given a string, it adds it to the list of paths searched. If given array, it replaces the list.</p><p>
+                            This doesn't mean all your files need to be in the root
+                            directory, you can use sub folders to organize your template
+                            designer's work.  It's just a shortcut which will allow you to
+                            reference templates without specifying the real path, but
+                            instead their relative path within the repository.
+                    </p><div class="tip"><h4 class="title">Tip</h4><p>It's like 
+                <code class="code">include_path</code>, but for 
+                <acronym class="acronym">PHPTAL</acronym> templates only.
+              </p></div></div><div class="simplesect" id="set-code-destination"><div class="titlepage"><div><div><h5 class="title">
+              <code class="methodname">setPhpCodeDestination(
+                <em class="replaceable"><code>path</code></em>)
+              </code>
+            </h5></div></div></div><p>To tell 
+              <acronym class="acronym">PHPTAL</acronym> where to store its intermediate (temporary) 
+              <acronym class="acronym">PHP</acronym> files. By default it uses directory given by  
+              <acronym class="acronym">PHP</acronym>'s 
+              <code class="function">sys_get_tmp_dir()</code>, which usually is '
+              <code class="filename">/tmp/</code>' directory.
+            </p></div><div class="simplesect" id="set-code-extension"><div class="titlepage"><div><div><h5 class="title">
+              <code class="methodname">setPhpCodeExtension(
+                <em class="replaceable"><code>string</code></em>)
+              </code>
+            </h5></div></div></div><p>What filename extension should be used for intermediate 
+              <acronym class="acronym">PHP</acronym> files. The default is 
+              <code class="filename">php</code> and frankly, there's no reason to change it.
+            </p></div><div class="simplesect" id="set-cache-lifetime"><div class="titlepage"><div><div><h5 class="title">
+              <code class="methodname">setCacheLifetime(
+                <em class="replaceable"><code>num_days</code></em>)
+              </code>
+            </h5></div></div></div><p>Maximum number of days intermediate files and fragments cached with 
+              <code class="sgmltag-element">phptal:cache</code> should be kept.
+            </p><p>The default is 30 days. Cache is scanned and cleaned up only when PHPTAL recompiles a file, and only (on average) once per 30 recompiles. You can simply 
+              <a class="link" href="sysadmin.html" title="Appendix A. Note for system administrators">delete cached files</a> if you don't want to wait until PHPTAL clears them.
+            </p></div><div class="simplesect" id="set-force-reparse"><div class="titlepage"><div><div><h5 class="title">
+              <code class="methodname">setForceReparse(
+                <em class="replaceable"><code>boolean</code></em>)
+              </code>
+            </h5></div></div></div><p>Forces reparsing of all templates all the time. It should be used only for testing and debugging. It's useful if you're testing pre filters or changing code of PHPTAL itself.</p><div class="warning"><h4 class="title">Warning</h4><p>This slows down 
+                <acronym class="acronym">PHPTAL</acronym> very much. Never enable this on production servers!
+              </p></div></div></div></div><div class="navfooter"><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="phptal-class.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="phptal-class.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="execute.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">class 
+        <code class="classname">PHPTAL</code>
+       </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> 
+          <code class="methodname">execute()</code> method
+        </td></tr></table></div></body></html>

@@ -1,0 +1,26 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>phptal:debug</title><link rel="stylesheet" type="text/css" href="https://phptal.org/nifty.css" /><meta name="generator" content="DocBook XSL Stylesheets V1.79.1" /><link rel="home" href="index.html" title="PHPTAL Manual" /><link rel="up" href="phptal-namespace.html" title="PHPTAL namespace" /><link rel="prev" href="phptal-namespace.html" title="PHPTAL namespace" /><link rel="next" href="phptal-cache.html" title="phptal:cache" /><link rel="article" href="introduction.html" title="Introduction" /><link rel="article" href="whyusephptal.html" title="Why use PHPTAL" /><link rel="article" href="installation.html" title="Installation" /><link rel="article" href="firstexample.html" title="First example" /><link rel="article" href="attributelanguage.html" title="Template Attribute Language" /><link rel="article" href="phpintegration.html" title="PHP Integration" /><link rel="appendix" href="sysadmin.html" title="Appendix A. Note for system administrators" /><link rel="appendix" href="usefullinks.html" title="Appendix B. Useful links" /><link rel="appendix" href="greetings.html" title="Appendix C. Greetings" /></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><td><a rel="prev" href="phptal-namespace.html">Prev</a></td><th><div class="breadcrumbs"><span class="breadcrumb-link"><a href="attributelanguage.html">Template Attribute Language</a></span> › <span class="breadcrumb-link"><a href="phptal-namespace.html">
+        <acronym class="acronym">PHPTAL</acronym> namespace
+      </a></span> › <span class="breadcrumb-node">
+          <code class="sgmltag-element">phptal:debug</code>
+        </span></div></th><td align="right"><a rel="next" href="phptal-cache.html">Next</a></td></tr></table></div><div class="section" id="phptal-debug"><div class="titlepage"><div><div><h3 class="title">
+          <code class="sgmltag-element">phptal:debug</code>
+        </h3></div></div></div><p>        This attribute toggles the activation of 
+          <acronym class="acronym">PHPTAL</acronym> debugging for        the content of the tag it is defined in.        
+        </p><div class="note"><h4 class="title">Note</h4><p>To debug errors in macros called across templates you need to add 
+            <code class="sgmltag-element">phptal:debug</code> in template which 
+            <span class="emphasis"><em>defines</em></span> the macro, not the one which uses it.
+          </p></div><p>        The debug mode stores information like filename and source line        number in the template, so exceptions thrown by incorrect path        access will contain more information about where they where        thrown.        </p><div class="informalexample"><pre class="programlisting"><code class="xml">
+            &lt;html&gt;&lt;head&gt;
+    …
+  &lt;/head&gt;&lt;body&gt;&lt;div id="menu"&gt;
+      …
+    &lt;/div&gt;&lt;div id="leftPane" phptal:debug="" tal:comment="this div seems buggy, keep
+      trace of where errors are thrown"&gt;
+          …
+    &lt;/div&gt;&lt;/body&gt;&lt;/html&gt;
+
+          </code></pre></div></div><div class="navfooter"><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="phptal-namespace.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="phptal-namespace.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="phptal-cache.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">
+        <acronym class="acronym">PHPTAL</acronym> namespace
+       </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> 
+          <code class="sgmltag-element">phptal:cache</code>
+        </td></tr></table></div></body></html>

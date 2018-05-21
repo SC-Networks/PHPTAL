@@ -1,0 +1,22 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>structure</title><link rel="stylesheet" type="text/css" href="https://phptal.org/nifty.css" /><meta name="generator" content="DocBook XSL Stylesheets V1.79.1" /><link rel="home" href="index.html" title="PHPTAL Manual" /><link rel="up" href="phptales.html" title="PHPTALES" /><link rel="prev" href="tales-default.html" title="default" /><link rel="next" href="expression-chains.html" title="Expression chains" /><link rel="article" href="introduction.html" title="Introduction" /><link rel="article" href="whyusephptal.html" title="Why use PHPTAL" /><link rel="article" href="installation.html" title="Installation" /><link rel="article" href="firstexample.html" title="First example" /><link rel="article" href="attributelanguage.html" title="Template Attribute Language" /><link rel="article" href="phpintegration.html" title="PHP Integration" /><link rel="appendix" href="sysadmin.html" title="Appendix A. Note for system administrators" /><link rel="appendix" href="usefullinks.html" title="Appendix B. Useful links" /><link rel="appendix" href="greetings.html" title="Appendix C. Greetings" /></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><td><a rel="prev" href="tales-default.html">Prev</a></td><th><div class="breadcrumbs"><span class="breadcrumb-link"><a href="attributelanguage.html">Template Attribute Language</a></span> › <span class="breadcrumb-link"><a href="phptales.html">
+        <acronym class="acronym">PHPTALES</acronym>
+      </a></span> › <span class="breadcrumb-node">
+          <code class="code">structure</code>
+        </span></div></th><td align="right"><a rel="next" href="expression-chains.html">Next</a></td></tr></table></div><div class="section" id="tales-structure"><div class="titlepage"><div><div><h3 class="title">
+          <code class="code">structure</code>
+        </h3></div></div></div><p>        This is not an expression modifier but a keyword.        </p><p>        While printing variables inside 
+          <acronym class="acronym">PHPTAL</acronym> templates, you will        have noticed that 
+          <acronym class="acronym">PHPTAL</acronym> encodes each variable to ensure the        validity of the output document.        
+        </p><p>        Sometimes, you may use 
+          <acronym class="acronym">HTML</acronym>/
+          <acronym class="acronym">XML</acronym> variables which must be echoed as is.        
+        </p><div class="informalexample"><pre class="programlisting"><code class="xml">
+            &lt;h1 tal:content="structure document/title"/&gt;&lt;span tal:replace="structure document/content"/&gt;
+
+          </code></pre></div><p>        In above examples, we assume that 
+          <code class="code">$document-&gt;title</code> and        
+          <code class="code">$document-&gt;content</code> are variables containing preformatted 
+          <acronym class="acronym">HTML</acronym>        which must be echoed as is.        
+        </p></div><div class="navfooter"><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="tales-default.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="phptales.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="expression-chains.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">
+          <code class="code">default</code>
+         </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> Expression chains</td></tr></table></div></body></html>

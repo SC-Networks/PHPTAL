@@ -1,0 +1,120 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>PHPTAL Manual</title><link rel="stylesheet" type="text/css" href="https://phptal.org/nifty.css" /><meta name="generator" content="DocBook XSL Stylesheets V1.79.1" /><link rel="home" href="index.html" title="PHPTAL Manual" /><link rel="next" href="introduction.html" title="Introduction" /><link rel="article" href="introduction.html" title="Introduction" /><link rel="article" href="whyusephptal.html" title="Why use PHPTAL" /><link rel="article" href="installation.html" title="Installation" /><link rel="article" href="firstexample.html" title="First example" /><link rel="article" href="attributelanguage.html" title="Template Attribute Language" /><link rel="article" href="phpintegration.html" title="PHP Integration" /><link rel="appendix" href="sysadmin.html" title="Appendix A. Note for system administrators" /><link rel="appendix" href="usefullinks.html" title="Appendix B. Useful links" /><link rel="appendix" href="greetings.html" title="Appendix C. Greetings" /></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><td></td><th></th><td align="right"><a rel="next" href="introduction.html">Next</a></td></tr></table></div><div xml:lang="en" class="book" id="idm45541421987184" lang="en"><div class="titlepage"><div><div><h1 class="title">PHPTAL Manual</h1></div><div><h2 class="subtitle">
+      <acronym class="acronym">PHP</acronym> Template Attribute Language
+    </h2></div></div><hr /></div><div class="toc"><p><strong>Table of Contents</strong></p><ol class="toc"><li><span class="article"><a href="introduction.html">Introduction</a></span></li><li><span class="article"><a href="whyusephptal.html">Why use 
+      <acronym class="acronym">PHPTAL</acronym>
+    </a></span></li><li><span class="article"><a href="installation.html">Installation</a></span></li><li><span class="article"><a href="firstexample.html">First example</a></span></li><li><span class="article"><a href="attributelanguage.html">Template Attribute Language</a></span><ol><li><span class="section"><a href="variableRefs.html">Referencing variables with ${}</a></span></li><li><span class="section"><a href="attributes.html">Attribute priority</a></span></li><li><span class="section"><a href="tal-namespace.html">
+        <acronym class="acronym">TAL</acronym> namespace
+      </a></span><ol><li><span class="section"><a href="tal-define.html">
+          <code class="sgmltag-element">tal:define</code>
+        </a></span></li><li><span class="section"><a href="tal-condition.html">
+          <code class="sgmltag-element">tal:condition</code>
+        </a></span></li><li><span class="section"><a href="tal-repeat.html">
+          <code class="sgmltag-element">tal:repeat</code>
+        </a></span></li><li><span class="section"><a href="tal-omit-tag.html">
+          <code class="sgmltag-element">tal:omit-tag</code>
+        </a></span></li><li><span class="section"><a href="tal-replace.html">
+          <code class="sgmltag-element">tal:replace</code>
+        </a></span></li><li><span class="section"><a href="tal-content.html">
+          <code class="sgmltag-element">tal:content</code>
+        </a></span></li><li><span class="section"><a href="tal-attributes.html">
+          <code class="sgmltag-element">tal:attributes</code>
+        </a></span><ol><li><span class="section"><a href="tal-attributes.html#optional-attrs">Optional attributes</a></span></li></ol></li><li><span class="section"><a href="tal-on-error.html">
+          <code class="sgmltag-element">tal:on-error</code>
+        </a></span></li></ol></li><li><span class="section"><a href="metal.html">
+        <acronym class="acronym">METAL</acronym> namespace
+      </a></span><ol><li><span class="section"><a href="metal-define-macro.html">
+          <code class="sgmltag-element">metal:define-macro</code>
+        </a></span></li><li><span class="section"><a href="metal-use-macro.html">
+          <code class="sgmltag-element">metal:use-macro</code>
+        </a></span></li><li><span class="section"><a href="metal-define-slot.html">
+          <code class="sgmltag-element">metal:define-slot</code>
+        </a></span></li><li><span class="section"><a href="metal-fill-slot.html">
+          <code class="sgmltag-element">metal:fill-slot</code>
+        </a></span></li></ol></li><li><span class="section"><a href="i18n.html">
+        <acronym class="acronym">I18N</acronym> namespace
+      </a></span><ol><li><span class="section"><a href="i18n-translate.html">
+          <code class="sgmltag-element">i18n:translate</code>
+        </a></span></li><li><span class="section"><a href="i18n-attributes.html">
+          <code class="sgmltag-element">i18n:attributes</code>
+        </a></span></li><li><span class="section"><a href="i18n-name.html">
+          <code class="sgmltag-element">i18n:name</code>
+        </a></span></li><li><span class="section"><a href="xhtml-in-translations.html">
+          <acronym class="acronym">XHTML</acronym> in translations
+        </a></span></li></ol></li><li><span class="section"><a href="phptal-namespace.html">
+        <acronym class="acronym">PHPTAL</acronym> namespace
+      </a></span><ol><li><span class="section"><a href="phptal-debug.html">
+          <code class="sgmltag-element">phptal:debug</code>
+        </a></span></li><li><span class="section"><a href="phptal-cache.html">
+          <code class="sgmltag-element">phptal:cache</code>
+        </a></span><ol><li><span class="section"><a href="phptal-cache.html#cache-refresh">Instant refreshing</a></span></li><li><span class="section"><a href="phptal-cache.html#cache-limits">Limitations:</a></span></li></ol></li><li><span class="section"><a href="phptal-tales.html">
+          <code class="sgmltag-element">phptal:tales</code>
+        </a></span></li></ol></li><li><span class="section"><a href="phptal-blocks.html">
+        <code class="sgmltag-element">tal:block</code>
+      </a></span></li><li><span class="section"><a href="phptales.html">
+        <acronym class="acronym">PHPTALES</acronym>
+      </a></span><ol><li><span class="section"><a href="tales-path.html">path:</a></span></li><li><span class="section"><a href="conditional.html">Alternative 
+          <acronym class="acronym">PHP</acronym> operator syntax
+        </a></span></li><li><span class="section"><a href="tales-string.html">
+          <code class="code">string:</code>
+        </a></span></li><li><span class="section"><a href="tales-php.html">
+          <code class="code">php:</code>
+        </a></span></li><li><span class="section"><a href="tales-not.html">
+          <code class="code">not:</code>
+        </a></span></li><li><span class="section"><a href="tales-exists.html">
+          <code class="code">exists:</code>
+        </a></span></li><li><span class="section"><a href="tales-true.html">
+          <code class="code">true:</code>
+        </a></span></li><li><span class="section"><a href="tales-default.html">
+          <code class="code">default</code>
+        </a></span></li><li><span class="section"><a href="tales-structure.html">
+          <code class="code">structure</code>
+        </a></span></li><li><span class="section"><a href="expression-chains.html">Expression chains</a></span></li></ol></li></ol></li><li><span class="article"><a href="phpintegration.html">
+      <acronym class="acronym">PHP</acronym> Integration
+    </a></span><ol><li><span class="section"><a href="phptal-class.html">class 
+        <code class="classname">PHPTAL</code>
+      </a></span><ol><li><span class="section"><a href="configuration.html">Configuration methods</a></span><ol><li><span class="section"><a href="configuration.html#set-output-mode">
+            <code class="methodname">setOutputMode(
+              <em class="replaceable"><code>mode</code></em>)
+            </code>
+          </a></span></li><li><span class="section"><a href="configuration.html#set-encoding">
+            <code class="methodname">setEncoding(
+              <em class="replaceable"><code>encoding</code></em>)
+            </code>
+          </a></span></li><li><span class="section"><a href="configuration.html#config-methods">Other methods</a></span></li></ol></li><li><span class="section"><a href="execute.html">
+          <code class="methodname">execute()</code> method
+        </a></span></li><li><span class="section"><a href="echo-execute.html">
+          <code class="methodname">echoExecute()</code> method
+        </a></span></li><li><span class="section"><a href="add-prefilter.html">
+          <code class="methodname">addPreFilter()</code> method
+        </a></span></li></ol></li><li><span class="section"><a href="prefilters.html">class 
+        <code class="classname">PHPTAL_PreFilter</code>
+      </a></span></li><li><span class="section"><a href="phptal-dom.html">PHPTAL DOM</a></span></li><li><span class="section"><a href="filter-interface.html">interface 
+        <code class="classname">PHPTAL_Filter</code>
+      </a></span></li><li><span class="section"><a href="trigger-interface.html">interface 
+        <code class="classname">PHPTAL_Trigger</code>
+      </a></span></li><li><span class="section"><a href="translation-interface.html">interface 
+        <code class="classname">PHPTAL_TranslationService</code>
+      </a></span><ol><li><span class="section"><a href="i18n-setlanguage.html">method 
+          <code class="methodname">setLanguage(
+            <em class="replaceable"><code>…</code></em>)
+          </code>
+        </a></span></li><li><span class="section"><a href="i18n-usedomain.html">method 
+          <code class="methodname">useDomain(
+            <em class="replaceable"><code>$domain</code></em>)
+          </code>
+        </a></span></li><li><span class="section"><a href="i18n-setvar.html">method 
+          <code class="methodname">setVar(
+            <em class="replaceable"><code>$key</code></em>,
+            <em class="replaceable"><code>$value</code></em>)
+          </code>
+        </a></span></li><li><span class="section"><a href="i18n-translatekey.html">method 
+          <code class="methodname">translate(
+            <em class="replaceable"><code>$key</code></em>)
+          </code>
+        </a></span></li><li><span class="section"><a href="i18n-setencoding.html">method 
+          <code class="methodname">setEncoding(
+            <em class="replaceable"><code>$encoding</code></em>)
+          </code>
+        </a></span></li></ol></li><li><span class="section"><a href="gettext.html">Working with gettext</a></span><ol><li><span class="section"><a href="gettext.html#i18n-directory">Creating the translation directory structure</a></span></li><li><span class="section"><a href="gettext.html#po-files">Portable Object files</a></span></li><li><span class="section"><a href="gettext.html#i18n-domains">Translation Domain</a></span></li><li><span class="section"><a href="gettext.html#php-in-phptal">Using Translator in 
+          <acronym class="acronym">PHP</acronym>
+        </a></span></li><li><span class="section"><a href="gettext.html#var-interpolation">Variable interpolation</a></span></li></ol></li><li><span class="section"><a href="custom-modifiers.html">Creating custom expression modifiers</a></span></li></ol></li><li><span class="appendix"><a href="sysadmin.html">A. Note for system administrators</a></span></li><li><span class="appendix"><a href="usefullinks.html">B. Useful links</a></span></li><li><span class="appendix"><a href="greetings.html">C. Greetings</a></span></li></ol></div></div><div class="navfooter"><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"> </td><td width="20%" align="center"> </td><td width="40%" align="right"> <a accesskey="n" href="introduction.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top"> </td><td width="20%" align="center"> </td><td width="40%" align="right" valign="top"> Introduction</td></tr></table></div></body></html>
