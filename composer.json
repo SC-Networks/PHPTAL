@@ -59,11 +59,12 @@
         "bin-dir": "bin"
     },
     "scripts": {
-        "tests": "bin/phpunit -c phpunit.xml",
-        "tal-lint": "tools/phptal_lint -e html tests/input/phptal*.html"
+        "tests": "bin/phpunit -c phpunit.xml"
     },
     "scripts-descriptions": {
-        "tests": "Run the project's unittest",
-        "tal-lint": "Run the Tal Linter on html-test files"
+        "tests": "Run the project's unittest"
+    },
+    "suggest": {
+        "scn/phptal-lint": "Linter for phptal template files"
     }
 }
