@@ -1,0 +1,26 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>tal:omit-tag</title><link rel="stylesheet" type="text/css" href="https://phptal.org/nifty.css" /><meta name="generator" content="DocBook XSL Stylesheets V1.79.1" /><link rel="home" href="index.html" title="PHPTAL Manual" /><link rel="up" href="tal-namespace.html" title="TAL namespace" /><link rel="prev" href="tal-repeat.html" title="tal:repeat" /><link rel="next" href="tal-replace.html" title="tal:replace" /><link rel="article" href="introduction.html" title="Introduction" /><link rel="article" href="whyusephptal.html" title="Why use PHPTAL" /><link rel="article" href="installation.html" title="Installation" /><link rel="article" href="firstexample.html" title="First example" /><link rel="article" href="attributelanguage.html" title="Template Attribute Language" /><link rel="article" href="phpintegration.html" title="PHP Integration" /><link rel="appendix" href="sysadmin.html" title="Appendix A. Note for system administrators" /><link rel="appendix" href="usefullinks.html" title="Appendix B. Useful links" /><link rel="appendix" href="greetings.html" title="Appendix C. Greetings" /></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><td><a rel="prev" href="tal-repeat.html">Prev</a></td><th><div class="breadcrumbs"><span class="breadcrumb-link"><a href="attributelanguage.html">Template Attribute Language</a></span> › <span class="breadcrumb-link"><a href="tal-namespace.html">
+        <acronym class="acronym">TAL</acronym> namespace
+      </a></span> › <span class="breadcrumb-node">
+          <code class="sgmltag-element">tal:omit-tag</code>
+        </span></div></th><td align="right"><a rel="next" href="tal-replace.html">Next</a></td></tr></table></div><div class="section" id="tal-omit-tag"><div class="titlepage"><div><div><h3 class="title">
+          <code class="sgmltag-element">tal:omit-tag</code>
+        </h3></div></div></div><p>        This attribute asks the 
+          <acronym class="acronym">PHPTAL</acronym> parser to ignore the elements's open and        close tag, its content will still be evaluated.        
+        </p><div class="informalexample"><pre class="programlisting"><code class="xml">
+            &lt;span tal:omit-tag="condition"&gt;
+  if the condition is true, then only this text will appear and span open and close will be removed
+&lt;/span&gt;
+
+          </code></pre></div><p>        Will produce:        </p><div class="informalexample"><pre class="programlisting"><code>
+            only this text will appear, span open and close will be removed
+
+          </code></pre></div><p>        This attribute is useful when you want to create element optionally, e.g. hide a link if certain condition is met.        </p><p>If you want element that is never output, you can use 
+          <code class="sgmltag-element">tal:block</code>
+        </p><div class="informalexample"><pre class="programlisting"><code class="xml">
+            &lt;tal:block tal:repeat="x php:range(1,10)"&gt;only this text will appear, ten times.&lt;/tal:block&gt;
+
+          </code></pre></div></div><div class="navfooter"><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="tal-repeat.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="tal-namespace.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="tal-replace.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">
+          <code class="sgmltag-element">tal:repeat</code>
+         </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> 
+          <code class="sgmltag-element">tal:replace</code>
+        </td></tr></table></div></body></html>

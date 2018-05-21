@@ -1,0 +1,28 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>tal:condition</title><link rel="stylesheet" type="text/css" href="https://phptal.org/nifty.css" /><meta name="generator" content="DocBook XSL Stylesheets V1.79.1" /><link rel="home" href="index.html" title="PHPTAL Manual" /><link rel="up" href="tal-namespace.html" title="TAL namespace" /><link rel="prev" href="tal-define.html" title="tal:define" /><link rel="next" href="tal-repeat.html" title="tal:repeat" /><link rel="article" href="introduction.html" title="Introduction" /><link rel="article" href="whyusephptal.html" title="Why use PHPTAL" /><link rel="article" href="installation.html" title="Installation" /><link rel="article" href="firstexample.html" title="First example" /><link rel="article" href="attributelanguage.html" title="Template Attribute Language" /><link rel="article" href="phpintegration.html" title="PHP Integration" /><link rel="appendix" href="sysadmin.html" title="Appendix A. Note for system administrators" /><link rel="appendix" href="usefullinks.html" title="Appendix B. Useful links" /><link rel="appendix" href="greetings.html" title="Appendix C. Greetings" /></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><td><a rel="prev" href="tal-define.html">Prev</a></td><th><div class="breadcrumbs"><span class="breadcrumb-link"><a href="attributelanguage.html">Template Attribute Language</a></span> › <span class="breadcrumb-link"><a href="tal-namespace.html">
+        <acronym class="acronym">TAL</acronym> namespace
+      </a></span> › <span class="breadcrumb-node">
+          <code class="sgmltag-element">tal:condition</code>
+        </span></div></th><td align="right"><a rel="next" href="tal-repeat.html">Next</a></td></tr></table></div><div class="section" id="tal-condition"><div class="titlepage"><div><div><h3 class="title">
+          <code class="sgmltag-element">tal:condition</code>
+        </h3></div></div></div><p>        The element and its content will be shown only if the condition        is evaluated to true.        </p><div class="informalexample"><pre class="programlisting"><code class="xml">
+            &lt;p tal:condition="identified"&gt; Welcome member … &lt;/p&gt;
+
+          </code></pre></div><div class="informalexample"><pre class="programlisting"><code class="xml">
+            &lt;p tal:condition="not: identified"&gt;
+  Please login before accessing this page
+&lt;/p&gt;
+
+          </code></pre></div><p>        If the 
+          <acronym class="acronym">PHP</acronym> backend does not provide your templates with enough        methods, you will often have to fall back to 
+          <acronym class="acronym">PHP</acronym> for special        conditions:        
+        </p><div class="informalexample"><pre class="programlisting"><code class="xml">
+            &lt;span tal:comment="show only if more than five items in the cart" tal:condition="php: cart.countItems() GT 5"&gt;…&lt;/span&gt;
+
+          </code></pre></div><p>        This may put too much logic inside the template and it is        sometimes preferable to provide boolean attributes or accessible        methods to the template:        </p><div class="informalexample"><pre class="programlisting"><code class="xml">
+            &lt;span tal:condition="cart/hasEnoughItems"&gt;…&lt;/span&gt;
+
+          </code></pre></div></div><div class="navfooter"><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="tal-define.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="tal-namespace.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="tal-repeat.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">
+          <code class="sgmltag-element">tal:define</code>
+         </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> 
+          <code class="sgmltag-element">tal:repeat</code>
+        </td></tr></table></div></body></html>

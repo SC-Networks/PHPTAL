@@ -1,0 +1,51 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>phptal:cache</title><link rel="stylesheet" type="text/css" href="https://phptal.org/nifty.css" /><meta name="generator" content="DocBook XSL Stylesheets V1.79.1" /><link rel="home" href="index.html" title="PHPTAL Manual" /><link rel="up" href="phptal-namespace.html" title="PHPTAL namespace" /><link rel="prev" href="phptal-debug.html" title="phptal:debug" /><link rel="next" href="phptal-tales.html" title="phptal:tales" /><link rel="article" href="introduction.html" title="Introduction" /><link rel="article" href="whyusephptal.html" title="Why use PHPTAL" /><link rel="article" href="installation.html" title="Installation" /><link rel="article" href="firstexample.html" title="First example" /><link rel="article" href="attributelanguage.html" title="Template Attribute Language" /><link rel="article" href="phpintegration.html" title="PHP Integration" /><link rel="appendix" href="sysadmin.html" title="Appendix A. Note for system administrators" /><link rel="appendix" href="usefullinks.html" title="Appendix B. Useful links" /><link rel="appendix" href="greetings.html" title="Appendix C. Greetings" /><link rel="subsection" href="phptal-cache.html#cache-refresh" title="Instant refreshing" /><link rel="subsection" href="phptal-cache.html#cache-limits" title="Limitations:" /></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><td><a rel="prev" href="phptal-debug.html">Prev</a></td><th><div class="breadcrumbs"><span class="breadcrumb-link"><a href="attributelanguage.html">Template Attribute Language</a></span> › <span class="breadcrumb-link"><a href="phptal-namespace.html">
+        <acronym class="acronym">PHPTAL</acronym> namespace
+      </a></span> › <span class="breadcrumb-node">
+          <code class="sgmltag-element">phptal:cache</code>
+        </span></div></th><td align="right"><a rel="next" href="phptal-tales.html">Next</a></td></tr></table></div><div class="section" id="phptal-cache"><div class="titlepage"><div><div><h3 class="title">
+          <code class="sgmltag-element">phptal:cache</code>
+        </h3></div></div></div><p>              This attribute causes output of entire element (including its tag) to be cached on disk and not re-evaluated until cache expires.              </p><div class="note"><h4 class="title">Note</h4><p>Use of cache is beneficial only for elements that use very complex expressions, macros from external files or 
+            <acronym class="acronym">PHP</acronym> expressions/objects that access the database. Otherwise uncached templates will be just as fast.
+          </p></div><p>Content of this attribute is a duration (how long element should be kept in cache) written as number with '
+          <code class="constant">d</code>', '
+          <code class="constant">h</code>', '
+          <code class="constant">m</code>' or '
+          <code class="constant">s</code>' suffix.            
+        </p><div class="informalexample"><pre class="programlisting"><code class="xml">
+            &lt;div class="footer" phptal:cache="3h"&gt;…&lt;/div&gt;
+          </code></pre></div><p>
+          <code class="sgmltag-element">&lt;div&gt;</code> will be evaluated at most once per 3 hours.
+        </p><p>Duration can be followed by optional "
+          <code class="varname">per</code>" parameter that defines how cache should be shared. By default cache is shared between all pages that use that template.                  You can add "
+          <code class="varname">per url</code>" to have separate copy of given element for every 
+          <acronym class="acronym">URL</acronym>.
+
+        </p><div class="informalexample"><pre class="programlisting"><code class="xml">
+            &lt;ol id="breadcrumbs" phptal:cache="1d per url"&gt;…&lt;/ol&gt;
+          </code></pre></div><p>
+          <code class="sgmltag-element">&lt;ol&gt;</code> will be cached for one day, separately for each page.
+        </p><p>                  You can add "
+          <code class="varname">per expression</code>" to have different cache copy for every different value of an expression (which MUST evaluate to a string).                  
+          </p><div class="note"><h4 class="title">Note</h4><p>Expression cannot refer to variables defined using 
+              <code class="sgmltag-element">tal:define</code> on the same element.
+            </p></div><p>
+        </p><div class="informalexample"><pre class="programlisting"><code class="xml">
+            &lt;ul id="user-info" phptal:cache="25m per object/id"&gt;…&lt;/ul&gt;
+          </code></pre></div><p>
+          <code class="sgmltag-element">&lt;ul&gt;</code> will be cached for 25 minutes, separately for each object ID.
+        </p><div class="warning"><h4 class="title">Warning</h4><p>Be careful when caching users' private data. Cache will be shared with everyone unless you make it user-specific with 
+            <code class="code">per user/id</code> or similar expression.
+          </p></div><div class="section" id="cache-refresh"><div class="titlepage"><div><div><h4 class="title">Instant refreshing</h4></div></div></div><p>Instead of clearing cache, it might be a better idea to put version or last modification timestamp in the 
+            <code class="varname">per</code> parameter. This will cause cached template to be refreshed as soon as version/timestamp changes and no special cache clearing will be necessary.
+          </p><div class="informalexample"><pre class="programlisting"><code class="xml">
+              &lt;div phptal:cache="100d per php:news.id . news.last_modified_date"&gt;…&lt;/div&gt;
+            </code></pre></div></div><div class="section" id="cache-limits"><div class="titlepage"><div><div><h4 class="title">Limitations:</h4></div></div></div><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
+                <code class="sgmltag-element">phptal:cache</code> blocks can be nested, but outmost block will cache other blocks regardless of their freshness. 
+              </p></li><li class="listitem"><p>You cannot use 
+                <code class="sgmltag-element">metal:fill-slot</code> inside elements with 
+                <code class="sgmltag-element">phptal:cache</code>.
+              </p></li></ul></div></div></div><div class="navfooter"><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="phptal-debug.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="phptal-namespace.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="phptal-tales.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">
+          <code class="sgmltag-element">phptal:debug</code>
+         </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> 
+          <code class="sgmltag-element">phptal:tales</code>
+        </td></tr></table></div></body></html>

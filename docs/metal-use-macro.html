@@ -1,0 +1,40 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>metal:use-macro</title><link rel="stylesheet" type="text/css" href="https://phptal.org/nifty.css" /><meta name="generator" content="DocBook XSL Stylesheets V1.79.1" /><link rel="home" href="index.html" title="PHPTAL Manual" /><link rel="up" href="metal.html" title="METAL namespace" /><link rel="prev" href="metal-define-macro.html" title="metal:define-macro" /><link rel="next" href="metal-define-slot.html" title="metal:define-slot" /><link rel="article" href="introduction.html" title="Introduction" /><link rel="article" href="whyusephptal.html" title="Why use PHPTAL" /><link rel="article" href="installation.html" title="Installation" /><link rel="article" href="firstexample.html" title="First example" /><link rel="article" href="attributelanguage.html" title="Template Attribute Language" /><link rel="article" href="phpintegration.html" title="PHP Integration" /><link rel="appendix" href="sysadmin.html" title="Appendix A. Note for system administrators" /><link rel="appendix" href="usefullinks.html" title="Appendix B. Useful links" /><link rel="appendix" href="greetings.html" title="Appendix C. Greetings" /></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><td><a rel="prev" href="metal-define-macro.html">Prev</a></td><th><div class="breadcrumbs"><span class="breadcrumb-link"><a href="attributelanguage.html">Template Attribute Language</a></span> › <span class="breadcrumb-link"><a href="metal.html">
+        <acronym class="acronym">METAL</acronym> namespace
+      </a></span> › <span class="breadcrumb-node">
+          <code class="sgmltag-element">metal:use-macro</code>
+        </span></div></th><td align="right"><a rel="next" href="metal-define-slot.html">Next</a></td></tr></table></div><div class="section" id="metal-use-macro"><div class="titlepage"><div><div><h3 class="title">
+          <code class="sgmltag-element">metal:use-macro</code>
+        </h3></div></div></div><p>        This attribute calls a macro and includes its result in the        current template.        </p><div class="informalexample"><pre class="programlisting"><code class="xml">
+            &lt;span tal:comment="main_menu template requires 'mdate' variable" tal:define="mdate page/last_modified" metal:use-macro="main_menu" /&gt;
+
+          </code></pre></div><p>        You can refer to external macros defined in other templates by        specifying the template source file.        </p><div class="informalexample"><pre class="programlisting"><code class="xml">
+            &lt;span metal:use-macro="site_macros.xhtml/main_menu"/&gt;
+
+          </code></pre></div><p>        It is interesting to note that you can also use the 
+          <acronym class="acronym">PHPTAL</acronym> inline        replacement feature inside the 
+          <code class="sgmltag-element">use-macro</code> attribute value:        
+        </p><div class="informalexample"><pre class="programlisting"><code class="xml">
+            &lt;span metal:use-macro="${design}/site_macros.xhtml/main_menu"/&gt;
+
+          </code></pre></div><p>Macro can call itself. This way you can output arrays recursively:</p><div class="informalexample"><pre class="programlisting"><code class="xml">
+            &lt;ul metal:define-macro="show-list"&gt;&lt;li tal:repeat="item list"&gt;&lt;tal:block tal:condition="php:is_array(item)" tal:define="list item" metal:use-macro="show-list" /&gt;&lt;tal:block tal:condition="php:!is_array(item)" tal:content="item" /&gt;&lt;/li&gt;&lt;/ul&gt;
+
+          </code></pre></div><div class="simplesect" id="macro-callback"><div class="titlepage"><div><div><h4 class="title">Callbacks</h4></div></div></div><p>Since you can use variables in macro names, you can create macros that call back other macros. This is useful in cases where 
+            <a class="link" href="metal-define-slot.html" title="metal:define-slot">slots</a> are not enough.
+          </p><div class="informalexample"><pre class="programlisting"><code class="xml">
+              
+              &lt;!-- this code uses "macroname" variable as name of macro to call back --&gt;
+              &lt;ul metal:define-macro="macro-with-callback"&gt;
+                &lt;li tal:repeat="item list"&gt;
+                  &lt;tal:block metal:use-macro="${macroname}"/&gt;
+                &lt;/li&gt;
+              &lt;/ul&gt;
+              &lt;!-- define callback --&gt;
+              &lt;div metal:define-macro="my-callback"&gt;    this will be called every time
+&lt;/div&gt;
+              &lt;!-- use it with the first macro --&gt;&lt;div tal:define="macroname 'my-callback'" metal:use-macro="macro-with-callback"/&gt;
+            </code></pre></div></div></div><div class="navfooter"><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="metal-define-macro.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="metal.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="metal-define-slot.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">
+          <code class="sgmltag-element">metal:define-macro</code>
+         </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> 
+          <code class="sgmltag-element">metal:define-slot</code>
+        </td></tr></table></div></body></html>

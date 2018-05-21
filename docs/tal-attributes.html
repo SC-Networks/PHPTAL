@@ -1,0 +1,71 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>tal:attributes</title><link rel="stylesheet" type="text/css" href="https://phptal.org/nifty.css" /><meta name="generator" content="DocBook XSL Stylesheets V1.79.1" /><link rel="home" href="index.html" title="PHPTAL Manual" /><link rel="up" href="tal-namespace.html" title="TAL namespace" /><link rel="prev" href="tal-content.html" title="tal:content" /><link rel="next" href="tal-on-error.html" title="tal:on-error" /><link rel="article" href="introduction.html" title="Introduction" /><link rel="article" href="whyusephptal.html" title="Why use PHPTAL" /><link rel="article" href="installation.html" title="Installation" /><link rel="article" href="firstexample.html" title="First example" /><link rel="article" href="attributelanguage.html" title="Template Attribute Language" /><link rel="article" href="phpintegration.html" title="PHP Integration" /><link rel="appendix" href="sysadmin.html" title="Appendix A. Note for system administrators" /><link rel="appendix" href="usefullinks.html" title="Appendix B. Useful links" /><link rel="appendix" href="greetings.html" title="Appendix C. Greetings" /><link rel="subsection" href="tal-attributes.html#optional-attrs" title="Optional attributes" /></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><td><a rel="prev" href="tal-content.html">Prev</a></td><th><div class="breadcrumbs"><span class="breadcrumb-link"><a href="attributelanguage.html">Template Attribute Language</a></span> › <span class="breadcrumb-link"><a href="tal-namespace.html">
+        <acronym class="acronym">TAL</acronym> namespace
+      </a></span> › <span class="breadcrumb-node">
+          <code class="sgmltag-element">tal:attributes</code>
+        </span></div></th><td align="right"><a rel="next" href="tal-on-error.html">Next</a></td></tr></table></div><div class="section" id="tal-attributes"><div class="titlepage"><div><div><h3 class="title">
+          <code class="sgmltag-element">tal:attributes</code>
+        </h3></div></div></div><p>        This attribute changes tag attribute(s) value(s).        </p><div class="informalexample"><pre class="programlisting"><code class="xml">
+            &lt;a href="http://www.foo.com" title="some foo link" tal:attributes="href somelink/href; title somelink/title" tal:content="somelink/text"&gt;sample link&lt;/a&gt;
+
+          </code></pre></div><p>        With a '
+          <code class="varname">somelink</code>' having:        
+        </p><div class="informalexample"><pre class="programlisting"><code class="php">
+            $somelink-&gt;href = "http://www.google.com";
+$somelink-&gt;title = "google search engine";
+$somelink-&gt;text = "the google search engine";
+
+          </code></pre></div><p>        Will produce:        </p><div class="informalexample"><pre class="programlisting"><code class="xml">
+            &lt;a href="http://www.google.com" title="google search engine"&gt;the google search engine&lt;/a&gt;
+
+          </code></pre></div><p>Semicolon (
+          <code class="literal">;</code>) separates attributes. If you want semicolon to be output in an attribute, you have to double it (
+          <code class="literal">;;</code>).
+        </p><p>        A somewhat complicated example involving 
+          <code class="sgmltag-element">tal:repeat</code>:        
+        </p><div class="informalexample"><pre class="programlisting"><code class="xml">
+            &lt;tr tal:repeat="ranking playerRankings" tal:attributes="class php: repeat.ranking.odd ? 'odd' : NULL"&gt;
+    …
+&lt;/tr&gt;
+
+          </code></pre></div><p>        The 
+          <code class="code">php:</code> modifier will be explained later, basically if the line        is odd then 
+          <code class="sgmltag-element">tr</code> will have a 
+          <code class="sgmltag-element">class</code> attribute with "odd" as value,        otherwise, no class will be set.        
+        </p><p>        The "
+          <code class="code">condition ? then : else</code>" is a regular 
+          <acronym class="acronym">PHP</acronym> expression which        must be used with care but has proven to be useful on more        than one occasion.        
+        </p><p>        A better way to achieve the same result would be to ask your 
+          <acronym class="acronym">PHP</acronym>        coder to create a custom modifier for your needs (see 
+          <acronym class="acronym">PHP</acronym>        integration / custom modifiers) which would be used as follows:        
+        </p><div class="informalexample"><pre class="programlisting"><code class="xml">
+            &lt;tr tal:repeat="ranking playerRankings" tal:attributes="class css-odd:repeat/ranking/odd"&gt;
+  …
+&lt;/tr&gt;
+
+          </code></pre></div><p>        The modifier would return "odd" if 
+          <code class="varname">repeat/ranking/odd</code> is true,        
+          <code class="constant">NULL</code> otherwise.        
+        </p><div class="section" id="optional-attrs"><div class="titlepage"><div><div><h4 class="title">Optional attributes</h4></div></div></div><p>If you use 
+            <acronym class="acronym">TALES</acronym> alternatives in 
+            <code class="sgmltag-element">tal:attributes</code> and use 
+            <code class="varname">nothing</code> (or 
+            <code class="varname">NULL</code> in 
+            <acronym class="acronym">PHP</acronym>) as last alternative,            attribute won't be added at all if there's no value for it (this avoids adding empty attributes):
+          </p><div class="informalexample"><pre class="programlisting"><code class="xml">
+              … tal:attributes="title object/tooltip | nothing"&gt; 
+            </code></pre></div><p>
+            <acronym class="acronym">XHTML</acronym> attributes like 
+            <code class="sgmltag-element">selected</code>, 
+            <code class="sgmltag-element">checked</code>, etc. are properly handled automatically.
+          </p><div class="informalexample"><pre class="programlisting"><code class="xml">
+              &lt;input type="checkbox" tal:attributes="checked object/isChecked"/&gt;
+            </code></pre></div><div class="warning"><h4 class="title">Warning</h4><p>            Remember that 
+              <acronym class="acronym">XHTML</acronym> is case-sensitive, so 
+              <code class="sgmltag-element">SELECTED</code> attribute is an error in 
+              <acronym class="acronym">XHTML</acronym>. Use 
+              <code class="sgmltag-element">selected</code>.        
+            </p></div></div></div><div class="navfooter"><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="tal-content.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="tal-namespace.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="tal-on-error.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">
+          <code class="sgmltag-element">tal:content</code>
+         </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> 
+          <code class="sgmltag-element">tal:on-error</code>
+        </td></tr></table></div></body></html>

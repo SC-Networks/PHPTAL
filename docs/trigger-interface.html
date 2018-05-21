@@ -1,0 +1,141 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>interface PHPTAL_Trigger</title><link rel="stylesheet" type="text/css" href="https://phptal.org/nifty.css" /><meta name="generator" content="DocBook XSL Stylesheets V1.79.1" /><link rel="home" href="index.html" title="PHPTAL Manual" /><link rel="up" href="phpintegration.html" title="PHP Integration" /><link rel="prev" href="filter-interface.html" title="interface PHPTAL_Filter" /><link rel="next" href="translation-interface.html" title="interface PHPTAL_TranslationService" /><link rel="article" href="introduction.html" title="Introduction" /><link rel="article" href="whyusephptal.html" title="Why use PHPTAL" /><link rel="article" href="installation.html" title="Installation" /><link rel="article" href="firstexample.html" title="First example" /><link rel="article" href="attributelanguage.html" title="Template Attribute Language" /><link rel="article" href="phpintegration.html" title="PHP Integration" /><link rel="appendix" href="sysadmin.html" title="Appendix A. Note for system administrators" /><link rel="appendix" href="usefullinks.html" title="Appendix B. Useful links" /><link rel="appendix" href="greetings.html" title="Appendix C. Greetings" /></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><td><a rel="prev" href="filter-interface.html">Prev</a></td><th><div class="breadcrumbs"><span class="breadcrumb-link"><a href="phpintegration.html">
+      <acronym class="acronym">PHP</acronym> Integration
+    </a></span> › <span class="breadcrumb-node">interface 
+        <code class="classname">PHPTAL_Trigger</code>
+      </span></div></th><td align="right"><a rel="next" href="translation-interface.html">Next</a></td></tr></table></div><div class="section" id="trigger-interface"><div class="titlepage"><div><div><h2 class="title" style="clear: both">interface 
+        <code class="classname">PHPTAL_Trigger</code>
+      </h2></div></div></div><p>      The 
+        <code class="sgmltag-element">phptal:id</code> attribute was added into the 
+        <acronym class="acronym">PHPTAL</acronym> for the 
+        <acronym class="acronym">PHP5</acronym>      version to replace the old 
+        <code class="classname">PHPTAL_Cache</code> interface and to abstract      it a little more.      
+      </p><p>      When a 
+        <code class="sgmltag-element">phptal:id</code> is reached, 
+        <acronym class="acronym">PHPTAL</acronym> will look in its triggers list      for a matching id and will invoke the trigger 
+        <code class="methodname">start()</code> and 
+        <code class="methodname">end()</code>      methods before entering the element, and just after it.      
+      </p><p>      If the 
+        <code class="methodname">PHPTAL_Trigger::start()</code> method returns      
+        <code class="constant">PHPTAL_Trigger::SKIPTAG</code>, 
+        <acronym class="acronym">PHPTAL</acronym> will ignore the element and its      content (
+        <code class="methodname">start()</code> may echo something to replace it).      
+      </p><p>      If your trigger wants the element and its content to be executed,      you'll have to return 
+        <code class="constant">PHPTAL_Trigger::PROCEED</code>.      
+      </p><p>      The 
+        <code class="methodname">PHPTAL_Trigger::end()</code> will be called after the element      (whether it has been executed or not). This allows you to build      cache systems using 
+        <code class="function">ob_start()</code> in 
+        <code class="methodname">start()</code> and 
+        <code class="function">ob_get_contents()</code>,      
+        <code class="function">ob_end_clean()</code> in 
+        <code class="methodname">end()</code>.      
+      </p><div class="informalexample"><pre class="programlisting"><code class="xml">
+          &lt;html&gt;
+  …
+  &lt;div&gt;
+    …
+    foo bar baz &lt;span tal:replace="id"/&gt; foo bar baz
+    …
+  &lt;/div&gt;
+  …
+&lt;/html&gt;
+
+        </code></pre></div><p>      For some reason we decide the 
+        <code class="sgmltag-element">&lt;div&gt;</code> block requires to be cached. We      introduce a 
+        <code class="sgmltag-element">phptal:id</code> into the template:      
+      </p><div class="informalexample"><pre class="programlisting"><code class="xml">
+          &lt;html&gt;
+  …
+  &lt;div phptal:id="somePossiblyUniqueKeyword"&gt;
+    …
+    foo bar baz &lt;span tal:replace="id"/&gt; foo bar baz
+    …
+  &lt;/div&gt;
+  …
+&lt;/html&gt;
+
+        </code></pre></div><p>      Then we write our trigger which will cache the 
+        <code class="sgmltag-element">&lt;div&gt;</code> content:      
+      </p><div class="informalexample"><pre class="programlisting"><code class="php">
+          &lt;?php
+
+class CacheTrigger implements PhpTal\TriggerInterface
+{
+    public function start($phptalid, $tpl)
+    {
+        // this cache depends on 'id' which must appears in
+        // the template execution context
+        $this-&gt;_cachePath = 'cache.' . $tpl-&gt;getContext()-&gt;id;
+
+        // if already cached, read the cache and tell PHPTAL to
+        // ignore the tag content
+        if (file_exists($this-&gt;_cachePath)){
+            $this-&gt;_usedCache = true;
+            readfile($this-&gt;_cachePath);
+            return self::SKIPTAG;
+        }
+
+        // no cache found, we start an output buffer and tell
+        // PHPTAL to proceed (ie: execute the tag content)
+        $this-&gt;_usedCache = false;
+        ob_start();
+        return self::PROCEED;
+    }
+
+    // Invoked after tag execution
+    public function end($phptalid, $tpl)
+    {
+        // end of tag, if cached file used, do nothing
+        if ($this-&gt;_usedCache){
+            return;
+        }
+
+        // otherwise, get the content of the output buffer
+        // and write it into the cache file for later usage
+        $content = ob_get_contents();
+        ob_end_clean();
+        echo $content;
+
+        $f = fopen($this-&gt;_cachePath, 'w');
+        fwrite($f, $content);
+        fclose($f);
+    }
+
+    private $_cachePath;
+    private $_usedCache;
+}
+?&gt;
+
+        </code></pre></div><p>      The key here is to return from 
+        <code class="methodname">start()</code> with either 
+        <code class="constant">SKIPTAG</code> or      
+        <code class="constant">PROCEED</code>.      
+      </p><p>      When 
+        <code class="constant">SKIPTAG</code> is returned, 
+        <acronym class="acronym">PHPTAL</acronym> will just ignore the tag and call      end().  This usually means that the trigger takes the hand in      deciding what to show there.      
+      </p><p>      When 
+        <code class="constant">PROCEED</code> is returned, 
+        <acronym class="acronym">PHPTAL</acronym> will execute the tag and its      content as usual, then call 
+        <code class="methodname">end()</code>. This allows our cache class to      play with output buffers to execute the tag once and to store the      result in a file which will be used in later calls.      
+      </p><p>      To install our trigger we use:      </p><div class="informalexample"><pre class="programlisting"><code class="php">
+          &lt;?php
+
+$trigger = new CacheTrigger();
+
+$tpl = new PhpTal\PHPTAL('test.xhtml');
+
+// this trigger will only be called for phptal:id="triggerId"
+$tpl-&gt;addTrigger('somePossiblyUniqueKeyword', $trigger);
+
+$tpl-&gt;id = 1;
+
+echo $tpl-&gt;execute();
+
+?&gt;
+
+        </code></pre></div><p>      You can add as many triggers as you like to your templates.  A      generic cache trigger may also handle more than one 
+        <code class="sgmltag-element">phptal:id</code>…      etc…      
+      </p></div><div class="navfooter"><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="filter-interface.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="phpintegration.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="translation-interface.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">interface 
+        <code class="classname">PHPTAL_Filter</code>
+       </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> interface 
+        <code class="classname">PHPTAL_TranslationService</code>
+      </td></tr></table></div></body></html>

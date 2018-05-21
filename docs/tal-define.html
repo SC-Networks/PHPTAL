@@ -1,0 +1,42 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>tal:define</title><link rel="stylesheet" type="text/css" href="https://phptal.org/nifty.css" /><meta name="generator" content="DocBook XSL Stylesheets V1.79.1" /><link rel="home" href="index.html" title="PHPTAL Manual" /><link rel="up" href="tal-namespace.html" title="TAL namespace" /><link rel="prev" href="tal-namespace.html" title="TAL namespace" /><link rel="next" href="tal-condition.html" title="tal:condition" /><link rel="article" href="introduction.html" title="Introduction" /><link rel="article" href="whyusephptal.html" title="Why use PHPTAL" /><link rel="article" href="installation.html" title="Installation" /><link rel="article" href="firstexample.html" title="First example" /><link rel="article" href="attributelanguage.html" title="Template Attribute Language" /><link rel="article" href="phpintegration.html" title="PHP Integration" /><link rel="appendix" href="sysadmin.html" title="Appendix A. Note for system administrators" /><link rel="appendix" href="usefullinks.html" title="Appendix B. Useful links" /><link rel="appendix" href="greetings.html" title="Appendix C. Greetings" /></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><td><a rel="prev" href="tal-namespace.html">Prev</a></td><th><div class="breadcrumbs"><span class="breadcrumb-link"><a href="attributelanguage.html">Template Attribute Language</a></span> › <span class="breadcrumb-link"><a href="tal-namespace.html">
+        <acronym class="acronym">TAL</acronym> namespace
+      </a></span> › <span class="breadcrumb-node">
+          <code class="sgmltag-element">tal:define</code>
+        </span></div></th><td align="right"><a rel="next" href="tal-condition.html">Next</a></td></tr></table></div><div class="section" id="tal-define"><div class="titlepage"><div><div><h3 class="title">
+          <code class="sgmltag-element">tal:define</code>
+        </h3></div></div></div><p>        Defines variables in the template.        </p><p>It takes one or multiple semicolon-separated variable definitions.</p><p>        Making a shortcut to a long path:        </p><div class="informalexample"><pre class="programlisting"><code class="xml">
+            &lt;div tal:define="destname path/to/existing/variable"&gt;…&lt;/div&gt;
+
+          </code></pre></div><p>        Defining more than one variable at the same time:
+</p><div class="informalexample"><pre class="programlisting"><code class="xml">
+            &lt;span tal:define="fname string:Paul; lname string:Dupond"&gt;…&lt;/span&gt;
+
+          </code></pre></div><p>Each definition may start with 
+          <code class="code">global</code> keyword which makes variable available everywhere later in the template and all macros. Global variables can be redefined.
+        </p><div class="informalexample"><pre class="programlisting"><code class="xml">
+            &lt;span tal:define="global hello string:hello world"/&gt;&lt;p tal:content="hello"/&gt;
+          </code></pre></div><p>		On the contrary, a local variable is only available inside the element it is defined in (and inside macros that are called in this element):		</p><div class="informalexample"><pre class="programlisting"><code class="xml">
+            &lt;span tal:define="hello string:hello world"/&gt;&lt;p tal:content="hello"/&gt;
+            &lt;!-- will produce an undefined variable error --&gt;
+          </code></pre></div><div class="tip"><h4 class="title">Tip</h4><p>        You may also use 
+            <code class="sgmltag-element">tal:define</code> with other attributes, it will be        executed before any other attributes on the same element.
+
+          </p></div><p>        Creating a string inside the template:        </p><div class="informalexample"><pre class="programlisting"><code class="xml">
+            &lt;span tal:define="destname string:some string" /&gt;
+
+          </code></pre></div><p>        Defining a string containing another variable:        </p><div class="informalexample"><pre class="programlisting"><code class="xml">
+            &lt;span tal:define="fname string:Paul; hello string:Hello $fname! Welcome to this page" /&gt;
+
+          </code></pre></div><p>        A small trick which uses content of the element (useful if you need to define very complex value):        </p><div class="informalexample"><pre class="programlisting"><code class="xml">
+            &lt;span tal:define="global hello"&gt;Hello ${fname}! Welcome to this page&lt;/span&gt;
+
+          </code></pre></div><p>        In above example, the 
+          <code class="sgmltag-element">&lt;span&gt;</code> tag won't show up because it has no        printable content (
+          <code class="varname">hello</code> variable grabs it) nor attributes.        
+        </p><div class="note"><h4 class="title">Note</h4><p>This is a special case. It only works if you use the 
+            <code class="code">global</code> keyword.
+          </p></div></div><div class="navfooter"><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="tal-namespace.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="tal-namespace.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="tal-condition.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">
+        <acronym class="acronym">TAL</acronym> namespace
+       </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> 
+          <code class="sgmltag-element">tal:condition</code>
+        </td></tr></table></div></body></html>

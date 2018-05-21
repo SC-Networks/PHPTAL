@@ -1,0 +1,44 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>class PHPTAL_PreFilter</title><link rel="stylesheet" type="text/css" href="https://phptal.org/nifty.css" /><meta name="generator" content="DocBook XSL Stylesheets V1.79.1" /><link rel="home" href="index.html" title="PHPTAL Manual" /><link rel="up" href="phpintegration.html" title="PHP Integration" /><link rel="prev" href="add-prefilter.html" title="addPreFilter() method" /><link rel="next" href="phptal-dom.html" title="PHPTAL DOM" /><link rel="article" href="introduction.html" title="Introduction" /><link rel="article" href="whyusephptal.html" title="Why use PHPTAL" /><link rel="article" href="installation.html" title="Installation" /><link rel="article" href="firstexample.html" title="First example" /><link rel="article" href="attributelanguage.html" title="Template Attribute Language" /><link rel="article" href="phpintegration.html" title="PHP Integration" /><link rel="appendix" href="sysadmin.html" title="Appendix A. Note for system administrators" /><link rel="appendix" href="usefullinks.html" title="Appendix B. Useful links" /><link rel="appendix" href="greetings.html" title="Appendix C. Greetings" /></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><td><a rel="prev" href="add-prefilter.html">Prev</a></td><th><div class="breadcrumbs"><span class="breadcrumb-link"><a href="phpintegration.html">
+      <acronym class="acronym">PHP</acronym> Integration
+    </a></span> › <span class="breadcrumb-node">class 
+        <code class="classname">PHPTAL_PreFilter</code>
+      </span></div></th><td align="right"><a rel="next" href="phptal-dom.html">Next</a></td></tr></table></div><div class="section" id="prefilters"><div class="titlepage"><div><div><h2 class="title" style="clear: both">class 
+        <code class="classname">PHPTAL_PreFilter</code>
+      </h2></div></div></div><p>Pre filters are executed only once before template is compiled. Pre filters operate on template's source code, so they are 
+        <span class="emphasis"><em>not</em></span> able to access value of any template variables. However pre filters can "see" and modify TAL markup.			
+      </p><p>To create pre filter 
+        <span class="emphasis"><em>extend</em></span>
+        <code class="classname">PHPTAL_PreFilter</code> class and implement only 
+        <code class="methodname">filter
+          <em class="replaceable"><code>*</code></em>()
+        </code> methods you need.
+      </p><div class="simplesect" id="idm45541416184720"><div class="titlepage"><div><div><h3 class="title">
+          <code class="methodname">filter()</code>
+        </h3></div></div></div><p>Receives template source code as string and is expected to return new source.</p><p>You can use it to simply find'n'replace fragments of source code. Be careful not to introduce syntax errors in the template.</p><div class="warning"><h4 class="title">Warning</h4><p>PHPTAL's error messages will refer to line numbers after filtering, which may be confusing if your prefilter adds or remove lines from the source code.</p></div></div><div class="simplesect" id="idm45541416181632"><div class="titlepage"><div><div><h3 class="title">
+          <code class="methodname">filterDOM()</code>
+        </h3></div></div></div><p>Receives root 
+          <a class="link" href="phptal-dom.html" title="PHPTAL DOM">PHPTAL DOM node</a> of parsed file and should edit it in place.
+        </p><p>Example pre filter that removes all comments:</p><div class="informalexample"><pre class="programlisting"><code class="php">
+            function filterDOM(PHPTAL_Dom_Element $element)
+{
+    foreach($element-&gt;childNodes as $node) {
+       if ($node instanceof PHPTAL_Dom_Comment) {
+           $node-&gt;parentNode-&gt;removeChild($node);
+       }
+       else if ($node instanceof PHPTAL_Dom_Element) {
+           $this-&gt;filterDOM($node); /* recursively filter all elements */
+       }
+    }
+}
+
+          </code></pre></div></div><div class="simplesect" id="idm45541416177072"><div class="titlepage"><div><div><h3 class="title">
+          <code class="methodname">getCacheId()</code>
+        </h3></div></div></div><p>	Should return (any) string that uniquely identifies this filter and its settings, which is used to (in)validate template cache. Each time you return different string, template will be recompiled. Implement this method if result of the filter depends on its configuration.</p><p> Unlike other filter methods, this one is called on every execution.</p><div class="tip"><h4 class="title">Tip</h4><p>When developing and testing your filter, set 
+            <a class="link" href="configuration.html#set-force-reparse" title="setForceReparse( boolean)">
+              <code class="methodname">setForceReparse(true)</code>
+            </a> to force PHPTAL to update templates every time. Otherwise result of your filter will be cached and you won't see the changes.
+          </p></div></div><div class="simplesect" id="idm45541416172768"><div class="titlepage"><div><div><h3 class="title">
+          <code class="methodname">getPHPTAL()</code>
+        </h3></div></div></div><p>Returns instance of PHPTAL class that uses this prefilter. You can query it to check current encoding or other settings.</p></div></div><div class="navfooter"><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="add-prefilter.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="phpintegration.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="phptal-dom.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">
+          <code class="methodname">addPreFilter()</code> method
+         </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> PHPTAL DOM</td></tr></table></div></body></html>

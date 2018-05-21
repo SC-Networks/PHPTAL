@@ -1,0 +1,39 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>phptal:tales</title><link rel="stylesheet" type="text/css" href="https://phptal.org/nifty.css" /><meta name="generator" content="DocBook XSL Stylesheets V1.79.1" /><link rel="home" href="index.html" title="PHPTAL Manual" /><link rel="up" href="phptal-namespace.html" title="PHPTAL namespace" /><link rel="prev" href="phptal-cache.html" title="phptal:cache" /><link rel="next" href="phptal-blocks.html" title="tal:block" /><link rel="article" href="introduction.html" title="Introduction" /><link rel="article" href="whyusephptal.html" title="Why use PHPTAL" /><link rel="article" href="installation.html" title="Installation" /><link rel="article" href="firstexample.html" title="First example" /><link rel="article" href="attributelanguage.html" title="Template Attribute Language" /><link rel="article" href="phpintegration.html" title="PHP Integration" /><link rel="appendix" href="sysadmin.html" title="Appendix A. Note for system administrators" /><link rel="appendix" href="usefullinks.html" title="Appendix B. Useful links" /><link rel="appendix" href="greetings.html" title="Appendix C. Greetings" /></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><td><a rel="prev" href="phptal-cache.html">Prev</a></td><th><div class="breadcrumbs"><span class="breadcrumb-link"><a href="attributelanguage.html">Template Attribute Language</a></span> › <span class="breadcrumb-link"><a href="phptal-namespace.html">
+        <acronym class="acronym">PHPTAL</acronym> namespace
+      </a></span> › <span class="breadcrumb-node">
+          <code class="sgmltag-element">phptal:tales</code>
+        </span></div></th><td align="right"><a rel="next" href="phptal-blocks.html">Next</a></td></tr></table></div><div class="section" id="phptal-tales"><div class="titlepage"><div><div><h3 class="title">
+          <code class="sgmltag-element">phptal:tales</code>
+        </h3></div></div></div><p>        This attribute allows us to change the behavior of 
+          <acronym class="acronym">PHPTALES</acronym>.  The        default behaviors is to interpret attribute expressions in a        very 
+          <acronym class="acronym">ZPT</acronym> way. But sometimes you just would like to have 
+          <acronym class="acronym">PHP</acronym>        there, and you end up using 
+          <code class="code">php:</code> modifier everywhere.        
+        </p><p>        Another problem concerning 
+          <acronym class="acronym">PHPTALES</acronym> is the way 
+          <acronym class="acronym">PHPTAL</acronym> has to        interpret paths. For example,        
+          <code class="varname">myobject/mymethod/property/10/othermethod/hashkey</code> takes relatively long to        interpret (but don't worry about this too much – don't optimize until you find that it is 
+          <span class="emphasis"><em>really</em></span> a problem with performance!)        
+        </p><p>
+          <acronym class="acronym">PHPTAL</acronym> has (at runtime) to take myobject and discover that it        is an object; find out that '
+          <code class="varname">mymethod</code>' is a method of this        object (rather than a variable), and then to call it; explore        the result to determine that it is an object with a property; find that its value is an array; find the '
+          <code class="varname">ten</code>'        element of this array, and determine that it is an object;        decide that 
+          <code class="varname">othermethod</code> is a method of this object (rather        than a variable), and get the result of its execution; find        that it is an object, and then retrieve the value        for the key '
+          <code class="varname">hashkey</code>'.        
+        </p><p>        Of course this was an extreme example and most of the time we        don't care, because the process is fast enough. But what if this        very long path is called inside a big 
+          <code class="sgmltag-element">tal:repeat</code>? D'oh!        
+          <code class="sgmltag-element">phptal:tales</code> can help us here:        
+        </p><div class="informalexample"><pre class="programlisting"><code class="xml">
+            &lt;html&gt;&lt;body&gt;&lt;table phptal:tales="php"&gt;&lt;tr tal:repeat="myobject document.getChildren()"&gt;&lt;td tal:content="myobject.mymethod().property[10].otherMethod().hashkey"&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/body&gt;&lt;/html&gt;
+
+          </code></pre></div><p>        Please note that the above example does the same as:        </p><div class="informalexample"><pre class="programlisting"><code class="xml">
+            &lt;html&gt;&lt;body&gt;&lt;table&gt;&lt;tr tal:repeat="myobject php:document.getChildren()"&gt;&lt;td tal:content="php:myobject.mymethod().property[10].otherMethod().hashkey"&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/body&gt;&lt;/html&gt;
+
+          </code></pre></div><div class="note"><h4 class="title">Note</h4><p>
+            <code class="code">php:</code> modifier is explained in its 
+            <a class="link" href="tales-php.html" title="php:">own chapter</a>.        
+          </p></div></div><div class="navfooter"><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="phptal-cache.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="phptal-namespace.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="phptal-blocks.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">
+          <code class="sgmltag-element">phptal:cache</code>
+         </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> 
+        <code class="sgmltag-element">tal:block</code>
+      </td></tr></table></div></body></html>

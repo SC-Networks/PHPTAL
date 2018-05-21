@@ -1,0 +1,51 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>tal:repeat</title><link rel="stylesheet" type="text/css" href="https://phptal.org/nifty.css" /><meta name="generator" content="DocBook XSL Stylesheets V1.79.1" /><link rel="home" href="index.html" title="PHPTAL Manual" /><link rel="up" href="tal-namespace.html" title="TAL namespace" /><link rel="prev" href="tal-condition.html" title="tal:condition" /><link rel="next" href="tal-omit-tag.html" title="tal:omit-tag" /><link rel="article" href="introduction.html" title="Introduction" /><link rel="article" href="whyusephptal.html" title="Why use PHPTAL" /><link rel="article" href="installation.html" title="Installation" /><link rel="article" href="firstexample.html" title="First example" /><link rel="article" href="attributelanguage.html" title="Template Attribute Language" /><link rel="article" href="phpintegration.html" title="PHP Integration" /><link rel="appendix" href="sysadmin.html" title="Appendix A. Note for system administrators" /><link rel="appendix" href="usefullinks.html" title="Appendix B. Useful links" /><link rel="appendix" href="greetings.html" title="Appendix C. Greetings" /></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><td><a rel="prev" href="tal-condition.html">Prev</a></td><th><div class="breadcrumbs"><span class="breadcrumb-link"><a href="attributelanguage.html">Template Attribute Language</a></span> › <span class="breadcrumb-link"><a href="tal-namespace.html">
+        <acronym class="acronym">TAL</acronym> namespace
+      </a></span> › <span class="breadcrumb-node">
+          <code class="sgmltag-element">tal:repeat</code>
+        </span></div></th><td align="right"><a rel="next" href="tal-omit-tag.html">Next</a></td></tr></table></div><div class="section" id="tal-repeat"><div class="titlepage"><div><div><h3 class="title">
+          <code class="sgmltag-element">tal:repeat</code>
+        </h3></div></div></div><p>        This attribute handles iterable objects like arrays, associative        arrays, and objects implementing the 
+          <acronym class="acronym">PHP5</acronym>
+          <code class="constant">Iterator</code> class.        
+        </p><p>        The 
+          <code class="sgmltag-element">repeat</code> attribute repeats its element and its content until        the end of the specified resource.        
+        </p><div class="informalexample"><pre class="programlisting"><code class="xml">
+            &lt;tr tal:repeat="item some/result"&gt;&lt;td tal:content="item"&gt;text replaced by item&lt;/td&gt;&lt;/tr&gt;
+
+          </code></pre></div><p>        Within a loop, you can access the current loop information        (and that of its parent for nested loops) using specific        
+          <code class="varname">repeat/
+            <em class="replaceable"><code>*</code></em>
+          </code> paths.        
+        </p><p>        In the above example:        </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
+              <code class="varname">repeat/item/key</code>    : returns the item's key if some/result is            an associative resource (index otherwise)          
+            </p></li><li class="listitem"><p>
+              <code class="varname">repeat/item/index</code>  : returns the item index (0 to count-1)          
+            </p></li><li class="listitem"><p>
+              <code class="varname">repeat/item/number</code> : returns the item number (1 to count)          
+            </p></li><li class="listitem"><p>
+              <code class="varname">repeat/item/even</code>   : returns true if item index is even          
+            </p></li><li class="listitem"><p>
+              <code class="varname">repeat/item/odd</code>    : returns true if item index is odd          
+            </p></li><li class="listitem"><p>
+              <code class="varname">repeat/item/start</code>  : returns true if item is the first one          
+            </p></li><li class="listitem"><p>
+              <code class="varname">repeat/item/end</code>    : returns true if item is the last one          
+            </p></li><li class="listitem"><p>
+              <code class="varname">repeat/item/length</code> : returns the number of elements in          some/result          
+            </p></li></ul></div><p>        "
+          <code class="varname">item</code>" depends on the receiver variable defined in 
+          <code class="sgmltag-element">tal:repeat</code>        expression.        
+        </p><p>        The most common usage of 
+          <code class="sgmltag-element">tal:repeat</code> is in using some 
+          <acronym class="acronym">SQL</acronym>        database result.  The following code will work if 
+          <code class="varname">playersRanking</code> contains object that implements 
+          <acronym class="acronym">PHP</acronym>'s 
+          <code class="constant">Iterator</code> interface:        
+        </p><div class="informalexample"><pre class="programlisting"><code class="xml">
+            &lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;Position&lt;/th&gt;&lt;th&gt;Player&lt;/th&gt;&lt;th&gt;Score&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;&lt;tbody&gt;&lt;tr tal:repeat="ranking playersRanking"&gt;&lt;td tal:content="ranking/position"/&gt;&lt;td tal:content="ranking/player"/&gt;&lt;td tal:content="ranking/score"/&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+
+          </code></pre></div></div><div class="navfooter"><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="tal-condition.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="tal-namespace.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="tal-omit-tag.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">
+          <code class="sgmltag-element">tal:condition</code>
+         </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> 
+          <code class="sgmltag-element">tal:omit-tag</code>
+        </td></tr></table></div></body></html>
