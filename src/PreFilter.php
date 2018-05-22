@@ -53,11 +53,11 @@ abstract class PreFilter implements FilterInterface
      *
      * @see \PhpTal\Dom\Element class for methods and fields available.
      *
-     * @param \PhpTal\Dom\Element $root PHPTAL DOM node to modify in place
+     * @param Dom\Element $root PHPTAL DOM node to modify in place
      *
      * @return void
      */
-    public function filterDOM(\PhpTal\Dom\Element $root)
+    public function filterDOM(Dom\Element $root)
     {
     }
 
@@ -68,11 +68,11 @@ abstract class PreFilter implements FilterInterface
      *
      * Default implementation calls filterDOM(). Override it.
      *
-     * @param \PhpTal\Dom\Element $node PHPTAL DOM node to modify in place
+     * @param Dom\Element $node PHPTAL DOM node to modify in place
      *
      * @return void
      */
-    public function filterDOMFragment(\PhpTal\Dom\Element $node)
+    public function filterDOMFragment(Dom\Element $node)
     {
         $this->filterDOM($node);
     }

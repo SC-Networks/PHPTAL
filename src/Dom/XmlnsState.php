@@ -28,35 +28,70 @@ use PhpTal\TalNamespace\Builtin;
  */
 class XmlnsState
 {
-    /** Create a new XMLNS state inheriting provided aliases. */
+
+    /**
+     * @var array
+     */
+    private $prefix_to_uri;
+
+    /**
+     * @var mixed
+     */
+    private $current_default;
+
+    /** Create a new XMLNS state inheriting provided aliases.
+     * @param array $prefix_to_uri
+     * @param $current_default
+     */
     public function __construct(array $prefix_to_uri, $current_default)
     {
         $this->prefix_to_uri = $prefix_to_uri;
         $this->current_default = $current_default;
     }
 
+    /**
+     * @param $prefix
+     *
+     * @return bool|mixed|string
+     */
     public function prefixToNamespaceURI($prefix)
     {
-        if ($prefix === 'xmlns') return Builtin::NS_XMLNS;
-        if ($prefix === 'xml') return Builtin::NS_XML;
+        if ($prefix === 'xmlns') {
+            return Builtin::NS_XMLNS;
+        }
+
+        if ($prefix === 'xml') {
+            return Builtin::NS_XML;
+        }
 
         // domdefs provides fallback for all known phptal ns
         if (isset($this->prefix_to_uri[$prefix])) {
             return $this->prefix_to_uri[$prefix];
-        } else {
-            return \PhpTal\Dom\Defs::getInstance()->prefixToNamespaceURI($prefix);
         }
+        return Defs::getInstance()->prefixToNamespaceURI($prefix);
     }
 
-    /** Returns true if $attName is a valid attribute name, false otherwise. */
+    /**
+     * Returns true if $attName is a valid attribute name, false otherwise.
+     *
+     * @param string $namespace_uri
+     * @param string $local_name
+     *
+     * @return bool
+     */
     public function isValidAttributeNS($namespace_uri, $local_name)
     {
-        return \PhpTal\Dom\Defs::getInstance()->isValidAttributeNS($namespace_uri, $local_name);
+        return Defs::getInstance()->isValidAttributeNS($namespace_uri, $local_name);
     }
 
+    /**
+     * @param string $namespace_uri
+     *
+     * @return bool
+     */
     public function isHandledNamespace($namespace_uri)
     {
-        return \PhpTal\Dom\Defs::getInstance()->isHandledNamespace($namespace_uri);
+        return Defs::getInstance()->isHandledNamespace($namespace_uri);
     }
 
     /**
@@ -65,6 +100,10 @@ class XmlnsState
      *
      * This method is used by the PHPTAL parser to keep track of xmlns fluctuation for
      * each encountered node.
+     *
+     * @param array $nodeAttributes
+     *
+     * @return XmlnsState
      */
     public function newElement(array $nodeAttributes)
     {
@@ -79,20 +118,23 @@ class XmlnsState
                 $prefix_to_uri[$prefix] = $value;
             }
 
-            if ($qname == 'xmlns') {$changed=true;$current_default = $value;}
+            if ($qname === 'xmlns') {
+                $changed = true;
+                $current_default = $value;
+            }
         }
 
         if ($changed) {
-            return new \PhpTal\Dom\XmlnsState($prefix_to_uri, $current_default);
-        } else {
-            return $this;
+            return new XmlnsState($prefix_to_uri, $current_default);
         }
+        return $this;
     }
 
-    function getCurrentDefaultNamespaceURI()
+    /**
+     * @return mixed
+     */
+    public function getCurrentDefaultNamespaceURI()
     {
         return $this->current_default;
     }
-
-    private $prefix_to_uri, $current_default;
 }

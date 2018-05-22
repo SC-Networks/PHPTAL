@@ -14,6 +14,13 @@
 
 namespace PhpTal\Php\Attribute\TAL;
 
+use PhpTal\Exception\TemplateException;
+use PhpTal\Php\Attribute;
+use PhpTal\Php\CodeWriter;
+use PhpTal\Php\TalesChainExecutor;
+use PhpTal\Php\TalesChainReaderInterface;
+use PhpTal\Php\TalesInternal;
+
 /**
  * TAL spec 1.4 for tal:define content
  *
@@ -34,19 +41,47 @@ namespace PhpTal\Php\Attribute\TAL;
  * @package PHPTAL
  * @author Laurent Bedubourg <lbedubourg@motion-twin.com>
  */
-class Define extends \PhpTal\Php\Attribute implements \PhpTal\Php\TalesChainReaderInterface
+class Define extends Attribute implements TalesChainReaderInterface
 {
+    /**
+     * @var string
+     */
     private $tmp_content_var;
-    private $_buffered = false;
-    private $_defineScope = null;
-    private $_defineVar = null;
-    private $_pushedContext = false;
+
+    /**
+     * @var bool
+     */
+    private $buffered = false;
+
+    /**
+     * @var string
+     */
+    private $defineScope;
+
+    /**
+     * @var
+     */
+    private $defineVar;
+
+    /**
+     * @var bool
+     */
+    private $pushedContext = false;
+
     /**
      * Prevents generation of invalid PHP code when given invalid TALES
+     * @var bool
      */
-    private $_chainPartGenerated=false;
+    private $chainPartGenerated = false;
 
-    public function before(\PhpTal\Php\CodeWriter $codewriter)
+    /**
+     * Called before element printing.
+     *
+     * @param CodeWriter $codewriter
+     *
+     * @return void
+     */
+    public function before(CodeWriter $codewriter)
     {
         $expressions = $codewriter->splitExpression($this->expression);
         $definesAnyNonGlobalVars = false;
@@ -57,17 +92,19 @@ class Define extends \PhpTal\Php\Attribute implements \PhpTal\Php\TalesChainRead
                 continue;
             }
 
-            $this->_defineScope = $defineScope;
+            $this->defineScope = $defineScope;
 
             // <span tal:define="global foo" /> should be invisible, but <img tal:define="bar baz" /> not
-            if ($defineScope != 'global') $definesAnyNonGlobalVars = true;
-
-            if ($this->_defineScope != 'global' && !$this->_pushedContext) {
-                $codewriter->pushContext();
-                $this->_pushedContext = true;
+            if ($defineScope !== 'global') {
+                $definesAnyNonGlobalVars = true;
             }
 
-            $this->_defineVar = $defineVar;
+            if ($this->defineScope !== 'global' && !$this->pushedContext) {
+                $codewriter->pushContext();
+                $this->pushedContext = true;
+            }
+
+            $this->defineVar = $defineVar;
             if ($expression === null) {
                 // no expression give, use content of tag as value for newly defined var.
                 $this->bufferizeContent($codewriter);
@@ -77,7 +114,7 @@ class Define extends \PhpTal\Php\Attribute implements \PhpTal\Php\TalesChainRead
             $code = $codewriter->evaluateExpression($expression);
             if (is_array($code)) {
                 $this->chainedDefine($codewriter, $code);
-            } elseif ( $code == \PhpTal\Php\TalesInternal::NOTHING_KEYWORD) {
+            } elseif ($code === TalesInternal::NOTHING_KEYWORD) {
                 $this->doDefineVarWith($codewriter, 'null');
             } else {
                 $this->doDefineVarWith($codewriter, $code);
@@ -85,52 +122,97 @@ class Define extends \PhpTal\Php\Attribute implements \PhpTal\Php\TalesChainRead
         }
 
         // if the content of the tag was buffered or the tag has nothing to tell, we hide it.
-        if ($this->_buffered || (!$definesAnyNonGlobalVars && !$this->phpelement->hasRealContent() && !$this->phpelement->hasRealAttributes())) {
+        if ($this->buffered || (!$definesAnyNonGlobalVars && !$this->phpelement->hasRealContent() && !$this->phpelement->hasRealAttributes())) {
             $this->phpelement->hidden = true;
         }
     }
 
-    public function after(\PhpTal\Php\CodeWriter $codewriter)
+    /**
+     * Called after element printing.
+     *
+     * @param CodeWriter $codewriter
+     *
+     * @return void
+     * @throws \PhpTal\Exception\PhpTalException
+     */
+    public function after(CodeWriter $codewriter)
     {
-        if ($this->tmp_content_var) $codewriter->recycleTempVariable($this->tmp_content_var);
-        if ($this->_pushedContext) {
+        if ($this->tmp_content_var) {
+            $codewriter->recycleTempVariable($this->tmp_content_var);
+        }
+        if ($this->pushedContext) {
             $codewriter->popContext();
         }
     }
 
-    private function chainedDefine(\PhpTal\Php\CodeWriter $codewriter, $parts)
+    /**
+     * @param CodeWriter $codewriter
+     * @param array $parts
+     * @return void
+     */
+    private function chainedDefine(CodeWriter $codewriter, $parts)
     {
-        $executor = new \PhpTal\Php\TalesChainExecutor(
-            $codewriter, $parts, $this
-        );
+        new TalesChainExecutor($codewriter, $parts, $this);
     }
 
-    public function talesChainNothingKeyword(\PhpTal\Php\TalesChainExecutor $executor)
+    /**
+     * @param TalesChainExecutor $executor
+     *
+     * @return void
+     * @throws TemplateException
+     */
+    public function talesChainNothingKeyword(TalesChainExecutor $executor)
     {
-        if (!$this->_chainPartGenerated) throw new \PhpTal\Exception\TemplateException("Invalid expression in tal:define", $this->phpelement->getSourceFile(), $this->phpelement->getSourceLine());
+        if (!$this->chainPartGenerated) {
+            throw new TemplateException(
+                'Invalid expression in tal:define',
+                $this->phpelement->getSourceFile(),
+                $this->phpelement->getSourceLine()
+            );
+        }
 
         $executor->doElse();
         $this->doDefineVarWith($executor->getCodeWriter(), 'null');
         $executor->breakChain();
     }
 
-    public function talesChainDefaultKeyword(\PhpTal\Php\TalesChainExecutor $executor)
+    /**
+     * @param TalesChainExecutor $executor
+     *
+     * @return void
+     * @throws TemplateException
+     */
+    public function talesChainDefaultKeyword(TalesChainExecutor $executor)
     {
-        if (!$this->_chainPartGenerated) throw new \PhpTal\Exception\TemplateException("Invalid expression in tal:define", $this->phpelement->getSourceFile(), $this->phpelement->getSourceLine());
+        if (!$this->chainPartGenerated) {
+            throw new TemplateException(
+                'Invalid expression in tal:define',
+                $this->phpelement->getSourceFile(),
+                $this->phpelement->getSourceLine()
+            );
+        }
 
         $executor->doElse();
         $this->bufferizeContent($executor->getCodeWriter());
         $executor->breakChain();
     }
 
-    public function talesChainPart(\PhpTal\Php\TalesChainExecutor $executor, $exp, $islast)
+    /**
+     * @param TalesChainExecutor $executor
+     * @param string $exp
+     * @param bool $islast
+     *
+     * @return void
+     * @throws \PhpTal\Exception\PhpTalException
+     */
+    public function talesChainPart(TalesChainExecutor $executor, $exp, $islast)
     {
-        $this->_chainPartGenerated=true;
+        $this->chainPartGenerated = true;
 
-        if ($this->_defineScope == 'global') {
-            $var = '$tpl->getGlobalContext()->'.$this->_defineVar;
+        if ($this->defineScope === 'global') {
+            $var = '$tpl->getGlobalContext()->' . $this->defineVar;
         } else {
-            $var = '$ctx->'.$this->_defineVar;
+            $var = '$ctx->' . $this->defineVar;
         }
 
         $cw = $executor->getCodeWriter();
@@ -138,21 +220,24 @@ class Define extends \PhpTal\Php\Attribute implements \PhpTal\Php\TalesChainRead
         if (!$islast) {
             // must use temp variable, because expression could refer to itself
             $tmp = $cw->createTempVariable();
-            $executor->doIf('('.$tmp.' = '.$exp.') !== null');
+            $executor->doIf('(' . $tmp . ' = ' . $exp . ') !== null');
             $cw->doSetVar($var, $tmp);
             $cw->recycleTempVariable($tmp);
         } else {
-            $executor->doIf('('.$var.' = '.$exp.') !== null');
+            $executor->doIf('(' . $var . ' = ' . $exp . ') !== null');
         }
     }
 
     /**
      * Parse the define expression, already splitted in sub parts by ';'.
+     *
+     * @param string $exp
+     *
+     * @return array
      */
     public function parseExpression($exp)
     {
         $defineScope = false; // (local | global)
-        $defineVar   = false; // var to define
 
         // extract defineScope from expression
         $exp = trim($exp);
@@ -162,29 +247,42 @@ class Define extends \PhpTal\Php\Attribute implements \PhpTal\Php\TalesChainRead
         }
 
         // extract varname and expression from remaining of expression
-        list($defineVar, $exp) = $this->parseSetExpression($exp);
-        if ($exp !== null) $exp = trim($exp);
-        return array($defineScope, $defineVar, $exp);
+        list($defineVar, $newExp) = $this->parseSetExpression($exp);
+        if ($newExp !== null) {
+            $newExp = trim($newExp);
+        }
+        return [$defineScope, $defineVar, $newExp];
     }
 
-    private function bufferizeContent(\PhpTal\Php\CodeWriter $codewriter)
+    /**
+     * @param CodeWriter $codewriter
+     *
+     * @return void
+     */
+    private function bufferizeContent(CodeWriter $codewriter)
     {
-        if (!$this->_buffered) {
+        if (!$this->buffered) {
             $this->tmp_content_var = $codewriter->createTempVariable();
-            $codewriter->pushCode( 'ob_start()' );
+            $codewriter->pushCode('ob_start()');
             $this->phpelement->generateContent($codewriter);
             $codewriter->doSetVar($this->tmp_content_var, 'ob_get_clean()');
-            $this->_buffered = true;
+            $this->buffered = true;
         }
         $this->doDefineVarWith($codewriter, $this->tmp_content_var);
     }
 
-    private function doDefineVarWith(\PhpTal\Php\CodeWriter $codewriter, $code)
+    /**
+     * @param CodeWriter $codewriter
+     * @param string $code
+     *
+     * @return void
+     */
+    private function doDefineVarWith(CodeWriter $codewriter, $code)
     {
-        if ($this->_defineScope == 'global') {
-            $codewriter->doSetVar('$tpl->getGlobalContext()->'.$this->_defineVar, $code);
+        if ($this->defineScope === 'global') {
+            $codewriter->doSetVar('$tpl->getGlobalContext()->' . $this->defineVar, $code);
         } else {
-            $codewriter->doSetVar('$ctx->'.$this->_defineVar, $code);
+            $codewriter->doSetVar('$ctx->' . $this->defineVar, $code);
         }
     }
 }

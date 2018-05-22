@@ -64,7 +64,7 @@ class FileSource implements SourceInterface
         $content = file_get_contents($this->path);
 
         // file_get_contents returns "" when loading directory!?
-        if (false === $content || ('' === $content && is_dir($this->path))) {
+        if ($content === false || ($content === '' && is_dir($this->path))) {
             throw new Exception\IOException('Unable to load file ' . $this->path);
         }
         return $content;

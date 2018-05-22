@@ -14,14 +14,21 @@
 
 namespace PhpTal\Dom;
 
+use PhpTal\Php\CodeWriter;
+
 /**
  * XML declaration node.
  *
  * @package PHPTAL
  */
-class XmlDeclaration extends \PhpTal\Dom\Node
+class XmlDeclaration extends Node
 {
-    public function generateCode(\PhpTal\Php\CodeWriter $codewriter)
+    /**
+     * use CodeWriter to compile this element to PHP code
+     *
+     * @param CodeWriter $codewriter
+     */
+    public function generateCode(CodeWriter $codewriter)
     {
         $codewriter->setXmlDeclaration($this->getValueEscaped());
         $codewriter->doXmlDeclaration();

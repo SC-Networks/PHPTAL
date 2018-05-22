@@ -14,6 +14,11 @@
 
 namespace PhpTal\Php\Attribute\TAL;
 
+use PhpTal\Dom\Defs;
+use PhpTal\Php\Attribute;
+use PhpTal\Php\CodeWriter;
+use PhpTal\Php\TalesChainExecutor;
+use PhpTal\Php\TalesChainReaderInterface;
 use PhpTal\TalNamespace\Builtin;
 
 /**
@@ -36,21 +41,44 @@ use PhpTal\TalNamespace\Builtin;
  * @package PHPTAL
  * @author Laurent Bedubourg <lbedubourg@motion-twin.com>
  */
-class Attributes extends \PhpTal\Php\Attribute implements \PhpTal\Php\TalesChainReaderInterface
+class Attributes extends Attribute implements TalesChainReaderInterface
 {
-    /** before creates several variables that need to be freed in after */
-    private $vars_to_recycle = array();
+    /**
+     * before creates several variables that need to be freed in after
+     *
+     * @var array
+     */
+    private $vars_to_recycle = [];
 
     /**
      * value for default keyword
+     *
+     * @var string
      */
-    private $_default_escaped;
+    private $default_escaped;
 
-    public function before(\PhpTal\Php\CodeWriter $codewriter)
+    /**
+     * @var string
+     */
+    private $attribute;
+
+    /**
+     * @var string
+     */
+    private $attkey;
+
+    /**
+     * Called before element printing.
+     *
+     * @param CodeWriter $codewriter
+     *
+     * @return void
+     * @throws \PhpTal\Exception\PhpTalException
+     */
+    public function before(CodeWriter $codewriter)
     {
         // split attributes using ; delimiter
-        $attrs = $codewriter->splitExpression($this->expression);
-        foreach ($attrs as $exp) {
+        foreach ($codewriter->splitExpression($this->expression) as $exp) {
             list($qname, $expression) = $this->parseSetExpression($exp);
             if ($expression) {
                 $this->prepareAttribute($codewriter, $qname, $expression);
@@ -58,29 +86,39 @@ class Attributes extends \PhpTal\Php\Attribute implements \PhpTal\Php\TalesChain
         }
     }
 
-    private function prepareAttribute(\PhpTal\Php\CodeWriter $codewriter, $qname, $expression)
+    /**
+     * @param CodeWriter $codewriter
+     * @param string $qname
+     * @param string $expression
+     *
+     * @return void
+     * @throws \PhpTal\Exception\PhpTalException
+     */
+    private function prepareAttribute(CodeWriter $codewriter, $qname, $expression)
     {
         $tales_code = $this->extractEchoType($expression);
         $code = $codewriter->evaluateExpression($tales_code);
 
         // XHTML boolean attribute does not appear when empty or false
-        if (\PhpTal\Dom\Defs::getInstance()->isBooleanAttribute($qname)) {
-
+        if (Defs::getInstance()->isBooleanAttribute($qname)) {
             // I don't want to mix code for boolean with chained executor
             // so compile it again to simple expression
             if (is_array($code)) {
                 $code = \PhpTal\Php\TalesInternal::compileToPHPExpression($tales_code);
             }
-            return $this->prepareBooleanAttribute($codewriter, $qname, $code);
+            $this->prepareBooleanAttribute($codewriter, $qname, $code);
+            return;
         }
 
         // if $code is an array then the attribute value is decided by a
         // tales chained expression
         if (is_array($code)) {
-            return $this->prepareChainedAttribute($codewriter, $qname, $code);
+            $this->prepareChainedAttribute($codewriter, $qname, $code);
+            return;
         }
 
-        // i18n needs to read replaced value of the attribute, which is not possible if attribute is completely replaced with conditional code
+        // i18n needs to read replaced value of the attribute, which is not possible
+        // if attribute is completely replaced with conditional code
         if ($this->phpelement->hasAttributeNS(Builtin::NS_I18N, 'attributes')) {
             $this->prepareAttributeUnconditional($codewriter, $qname, $code);
         } else {
@@ -90,12 +128,16 @@ class Attributes extends \PhpTal\Php\Attribute implements \PhpTal\Php\TalesChain
 
     /**
      * attribute will be output regardless of its evaluated value. NULL behaves just like "".
+     *
+     * @param CodeWriter $codewriter
+     * @param string $qname
+     * @param string $code
      */
-    private function prepareAttributeUnconditional(\PhpTal\Php\CodeWriter $codewriter, $qname, $code)
+    private function prepareAttributeUnconditional(CodeWriter $codewriter, $qname, $code)
     {
         // regular attribute which value is the evaluation of $code
-        $attkey = $this->getVarName($qname, $codewriter);
-        if ($this->_echoType == \PhpTal\Php\Attribute::ECHO_STRUCTURE) {
+        $attkey = $this->getVarName($codewriter);
+        if ($this->echoType === Attribute::ECHO_STRUCTURE) {
             $value = $codewriter->stringifyCode($code);
         } else {
             $value = $codewriter->escapeCode($code);
@@ -106,18 +148,27 @@ class Attributes extends \PhpTal\Php\Attribute implements \PhpTal\Php\TalesChain
 
     /**
      * If evaluated value of attribute is NULL, it will not be output at all.
+     *
+     * @param CodeWriter $codewriter
+     * @param string $qname
+     * @param string $code
+     *
+     * @throws \PhpTal\Exception\PhpTalException
      */
-    private function prepareAttributeConditional(\PhpTal\Php\CodeWriter $codewriter, $qname, $code)
+    private function prepareAttributeConditional(CodeWriter $codewriter, $qname, $code)
     {
         // regular attribute which value is the evaluation of $code
-        $attkey = $this->getVarName($qname, $codewriter);
+        $attkey = $this->getVarName($codewriter);
 
         $codewriter->doIf("null !== ($attkey = ($code))");
 
-        if ($this->_echoType !== \PhpTal\Php\Attribute::ECHO_STRUCTURE)
-            $codewriter->doSetVar($attkey, $codewriter->str(" $qname=\"").".".$codewriter->escapeCode($attkey).".'\"'");
-        else
-            $codewriter->doSetVar($attkey, $codewriter->str(" $qname=\"").".".$codewriter->stringifyCode($attkey).".'\"'");
+        if ($this->echoType !== Attribute::ECHO_STRUCTURE) {
+            $codewriter->doSetVar($attkey, $codewriter->str(" $qname=\"") . '.' .
+                $codewriter->escapeCode($attkey) . ".'\"'");
+        } else {
+            $codewriter->doSetVar($attkey, $codewriter->str(" $qname=\"") . '.' .
+                $codewriter->stringifyCode($attkey) . ".'\"'");
+        }
 
         $codewriter->doElse();
         $codewriter->doSetVar($attkey, "''");
@@ -126,26 +177,43 @@ class Attributes extends \PhpTal\Php\Attribute implements \PhpTal\Php\TalesChain
         $this->phpelement->getOrCreateAttributeNode($qname)->overwriteFullWithVariable($attkey);
     }
 
-    private function prepareChainedAttribute(\PhpTal\Php\CodeWriter $codewriter, $qname, $chain)
+    /**
+     * @param CodeWriter $codewriter
+     * @param string $qname
+     * @param array $chain
+     *
+     * @return void
+     */
+    private function prepareChainedAttribute(CodeWriter $codewriter, $qname, $chain)
     {
-        $this->_default_escaped = false;
-        $this->_attribute = $qname;
-        if ($default_attr = $this->phpelement->getAttributeNode($qname)) {
-            $this->_default_escaped = $default_attr->getValueEscaped();
+        $this->default_escaped = false;
+        $this->attribute = $qname;
+        $default_attr = $this->phpelement->getAttributeNode($qname);
+        if ($default_attr) {
+            $this->default_escaped = $default_attr->getValueEscaped();
         }
-        $this->_attkey = $this->getVarName($qname, $codewriter);
-        $executor = new \PhpTal\Php\TalesChainExecutor($codewriter, $chain, $this);
-        $this->phpelement->getOrCreateAttributeNode($qname)->overwriteFullWithVariable($this->_attkey);
+        $this->attkey = $this->getVarName($codewriter);
+        // todo this does magic in the constructor :/
+        new TalesChainExecutor($codewriter, $chain, $this);
+        $this->phpelement->getOrCreateAttributeNode($qname)->overwriteFullWithVariable($this->attkey);
     }
 
-    private function prepareBooleanAttribute(\PhpTal\Php\CodeWriter $codewriter, $qname, $code)
+    /**
+     * @param CodeWriter $codewriter
+     * @param string $qname
+     * @param string $code
+     *
+     * @return void
+     * @throws \PhpTal\Exception\PhpTalException
+     */
+    private function prepareBooleanAttribute(CodeWriter $codewriter, $qname, $code)
     {
-        $attkey = $this->getVarName($qname, $codewriter);
+        $attkey = $this->getVarName($codewriter);
 
         if ($codewriter->getOutputMode() === \PhpTal\PHPTAL::HTML5) {
-            $value  = "' $qname'";
+            $value = "' $qname'";
         } else {
-            $value  = "' $qname=\"$qname\"'";
+            $value = "' $qname=\"$qname\"'";
         }
         $codewriter->doIf($code);
         $codewriter->doSetVar($attkey, $value);
@@ -155,7 +223,12 @@ class Attributes extends \PhpTal\Php\Attribute implements \PhpTal\Php\TalesChain
         $this->phpelement->getOrCreateAttributeNode($qname)->overwriteFullWithVariable($attkey);
     }
 
-    private function getVarName($qname, \PhpTal\Php\CodeWriter $codewriter)
+    /**
+     * @param CodeWriter $codewriter
+     *
+     * @return string
+     */
+    private function getVarName(CodeWriter $codewriter)
     {
         $var = $codewriter->createTempVariable();
         $this->vars_to_recycle[] = $var;
@@ -163,49 +236,76 @@ class Attributes extends \PhpTal\Php\Attribute implements \PhpTal\Php\TalesChain
     }
 
 
-    public function after(\PhpTal\Php\CodeWriter $codewriter)
+    /**
+     * Called after element printing.
+     *
+     * @param CodeWriter $codewriter
+     *
+     * @return void
+     * @throws \PhpTal\Exception\PhpTalException
+     */
+    public function after(CodeWriter $codewriter)
     {
-        foreach ($this->vars_to_recycle as $var) $codewriter->recycleTempVariable($var);
+        foreach ($this->vars_to_recycle as $var) {
+            $codewriter->recycleTempVariable($var);
+        }
     }
 
-    public function talesChainNothingKeyword(\PhpTal\Php\TalesChainExecutor $executor)
+    /**
+     * @param TalesChainExecutor $executor
+     * @return void
+     */
+    public function talesChainNothingKeyword(TalesChainExecutor $executor)
     {
         $codewriter = $executor->getCodeWriter();
         $executor->doElse();
         $codewriter->doSetVar(
-            $this->_attkey,
+            $this->attkey,
             "''"
         );
         $executor->breakChain();
     }
 
-    public function talesChainDefaultKeyword(\PhpTal\Php\TalesChainExecutor $executor)
+    /**
+     * @param TalesChainExecutor $executor
+     *
+     * @return void
+     */
+    public function talesChainDefaultKeyword(TalesChainExecutor $executor)
     {
         $codewriter = $executor->getCodeWriter();
         $executor->doElse();
-        $attr_str = ($this->_default_escaped !== false)
-            ? ' '.$this->_attribute.'='.$codewriter->quoteAttributeValue($this->_default_escaped)  // default value
+        $attr_str = ($this->default_escaped !== false)
+            ? ' ' . $this->attribute . '=' . $codewriter->quoteAttributeValue($this->default_escaped)  // default value
             : '';                                 // do not print attribute
-        $codewriter->doSetVar($this->_attkey, $codewriter->str($attr_str));
+        $codewriter->doSetVar($this->attkey, $codewriter->str($attr_str));
         $executor->breakChain();
     }
 
-    public function talesChainPart(\PhpTal\Php\TalesChainExecutor $executor, $exp, $islast)
+    /**
+     * @param TalesChainExecutor $executor
+     * @param string $exp
+     * @param bool $islast
+     *
+     * @return void
+     */
+    public function talesChainPart(TalesChainExecutor $executor, $exp, $islast)
     {
         $codewriter = $executor->getCodeWriter();
 
         if (!$islast) {
-            $condition = "!\PhpTal\Helper::phptal_isempty($this->_attkey = ($exp))";
+            $condition = "!\PhpTal\Helper::phptal_isempty($this->attkey = ($exp))";
         } else {
-            $condition = "null !== ($this->_attkey = ($exp))";
+            $condition = "null !== ($this->attkey = ($exp))";
         }
         $executor->doIf($condition);
 
-        if ($this->_echoType == \PhpTal\Php\Attribute::ECHO_STRUCTURE)
-            $value = $codewriter->stringifyCode($this->_attkey);
-        else
-            $value = $codewriter->escapeCode($this->_attkey);
+        if ($this->echoType === Attribute::ECHO_STRUCTURE) {
+            $value = $codewriter->stringifyCode($this->attkey);
+        } else {
+            $value = $codewriter->escapeCode($this->attkey);
+        }
 
-        $codewriter->doSetVar($this->_attkey, $codewriter->str(" {$this->_attribute}=\"").".$value.'\"'");
+        $codewriter->doSetVar($this->attkey, $codewriter->str(" {$this->attribute}=\"") . ".$value.'\"'");
     }
 }

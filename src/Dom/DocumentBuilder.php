@@ -21,43 +21,113 @@ namespace PhpTal\Dom;
  */
 abstract class DocumentBuilder
 {
-    protected $_stack;   /* array<\PhpTal\Dom\Node> */
-    protected $_current; /* \PhpTal\Dom\Node */
+    /**
+     * @var Node[]
+     */
+    protected $stack;
 
-    protected $file, $line;
+    /**
+     * @var Element
+     */
+    protected $current;
 
+    /**
+     * @var string
+     */
+    protected $file;
+
+    /**
+     * @var int
+     */
+    protected $line;
+
+    /**
+     * DocumentBuilder constructor.
+     */
     public function __construct()
     {
-        $this->_stack = array();
+        $this->stack = [];
     }
 
+    /**
+     * @return mixed
+     */
     abstract public function getResult();
 
+    /**
+     * @return mixed
+     */
     abstract public function onDocumentStart();
 
+    /**
+     * @return mixed
+     */
     abstract public function onDocumentEnd();
 
+    /**
+     * @param $doctype
+     * @return mixed
+     */
     abstract public function onDocType($doctype);
 
+    /**
+     * @param $decl
+     * @return mixed
+     */
     abstract public function onXmlDecl($decl);
 
+    /**
+     * @param $data
+     * @return mixed
+     */
     abstract public function onComment($data);
 
+    /**
+     * @param $data
+     * @return mixed
+     */
     abstract public function onCDATASection($data);
 
+    /**
+     * @param $data
+     * @return mixed
+     */
     abstract public function onProcessingInstruction($data);
 
+    /**
+     * @param $element_qname
+     * @param array $attributes
+     * @return mixed
+     */
     abstract public function onElementStart($element_qname, array $attributes);
 
+    /**
+     * @param $data
+     * @return mixed
+     */
     abstract public function onElementData($data);
 
+    /**
+     * @param $qname
+     * @return mixed
+     */
     abstract public function onElementClose($qname);
 
+    /**
+     * @param string $file
+     * @param int $line
+     *
+     * @return void
+     */
     public function setSource($file, $line)
     {
-        $this->file = $file; $this->line = $line;
+        $this->file = $file;
+        $this->line = $line;
     }
 
+    /**
+     * @param string $encoding
+     * @return mixed
+     */
     abstract public function setEncoding($encoding);
 }
-

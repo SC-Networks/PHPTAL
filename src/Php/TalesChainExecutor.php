@@ -26,7 +26,11 @@ class TalesChainExecutor
     private $_state = 0;
     private $_chain;
     private $_chainStarted = false;
-    private $codewriter = null;
+
+    /**
+     * @var CodeWriter
+     */
+    private $codewriter;
 
 
     public function __construct(\PhpTal\Php\CodeWriter $codewriter, array $chain, TalesChainReaderInterface $reader)
@@ -37,6 +41,9 @@ class TalesChainExecutor
         $this->_executeChain();
     }
 
+    /**
+     * @return CodeWriter
+     */
     public function getCodeWriter()
     {
         return $this->codewriter;

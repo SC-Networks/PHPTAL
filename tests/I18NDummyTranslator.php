@@ -19,7 +19,7 @@ class DummyTranslator implements \PhpTal\TranslationServiceInterface
     public $translations = array();
     public $domain;
 
-    public function setLanguage()
+    public function setLanguage(...$langs)
     {
     }
 

@@ -14,6 +14,8 @@
 
 namespace PhpTal\Dom;
 
+use PhpTal\Exception\ParserException;
+use PhpTal\Exception\PhpTalException;
 use PhpTal\TalNamespace\Builtin;
 
 /**
@@ -21,146 +23,235 @@ use PhpTal\TalNamespace\Builtin;
  *
  * @package PHPTAL
  */
-class PHPTALDocumentBuilder extends \PhpTal\Dom\DocumentBuilder
+class PHPTALDocumentBuilder extends DocumentBuilder
 {
-    private $_xmlns;   /* \PhpTal\Dom\XmlnsState */
+    /**
+     * @var XmlnsState
+     */
+    private $xmlns;   /* \PhpTal\Dom\XmlnsState */
+
+    /**
+     * @var string
+     */
     private $encoding;
 
+    /**
+     * @var Element
+     */
+    private $documentElement;
+
+    /**
+     * PHPTALDocumentBuilder constructor.
+     */
     public function __construct()
     {
-        $this->_xmlns = new \PhpTal\Dom\XmlnsState(array(), '');
+        parent::__construct();
+        $this->xmlns = new XmlnsState([], '');
     }
 
+    /**
+     * @return mixed
+     */
     public function getResult()
     {
         return $this->documentElement;
     }
 
+    /**
+     * @return XmlnsState
+     */
     protected function getXmlnsState()
     {
-        return $this->_xmlns;
+        return $this->xmlns;
     }
 
     // ~~~~~ XmlParser implementation ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     public function onDocumentStart()
     {
-        $this->documentElement = new \PhpTal\Dom\Element('documentElement', Builtin::NS_TAL, array(), $this->getXmlnsState());
+        $this->documentElement = new Element('documentElement', Builtin::NS_TAL, [], $this->getXmlnsState());
         $this->documentElement->setSource($this->file, $this->line);
-        $this->_current = $this->documentElement;
+        $this->current = $this->documentElement;
     }
 
     public function onDocumentEnd()
     {
-        if (count($this->_stack) > 0) {
-            $left='</'.$this->_current->getQualifiedName().'>';
-            for ($i = count($this->_stack)-1; $i>0; $i--) $left .= '</'.$this->_stack[$i]->getQualifiedName().'>';
-            throw new \PhpTal\Exception\ParserException("Not all elements were closed before end of the document. Missing: ".$left,
-                        $this->file, $this->line);
+        if (count($this->stack) > 0) {
+            $left = '</' . $this->current->getQualifiedName() . '>';
+            for ($i = count($this->stack) - 1; $i > 0; $i--) {
+                $left .= '</' . $this->stack[$i]->getQualifiedName() . '>';
+            }
+            throw new ParserException(
+                'Not all elements were closed before end of the document. Missing: ' . $left,
+                $this->file,
+                $this->line
+            );
         }
     }
 
+    /**
+     * @param $doctype
+     * @return void
+     */
     public function onDocType($doctype)
     {
-        $this->pushNode(new \PhpTal\Dom\DocumentType($doctype, $this->encoding));
+        $this->pushNode(new DocumentType($doctype, $this->encoding));
     }
 
+    /**
+     * @param $decl
+     * @return void
+     * @throws PhpTalException
+     */
     public function onXmlDecl($decl)
     {
         if (!$this->encoding) {
-            throw new \PhpTal\Exception\PhpTalException("Encoding not set");
+            throw new PhpTalException('Encoding not set');
         }
-        $this->pushNode(new \PhpTal\Dom\XmlDeclaration($decl, $this->encoding));
+        $this->pushNode(new XmlDeclaration($decl, $this->encoding));
     }
 
+    /**
+     * @param $data
+     * @return void
+     */
     public function onComment($data)
     {
-        $this->pushNode(new \PhpTal\Dom\Comment($data, $this->encoding));
+        $this->pushNode(new Comment($data, $this->encoding));
     }
 
+    /**
+     * @param $data
+     * @return void
+     */
     public function onCDATASection($data)
     {
-        $this->pushNode(new \PhpTal\Dom\CDATASection($data, $this->encoding));
+        $this->pushNode(new CDATASection($data, $this->encoding));
     }
 
+    /**
+     * @param $data
+     * @return void
+     */
     public function onProcessingInstruction($data)
     {
-        $this->pushNode(new \PhpTal\Dom\ProcessingInstruction($data, $this->encoding));
+        $this->pushNode(new ProcessingInstruction($data, $this->encoding));
     }
 
+    /**
+     * @param $element_qname
+     * @param array $attributes
+     * @return void
+     * @throws ParserException
+     * @throws \PhpTal\Exception\TemplateException
+     */
     public function onElementStart($element_qname, array $attributes)
     {
-        $this->_xmlns = $this->_xmlns->newElement($attributes);
+        $this->xmlns = $this->xmlns->newElement($attributes);
 
         if (preg_match('/^([^:]+):/', $element_qname, $m)) {
             $prefix = $m[1];
-            $namespace_uri = $this->_xmlns->prefixToNamespaceURI($prefix);
-            if (false === $namespace_uri) {
-                throw new \PhpTal\Exception\ParserException("There is no namespace declared for prefix of element < $element_qname >. You must have xmlns:$prefix declaration in the same document.",
-                            $this->file, $this->line);
+            $namespace_uri = $this->xmlns->prefixToNamespaceURI($prefix);
+            if ($namespace_uri === false) {
+                throw new ParserException(
+                    "There is no namespace declared for prefix of element < $element_qname >. You must have xmlns:$prefix declaration in the same document.",
+                    $this->file,
+                    $this->line
+                );
             }
         } else {
-            $namespace_uri = $this->_xmlns->getCurrentDefaultNamespaceURI();
+            $namespace_uri = $this->xmlns->getCurrentDefaultNamespaceURI();
         }
 
-        $attrnodes = array();
-        foreach ($attributes as $qname=>$value) {
-
+        $attrnodes = [];
+        foreach ($attributes as $qname => $value) {
             if (preg_match('/^([^:]+):(.+)$/', $qname, $m)) {
-                list(,$prefix, $local_name) = $m;
-                $attr_namespace_uri = $this->_xmlns->prefixToNamespaceURI($prefix);
+                list(, $prefix, $local_name) = $m;
+                $attr_namespace_uri = $this->xmlns->prefixToNamespaceURI($prefix);
 
-            if (false === $attr_namespace_uri) {
-                    throw new \PhpTal\Exception\ParserException("There is no namespace declared for prefix of attribute $qname of element < $element_qname >. You must have xmlns:$prefix declaration in the same document.",
-                            $this->file, $this->line);
-            }
+                if ($attr_namespace_uri === false) {
+                    throw new ParserException(
+                        "There is no namespace declared for prefix of attribute $qname of element < $element_qname >. You must have xmlns:$prefix declaration in the same document.",
+                        $this->file,
+                        $this->line
+                    );
+                }
             } else {
                 $local_name = $qname;
                 $attr_namespace_uri = ''; // default NS. Attributes don't inherit namespace per XMLNS spec
             }
 
-            if ($this->_xmlns->isHandledNamespace($attr_namespace_uri)
-                && !$this->_xmlns->isValidAttributeNS($attr_namespace_uri, $local_name)) {
-                throw new \PhpTal\Exception\ParserException("Attribute '$qname' is in '$attr_namespace_uri' namespace, but is not a supported PHPTAL attribute",
-                            $this->file, $this->line);
+            if ($this->xmlns->isHandledNamespace($attr_namespace_uri)
+                && !$this->xmlns->isValidAttributeNS($attr_namespace_uri, $local_name)) {
+                throw new ParserException(
+                    "Attribute '$qname' is in '$attr_namespace_uri' namespace, but is not a supported PHPTAL attribute",
+                    $this->file,
+                    $this->line
+                );
             }
 
-            $attrnodes[] = new \PhpTal\Dom\Attr($qname, $attr_namespace_uri, $value, $this->encoding);
+            $attrnodes[] = new Attr($qname, $attr_namespace_uri, $value, $this->encoding);
         }
 
-        $node = new \PhpTal\Dom\Element($element_qname, $namespace_uri, $attrnodes, $this->getXmlnsState());
+        $node = new Element($element_qname, $namespace_uri, $attrnodes, $this->getXmlnsState());
         $this->pushNode($node);
-        $this->_stack[] =  $this->_current;
-        $this->_current = $node;
+        $this->stack[] = $this->current;
+        $this->current = $node;
     }
 
+    /**
+     * @param $data
+     * @return void
+     */
     public function onElementData($data)
     {
-        $this->pushNode(new \PhpTal\Dom\Text($data, $this->encoding));
+        $this->pushNode(new Text($data, $this->encoding));
     }
 
+    /**
+     * @param $qname
+     * @return void
+     * @throws ParserException
+     */
     public function onElementClose($qname)
     {
-        if ($this->_current === $this->documentElement) {
-            throw new \PhpTal\Exception\ParserException("Found closing tag for < $qname > where there are no open tags",
-                        $this->file, $this->line);
+        if ($this->current === $this->documentElement) {
+            throw new ParserException(
+                "Found closing tag for < $qname > where there are no open tags",
+                $this->file,
+                $this->line
+            );
         }
-        if ($this->_current->getQualifiedName() != $qname) {
-            throw new \PhpTal\Exception\ParserException("Tag closure mismatch, expected < /".$this->_current->getQualifiedName()." > (opened in line ".$this->_current->getSourceLine().") but found < /".$qname." >",
-                        $this->file, $this->line);
+        if ($this->current->getQualifiedName() !== $qname) {
+            throw new ParserException(
+                "Tag closure mismatch, expected < /" . $this->current->getQualifiedName() . " > (opened in line " . $this->current->getSourceLine() . ") but found < /" . $qname . " >",
+                $this->file,
+                $this->line
+            );
         }
-        $this->_current = array_pop($this->_stack);
-        if ($this->_current instanceof \PhpTal\Dom\Element) {
-            $this->_xmlns = $this->_current->getXmlnsState(); // restore namespace prefixes info to previous state
+        $this->current = array_pop($this->stack);
+        if ($this->current instanceof Element) {
+            $this->xmlns = $this->current->getXmlnsState(); // restore namespace prefixes info to previous state
         }
     }
 
-    private function pushNode(\PhpTal\Dom\Node $node)
+    /**
+     * @param Node $node
+     *
+     * @return void
+     * @throws PhpTalException
+     */
+    private function pushNode(Node $node)
     {
         $node->setSource($this->file, $this->line);
-        $this->_current->appendChild($node);
+        $this->current->appendChild($node);
     }
 
+    /**
+     * @param string $encoding
+     *
+     * @return void
+     */
     public function setEncoding($encoding)
     {
         $this->encoding = $encoding;

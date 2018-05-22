@@ -14,12 +14,19 @@
 
 namespace PhpTal\Dom;
 
+use PhpTal\Php\CodeWriter;
+
 /**
  * @package PHPTAL
  */
-class Comment extends \PhpTal\Dom\Node
+class Comment extends Node
 {
-    public function generateCode(\PhpTal\Php\CodeWriter $codewriter)
+    /**
+     * use CodeWriter to compile this element to PHP code
+     *
+     * @param CodeWriter $codewriter
+     */
+    public function generateCode(CodeWriter $codewriter)
     {
         if (!preg_match('/^\s*!/', $this->getValueEscaped())) {
             $codewriter->pushHTML('<!--'.$this->getValueEscaped().'-->');

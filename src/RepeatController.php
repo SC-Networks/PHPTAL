@@ -34,38 +34,72 @@ namespace PhpTal;
  */
 class RepeatController implements \Iterator
 {
+    /**
+     * @var string
+     */
     public $key;
+
+    /**
+     * @var mixed
+     */
     private $current;
+
+    /**
+     * @var bool
+     */
     private $valid;
+
+    /**
+     * @var bool
+     */
     private $validOnNext;
 
+    /**
+     * @var bool
+     */
     private $uses_groups = false;
 
+    /**
+     * @var \Iterator
+     */
     protected $iterator;
+
+    /**
+     * @var int
+     */
     public $index;
+
+    /**
+     * @var bool
+     */
     public $end;
 
     /**
-     * computed lazily
+     * @var int
      */
-    private $length = null;
+    private $length;
+
+    /**
+     * @var RepeatControllerGroups
+     */
+    private $groups;
 
     /**
      * Construct a new RepeatController.
      *
-     * @param $source array, string, iterator, iterable.
+     * @param mixed $source array, string, iterator, iterable.
      */
     public function __construct($source)
     {
-        if ( is_string($source) ) {
-            $this->iterator = new \ArrayIterator( str_split($source) );  // FIXME: invalid for UTF-8 encoding, use preg_match_all('/./u') trick
-        } elseif ( is_array($source) ) {
+        if (is_string($source)) {
+            $this->iterator = new \ArrayIterator(str_split($source));  // FIXME: invalid for UTF-8 encoding, use preg_match_all('/./u') trick
+        } elseif (is_array($source)) {
             $this->iterator = new \ArrayIterator($source);
         } elseif ($source instanceof \IteratorAggregate) {
             $this->iterator = $source->getIterator();
         } elseif ($source instanceof \DOMNodeList) {
-            $array = array();
-            foreach ($source as $k=>$v) {
+            $array = [];
+            foreach ($source as $k => $v) {
                 $array[$k] = $v;
             }
             $this->iterator = new \ArrayIterator($array);
@@ -74,11 +108,11 @@ class RepeatController implements \Iterator
         } elseif ($source instanceof \Traversable) {
             $this->iterator = new \IteratorIterator($source);
         } elseif ($source instanceof \Closure) {
-            $this->iterator = new \ArrayIterator( (array) $source() );
+            $this->iterator = new \ArrayIterator((array)$source());
         } elseif ($source instanceof \stdClass) {
-            $this->iterator = new \ArrayIterator( (array) $source );
+            $this->iterator = new \ArrayIterator((array)$source);
         } else {
-            $this->iterator = new \ArrayIterator( array() );
+            $this->iterator = new \ArrayIterator([]);
         }
     }
 
@@ -115,24 +149,30 @@ class RepeatController implements \Iterator
         return $valid;
     }
 
+    /**
+     * @return int
+     */
     public function length()
     {
         if ($this->length === null) {
             if ($this->iterator instanceof \Countable) {
                 return $this->length = count($this->iterator);
-            } elseif ( is_object($this->iterator) ) {
+            }
+
+            if (is_object($this->iterator)) {
                 // for backwards compatibility with existing PHPTAL templates
-                if ( method_exists($this->iterator, 'size') ) {
+                if (method_exists($this->iterator, 'size')) {
                     return $this->length = $this->iterator->size();
-                } elseif ( method_exists($this->iterator, 'length') ) {
+                }
+
+                if (method_exists($this->iterator, 'length')) {
                     return $this->length = $this->iterator->length();
                 }
             }
             $this->length = '_PHPTAL_LENGTH_UNKNOWN_';
         }
 
-        if ($this->length === '_PHPTAL_LENGTH_UNKNOWN_') // return length if end is discovered
-        {
+        if ($this->length === '_PHPTAL_LENGTH_UNKNOWN_') { // return length if end is discovered
             return $this->end ? $this->index + 1 : null;
         }
         return $this->length;
@@ -173,7 +213,9 @@ class RepeatController implements \Iterator
         $this->index++;
 
         // Prefetch the next element
-        if ($this->validOnNext) $this->prefetch();
+        if ($this->validOnNext) {
+            $this->prefetch();
+        }
 
         if ($this->uses_groups) {
             // Notify the grouping helper of the change
@@ -189,7 +231,7 @@ class RepeatController implements \Iterator
     private function initializeGroups()
     {
         if (!$this->uses_groups) {
-            $this->groups = new \PhpTal\RepeatControllerGroups();
+            $this->groups = new RepeatControllerGroups();
             $this->uses_groups = true;
         }
     }
@@ -197,7 +239,9 @@ class RepeatController implements \Iterator
     /**
      * Gets an object property
      *
-     * @return $var  Mixed  The variable value
+     * @param string $var
+     * @return mixed $var  Mixed  The variable value
+     * @throws Exception\VariableNotFoundException
      */
     public function __get($var)
     {
@@ -213,13 +257,13 @@ class RepeatController implements \Iterator
             case 'length':
                 return $this->length();
             case 'letter':
-                return strtolower( $this->int2letter($this->index+1) );
+                return strtolower($this->int2letter($this->index + 1));
             case 'Letter':
-                return strtoupper( $this->int2letter($this->index+1) );
+                return strtoupper($this->int2letter($this->index + 1));
             case 'roman':
-                return strtolower( $this->int2roman($this->index+1) );
+                return strtolower($this->int2roman($this->index + 1));
             case 'Roman':
-                return strtoupper( $this->int2roman($this->index+1) );
+                return strtoupper($this->int2roman($this->index + 1));
 
             case 'groups':
                 $this->initializeGroups();
@@ -234,19 +278,17 @@ class RepeatController implements \Iterator
             case 'last':
                 $this->initializeGroups();
                 // Compare the next one with the dictionary
-                $res = $this->groups->last( $this->iterator->current() );
+                $res = $this->groups->last($this->iterator->current());
                 return is_bool($res) ? $res : $this->groups;
 
             default:
-                throw new \PhpTal\Exception\VariableNotFoundException("Unable to find part '$var' in repeat variable");
+                throw new Exception\VariableNotFoundException("Unable to find part '$var' in repeat variable");
         }
     }
 
     /**
      * Fetches the next element from the source data store and
      * updates the end flag if needed.
-     *
-     * @access protected
      */
     protected function prefetch()
     {
@@ -255,7 +297,7 @@ class RepeatController implements \Iterator
         $this->key = $this->iterator->key();
 
         $this->iterator->next();
-        if ( !$this->iterator->valid() ) {
+        if (!$this->iterator->valid()) {
             $this->valid = false;
             $this->end = true;
         }
@@ -264,10 +306,9 @@ class RepeatController implements \Iterator
     /**
      * Converts an integer number (1 based) to a sequence of letters
      *
-     * @param int $int  The number to convert
+     * @param int $int The number to convert
      *
      * @return String   The letters equivalent as a, b, c-z ... aa, ab, ac-zz ...
-     * @access protected
      */
     protected function int2letter($int)
     {
@@ -278,7 +319,7 @@ class RepeatController implements \Iterator
         while ($int > 0) {
             $int--;
             $letters = $lookup[$int % $size] . $letters;
-            $int = floor($int / $size);
+            $int = (int) floor($int / $size);
         }
         return $letters;
     }
@@ -286,28 +327,27 @@ class RepeatController implements \Iterator
     /**
      * Converts an integer number (1 based) to a roman numeral
      *
-     * @param int $int  The number to convert
+     * @param int $int The number to convert
      *
-     * @return String   The roman numeral
-     * @access protected
+     * @return string   The roman numeral
      */
     protected function int2roman($int)
     {
-        $lookup = array(
-            '1000'  => 'M',
-            '900'   => 'CM',
-            '500'   => 'D',
-            '400'   => 'CD',
-            '100'   => 'C',
-            '90'    => 'XC',
-            '50'    => 'L',
-            '40'    => 'XL',
-            '10'    => 'X',
-            '9'     => 'IX',
-            '5'     => 'V',
-            '4'     => 'IV',
-            '1'     => 'I',
-        );
+        $lookup = [
+            '1000' => 'M',
+            '900' => 'CM',
+            '500' => 'D',
+            '400' => 'CD',
+            '100' => 'C',
+            '90' => 'XC',
+            '50' => 'L',
+            '40' => 'XL',
+            '10' => 'X',
+            '9' => 'IX',
+            '5' => 'V',
+            '4' => 'IV',
+            '1' => 'I',
+        ];
 
         $roman = '';
         foreach ($lookup as $max => $letters) {

@@ -28,19 +28,27 @@ interface TranslationServiceInterface
      *
      * setLanguage('fr_FR', 'fr_FR@euro')
      *
+     * @param array $langs
+     *
      * @return string - chosen language
      */
-    public function setLanguage(/*...*/);
+    public function setLanguage(...$langs);
 
     /**
      * PHPTAL will inform translation service what encoding page uses.
      * Output of translate() must be in this encoding.
+     *
+     * @param string $encoding
      */
     public function setEncoding($encoding);
 
     /**
      * Set the domain to use for translations (if different parts of application are translated in different files.
      * This is not for language selection).
+     *
+     * @param string $domain
+     *
+     * @return string
      */
     public function useDomain($domain);
 

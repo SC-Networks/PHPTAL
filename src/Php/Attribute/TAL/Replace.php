@@ -14,6 +14,10 @@
 
 namespace PhpTal\Php\Attribute\TAL;
 
+use PhpTal\Php\Attribute;
+use PhpTal\Php\CodeWriter;
+use PhpTal\Php\TalesChainExecutor;
+
 /**
  * TAL Specifications 1.4
  *
@@ -31,12 +35,21 @@ namespace PhpTal\Php\Attribute\TAL;
  * @package PHPTAL
  * @author Laurent Bedubourg <lbedubourg@motion-twin.com>
  */
-class Replace extends \PhpTal\Php\Attribute implements \PhpTal\Php\TalesChainReaderInterface
+class Replace extends Attribute implements \PhpTal\Php\TalesChainReaderInterface
+
 {
-    public function before(\PhpTal\Php\CodeWriter $codewriter)
+    /**
+     * Called before element printing.
+     *
+     * @param CodeWriter $codewriter
+     *
+     * @return void
+     * @throws \PhpTal\Exception\PhpTalException
+     */
+    public function before(CodeWriter $codewriter)
     {
         // tal:replace="" => do nothing and ignore node
-        if (trim($this->expression) == "") {
+        if (trim($this->expression) === '') {
             return;
         }
 
@@ -45,50 +58,78 @@ class Replace extends \PhpTal\Php\Attribute implements \PhpTal\Php\TalesChainRea
 
         // chained expression
         if (is_array($code)) {
-            return $this->replaceByChainedExpression($codewriter, $code);
+            $this->replaceByChainedExpression($codewriter, $code);
+            return;
         }
 
         // nothing do nothing
-        if ($code == \PhpTal\Php\TalesInternal::NOTHING_KEYWORD) {
+        if ($code === \PhpTal\Php\TalesInternal::NOTHING_KEYWORD) {
             return;
         }
 
         // default generate default tag content
-        if ($code == \PhpTal\Php\TalesInternal::DEFAULT_KEYWORD) {
-            return $this->generateDefault($codewriter);
+        if ($code === \PhpTal\Php\TalesInternal::DEFAULT_KEYWORD) {
+            $this->generateDefault($codewriter);
+            return;
         }
 
         // replace tag with result of expression
         $this->doEchoAttribute($codewriter, $code);
     }
 
-    public function after(\PhpTal\Php\CodeWriter $codewriter)
+    /**
+     * Called after element printing.
+     *
+     * @param CodeWriter $codewriter
+     *
+     * @return void
+     */
+    public function after(CodeWriter $codewriter)
     {
     }
 
     /**
      * support expressions like "foo | bar"
+     * @param CodeWriter $codewriter
+     * @param array $expArray
      */
-    private function replaceByChainedExpression(\PhpTal\Php\CodeWriter $codewriter, $expArray)
+    private function replaceByChainedExpression(CodeWriter $codewriter, $expArray)
     {
-        $executor = new \PhpTal\Php\TalesChainExecutor(
-            $codewriter, $expArray, $this
-        );
+        new TalesChainExecutor($codewriter, $expArray, $this);
     }
 
-    public function talesChainNothingKeyword(\PhpTal\Php\TalesChainExecutor $executor)
+    /**
+     * @param TalesChainExecutor $executor
+     *
+     * @return void
+     */
+    public function talesChainNothingKeyword(TalesChainExecutor $executor)
     {
         $executor->continueChain();
     }
 
-    public function talesChainDefaultKeyword(\PhpTal\Php\TalesChainExecutor $executor)
+    /**
+     * @param TalesChainExecutor $executor
+     *
+     * @return void
+     * @throws \PhpTal\Exception\PhpTalException
+     */
+    public function talesChainDefaultKeyword(TalesChainExecutor $executor)
     {
         $executor->doElse();
         $this->generateDefault($executor->getCodeWriter());
         $executor->breakChain();
     }
 
-    public function talesChainPart(\PhpTal\Php\TalesChainExecutor $executor, $exp, $islast)
+    /**
+     * @param TalesChainExecutor $executor
+     * @param string $exp
+     * @param bool $islast
+     *
+     * @return void
+     * @throws \PhpTal\Exception\PhpTalException
+     */
+    public function talesChainPart(TalesChainExecutor $executor, $exp, $islast)
     {
         if (!$islast) {
             $var = $executor->getCodeWriter()->createTempVariable();
@@ -103,8 +144,11 @@ class Replace extends \PhpTal\Php\Attribute implements \PhpTal\Php\TalesChainRea
 
     /**
      * don't replace - re-generate default content
+     * @param CodeWriter $codewriter
+     *
+     * @throws \PhpTal\Exception\PhpTalException
      */
-    private function generateDefault(\PhpTal\Php\CodeWriter $codewriter)
+    private function generateDefault(CodeWriter $codewriter)
     {
         $this->phpelement->generateSurroundHead($codewriter);
         $this->phpelement->generateHead($codewriter);

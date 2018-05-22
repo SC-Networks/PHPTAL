@@ -14,6 +14,10 @@
 
 namespace PhpTal\Php\Attribute\PHPTAL;
 
+use PhpTal\Exception\ParserException;
+use PhpTal\Php\Attribute;
+use PhpTal\Php\CodeWriter;
+
 /**
  *  phptal:cache (note that's not tal:cache) caches element's HTML for a given time. Time is a number with 'd', 'h', 'm' or 's' suffix.
  *  There's optional parameter that defines how cache should be shared. By default cache is not sensitive to template's context at all
@@ -32,63 +36,105 @@ namespace PhpTal\Php\Attribute\PHPTAL;
  *  <ul phptal:cache="1d per object/id">...</ul> <!-- <ul> be cached for one day, separately for each object. -->
  *
  * @package PHPTAL
-*/
-class Cache extends \PhpTal\Php\Attribute
+ */
+class Cache extends Attribute
 {
+    /**
+     * @var string
+     */
     private $cache_filename_var;
 
-    public function before(\PhpTal\Php\CodeWriter $codewriter)
+    /**
+     * Called before element printing.
+     *
+     * @param CodeWriter $codewriter
+     *
+     * @return void
+     * @throws ParserException
+     */
+    public function before(CodeWriter $codewriter)
     {
         // number or variable name followed by time unit
         // optional per expression
-        if (!preg_match('/^\s*([0-9]+\s*|[a-zA-Z][\/a-zA-Z0-9_]*\s+)([dhms])\s*(?:\;?\s*per\s+([^;]+)|)\s*$/', $this->expression, $matches)) {
-            throw new \PhpTal\Exception\ParserException("Cache attribute syntax error: ".$this->expression,
-                        $this->phpelement->getSourceFile(), $this->phpelement->getSourceLine());
+        if (!preg_match(
+            '/^\s*([0-9]+\s*|[a-zA-Z][\/a-zA-Z0-9_]*\s+)([dhms])\s*(?:\;?\s*per\s+([^;]+)|)\s*$/',
+            $this->expression,
+            $matches
+        )) {
+            throw new ParserException(
+                'Cache attribute syntax error: ' . $this->expression,
+                $this->phpelement->getSourceFile(),
+                $this->phpelement->getSourceLine()
+            );
         }
 
         $cache_len = $matches[1];
         if (!is_numeric($cache_len)) {
             $cache_len = $codewriter->evaluateExpression($cache_len);
 
-            if (is_array($cache_len)) throw new \PhpTal\Exception\ParserException("Chained expressions in cache length are not supported",
-                                        $this->phpelement->getSourceFile(), $this->phpelement->getSourceLine());
+            if (is_array($cache_len)) {
+                throw new ParserException(
+                    'Chained expressions in cache length are not supported',
+                    $this->phpelement->getSourceFile(),
+                    $this->phpelement->getSourceLine()
+                );
+            }
         }
         switch ($matches[2]) {
-            case 'd': $cache_len .= '*24'; /* no break */
-            case 'h': $cache_len .= '*60'; /* no break */
-            case 'm': $cache_len .= '*60'; /* no break */
+            case 'd':
+                $cache_len .= '*24'; /* no break */
+            case 'h':
+                $cache_len .= '*60'; /* no break */
+            case 'm':
+                $cache_len .= '*60'; /* no break */
         }
 
-        $cache_tag = '"'.addslashes( $this->phpelement->getQualifiedName() . ':' . $this->phpelement->getSourceLine()).'"';
+        $cache_tag = '"' . addslashes($this->phpelement->getQualifiedName() . ':' . $this->phpelement->getSourceLine()) . '"';
 
-        $cache_per_expression = isset($matches[3])?trim($matches[3]):null;
-        if ($cache_per_expression == 'url') {
+        $cache_per_expression = isset($matches[3]) ? trim($matches[3]) : null;
+        if ($cache_per_expression === 'url') {
             $cache_tag .= '.$_SERVER["REQUEST_URI"]';
-        } elseif ($cache_per_expression == 'nothing') {
+        } elseif ($cache_per_expression === 'nothing') {
             /* do nothing */
         } elseif ($cache_per_expression) {
-             $code = $codewriter->evaluateExpression($cache_per_expression);
+            $code = $codewriter->evaluateExpression($cache_per_expression);
 
-             if (is_array($code)) throw new \PhpTal\Exception\ParserException("Chained expressions in per-cache directive are not supported",
-                                                $this->phpelement->getSourceFile(), $this->phpelement->getSourceLine());
+            if (is_array($code)) {
+                throw new ParserException(
+                    'Chained expressions in per-cache directive are not supported',
+                    $this->phpelement->getSourceFile(),
+                    $this->phpelement->getSourceLine()
+                );
+            }
 
-             $cache_tag = '('.$code.')."@".' . $cache_tag;
+            $cache_tag = '(' . $code . ')."@".' . $cache_tag;
         }
 
         $this->cache_filename_var = $codewriter->createTempVariable();
-        $codewriter->doSetVar($this->cache_filename_var, $codewriter->str($codewriter->getCacheFilesBaseName()).'.md5('.$cache_tag.')' );
+        $codewriter->doSetVar(
+            $this->cache_filename_var,
+            $codewriter->str($codewriter->getCacheFilesBaseName()) . '.md5(' . $cache_tag . ')'
+        );
 
-        $cond = '!file_exists('.$this->cache_filename_var.') || time() - '.$cache_len.' >= filemtime('.$this->cache_filename_var.')';
+        $cond = '!file_exists(' . $this->cache_filename_var . ') || time() - ' . $cache_len . ' >= filemtime(' . $this->cache_filename_var . ')';
 
         $codewriter->doIf($cond);
         $codewriter->doEval('ob_start()');
     }
 
-    public function after(\PhpTal\Php\CodeWriter $codewriter)
+    /**
+     * Called after element printing.
+     *
+     * @param CodeWriter $codewriter
+     *
+     * @return void
+     * @throws \PhpTal\Exception\PhpTalException
+     */
+    public function after(CodeWriter $codewriter)
     {
-        $codewriter->doEval('file_put_contents('.$this->cache_filename_var.', ob_get_flush())');
+        $codewriter->doEval('file_put_contents(' . $this->cache_filename_var . ', ob_get_flush())');
         $codewriter->doElse();
-        $codewriter->doEval('readfile('.$this->cache_filename_var.')');
+        $codewriter->doEval('readfile(' . $this->cache_filename_var . ')');
         $codewriter->doEnd('if');
 
         $codewriter->recycleTempVariable($this->cache_filename_var);

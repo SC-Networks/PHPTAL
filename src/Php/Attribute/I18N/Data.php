@@ -14,6 +14,9 @@
 
 namespace PhpTal\Php\Attribute\I18N;
 
+use PhpTal\Php\Attribute;
+use PhpTal\Php\CodeWriter;
+
 /**
  * i18n:data
  *
@@ -28,8 +31,25 @@ namespace PhpTal\Php\Attribute\I18N;
  *
  * @package PHPTAL
  */
-class Data extends \PhpTal\Php\Attribute
+class Data extends Attribute
 {
-    public function before(\PhpTal\Php\CodeWriter $codewriter){}
-    public function after(\PhpTal\Php\CodeWriter $codewriter){}
+    /**
+     * Called before element printing.
+     *
+     * @param CodeWriter $codewriter
+     *
+     * @return void
+     */
+    public function before(CodeWriter $codewriter)
+    {
+    }
+
+    /**
+     * @param CodeWriter $codewriter
+     *
+     * @return void
+     */
+    public function after(CodeWriter $codewriter)
+    {
+    }
 }

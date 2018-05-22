@@ -20,16 +20,25 @@ namespace PhpTal;
  */
 class NothingKeyword implements KeywordsInterface
 {
+    /**
+     * @return string
+     */
     public function __toString()
     {
         return 'null';
     }
 
+    /**
+     * @return int
+     */
     public function count()
     {
         return 0;
     }
 
+    /**
+     * @return null
+     */
     public function jsonSerialize()
     {
         return null;

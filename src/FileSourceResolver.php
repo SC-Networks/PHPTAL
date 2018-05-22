@@ -23,18 +23,27 @@ class FileSourceResolver implements SourceResolverInterface
 {
 
     /**
-     * @var
+     * @var string[]
      */
-    private $_repositories;
+    private $repositories = [];
 
-    public function __construct($repositories)
+    /**
+     * FileSourceResolver constructor.
+     * @param array $repositories
+     */
+    public function __construct(array $repositories)
     {
-        $this->_repositories = $repositories;
+        $this->repositories = $repositories;
     }
 
+    /**
+     * @param string $path
+     * @return FileSource
+     * @throws Exception\IOException
+     */
     public function resolve($path)
     {
-        foreach ($this->_repositories as $repository) {
+        foreach ($this->repositories as $repository) {
             $file = $repository . DIRECTORY_SEPARATOR . $path;
             if (file_exists($file)) {
                 return new FileSource($file);

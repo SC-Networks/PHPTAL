@@ -20,5 +20,8 @@ namespace PhpTal;
  */
 interface KeywordsInterface extends \Countable
 {
+    /**
+     * @return string
+     */
     public function __toString();
 }

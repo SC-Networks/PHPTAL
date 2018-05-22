@@ -14,14 +14,21 @@
 
 namespace PhpTal\Dom;
 
+use PhpTal\Php\CodeWriter;
+
 /**
  * Document text data representation.
  *
  * @package PHPTAL
  */
-class Text extends \PhpTal\Dom\Node
+class Text extends Node
 {
-    public function generateCode(\PhpTal\Php\CodeWriter $codewriter)
+    /**
+     * use CodeWriter to compile this element to PHP code
+     *
+     * @param CodeWriter $codewriter
+     */
+    public function generateCode(CodeWriter $codewriter)
     {
         if ($this->getValueEscaped() !== '') {
             $codewriter->pushHTML($codewriter->interpolateHTML($this->getValueEscaped()));
