@@ -65,6 +65,7 @@
         "tests": "Run the project's unittest"
     },
     "suggest": {
-        "scn/phptal-lint": "Linter for phptal template files"
+        "scn/phptal-lint": "Linter for phptal template files",
+        "ext-gettext": "Php gettext extension for i18n support"
     }
 }
