@@ -1,0 +1,31 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>string:</title><link rel="stylesheet" type="text/css" href="https://phptal.org/nifty.css" /><meta name="generator" content="DocBook XSL Stylesheets V1.79.1" /><link rel="home" href="index.html" title="PHPTAL Manual" /><link rel="up" href="phptales.html" title="PHPTALES" /><link rel="prev" href="conditional.html" title="Alternative PHP operator syntax" /><link rel="next" href="tales-php.html" title="php:" /><link rel="article" href="introduction.html" title="Introduction" /><link rel="article" href="whyusephptal.html" title="Why use PHPTAL" /><link rel="article" href="installation.html" title="Installation" /><link rel="article" href="firstexample.html" title="First example" /><link rel="article" href="attributelanguage.html" title="Template Attribute Language" /><link rel="article" href="phpintegration.html" title="PHP Integration" /><link rel="appendix" href="sysadmin.html" title="Appendix A. Note for system administrators" /><link rel="appendix" href="usefullinks.html" title="Appendix B. Useful links" /><link rel="appendix" href="greetings.html" title="Appendix C. Greetings" /></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><td><a rel="prev" href="conditional.html">Prev</a></td><th><div class="breadcrumbs"><span class="breadcrumb-link"><a href="attributelanguage.html">Template Attribute Language</a></span> › <span class="breadcrumb-link"><a href="phptales.html">
+        <acronym class="acronym">PHPTALES</acronym>
+      </a></span> › <span class="breadcrumb-node">
+          <code class="code">string:</code>
+        </span></div></th><td align="right"><a rel="next" href="tales-php.html">Next</a></td></tr></table></div><div class="section" id="tales-string"><div class="titlepage"><div><div><h3 class="title">
+          <code class="code">string:</code>
+        </h3></div></div></div><p>        Because expressions are separated by a '
+          <code class="literal">;</code>' character, and        because '
+          <code class="literal">$</code>' marks the start of a path, you must use:        
+        </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>          '
+              <code class="literal">;;</code>' when you want to insert a real '
+              <code class="literal">;</code>' character in a string,          
+            </p></li><li class="listitem"><p>          '
+              <code class="literal">$$</code>' when you want to insert a real '
+              <code class="literal">$</code>' character in a string.          
+            </p></li></ul></div><div class="informalexample"><pre class="programlisting"><code class="xml">
+            &lt;span tal:replace="string:this is a $$100 page"/&gt;
+string:foo $bar baz       
+            &lt;!-- will replace $bar --&gt;
+string:foo $$bar baz      
+            &lt;!-- no interpolation --&gt;
+string:foo ; php:doFoo()  
+            &lt;!-- two different expressions --&gt;
+string:foo ;; php:doFoo() 
+            &lt;!-- only string --&gt;
+
+          </code></pre></div></div><div class="navfooter"><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="conditional.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="phptales.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="tales-php.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Alternative 
+          <acronym class="acronym">PHP</acronym> operator syntax
+         </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> 
+          <code class="code">php:</code>
+        </td></tr></table></div></body></html>

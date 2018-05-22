@@ -1,0 +1,26 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>Appendix A. Note for system administrators</title><link rel="stylesheet" type="text/css" href="https://phptal.org/nifty.css" /><meta name="generator" content="DocBook XSL Stylesheets V1.79.1" /><link rel="home" href="index.html" title="PHPTAL Manual" /><link rel="up" href="index.html" title="PHPTAL Manual" /><link rel="prev" href="custom-modifiers.html" title="Creating custom expression modifiers" /><link rel="next" href="usefullinks.html" title="Appendix B. Useful links" /><link rel="article" href="introduction.html" title="Introduction" /><link rel="article" href="whyusephptal.html" title="Why use PHPTAL" /><link rel="article" href="installation.html" title="Installation" /><link rel="article" href="firstexample.html" title="First example" /><link rel="article" href="attributelanguage.html" title="Template Attribute Language" /><link rel="article" href="phpintegration.html" title="PHP Integration" /><link rel="appendix" href="sysadmin.html" title="Appendix A. Note for system administrators" /><link rel="appendix" href="usefullinks.html" title="Appendix B. Useful links" /><link rel="appendix" href="greetings.html" title="Appendix C. Greetings" /></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><td><a rel="prev" href="custom-modifiers.html">Prev</a></td><th><div class="breadcrumbs"><span class="breadcrumb-link"><a href="index.html">PHPTAL Manual</a></span> › <span class="breadcrumb-node">Note for system administrators</span></div></th><td align="right"><a rel="next" href="usefullinks.html">Next</a></td></tr></table></div><div class="appendix" id="sysadmin"><div class="titlepage"><div><div><h1 class="title">Appendix A. Note for system administrators</h1></div></div></div><p>
+      <acronym class="acronym">PHPTAL</acronym> functions by generating 
+      <acronym class="acronym">PHP</acronym> files from the template's logic,          this means that it needs a directory to store those generated files so          they can be parsed by the 
+      <acronym class="acronym">PHP</acronym> interpreter.
+
+    </p><p>          By default 
+      <acronym class="acronym">PHPTAL</acronym> will use the system's temp directory (via 
+      <acronym class="acronym">PHP</acronym>'s          
+      <code class="function">sys_get_temp_dir()</code> function if available) or will try to guess where          it should be, 
+      <code class="filename">/tmp</code> on Unix like systems and 
+      <code class="filename">c:\windows\temp</code> on          Microsoft ones, to store the compiled templates. The default          destination can be changed to your liking by calling 
+      <a class="link" href="configuration.html#set-code-destination" title="setPhpCodeDestination( path)">
+        <code class="methodname">setPhpCodeDestination()</code>
+      </a>          method with the appropriate path.          Be it the system's temp directory or a custom one, it needs to have          its permissions setup as to allow the 
+      <acronym class="acronym">PHP</acronym> running process (the Apache          user if using mod_php or the cgi/fastcgi user otherwise) to create and          update files in that directory.
+
+    </p><p>
+      <acronym class="acronym">PHPTAL</acronym> creates one file for each different template file and one file          for each tag if using 
+      <a class="link" href="phptal-cache.html" title="phptal:cache">
+        <code class="sgmltag-element">phptal:cache</code>
+      </a>. It doesn't create separate files          for macros (which are simply compiled as 
+      <acronym class="acronym">PHP</acronym> functions inside the          compiled template file).          These files are automatically cleaned up once in a while, more          specifically, each time a template is compiled there is random          probability, controlled by 
+      <code class="methodname">setCachePurgeFrequency()</code> method, which will          just delete files older than set by 
+      <code class="methodname">setCacheLifetime()</code> method.          
+    </p><p>          Alternatively you can also schedule the deletion of old/unused files          by running this from an Unix-like shell (e.g. in a cron job):
+</p><div class="informalexample"><pre class="programlisting"><code>find /tmp/ -name tpl_\* \( -atime +1 -o -mtime +14 \) -delete</code></pre></div></div><div class="navfooter"><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="custom-modifiers.html">Prev</a> </td><td width="20%" align="center"> </td><td width="40%" align="right"> <a accesskey="n" href="usefullinks.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Creating custom expression modifiers </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> Appendix B. Useful links</td></tr></table></div></body></html>

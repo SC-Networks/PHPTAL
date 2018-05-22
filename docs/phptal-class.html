@@ -1,0 +1,106 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>class PHPTAL</title><link rel="stylesheet" type="text/css" href="https://phptal.org/nifty.css" /><meta name="generator" content="DocBook XSL Stylesheets V1.79.1" /><link rel="home" href="index.html" title="PHPTAL Manual" /><link rel="up" href="phpintegration.html" title="PHP Integration" /><link rel="prev" href="phpintegration.html" title="PHP Integration" /><link rel="next" href="configuration.html" title="Configuration methods" /><link rel="article" href="introduction.html" title="Introduction" /><link rel="article" href="whyusephptal.html" title="Why use PHPTAL" /><link rel="article" href="installation.html" title="Installation" /><link rel="article" href="firstexample.html" title="First example" /><link rel="article" href="attributelanguage.html" title="Template Attribute Language" /><link rel="article" href="phpintegration.html" title="PHP Integration" /><link rel="appendix" href="sysadmin.html" title="Appendix A. Note for system administrators" /><link rel="appendix" href="usefullinks.html" title="Appendix B. Useful links" /><link rel="appendix" href="greetings.html" title="Appendix C. Greetings" /><link rel="subsection" href="configuration.html" title="Configuration methods" /><link rel="subsection" href="execute.html" title="execute() method" /><link rel="subsection" href="echo-execute.html" title="echoExecute() method" /><link rel="subsection" href="add-prefilter.html" title="addPreFilter() method" /></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><td><a rel="prev" href="phpintegration.html">Prev</a></td><th><div class="breadcrumbs"><span class="breadcrumb-link"><a href="phpintegration.html">
+      <acronym class="acronym">PHP</acronym> Integration
+    </a></span> › <span class="breadcrumb-node">class 
+        <code class="classname">PHPTAL</code>
+      </span></div></th><td align="right"><a rel="next" href="configuration.html">Next</a></td></tr></table></div><div class="section" id="phptal-class"><div class="titlepage"><div><div><h2 class="title" style="clear: both">class 
+        <code class="classname">PHPTAL</code>
+      </h2></div></div></div><div class="toc"><ol class="toc"><li><span class="section"><a href="configuration.html">Configuration methods</a></span><ol><li><span class="section"><a href="configuration.html#set-output-mode">
+            <code class="methodname">setOutputMode(
+              <em class="replaceable"><code>mode</code></em>)
+            </code>
+          </a></span></li><li><span class="section"><a href="configuration.html#set-encoding">
+            <code class="methodname">setEncoding(
+              <em class="replaceable"><code>encoding</code></em>)
+            </code>
+          </a></span></li><li><span class="section"><a href="configuration.html#config-methods">Other methods</a></span></li></ol></li><li><span class="section"><a href="execute.html">
+          <code class="methodname">execute()</code> method
+        </a></span></li><li><span class="section"><a href="echo-execute.html">
+          <code class="methodname">echoExecute()</code> method
+        </a></span></li><li><span class="section"><a href="add-prefilter.html">
+          <code class="methodname">addPreFilter()</code> method
+        </a></span></li></ol></div><p>      This is the main library class for you to use.      </p><p>      The most common method of use:      </p><div class="informalexample"><pre class="programlisting"><code class="php">
+          &lt;?php
+
+// instantiate a new PhpTal\PHPTAL object using specified template file
+$tpl = new PhpTal\PHPTAL('mytemplate.xhtml');
+
+// setting some template context variables
+$tpl-&gt;title  = 'my title';
+$tpl-&gt;values = array(1,2,3,4);
+$tpl-&gt;user   = new User('Joe');
+
+// execute the template and echo the result in a 'secure' way
+try {
+    echo $tpl-&gt;execute();
+}
+catch (Exception $e){
+    echo "Exception thrown while processing template\n";
+    echo $e;
+}
+?&gt;
+
+        </code></pre></div><p>      You can perfectly well choose to specify the template source      after setting context variables.      </p><div class="informalexample"><pre class="programlisting"><code class="php">
+          &lt;?php
+…
+$tpl = new PhpTal\PHPTAL();
+
+// it is a matter of taste but you can use the set() method instead of
+// setting context using PHPTAL::__set() like above
+$tpl-&gt;set('title', 'my title');
+$tpl-&gt;set('values', array(1,2,3,4));
+$tpl-&gt;set('user', new User('Joe'));
+
+$tpl-&gt;setTemplate('mytemplate.xhtml');
+…
+?&gt;
+
+        </code></pre></div><p>      You can also decide to use a generated string as the template      source instead of using an existing template file:      </p><div class="informalexample"><pre class="programlisting"><code class="php">
+          
+          &lt;?php
+
+$src = &lt;&lt;&lt;EOS
+&lt;html&gt;&lt;head&gt;&lt;title tal:content="title"&gt;my title&lt;/title&gt;&lt;/head&gt;&lt;body&gt;&lt;h1 tal:content="title"&gt;my title&lt;/h1&gt;&lt;/body&gt;&lt;/html&gt;
+EOS;
+
+$tpl = new PhpTal\PHPTAL();
+$tpl-&gt;setSource($src);
+$tpl-&gt;title = 'this is my title';
+try {
+    echo $tpl-&gt;execute();
+}
+catch (Exception $e){
+    echo $e;
+}
+
+?&gt;
+
+        </code></pre></div><p>      In the above example, because 
+        <acronym class="acronym">PHPTAL</acronym> requires a template source      identifier (usually the template file realpath), 
+        <acronym class="acronym">PHPTAL</acronym> will use the md5      of the 
+        <code class="varname">$src</code> parameter as a unique identifier. You may decide to force the      identifier using a second 
+        <code class="methodname">setSource()</code> argument:      
+      </p><div class="informalexample"><pre class="programlisting"><code class="php">
+          
+          &lt;?php
+$src = &lt;&lt;&lt;EOS
+&lt;html&gt;&lt;head&gt;&lt;title tal:content="title"&gt;my title&lt;/title&gt;&lt;/head&gt;&lt;body&gt;&lt;h1 tal:content="title"&gt;my title&lt;/h1&gt;&lt;/body&gt;&lt;/html&gt;
+EOS;
+
+$tpl = new PhpTal\PHPTAL();
+
+// If you specify where the source comes from (second argument to setSource),
+// PHPTAL will be able to generate more helpful error messages.
+$tpl-&gt;setSource($src, __FILE__);
+$tpl-&gt;title = 'this is my title';
+try {
+    echo $tpl-&gt;execute();
+}
+catch (Exception $e){
+    echo $e;
+}
+
+?&gt;
+
+        </code></pre></div></div><div class="navfooter"><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="phpintegration.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="phpintegration.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="configuration.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">
+      <acronym class="acronym">PHP</acronym> Integration
+     </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> Configuration methods</td></tr></table></div></body></html>

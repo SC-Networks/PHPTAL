@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>interface PHPTAL_Filter</title><link rel="stylesheet" type="text/css" href="https://phptal.org/nifty.css" /><meta name="generator" content="DocBook XSL Stylesheets V1.79.1" /><link rel="home" href="index.html" title="PHPTAL Manual" /><link rel="up" href="phpintegration.html" title="PHP Integration" /><link rel="prev" href="phptal-dom.html" title="PHPTAL DOM" /><link rel="next" href="trigger-interface.html" title="interface PHPTAL_Trigger" /><link rel="article" href="introduction.html" title="Introduction" /><link rel="article" href="whyusephptal.html" title="Why use PHPTAL" /><link rel="article" href="installation.html" title="Installation" /><link rel="article" href="firstexample.html" title="First example" /><link rel="article" href="attributelanguage.html" title="Template Attribute Language" /><link rel="article" href="phpintegration.html" title="PHP Integration" /><link rel="appendix" href="sysadmin.html" title="Appendix A. Note for system administrators" /><link rel="appendix" href="usefullinks.html" title="Appendix B. Useful links" /><link rel="appendix" href="greetings.html" title="Appendix C. Greetings" /></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><td><a rel="prev" href="phptal-dom.html">Prev</a></td><th><div class="breadcrumbs"><span class="breadcrumb-link"><a href="phpintegration.html">
+      <acronym class="acronym">PHP</acronym> Integration
+    </a></span> › <span class="breadcrumb-node">interface 
+        <code class="classname">PHPTAL_Filter</code>
+      </span></div></th><td align="right"><a rel="next" href="trigger-interface.html">Next</a></td></tr></table></div><div class="section" id="filter-interface"><div class="titlepage"><div><div><h2 class="title" style="clear: both">interface 
+        <code class="classname">PHPTAL_Filter</code>
+      </h2></div></div></div><p>	This interface allows you to create filters for processing result of template execution. Post filters are set using 
+        <code class="methodname">setPostFilter()</code> method.      
+      </p><p>      Post filters are invoked after each template execution.      </p><div class="tip"><h4 class="title">Tip</h4><p>If your filter is slow, try using 
+          <a class="link" href="prefilters.html" title="class PHPTAL_PreFilter">pre filter</a> instead, which is  executed only once before template is compiled.
+        </p></div><p>Result of template processing (with values of all variables and no TAL markup) will be passed to your filter's 
+        <code class="methodname">filter()</code> method:
+      </p><div class="informalexample"><pre class="programlisting"><code class="php">
+          &lt;?php
+class MyPreFilter implements PhpTal\Tal\FilterInterface {
+    public function filter($source){
+        return $source;
+    }
+}
+
+class MyPostFilter implements PhpTal\Tal\FilterInterface {
+    public function filter($xhtml){
+        return $xhtml;
+    }
+}
+
+$tpl = new PhpTal\PHPTAL('mytemplate.xhtml');
+$tpl-&gt;setPostFilter(new MyPostFilter());
+echo $tpl-&gt;execute();
+?&gt;
+
+        </code></pre></div><div class="simplesect" id="idm45541416120512"><div class="titlepage"><div><div><h3 class="title">Multiple post filters</h3></div></div></div><p>      You can set only one post filter using      
+          <code class="methodname">setPostFilter()</code>. If you have more than one filter to chain, you can      wrap them into a single class, implementing the 
+          <code class="classname">PHPTAL_Filter</code>      interface, which would invoke the filter's chain.      
+        </p><div class="informalexample"><pre class="programlisting"><code class="php">
+            &lt;?php
+class FilterChain implements PhpTal\Tal\FilterInterface {
+    private $_filters = array();
+
+    public function add(PHPTAL_Filter $filter){
+        $this-&gt;_filters[] = $filter;
+    }
+
+    public function filter($source){
+        foreach($this-&gt;_filters as $filter){
+            $source = $filter-&gt;filter($source);
+        }
+        return $source;
+    }
+}
+
+$myfilter = new FilterChain();
+$myfilter-&gt;add(new CommentFilter());  // imaginary filter
+$myfilter-&gt;add(new TidyFilter());     // imaginary filter
+
+$tpl = new PhpTal\PHPTAL('mytemplate.xhtml');
+$tpl-&gt;setPostFilter($myFilter);
+echo $tpl-&gt;execute();
+?&gt;
+
+          </code></pre></div></div></div><div class="navfooter"><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="phptal-dom.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="phpintegration.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="trigger-interface.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">PHPTAL DOM </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> interface 
+        <code class="classname">PHPTAL_Trigger</code>
+      </td></tr></table></div></body></html>

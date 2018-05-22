@@ -1,0 +1,90 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>Creating custom expression modifiers</title><link rel="stylesheet" type="text/css" href="https://phptal.org/nifty.css" /><meta name="generator" content="DocBook XSL Stylesheets V1.79.1" /><link rel="home" href="index.html" title="PHPTAL Manual" /><link rel="up" href="phpintegration.html" title="PHP Integration" /><link rel="prev" href="gettext.html" title="Working with gettext" /><link rel="next" href="sysadmin.html" title="Appendix A. Note for system administrators" /><link rel="article" href="introduction.html" title="Introduction" /><link rel="article" href="whyusephptal.html" title="Why use PHPTAL" /><link rel="article" href="installation.html" title="Installation" /><link rel="article" href="firstexample.html" title="First example" /><link rel="article" href="attributelanguage.html" title="Template Attribute Language" /><link rel="article" href="phpintegration.html" title="PHP Integration" /><link rel="appendix" href="sysadmin.html" title="Appendix A. Note for system administrators" /><link rel="appendix" href="usefullinks.html" title="Appendix B. Useful links" /><link rel="appendix" href="greetings.html" title="Appendix C. Greetings" /></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><td><a rel="prev" href="gettext.html">Prev</a></td><th><div class="breadcrumbs"><span class="breadcrumb-link"><a href="phpintegration.html">
+      <acronym class="acronym">PHP</acronym> Integration
+    </a></span> › <span class="breadcrumb-node">Creating custom expression modifiers</span></div></th><td align="right"><a rel="next" href="sysadmin.html">Next</a></td></tr></table></div><div class="section" id="custom-modifiers"><div class="titlepage"><div><div><h2 class="title" style="clear: both">Creating custom expression modifiers</h2></div></div></div><p>
+        <acronym class="acronym">PHPTAL</acronym> comes with some basic expression modifiers (
+        <code class="code">not:</code>, 
+        <code class="code">exists:</code>,      
+        <code class="code">string:</code>, 
+        <code class="code">php:</code>, 
+        <code class="code">path:</code>).      
+      </p><p>      These modifiers are defined by 
+        <acronym class="acronym">ZPT</acronym> specifications but 
+        <acronym class="acronym">PHPTALES</acronym> can      be extended with your own modifiers to manipulate strings, date,      money numbers, objects, whatever…      
+      </p><p>      The aim of a modifier is to return some 
+        <acronym class="acronym">PHP</acronym> code that will be      included in the template 
+        <acronym class="acronym">PHP</acronym> source.      
+      </p><p>      Modifiers are used at parse time. If you change the behavior of a      modifier, you'll have to delete generated 
+        <acronym class="acronym">PHP</acronym> files and reparse      all templates using it.      
+      </p><p>      Please note that modifiers produce code, and mustn't echo data!      </p><p>      Any 
+        <acronym class="acronym">PHP</acronym> function starting with "
+        <code class="constant">phptal_tales_</code>" is usable as a      modifier.      
+      </p><p>      Modifiers takes two arguments:      </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
+            <code class="varname">$src</code>: the source string after the "modifier:" keyword        
+          </p></li><li class="listitem"><p>
+            <code class="varname">$nothrow</code>: a boolean which determines whether exceptions may	  be thrown or not by 
+            <code class="function">phptal_path()</code> resolution. This boolean	  must be propagated whenever you call another 
+            <code class="function">phptal_tales_
+              <em class="replaceable"><code>*</code></em>
+            </code>	  modifier from within your own modifier.	
+          </p></li></ul></div><p>      For example, in the following 
+        <acronym class="acronym">TAL</acronym> template,      
+      </p><div class="informalexample"><pre class="programlisting"><code class="xml">
+          &lt;span tal:replace="some-modifier: my/path/value"/&gt;
+
+        </code></pre></div><p>      The src argument will be "
+        <code class="varname">my/path/value</code>", and the 
+        <code class="varname">$nothrow</code> boolean      will be false, because 
+        <code class="sgmltag-element">tal:replace</code> requires the path to be fully      resolvable.      
+      </p><p>      An expression like:      </p><div class="informalexample"><pre class="programlisting"><code class="xml">
+          &lt;span tal:replace="some-modifier: my/path/value | other/path"/&gt;
+
+        </code></pre></div><p>      Will use 2 modifiers:      </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>        some-modifier: with "
+            <code class="code">my/path/value</code>" as 
+            <code class="varname">$src</code> argument and         
+            <code class="varname">$nothrow</code> set to true because an alternative exists        
+          </p></li><li class="listitem"><p>        path: with "
+            <code class="code">other/path</code>" as 
+            <code class="varname">$src</code>, and 
+            <code class="varname">$nothrow</code> set to false        because in case the alternative is not found, 
+            <code class="sgmltag-element">tal:replace</code> will        be in trouble.        
+          </p></li></ul></div><p>      Remember, 
+        <code class="code">path:</code> is the implicit modifier used when no other      modifier is specified.      
+      </p><p>      Modifiers can use other modifiers to generate simpler 
+        <acronym class="acronym">PHP</acronym>      code. The example below shows this.      
+      </p><div class="informalexample"><pre class="programlisting"><code class="php">
+          //
+// This modifier will return a money formated string (XXX.XX)
+//
+// usage:
+//
+//      money: path/to/my/amount
+//
+// this modifier uses phptal_tales() function to generate the
+// PHP code that will return the value of the modifier argument.
+//
+// in the example:
+//
+//      money: path/to/my/amount
+//
+// the produced code will be something looking like:
+//
+//      sprintf("%01.2f", phptal_path($ctx-&gt;path, "to/my/amount"))
+//
+// This code will be included right into the template where needed.
+//
+// @param string $src
+//      The expression string
+// @param string $nothrow
+//      A boolean indicating if exceptions may be throw by phptal_path if
+//      the path does not exists.
+// @return string
+//      PHP code to include in the template
+//
+function phptal_tales_money( $src, $nothrow )
+{
+    // remove spaces we do not require here
+    $src = trim($src);
+    return 'sprintf("%01.2f", '.phptal_tales($src, $nothrow).')';
+}
+
+        </code></pre></div></div><div class="navfooter"><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="gettext.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="phpintegration.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="sysadmin.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Working with gettext </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> Appendix A. Note for system administrators</td></tr></table></div></body></html>

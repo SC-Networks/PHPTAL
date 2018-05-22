@@ -1,0 +1,27 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>metal:define-slot</title><link rel="stylesheet" type="text/css" href="https://phptal.org/nifty.css" /><meta name="generator" content="DocBook XSL Stylesheets V1.79.1" /><link rel="home" href="index.html" title="PHPTAL Manual" /><link rel="up" href="metal.html" title="METAL namespace" /><link rel="prev" href="metal-use-macro.html" title="metal:use-macro" /><link rel="next" href="metal-fill-slot.html" title="metal:fill-slot" /><link rel="article" href="introduction.html" title="Introduction" /><link rel="article" href="whyusephptal.html" title="Why use PHPTAL" /><link rel="article" href="installation.html" title="Installation" /><link rel="article" href="firstexample.html" title="First example" /><link rel="article" href="attributelanguage.html" title="Template Attribute Language" /><link rel="article" href="phpintegration.html" title="PHP Integration" /><link rel="appendix" href="sysadmin.html" title="Appendix A. Note for system administrators" /><link rel="appendix" href="usefullinks.html" title="Appendix B. Useful links" /><link rel="appendix" href="greetings.html" title="Appendix C. Greetings" /></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><td><a rel="prev" href="metal-use-macro.html">Prev</a></td><th><div class="breadcrumbs"><span class="breadcrumb-link"><a href="attributelanguage.html">Template Attribute Language</a></span> › <span class="breadcrumb-link"><a href="metal.html">
+        <acronym class="acronym">METAL</acronym> namespace
+      </a></span> › <span class="breadcrumb-node">
+          <code class="sgmltag-element">metal:define-slot</code>
+        </span></div></th><td align="right"><a rel="next" href="metal-fill-slot.html">Next</a></td></tr></table></div><div class="section" id="metal-define-slot"><div class="titlepage"><div><div><h3 class="title">
+          <code class="sgmltag-element">metal:define-slot</code>
+        </h3></div></div></div><p>        This attribute must appear inside a 
+          <code class="sgmltag-element">metal:define-macro</code> tag.        
+        </p><p>        Slots can be replaced by caller template with some custom        dynamically-generated 
+          <acronym class="acronym">XML</acronym>/
+          <acronym class="acronym">XHTML</acronym>.        
+        </p><p>        Slots can be thought of like reverse includes, a macro can be an        entire page and slots customize this page depending on the 
+          <acronym class="acronym">URL</acronym>.        For instance, a slot may contain the latest news in the home page        or user actions when the member is logged in.        
+        </p><div class="informalexample"><pre class="programlisting"><code class="xml">
+            &lt;span metal:define-slot="news_place"&gt;&lt;table&gt;&lt;tr tal:repeat="item php:latestNews()"&gt;&lt;td tal:content="item/value"&gt;news description&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/span&gt;
+
+          </code></pre></div><p>        The above example defines a place called        '
+          <span class="emphasis"><em>news_place</em></span>' which can be overwritten by        caller templates. See next section for the continuation of this        example.        
+        </p><div class="warning"><h4 class="title">Warning</h4><p>Slots work like variables, not like 
+            <a class="link" href="metal-use-macro.html#macro-callback" title="Callbacks">callbacks</a>. 
+            <code class="sgmltag-element">metal:define-slot</code> in 
+            <code class="sgmltag-element">tal:repeat</code> will always repeat the same value over and over again.
+          </p></div></div><div class="navfooter"><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="metal-use-macro.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="metal.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="metal-fill-slot.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">
+          <code class="sgmltag-element">metal:use-macro</code>
+         </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> 
+          <code class="sgmltag-element">metal:fill-slot</code>
+        </td></tr></table></div></body></html>

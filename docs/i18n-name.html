@@ -1,0 +1,48 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>i18n:name</title><link rel="stylesheet" type="text/css" href="https://phptal.org/nifty.css" /><meta name="generator" content="DocBook XSL Stylesheets V1.79.1" /><link rel="home" href="index.html" title="PHPTAL Manual" /><link rel="up" href="i18n.html" title="I18N namespace" /><link rel="prev" href="i18n-attributes.html" title="i18n:attributes" /><link rel="next" href="xhtml-in-translations.html" title="XHTML in translations" /><link rel="article" href="introduction.html" title="Introduction" /><link rel="article" href="whyusephptal.html" title="Why use PHPTAL" /><link rel="article" href="installation.html" title="Installation" /><link rel="article" href="firstexample.html" title="First example" /><link rel="article" href="attributelanguage.html" title="Template Attribute Language" /><link rel="article" href="phpintegration.html" title="PHP Integration" /><link rel="appendix" href="sysadmin.html" title="Appendix A. Note for system administrators" /><link rel="appendix" href="usefullinks.html" title="Appendix B. Useful links" /><link rel="appendix" href="greetings.html" title="Appendix C. Greetings" /></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><td><a rel="prev" href="i18n-attributes.html">Prev</a></td><th><div class="breadcrumbs"><span class="breadcrumb-link"><a href="attributelanguage.html">Template Attribute Language</a></span> › <span class="breadcrumb-link"><a href="i18n.html">
+        <acronym class="acronym">I18N</acronym> namespace
+      </a></span> › <span class="breadcrumb-node">
+          <code class="sgmltag-element">i18n:name</code>
+        </span></div></th><td align="right"><a rel="next" href="xhtml-in-translations.html">Next</a></td></tr></table></div><div class="section" id="i18n-name"><div class="titlepage"><div><div><h3 class="title">
+          <code class="sgmltag-element">i18n:name</code>
+        </h3></div></div></div><p>        This attribute sets a translation variable value.        </p><p>        Translations may contain 
+          <code class="varname">${xxx}</code> strings where "
+          <code class="varname">xxx</code>" is the        name of a variable that needs to be interpolated dynamically.        
+        </p><p>        The value of this variable will be set to the tag and its        content. If you don't need the tag around the value, use        
+          <code class="sgmltag-element">tal:replace</code> instead of 
+          <code class="sgmltag-element">tal:content</code>. 
+          <code class="sgmltag-element">tal:omit-tag</code> may help if the        value is a concatenation of strings.        
+        </p><div class="informalexample"><pre class="programlisting"><code class="xml">
+            &lt;span i18n:name="myVar" tal:content="some/path"/&gt;
+            &lt;!-- &lt;span&gt;${some/path}&lt;/span&gt; --&gt;
+            &lt;span i18n:name="myVar" tal:replace="some/path"/&gt;
+            &lt;!-- ${some/path} --&gt;
+            &lt;span i18n:name="myVar"&gt;foo&lt;/span&gt;
+            &lt;!-- &lt;span&gt;foo&lt;/span&gt; --&gt;
+            &lt;span i18n:name="myVar" tal:omit-tag=""&gt;foo&lt;/span&gt;
+            &lt;!-- foo --&gt;
+
+          </code></pre></div><p>        An example of i18n usage:        </p><div class="informalexample"><pre class="programlisting"><code class="xml">
+            &lt;div i18n:translate=""&gt;
+  Welcome &lt;span i18n:name="user" tal:replace="user/name"/&gt;,
+  you have &lt;span i18n:name="mails" tal:replace="user/nbrMails"/&gt;
+  unread mails.
+&lt;/div&gt;
+
+          </code></pre></div><p>        The translation key of this example will be:        </p><div class="informalexample"><pre class="programlisting"><code>
+            "Welcome ${user}, you have ${mails} unread mails."
+
+          </code></pre></div><p>
+          <acronym class="acronym">PHPTAL</acronym> will replace 
+          <code class="varname">${user}</code> with 
+          <code class="varname">${user/name}</code> and 
+          <code class="varname">${mails}</code> with        
+          <code class="varname">${user/nbrMails}</code> in translation.        
+        </p><p>        More information about 
+          <acronym class="acronym">I18N</acronym> with 
+          <acronym class="acronym">PHPTAL</acronym> is available in the 
+          <acronym class="acronym">PHP</acronym>        section of this book.        
+        </p></div><div class="navfooter"><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="i18n-attributes.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="i18n.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="xhtml-in-translations.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">
+          <code class="sgmltag-element">i18n:attributes</code>
+         </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> 
+          <acronym class="acronym">XHTML</acronym> in translations
+        </td></tr></table></div></body></html>

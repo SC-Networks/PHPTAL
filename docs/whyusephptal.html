@@ -1,0 +1,36 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>Why use PHPTAL</title><link rel="stylesheet" type="text/css" href="https://phptal.org/nifty.css" /><meta name="generator" content="DocBook XSL Stylesheets V1.79.1" /><link rel="home" href="index.html" title="PHPTAL Manual" /><link rel="up" href="index.html" title="PHPTAL Manual" /><link rel="prev" href="introduction.html" title="Introduction" /><link rel="next" href="installation.html" title="Installation" /><link rel="article" href="introduction.html" title="Introduction" /><link rel="article" href="whyusephptal.html" title="Why use PHPTAL" /><link rel="article" href="installation.html" title="Installation" /><link rel="article" href="firstexample.html" title="First example" /><link rel="article" href="attributelanguage.html" title="Template Attribute Language" /><link rel="article" href="phpintegration.html" title="PHP Integration" /><link rel="appendix" href="sysadmin.html" title="Appendix A. Note for system administrators" /><link rel="appendix" href="usefullinks.html" title="Appendix B. Useful links" /><link rel="appendix" href="greetings.html" title="Appendix C. Greetings" /></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><td><a rel="prev" href="introduction.html">Prev</a></td><th><div class="breadcrumbs"><span class="breadcrumb-link"><a href="index.html">PHPTAL Manual</a></span> › <span class="breadcrumb-node">Why use 
+      <acronym class="acronym">PHPTAL</acronym>
+    </span></div></th><td align="right"><a rel="next" href="installation.html">Next</a></td></tr></table></div><div class="article" id="whyusephptal"><div class="titlepage"><div><div><h1 class="title">Why use 
+      <acronym class="acronym">PHPTAL</acronym>
+    </h1></div></div><hr /></div><p>
+      <acronym class="acronym">XML</acronym>/
+      <acronym class="acronym">HTML</acronym> templates exist to separate logic from presentation in web    services. This separation brings more than one accompanying benefit.    
+    </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>better application design</p></li><li class="listitem"><p>easier task repartition</p></li><li class="listitem"><p>better maintainability</p></li><li class="listitem"><p>easy web skins</p></li></ul></div><p>    Most template systems uses 
+      <code class="sgmltag-element">&lt;? ?&gt;</code>, 
+      <code class="sgmltag-element">&lt;% %&gt;</code> or    
+      <code class="sgmltag-element">&lt;xxx:yyy&gt;&lt;/xxx:yyy&gt;</code> tags to find their sections. It    allows easier template system development but doesn't really help    template designers.    
+    </p><p>
+      <acronym class="acronym">TAL</acronym> hides most of its logic in 
+      <acronym class="acronym">XML</acronym> attributes, preserving syntax and structure of 
+      <acronym class="acronym">XHTML</acronym>. This allows previewing of 
+      <acronym class="acronym">TAL</acronym> templates in web browser (
+      <acronym class="acronym">WYSIWYG</acronym> editors, live previews) and doesn't break 
+      <acronym class="acronym">HTML</acronym> syntax highlighting in programmers' editors.    
+    </p><p>    If you have already worked with a simple template system, then you must    have encountered something looking like:    </p><div class="informalexample"><pre class="programlisting"><code class="xml">
+        &lt;table&gt;&lt;%loop myarray as myitem %&gt;&lt;tr&gt;&lt;td&gt;&lt;% myitem %&gt;&lt;/td&gt;&lt;/tr&gt;&lt;%/loop%&gt;&lt;/table&gt;
+
+      </code></pre></div><p>    Well, with 
+      <acronym class="acronym">PHPTAL</acronym> you now can write:    
+    </p><div class="informalexample"><pre class="programlisting"><code class="xml">
+        &lt;table&gt;&lt;tr tal:repeat="myitem myarray"&gt;&lt;td tal:content="myitem"&gt;
+      text replaced by the item value
+    &lt;/td&gt;&lt;td tal:replace=""&gt;sample 1&lt;/td&gt;&lt;td tal:replace=""&gt;sample 2&lt;/td&gt;&lt;td tal:replace=""&gt;sample 3&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+
+      </code></pre></div><p>    The above code will render correctly with the sample    text in normal web browser, so you can present it to your clients even if the code    required to get '
+      <code class="code">myarray</code>' values doesn't yet exist.    
+    </p><p>    Another big advantage of 
+      <acronym class="acronym">PHPTAL</acronym> is that you benefit from more than 3    years of Zope community experience, documentation, examples, and help.    
+      <acronym class="acronym">PHPTAL</acronym> relies on this community to provide its users a great deal    of useful information.    
+    </p><p>
+      <acronym class="acronym">PHPTAL</acronym> is designed to be as customizable as possible for advanced    developers and performance-eating systems, but still be easy to use for    beginners, with a comfortable and simple default behavior (at least we    tried :)    
+    </p></div><div class="navfooter"><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="introduction.html">Prev</a> </td><td width="20%" align="center"> </td><td width="40%" align="right"> <a accesskey="n" href="installation.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Introduction </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> Installation</td></tr></table></div></body></html>

@@ -1,0 +1,145 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>Working with gettext</title><link rel="stylesheet" type="text/css" href="https://phptal.org/nifty.css" /><meta name="generator" content="DocBook XSL Stylesheets V1.79.1" /><link rel="home" href="index.html" title="PHPTAL Manual" /><link rel="up" href="phpintegration.html" title="PHP Integration" /><link rel="prev" href="i18n-setencoding.html" title="method setEncoding( $encoding)" /><link rel="next" href="custom-modifiers.html" title="Creating custom expression modifiers" /><link rel="article" href="introduction.html" title="Introduction" /><link rel="article" href="whyusephptal.html" title="Why use PHPTAL" /><link rel="article" href="installation.html" title="Installation" /><link rel="article" href="firstexample.html" title="First example" /><link rel="article" href="attributelanguage.html" title="Template Attribute Language" /><link rel="article" href="phpintegration.html" title="PHP Integration" /><link rel="appendix" href="sysadmin.html" title="Appendix A. Note for system administrators" /><link rel="appendix" href="usefullinks.html" title="Appendix B. Useful links" /><link rel="appendix" href="greetings.html" title="Appendix C. Greetings" /><link rel="subsection" href="gettext.html#i18n-directory" title="Creating the translation directory structure" /><link rel="subsection" href="gettext.html#po-files" title="Portable Object files" /><link rel="subsection" href="gettext.html#i18n-domains" title="Translation Domain" /><link rel="subsection" href="gettext.html#php-in-phptal" title="Using Translator in PHP" /><link rel="subsection" href="gettext.html#var-interpolation" title="Variable interpolation" /></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><td><a rel="prev" href="i18n-setencoding.html">Prev</a></td><th><div class="breadcrumbs"><span class="breadcrumb-link"><a href="phpintegration.html">
+      <acronym class="acronym">PHP</acronym> Integration
+    </a></span> › <span class="breadcrumb-node">Working with gettext</span></div></th><td align="right"><a rel="next" href="custom-modifiers.html">Next</a></td></tr></table></div><div class="section" id="gettext"><div class="titlepage"><div><div><h2 class="title" style="clear: both">Working with gettext</h2></div></div></div><div class="toc"><ol class="toc"><li><span class="section"><a href="gettext.html#i18n-directory">Creating the translation directory structure</a></span></li><li><span class="section"><a href="gettext.html#po-files">Portable Object files</a></span></li><li><span class="section"><a href="gettext.html#i18n-domains">Translation Domain</a></span></li><li><span class="section"><a href="gettext.html#php-in-phptal">Using Translator in 
+          <acronym class="acronym">PHP</acronym>
+        </a></span></li><li><span class="section"><a href="gettext.html#var-interpolation">Variable interpolation</a></span></li></ol></div><p>
+        <code class="literal">gettext</code> is a standard 
+        <acronym class="acronym">GNU</acronym> internationalization      / translation system which can be used with 
+        <acronym class="acronym">PHP</acronym> and which is      supported by 
+        <acronym class="acronym">PHPTAL</acronym>.      
+      </p><p>      The usage of 
+        <span class="productname">gettext</span>™ is simple but you will      have to perform some tests to be sure everything works fine on your      system.      
+      </p><p>      First, 
+        <acronym class="acronym">PHP</acronym> must be compiled with the      
+        <em class="parameter"><code>--with-gettext</code></em> flag. See 
+        <acronym class="acronym">PHP</acronym> documentation      for how to do this.      
+      </p><p>      You can test your installation using following peace of code:      </p><div class="informalexample"><pre class="programlisting"><code>
+          //
+// test if gettext extension is installed with php
+//
+
+if (!function_exists("gettext"))
+{
+    echo "gettext is not installed\n";
+}
+else
+{
+    echo "gettext is supported\n";
+}
+
+        </code></pre></div><div class="section" id="i18n-directory"><div class="titlepage"><div><div><h3 class="title">Creating the translation directory structure</h3></div></div></div><p>        The 
+          <acronym class="acronym">PHP</acronym>
+          <span class="productname">gettext</span>™ extension requires a specific structure which        will contain your translation files.        
+        </p><div class="informalexample"><pre class="programlisting"><code>
+            /path/to/your/translation_root/en_US/LC_MESSAGES/
+/path/to/your/translation_root/en_GB/LC_MESSAGES/
+/path/to/your/translation_root/fr_FR/LC_MESSAGES/
+/path/to/your/translation_root/es_ES/LC_MESSAGES/
+… and so on …
+
+          </code></pre></div><p>        The language code is composed of two characters defining the        language itself (en, fr, es, …) and two characters defining        the country (US, GB, FR, ES, …).        </p><p>        The directory pattern is:        </p><div class="informalexample"><pre class="programlisting"><code>
+            &lt;path_to_where_you_want&gt;/&lt;ll_CC&gt;/LC_MESSAGES/
+
+          </code></pre></div></div><div class="section" id="po-files"><div class="titlepage"><div><div><h3 class="title">Portable Object files</h3></div></div></div><p>        PO files are plain text files that contain your translation.        You can safely edit them by hand.        </p><p>        po minimalistic example (
+          <code class="filename">en_US/LC_MESSAGES/mydomain.po</code>):        
+        </p><div class="informalexample"><pre class="programlisting"><code class="po">
+            msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "Simple test"
+msgstr "A small sentence in english"
+
+          </code></pre></div><p>        Once edited, each PO file must be indexed using:        </p><div class="informalexample"><pre class="programlisting"><code class="sh">
+            msgfmt mydomain.po -o mydomain.mo
+
+          </code></pre></div><p>        This command won't work if you don't have 
+          <span class="productname">gettext</span>™ tools        installed on your system.        
+        </p><p>        This will produce a MO file (machine object) indexing your        translation for quick access.        </p><p>        Then you have to translate this file in other languages.        </p><p>        po minimalistic example (
+          <code class="filename">fr_FR/LC_MESSAGES/mydomain.po</code>):        
+        </p><div class="informalexample"><pre class="programlisting"><code class="po">
+            msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "Simple test"
+msgstr "Une petite phrase en français"
+
+          </code></pre></div><p>        The translation file must also be indexed:        </p><div class="informalexample"><pre class="programlisting"><code class="sh">
+            msgfmt mydomain.po -o mydomain.mo
+
+          </code></pre></div></div><div class="section" id="i18n-domains"><div class="titlepage"><div><div><h3 class="title">Translation Domain</h3></div></div></div><p>        The domain is matched against your translation file names. In        above examples we used 'mydomain' as domain name.        </p><p>        You can have more than one domain for the same application, it        can enhance 
+          <span class="productname">gettext</span>™'s performance to split your application        translations in more than one file.        
+        </p></div><div class="section" id="php-in-phptal"><div class="titlepage"><div><div><h3 class="title">Using Translator in 
+          <acronym class="acronym">PHP</acronym>
+        </h3></div></div></div><div class="informalexample"><pre class="programlisting"><code class="php">
+            &lt;?php
+try {
+    $tr = new PhpTal\GetTextTranslator();
+
+    // set language to use for this session (first valid language will
+    // be used)
+    $tr-&gt;setLanguage('en_GB.utf8', 'en_GB');
+
+    // register gettext domain to use
+    $tr-&gt;addDomain('mydomain', '/path/to/your/translation_root');
+
+    // specify current domain
+    $tr-&gt;useDomain('mydomain');
+
+    $tpl = new PhpTal\PHPTAL('mytemplate.xhtml');
+
+    // tell PHPTAL to use our translator
+    $tpl-&gt;setTranslator($tr);
+
+    // output translated template
+    echo $tpl-&gt;execute();
+}
+catch (Exception $e){
+    echo $e;
+}
+
+          </code></pre></div><p>If you need to translate some other text, that is not in the template (e.g. plaintext e-mail message), you can reuse PHPTAL's translator:</p><div class="informalexample"><pre class="programlisting"><code class="php">
+            $tr = $tpl-&gt;getTranslator();
+
+$subject = $tr-&gt;translate("Registration information");
+
+$tr-&gt;setVar("user",$username);
+$message = $tr-&gt;translate("Dear ${user}, thanks for registering!");
+
+mail($email, $subject, $message);
+
+          </code></pre></div><p>If you're using PHPTAL's standard 
+          <span class="productname">gettext</span>™ translator, you can use 
+          <code class="function">gettext()</code> too.
+        </p></div><div class="section" id="var-interpolation"><div class="titlepage"><div><div><h3 class="title">Variable interpolation</h3></div></div></div><p>        The 
+          <acronym class="acronym">I18N</acronym> namespace allows some variable interpolation in your        translations.        
+        </p><div class="informalexample"><pre class="programlisting"><code class="gettext">
+            # english
+msgid "welcome"
+msgstr "Welcome ${name} you have ${n} mails!"
+
+# french
+msgid "welcome"
+msgstr "Bienvenue ${name} vous avez recu ${n} messages!"
+
+          </code></pre></div><p>        A template can use this interpolation as follows:        </p><div class="informalexample"><pre class="programlisting"><code class="xml">
+            &lt;span i18n:translate="welcome"&gt;
+  Welcome
+  &lt;span i18n:name="name" tal:replace="user/name"/&gt;
+  you currently have
+  &lt;span i18n:name="n" tal:replace="user/unreadeMails"/&gt;
+  unread messages!
+&lt;/span&gt;
+
+          </code></pre></div><p>        Because 
+          <code class="sgmltag-element">i18n:translate</code> contains a value 
+          <code class="computeroutput">'welcome'</code>, the template        data will be ignored and the message given by 
+          <span class="productname">gettext</span>™ will be        used instead.        
+        </p></div></div><div class="navfooter"><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="i18n-setencoding.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="phpintegration.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="custom-modifiers.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">method 
+          <code class="methodname">setEncoding(
+            <em class="replaceable"><code>$encoding</code></em>)
+          </code>
+         </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> Creating custom expression modifiers</td></tr></table></div></body></html>

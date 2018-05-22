@@ -27,7 +27,7 @@
 	  </div>
 	</xsl:template>
 
-  <xsl:param name="html.stylesheet" select="'/nifty.css'"/>
+  <xsl:param name="html.stylesheet" select="'https://phptal.org/nifty.css'"/>
   <xsl:param name="html.extra.head.links" select="1"></xsl:param>
   <xsl:param name="navig.showtitles">1</xsl:param>
 
@@ -121,26 +121,6 @@
       </div>
     </xsl:if>
   </xsl:template>
-
-  <xsl:template name="user.header.navigation">
-    <div id="header"><div>
-      <h1><a href="/"><abbr>PHPTAL</abbr> PHP Template Attribute Language</a></h1>
-    </div>
-      </div>
-      <div id="menu">
-      <ul>
-          <li class="news"><a href="/">News</a></li>
-          <li class="introduction"><a href="/introduction.html">Introduction</a></li>
-          <li class="download"><a href="/download.html">Download</a></li>
-          <li class="current manuals"><a href="/manuals.html">Manuals</a></li>
-          <li class="faq">     <a href="/faq.html">FAQ</a></li>
-          <li class="contact"> <a href="/contact.html">Mailinglist</a></li>
-      </ul>
-      </div>
-
-
-
- </xsl:template>
 
 <xsl:template name="apply-highlighting">
   <!--

@@ -1,0 +1,30 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>tal:on-error</title><link rel="stylesheet" type="text/css" href="https://phptal.org/nifty.css" /><meta name="generator" content="DocBook XSL Stylesheets V1.79.1" /><link rel="home" href="index.html" title="PHPTAL Manual" /><link rel="up" href="tal-namespace.html" title="TAL namespace" /><link rel="prev" href="tal-attributes.html" title="tal:attributes" /><link rel="next" href="metal.html" title="METAL namespace" /><link rel="article" href="introduction.html" title="Introduction" /><link rel="article" href="whyusephptal.html" title="Why use PHPTAL" /><link rel="article" href="installation.html" title="Installation" /><link rel="article" href="firstexample.html" title="First example" /><link rel="article" href="attributelanguage.html" title="Template Attribute Language" /><link rel="article" href="phpintegration.html" title="PHP Integration" /><link rel="appendix" href="sysadmin.html" title="Appendix A. Note for system administrators" /><link rel="appendix" href="usefullinks.html" title="Appendix B. Useful links" /><link rel="appendix" href="greetings.html" title="Appendix C. Greetings" /></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><td><a rel="prev" href="tal-attributes.html">Prev</a></td><th><div class="breadcrumbs"><span class="breadcrumb-link"><a href="attributelanguage.html">Template Attribute Language</a></span> › <span class="breadcrumb-link"><a href="tal-namespace.html">
+        <acronym class="acronym">TAL</acronym> namespace
+      </a></span> › <span class="breadcrumb-node">
+          <code class="sgmltag-element">tal:on-error</code>
+        </span></div></th><td align="right"><a rel="next" href="metal.html">Next</a></td></tr></table></div><div class="section" id="tal-on-error"><div class="titlepage"><div><div><h3 class="title">
+          <code class="sgmltag-element">tal:on-error</code>
+        </h3></div></div></div><p>            When any runtime error occurs while generating the element, the element will be replaced with result of 
+          <span class="emphasis"><em>expression</em></span> in the 
+          <code class="sgmltag-element">tal:on-error</code> attribute.
+        </p><p>            Runtime errors are references to non-existent variables/paths/macros and any 
+          <acronym class="acronym">PHP</acronym> exceptions thrown in the tag content.
+        </p><div class="informalexample"><pre class="programlisting"><code class="xml">
+            &lt;span tal:on-error="string:No username defined here" tal:content="user/name"&gt;the user name here&lt;/span&gt;
+
+          </code></pre></div><p>        If an error occurs accessing '
+          <code class="varname">name</code>' or '
+          <code class="varname">user</code>', the error string        will be shown instead of the 
+          <code class="code">&lt;span&gt;</code> element.        
+        </p><p>        This also works on more than one level of template:        </p><div class="informalexample"><pre class="programlisting"><code class="xml">
+            &lt;span tal:on-error="string:error occurred somewhere"&gt;&lt;span tal:content="user/firstname"/&gt;&lt;span tal:content="user/lastname"/&gt;&lt;span metal:use-macro="userMenu" /&gt;&lt;/span&gt;
+
+          </code></pre></div><div class="note"><h4 class="title">Note</h4><p>Due to optimizations performed by 
+            <acronym class="acronym">PHPTAL</acronym>, 
+            <code class="sgmltag-element">tal:on-error</code> on element containing element with 
+            <code class="sgmltag-element">metal:fill-slot</code> may not catch errors that happened inside the slot.
+          </p></div></div><div class="navfooter"><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="tal-attributes.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="tal-namespace.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="metal.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">
+          <code class="sgmltag-element">tal:attributes</code>
+         </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> 
+        <acronym class="acronym">METAL</acronym> namespace
+      </td></tr></table></div></body></html>

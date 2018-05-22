@@ -1,0 +1,23 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>metal:fill-slot</title><link rel="stylesheet" type="text/css" href="https://phptal.org/nifty.css" /><meta name="generator" content="DocBook XSL Stylesheets V1.79.1" /><link rel="home" href="index.html" title="PHPTAL Manual" /><link rel="up" href="metal.html" title="METAL namespace" /><link rel="prev" href="metal-define-slot.html" title="metal:define-slot" /><link rel="next" href="i18n.html" title="I18N namespace" /><link rel="article" href="introduction.html" title="Introduction" /><link rel="article" href="whyusephptal.html" title="Why use PHPTAL" /><link rel="article" href="installation.html" title="Installation" /><link rel="article" href="firstexample.html" title="First example" /><link rel="article" href="attributelanguage.html" title="Template Attribute Language" /><link rel="article" href="phpintegration.html" title="PHP Integration" /><link rel="appendix" href="sysadmin.html" title="Appendix A. Note for system administrators" /><link rel="appendix" href="usefullinks.html" title="Appendix B. Useful links" /><link rel="appendix" href="greetings.html" title="Appendix C. Greetings" /></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><td><a rel="prev" href="metal-define-slot.html">Prev</a></td><th><div class="breadcrumbs"><span class="breadcrumb-link"><a href="attributelanguage.html">Template Attribute Language</a></span> › <span class="breadcrumb-link"><a href="metal.html">
+        <acronym class="acronym">METAL</acronym> namespace
+      </a></span> › <span class="breadcrumb-node">
+          <code class="sgmltag-element">metal:fill-slot</code>
+        </span></div></th><td align="right"><a rel="next" href="i18n.html">Next</a></td></tr></table></div><div class="section" id="metal-fill-slot"><div class="titlepage"><div><div><h3 class="title">
+          <code class="sgmltag-element">metal:fill-slot</code>
+        </h3></div></div></div><p>        This attribute can occur only inside 
+          <code class="sgmltag-element">metal:use-macro</code> element.        
+        </p><p>        This explicitly tells 
+          <acronym class="acronym">PHPTAL</acronym> to replace a defined slot with the        content provided inside the 
+          <code class="sgmltag-element">metal:fill-slot</code> attribute.        
+        </p><div class="informalexample"><pre class="programlisting"><code class="xml">
+            &lt;span tal:condition="logged" metal:fill-slot="news_place"&gt;&lt;h2&gt;user menu&lt;/h2&gt;&lt;ul&gt;&lt;li&gt;&lt;a href="/user/action/inbox"&gt;inbox&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="/user/action/new"&gt;new mail&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href="/user/action/disconnect"&gt;disconnect&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/span&gt;
+
+          </code></pre></div><p>        Slots give the opportunity to define really customizable and        reusable page templates with a simple push technology.        </p><div class="warning"><h4 class="title">Warning</h4><p>Slots work like variables, not like 
+            <a class="link" href="metal-use-macro.html#macro-callback" title="Callbacks">callbacks</a>. 
+            <code class="sgmltag-element">metal:fill-slot</code> in 
+            <code class="sgmltag-element">tal:repeat</code> will keep overwriting same slot over and over again.
+          </p></div></div><div class="navfooter"><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="metal-define-slot.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="metal.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="i18n.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">
+          <code class="sgmltag-element">metal:define-slot</code>
+         </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> 
+        <acronym class="acronym">I18N</acronym> namespace
+      </td></tr></table></div></body></html>

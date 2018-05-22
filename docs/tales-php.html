@@ -1,0 +1,33 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>php:</title><link rel="stylesheet" type="text/css" href="https://phptal.org/nifty.css" /><meta name="generator" content="DocBook XSL Stylesheets V1.79.1" /><link rel="home" href="index.html" title="PHPTAL Manual" /><link rel="up" href="phptales.html" title="PHPTALES" /><link rel="prev" href="tales-string.html" title="string:" /><link rel="next" href="tales-not.html" title="not:" /><link rel="article" href="introduction.html" title="Introduction" /><link rel="article" href="whyusephptal.html" title="Why use PHPTAL" /><link rel="article" href="installation.html" title="Installation" /><link rel="article" href="firstexample.html" title="First example" /><link rel="article" href="attributelanguage.html" title="Template Attribute Language" /><link rel="article" href="phpintegration.html" title="PHP Integration" /><link rel="appendix" href="sysadmin.html" title="Appendix A. Note for system administrators" /><link rel="appendix" href="usefullinks.html" title="Appendix B. Useful links" /><link rel="appendix" href="greetings.html" title="Appendix C. Greetings" /></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><td><a rel="prev" href="tales-string.html">Prev</a></td><th><div class="breadcrumbs"><span class="breadcrumb-link"><a href="attributelanguage.html">Template Attribute Language</a></span> › <span class="breadcrumb-link"><a href="phptales.html">
+        <acronym class="acronym">PHPTALES</acronym>
+      </a></span> › <span class="breadcrumb-node">
+          <code class="code">php:</code>
+        </span></div></th><td align="right"><a rel="next" href="tales-not.html">Next</a></td></tr></table></div><div class="section" id="tales-php"><div class="titlepage"><div><div><h3 class="title">
+          <code class="code">php:</code>
+        </h3></div></div></div><p>        This expression evaluates what follows as a regular 
+          <acronym class="acronym">PHP</acronym>        expression except that '
+          <code class="code">-&gt;</code>' is replaced by dots '
+          <code class="code">.</code>' and        variable names are prefixed with a dollar '
+          <code class="literal">$</code>'        sign.        
+        </p><p>        A dot '
+          <code class="code">.</code>' separated from the rest of expression by spaces is        assumed to be a concatenation sign.        
+        </p><div class="informalexample"><pre class="programlisting"><code>
+            php:htmlentities(foo)
+php:'string ${varReplaced}'
+php:'string ${some.path().to[0].var}'
+php:NOT foo OR (bar GT baz)
+php:a + b
+php:array('a', 'b', 'c')
+php:range(0, 90)
+php:foo . a.b.c(e) . htmlentities(SomeClass::staticMethod())
+php:SomeClass::ConstOfClass
+php:SomeClass::$staticVar
+
+          </code></pre></div><p>
+          <code class="code">php:</code> should be used with care and won't be needed in 80% of        your templates but sometimes you will need to invoke some        special 
+          <acronym class="acronym">PHP</acronym> method to be certain whether a user is logged in, or        to retrieve specific complex data depending on some conditions,        dynamically inside the template.        
+        </p></div><div class="navfooter"><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="tales-string.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="phptales.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="tales-not.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">
+          <code class="code">string:</code>
+         </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> 
+          <code class="code">not:</code>
+        </td></tr></table></div></body></html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>echoExecute() method</title><link rel="stylesheet" type="text/css" href="https://phptal.org/nifty.css" /><meta name="generator" content="DocBook XSL Stylesheets V1.79.1" /><link rel="home" href="index.html" title="PHPTAL Manual" /><link rel="up" href="phptal-class.html" title="class PHPTAL" /><link rel="prev" href="execute.html" title="execute() method" /><link rel="next" href="add-prefilter.html" title="addPreFilter() method" /><link rel="article" href="introduction.html" title="Introduction" /><link rel="article" href="whyusephptal.html" title="Why use PHPTAL" /><link rel="article" href="installation.html" title="Installation" /><link rel="article" href="firstexample.html" title="First example" /><link rel="article" href="attributelanguage.html" title="Template Attribute Language" /><link rel="article" href="phpintegration.html" title="PHP Integration" /><link rel="appendix" href="sysadmin.html" title="Appendix A. Note for system administrators" /><link rel="appendix" href="usefullinks.html" title="Appendix B. Useful links" /><link rel="appendix" href="greetings.html" title="Appendix C. Greetings" /></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><td><a rel="prev" href="execute.html">Prev</a></td><th><div class="breadcrumbs"><span class="breadcrumb-link"><a href="phpintegration.html">
+      <acronym class="acronym">PHP</acronym> Integration
+    </a></span> › <span class="breadcrumb-link"><a href="phptal-class.html">class 
+        <code class="classname">PHPTAL</code>
+      </a></span> › <span class="breadcrumb-node">
+          <code class="methodname">echoExecute()</code> method
+        </span></div></th><td align="right"><a rel="next" href="add-prefilter.html">Next</a></td></tr></table></div><div class="section" id="echo-execute"><div class="titlepage"><div><div><h3 class="title">
+          <code class="methodname">echoExecute()</code> method
+        </h3></div></div></div><p>Since most common use of 
+          <code class="methodname">execute()</code> method is to echo its output, 
+          <acronym class="acronym">PHPTAL</acronym> offers convenience method that echoes output immediately without buffering. This enables streaming of arbitrarily large output without hitting memory limit.
+        </p><div class="note"><h4 class="title">Note</h4><p>Fragments of template that use 
+            <code class="sgmltag-element">tal:on-error</code> or 
+            <code class="sgmltag-element">phptal:cache</code> are buffered regardless.
+          </p></div><p>The code:</p><div class="informalexample"><pre class="programlisting"><code class="php">
+            &lt;?php
+    $tpl = new PhpTal\PHPTAL('template.xhtml');
+    $tpl-&gt;echoExecute();
+?&gt;
+          </code></pre></div><p>is same as:</p><div class="informalexample"><pre class="programlisting"><code class="php">
+            &lt;?php
+    $tpl = new PhpTal\PHPTAL('template.xhtml');
+    echo $tpl-&gt;execute();
+?&gt;
+          </code></pre></div><p>but little faster.</p><div class="warning"><h4 class="title">Warning</h4><p>Currently 
+            <code class="methodname">echoExecute()</code> method has some unexpected limitations.
+          </p></div><div class="simplesect" id="idm45541416199584"><div class="titlepage"><div><div><h4 class="title">Limitations</h4></div></div></div><p>When 
+            <code class="methodname">echoExecute()</code> is used, 
+            <acronym class="acronym">PHPTAL</acronym> will throw exception if you call any macro defined in a file that has XML declaration or DOCTYPE.
+          </p><p>Typically 
+            <acronym class="acronym">PHPTAL</acronym> allows templates to "inherit" DOCTYPE from another file (useful when subpage is calling main layout template), however that is not possible without buffering.
+          </p><p>To work around this you can:</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>Keep using 
+                <code class="code">echo $tpl-&gt;execute()</code> until this limitation is lifted.
+              </p></li><li class="listitem"><p>Remove all DOCTYPEs and XML declarations from templates and echo them from PHP before calling 
+                <code class="methodname">echoExecute()</code>.
+              </p></li></ul></div></div></div><div class="navfooter"><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="execute.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="phptal-class.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="add-prefilter.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">
+          <code class="methodname">execute()</code> method
+         </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> 
+          <code class="methodname">addPreFilter()</code> method
+        </td></tr></table></div></body></html>
