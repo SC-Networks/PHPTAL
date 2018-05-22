@@ -21,6 +21,10 @@ interface SourceResolverInterface
 {
     /**
      * Returns Source or null.
+     *
+     * @param string $path
+     *
+     * @return FileSource
      */
     public function resolve($path);
 }

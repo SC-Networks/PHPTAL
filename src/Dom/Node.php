@@ -14,6 +14,8 @@
 
 namespace PhpTal\Dom;
 
+use PhpTal\Php\CodeWriter;
+
 /**
  * Document node abstract class.
  *
@@ -26,8 +28,32 @@ abstract class Node
      */
     public $parentNode;
 
-    private $value_escaped, $source_file, $source_line, $encoding;
+    /**
+     * @var string
+     */
+    private $value_escaped;
 
+    /**
+     * @var string
+     */
+    private $source_file;
+
+    /**
+     * @var int
+     */
+    private $source_line;
+
+    /**
+     * @var string
+     */
+    private $encoding;
+
+    /**
+     * Node constructor.
+     *
+     * @param string $value_escaped
+     * @param string $encoding
+     */
     public function __construct($value_escaped, $encoding)
     {
         $this->value_escaped = $value_escaped;
@@ -36,6 +62,9 @@ abstract class Node
 
     /**
      * hint where this node is in source code
+     *
+     * @param string $file
+     * @param int $line
      */
     public function setSource($file, $line)
     {
@@ -45,6 +74,8 @@ abstract class Node
 
     /**
      * file from which this node comes from
+     *
+     * @return string
      */
     public function getSourceFile()
     {
@@ -53,6 +84,8 @@ abstract class Node
 
     /**
      * line on which this node was defined
+     *
+     * @return int
      */
     public function getSourceLine()
     {
@@ -61,8 +94,10 @@ abstract class Node
 
     /**
      * depends on node type. Value will be escaped according to context that node comes from.
+     *
+     * @return string
      */
-    function getValueEscaped()
+    public function getValueEscaped()
     {
         return $this->value_escaped;
     }
@@ -73,7 +108,7 @@ abstract class Node
      *
      * @param string $value_escaped new content
      */
-    function setValueEscaped($value_escaped)
+    public function setValueEscaped($value_escaped)
     {
         $this->value_escaped = $value_escaped;
     }
@@ -81,14 +116,18 @@ abstract class Node
 
     /**
      * get value as plain text. Depends on node type.
+     *
+     * @return string
      */
-    function getValue()
+    public function getValue()
     {
         return html_entity_decode($this->getValueEscaped(), ENT_QUOTES, $this->encoding);
     }
 
     /**
-     * encoding used by vaule of this node.
+     * encoding used by value of this node.
+     *
+     * @return string
      */
     public function getEncoding()
     {
@@ -97,11 +136,16 @@ abstract class Node
 
     /**
      * use CodeWriter to compile this element to PHP code
+     *
+     * @param CodeWriter $codewriter
      */
-    public abstract function generateCode(\PhpTal\Php\CodeWriter $gen);
+    abstract public function generateCode(CodeWriter $codewriter);
 
-    function __toString()
+    /**
+     * @return string
+     */
+    public function __toString()
     {
-        return " “".$this->getValue()."” ";
+        return ' “' . $this->getValue() . '” ';
     }
 }

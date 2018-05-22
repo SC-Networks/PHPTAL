@@ -13,9 +13,23 @@
 
 namespace PhpTal\PreFilter;
 
+use PhpTal\Dom\Element;
+
 class StripComments extends \PhpTal\PreFilter
 {
-    public function filterDOM(\PhpTal\Dom\Element $element)
+    /**
+     * Receives root PHPTAL DOM node of parsed file and should edit it in place.
+     * Prefilters are called only once before template is compiled, so they can be slow.
+     *
+     * Default implementation does nothing. Override it.
+     *
+     * @see \PhpTal\Dom\Element class for methods and fields available.
+     *
+     * @param Element $element
+     * @return void
+     * @throws \PhpTal\Exception\PhpTalException
+     */
+    public function filterDOM(Element $element)
     {
         $defs = \PhpTal\Dom\Defs::getInstance();
 
@@ -27,7 +41,7 @@ class StripComments extends \PhpTal\PreFilter
                 } else {
                     $node->parentNode->removeChild($node);
                 }
-            } else if ($node instanceof \PhpTal\Dom\Element) {
+            } elseif ($node instanceof Element) {
                 $this->filterDOM($node);
             }
         }

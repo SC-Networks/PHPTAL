@@ -14,6 +14,8 @@
 
 namespace PhpTal;
 
+use PhpTal\Php\TalesInternal;
+
 /**
  * Global registry of TALES expression modifiers
  *
@@ -21,19 +23,23 @@ namespace PhpTal;
  */
 class TalesRegistry
 {
+    /**
+     * @var TalesRegistry
+     */
     private static $instance;
 
     /**
      * {callback, bool is_fallback}
+     * @var array
      */
-    private $_callbacks = [];
+    private $callbacks = [];
 
     /**
      * This is a singleton
      *
      * @return \PhpTal\TalesRegistry
      */
-    static public function getInstance()
+    public static function getInstance()
     {
         if (!self::$instance) {
             self::$instance = new TalesRegistry();
@@ -44,17 +50,17 @@ class TalesRegistry
 
     protected function __construct()
     {
-        $this->registerPrefix('not', array('\PhpTal\Php\TalesInternal', 'not'));
-        $this->registerPrefix('path', array('\PhpTal\Php\TalesInternal', 'path'));
-        $this->registerPrefix('string', array('\PhpTal\Php\TalesInternal', 'string'));
-        $this->registerPrefix('php', array('\PhpTal\Php\TalesInternal', 'php'));
-        $this->registerPrefix('exists', array('\PhpTal\Php\TalesInternal', 'exists'));
-        $this->registerPrefix('number', array('\PhpTal\Php\TalesInternal', 'number'));
-        $this->registerPrefix('true', array('\PhpTal\Php\TalesInternal', 'true'));
+        $this->registerPrefix('not', [TalesInternal::class, 'not']);
+        $this->registerPrefix('path', [TalesInternal::class, 'path']);
+        $this->registerPrefix('string', [TalesInternal::class, 'string']);
+        $this->registerPrefix('php', [TalesInternal::class, 'php']);
+        $this->registerPrefix('exists', [TalesInternal::class, 'exists']);
+        $this->registerPrefix('number', [TalesInternal::class, 'number']);
+        $this->registerPrefix('true', [TalesInternal::class, 'true']);
 
         // these are added as fallbacks
-        $this->registerPrefix('json', array('\PhpTal\Php\TalesInternal', 'json'), true);
-        $this->registerPrefix('urlencode', array('\PhpTal\Php\TalesInternal', 'urlencode'), true);
+        $this->registerPrefix('json', [TalesInternal::class, 'json'], true);
+        $this->registerPrefix('urlencode', [TalesInternal::class, 'urlencode'], true);
     }
 
     /**
@@ -62,15 +68,15 @@ class TalesRegistry
      *
      * @param string $prefix
      *
-     * @throws \PhpTal\Exception\ConfigurationException
+     * @throws Exception\ConfigurationException
      */
     public function unregisterPrefix($prefix)
     {
         if (!$this->isRegistered($prefix)) {
-            throw new \PhpTal\Exception\ConfigurationException("Expression modifier '$prefix' is not registered");
+            throw new Exception\ConfigurationException("Expression modifier '$prefix' is not registered");
         }
 
-        unset($this->_callbacks[$prefix]);
+        unset($this->callbacks[$prefix]);
     }
 
     /**
@@ -81,41 +87,42 @@ class TalesRegistry
      * @param string $prefix
      * @param mixed $callback
      * @param bool $is_fallback if true, method will be used as last resort (if there's no phptal_tales_foo)
+     * @throws Exception\ConfigurationException
+     * @throws \ReflectionException
      */
     public function registerPrefix($prefix, $callback, $is_fallback = false)
     {
-        if ($this->isRegistered($prefix) && !$this->_callbacks[$prefix]['is_fallback']) {
+        if ($this->isRegistered($prefix) && !$this->callbacks[$prefix]['is_fallback']) {
             if ($is_fallback) {
                 return; // simply ignored
             }
-            throw new \PhpTal\Exception\ConfigurationException("Expression modifier '$prefix' is already registered");
+            throw new Exception\ConfigurationException("Expression modifier '$prefix' is already registered");
         }
 
         // Check if valid callback
 
         if (is_array($callback)) {
-
             $class = new \ReflectionClass($callback[0]);
 
             if (!$class->isSubclassOf(TalesInterface::class)) {
-                throw new \PhpTal\Exception\ConfigurationException('The class you want to register does not implement "\PhpTal\Tales".');
+                throw new Exception\ConfigurationException(
+                    'The class you want to register does not implement "\PhpTal\Tales".'
+                );
             }
 
             $method = new \ReflectionMethod($callback[0], $callback[1]);
 
             if (!$method->isStatic()) {
-                throw new \PhpTal\Exception\ConfigurationException('The method you want to register is not static.');
+                throw new Exception\ConfigurationException('The method you want to register is not static.');
             }
 
             // maybe we want to check the parameters the method takes
 
-        } else {
-            if (!function_exists($callback)) {
-                throw new \PhpTal\Exception\ConfigurationException('The function you are trying to register does not exist.');
-            }
+        } elseif (!function_exists($callback)) {
+            throw new Exception\ConfigurationException('The function you are trying to register does not exist.');
         }
 
-        $this->_callbacks[$prefix] = array('callback'=>$callback, 'is_fallback'=>$is_fallback);
+        $this->callbacks[$prefix] = ['callback' => $callback, 'is_fallback' => $is_fallback];
     }
 
     /**
@@ -127,27 +134,40 @@ class TalesRegistry
      */
     private function isRegistered($prefix)
     {
-        return array_key_exists($prefix, $this->_callbacks);
+        return array_key_exists($prefix, $this->callbacks);
     }
 
+    /**
+     * @param string $typePrefix
+     *
+     * @return array|null|string
+     * @throws Exception\UnknownModifierException
+     * @throws \ReflectionException
+     */
     private function findUnregisteredCallback($typePrefix)
     {
         // class method
         if (strpos($typePrefix, '.')) {
             $classCallback = explode('.', $typePrefix, 2);
-            $callbackName  = null;
+            $callbackName = null;
             if (!is_callable($classCallback, false, $callbackName)) {
-                throw new \PhpTal\Exception\UnknownModifierException("Unknown phptal modifier $typePrefix. Function $callbackName does not exists or is not statically callable", $typePrefix);
+                throw new Exception\UnknownModifierException(
+                    "Unknown phptal modifier $typePrefix. Function $callbackName does not exists or is not statically callable",
+                    $typePrefix
+                );
             }
             $ref = new \ReflectionClass($classCallback[0]);
-            if (!$ref->implementsInterface('\PhpTal\TalesInterface')) {
-                throw new \PhpTal\Exception\UnknownModifierException("Unable to use phptal modifier $typePrefix as the class $callbackName does not implement the \PhpTal\Tales interface", $typePrefix);
+            if (!$ref->implementsInterface(TalesInterface::class)) {
+                throw new Exception\UnknownModifierException(
+                    "Unable to use phptal modifier $typePrefix as the class $callbackName does not implement the \PhpTal\Tales interface",
+                    $typePrefix
+                );
             }
             return $classCallback;
         }
 
         // check if it is implemented via code-generating function
-        $func = 'phptal_tales_'.str_replace('-', '_', $typePrefix);
+        $func = 'phptal_tales_' . str_replace('-', '_', $typePrefix);
         if (function_exists($func)) {
             return $func;
         }
@@ -158,20 +178,25 @@ class TalesRegistry
     /**
      * get callback for the prefix
      *
+     * @param $prefix
+     *
      * @return callback or NULL
+     * @throws Exception\UnknownModifierException
+     * @throws \ReflectionException
      */
     public function getCallback($prefix)
     {
-        if ($this->isRegistered($prefix) && !$this->_callbacks[$prefix]['is_fallback']) {
-            return $this->_callbacks[$prefix]['callback'];
+        if ($this->isRegistered($prefix) && !$this->callbacks[$prefix]['is_fallback']) {
+            return $this->callbacks[$prefix]['callback'];
         }
 
-        if ($callback = $this->findUnregisteredCallback($prefix)) {
+        $callback = $this->findUnregisteredCallback($prefix);
+        if ($callback) {
             return $callback;
         }
 
         if ($this->isRegistered($prefix)) {
-            return $this->_callbacks[$prefix]['callback'];
+            return $this->callbacks[$prefix]['callback'];
         }
 
         return null;

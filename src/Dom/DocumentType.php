@@ -14,14 +14,21 @@
 
 namespace PhpTal\Dom;
 
+use PhpTal\Php\CodeWriter;
+
 /**
  * Document doctype representation.
  *
  * @package PHPTAL
  */
-class DocumentType extends \PhpTal\Dom\Node
+class DocumentType extends Node
 {
-    public function generateCode(\PhpTal\Php\CodeWriter $codewriter)
+    /**
+     * use CodeWriter to compile this element to PHP code
+     *
+     * @param CodeWriter $codewriter
+     */
+    public function generateCode(CodeWriter $codewriter)
     {
         if ($codewriter->getOutputMode() === \PhpTal\PHPTAL::HTML5) {
             $codewriter->setDocType('<!DOCTYPE html>');

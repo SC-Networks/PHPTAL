@@ -23,7 +23,17 @@ interface TriggerInterface
     const SKIPTAG = 1;
     const PROCEED = 2;
 
+    /**
+     * @param $id
+     * @param $tpl
+     * @return mixed
+     */
     public function start($id, $tpl);
 
+    /**
+     * @param $id
+     * @param $tpl
+     * @return mixed
+     */
     public function end($id, $tpl);
 }

@@ -27,6 +27,10 @@ interface FilterInterface
      *
      * In postfilter template output is passed to this method, and final output goes to the browser.
      * TAL or PHP tags won't be executed. Postfilters should be fast.
+     *
+     * @param string $str
+     *
+     * @return string
      */
     public function filter($str);
 }

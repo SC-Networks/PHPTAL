@@ -37,8 +37,9 @@ abstract class TalNamespace
 
     /**
      * TalNamespace constructor.
-     * @param $prefix
-     * @param $namespace_uri
+     *
+     * @param string $prefix
+     * @param string $namespace_uri
      * @throws Exception\ConfigurationException
      */
     public function __construct($prefix, $namespace_uri)

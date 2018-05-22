@@ -30,7 +30,10 @@ abstract class Attribute
     const ECHO_TEXT = 'text';
     const ECHO_STRUCTURE = 'structure';
 
-    protected $_echoType = Attribute::ECHO_TEXT;
+    /**
+     * @var string
+     */
+    protected $echoType = Attribute::ECHO_TEXT;
 
     /** Attribute value specified by the element. */
     protected $expression;
@@ -40,13 +43,21 @@ abstract class Attribute
 
     /**
      * Called before element printing.
+     *
+     * @param CodeWriter $codewriter
+     *
+     * @return void
      */
-    abstract function before(CodeWriter $codewriter);
+    abstract public function before(CodeWriter $codewriter);
 
     /**
      * Called after element printing.
+     *
+     * @param CodeWriter $codewriter
+     *
+     * @return void
      */
-    abstract function after(CodeWriter $codewriter);
+    abstract public function after(CodeWriter $codewriter);
 
     function __construct(\PhpTal\Dom\Element $phpelement, $expression)
     {
@@ -72,16 +83,17 @@ abstract class Attribute
         if (preg_match('/^(text|structure)\s+(.*?)$/ism', $expression, $m)) {
             list(, $echoType, $expression) = $m;
         }
-        $this->_echoType = strtolower($echoType);
+        $this->echoType = strtolower($echoType);
         return trim($expression);
     }
 
     protected function doEchoAttribute(CodeWriter $codewriter, $code)
     {
-        if ($this->_echoType === self::ECHO_TEXT)
+        if ($this->echoType === self::ECHO_TEXT) {
             $codewriter->doEcho($code);
-        else
+        } else {
             $codewriter->doEchoRaw($code);
+        }
     }
 
     protected function parseSetExpression($exp)

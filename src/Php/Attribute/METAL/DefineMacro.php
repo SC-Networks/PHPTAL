@@ -14,6 +14,11 @@
 
 namespace PhpTal\Php\Attribute\METAL;
 
+use PhpTal\Exception\ParserException;
+use PhpTal\Exception\TemplateException;
+use PhpTal\Php\Attribute;
+use PhpTal\Php\CodeWriter;
+
 /**
  * METAL Specification 1.0
  *
@@ -36,19 +41,34 @@ namespace PhpTal\Php\Attribute\METAL;
  * @package PHPTAL
  * @author Laurent Bedubourg <lbedubourg@motion-twin.com>
  */
-class DefineMacro extends \PhpTal\Php\Attribute
+class DefineMacro extends Attribute
 {
-    public function before(\PhpTal\Php\CodeWriter $codewriter)
+    /**
+     * Called before element printing.
+     *
+     * @param CodeWriter $codewriter
+     *
+     * @return void
+     * @throws ParserException
+     * @throws TemplateException
+     */
+    public function before(CodeWriter $codewriter)
     {
-        $macroname = strtr(trim($this->expression), '-', '_');
+        $macroname = str_replace('-', '_', trim($this->expression));
         if (!preg_match('/^[a-z0-9_]+$/i', $macroname)) {
-            throw new \PhpTal\Exception\ParserException('Bad macro name "'.$macroname.'"',
-                $this->phpelement->getSourceFile(), $this->phpelement->getSourceLine());
+            throw new ParserException(
+                'Bad macro name "'.$macroname.'"',
+                $this->phpelement->getSourceFile(),
+                $this->phpelement->getSourceLine()
+            );
         }
 
         if ($codewriter->functionExists($macroname)) {
-            throw new \PhpTal\Exception\TemplateException("Macro $macroname is defined twice",
-                $this->phpelement->getSourceFile(), $this->phpelement->getSourceLine());
+            throw new TemplateException(
+                "Macro $macroname is defined twice",
+                $this->phpelement->getSourceFile(),
+                $this->phpelement->getSourceLine()
+            );
         }
 
         $codewriter->doFunction($macroname, '\PhpTal\PHPTAL $_thistpl, \PhpTal\PHPTAL $tpl');
@@ -59,7 +79,15 @@ class DefineMacro extends \PhpTal\Php\Attribute
         $codewriter->doDoctype(true);
     }
 
-    public function after(\PhpTal\Php\CodeWriter $codewriter)
+    /**
+     * Called after element printing.
+     *
+     * @param CodeWriter $codewriter
+     *
+     * @return void
+     * @throws \PhpTal\Exception\PhpTalException
+     */
+    public function after(CodeWriter $codewriter)
     {
         $codewriter->doEnd('function');
     }

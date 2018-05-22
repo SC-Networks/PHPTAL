@@ -14,6 +14,8 @@
 
 namespace PhpTal\Php\Attribute\I18N;
 
+use PhpTal\Php\CodeWriter;
+
 /**
  * i18n:target
  *
@@ -37,6 +39,25 @@ namespace PhpTal\Php\Attribute\I18N;
  */
 class Target extends \PhpTal\Php\Attribute
 {
-    public function before(\PhpTal\Php\CodeWriter $codewriter){}
-    public function after(\PhpTal\Php\CodeWriter $codewriter){}
+    /**
+     * Called before element printing.
+     *
+     * @param CodeWriter $codewriter
+     *
+     * @return void
+     */
+    public function before(CodeWriter $codewriter)
+    {
+    }
+
+    /**
+     * Called after element printing.
+     *
+     * @param CodeWriter $codewriter
+     *
+     * @return void
+     */
+    public function after(CodeWriter $codewriter)
+    {
+    }
 }

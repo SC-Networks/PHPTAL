@@ -14,6 +14,11 @@
 
 namespace PhpTal\Php\Attribute\TAL;
 
+use PhpTal\Php\Attribute;
+use PhpTal\Php\CodeWriter;
+use PhpTal\Php\TalesChainExecutor;
+use PhpTal\Php\TalesChainReaderInterface;
+
 /** TAL Specifications 1.4
  *
  *     argument ::= (['text'] | 'structure') expression
@@ -28,44 +33,80 @@ namespace PhpTal\Php\Attribute\TAL;
  * @package PHPTAL
  * @author Laurent Bedubourg <lbedubourg@motion-twin.com>
  */
-class Content extends \PhpTal\Php\Attribute implements \PhpTal\Php\TalesChainReaderInterface
+class Content extends Attribute implements TalesChainReaderInterface
 {
-    public function before(\PhpTal\Php\CodeWriter $codewriter)
+    /**
+     * Called before element printing.
+     *
+     * @param CodeWriter $codewriter
+     *
+     * @return void
+     */
+    public function before(CodeWriter $codewriter)
     {
         $expression = $this->extractEchoType($this->expression);
 
         $code = $codewriter->evaluateExpression($expression);
 
         if (is_array($code)) {
-            return $this->generateChainedContent($codewriter, $code);
-        }
-
-        if ($code == \PhpTal\Php\TalesInternal::NOTHING_KEYWORD) {
+            $this->generateChainedContent($codewriter, $code);
             return;
         }
 
-        if ($code == \PhpTal\Php\TalesInternal::DEFAULT_KEYWORD) {
-            return $this->generateDefault($codewriter);
+        if ($code === \PhpTal\Php\TalesInternal::NOTHING_KEYWORD) {
+            return;
+        }
+
+        if ($code === \PhpTal\Php\TalesInternal::DEFAULT_KEYWORD) {
+            $this->generateDefault($codewriter);
+            return;
         }
 
         $this->doEchoAttribute($codewriter, $code);
     }
 
-    public function after(\PhpTal\Php\CodeWriter $codewriter)
+    /**
+     * Called after element printing.
+     *
+     * @param CodeWriter $codewriter
+     *
+     * @return void
+     */
+    public function after(CodeWriter $codewriter)
     {
     }
 
-    private function generateDefault(\PhpTal\Php\CodeWriter $codewriter)
+    /**
+     * @param CodeWriter $codewriter
+     *
+     * @return void
+     */
+    private function generateDefault(CodeWriter $codewriter)
     {
         $this->phpelement->generateContent($codewriter, true);
     }
 
-    protected function generateChainedContent(\PhpTal\Php\CodeWriter $codewriter, $code)
+    /**
+     * @param CodeWriter $codewriter
+     * @param array $code
+     *
+     * @return void
+     */
+    protected function generateChainedContent(CodeWriter $codewriter, $code)
     {
-        $executor = new \PhpTal\Php\TalesChainExecutor($codewriter, $code, $this);
+        // todo yep, indeed, this thing executes logic, a lot of it, in the constructor
+        new TalesChainExecutor($codewriter, $code, $this);
     }
 
-    public function talesChainPart(\PhpTal\Php\TalesChainExecutor $executor, $exp, $islast)
+    /**
+     * @param TalesChainExecutor $executor
+     * @param string $exp
+     * @param bool $islast
+     *
+     * @return void
+     * @throws \PhpTal\Exception\PhpTalException
+     */
+    public function talesChainPart(TalesChainExecutor $executor, $exp, $islast)
     {
         if (!$islast) {
             $var = $executor->getCodeWriter()->createTempVariable();
@@ -78,12 +119,22 @@ class Content extends \PhpTal\Php\Attribute implements \PhpTal\Php\TalesChainRea
         }
     }
 
-    public function talesChainNothingKeyword(\PhpTal\Php\TalesChainExecutor $executor)
+    /**
+     * @param TalesChainExecutor $executor
+     *
+     * @return void
+     */
+    public function talesChainNothingKeyword(TalesChainExecutor $executor)
     {
         $executor->breakChain();
     }
 
-    public function talesChainDefaultKeyword(\PhpTal\Php\TalesChainExecutor $executor)
+    /**
+     * @param TalesChainExecutor $executor
+     *
+     * @return void
+     */
+    public function talesChainDefaultKeyword(TalesChainExecutor $executor)
     {
         $executor->doElse();
         $this->generateDefault($executor->getCodeWriter());

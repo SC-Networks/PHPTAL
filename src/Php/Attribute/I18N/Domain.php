@@ -14,6 +14,8 @@
 
 namespace PhpTal\Php\Attribute\I18N;
 
+use PhpTal\Php\CodeWriter;
+
 /**
  * i18n:domain
  *
@@ -26,7 +28,16 @@ namespace PhpTal\Php\Attribute\I18N;
  */
 class Domain extends \PhpTal\Php\Attribute
 {
-    public function before(\PhpTal\Php\CodeWriter $codewriter)
+    /**
+     * Called before element printing.
+     *
+     * @param CodeWriter $codewriter
+     *
+     * @return void
+     * @throws \PhpTal\Exception\ConfigurationException
+     * @throws \PhpTal\Exception\PhpTalException
+     */
+    public function before(CodeWriter $codewriter)
     {
         // ensure a domain stack exists or create it
         $codewriter->doIf('!isset($_i18n_domains)');
@@ -36,14 +47,22 @@ class Domain extends \PhpTal\Php\Attribute
         $expression = $codewriter->interpolateTalesVarsInString($this->expression);
 
         // push current domain and use new domain
-        $code = '$_i18n_domains[] = '.$codewriter->getTranslatorReference().'->useDomain('.$expression.')';
+        $code = '$_i18n_domains[] = ' . $codewriter->getTranslatorReference() . '->useDomain(' . $expression . ')';
         $codewriter->pushCode($code);
     }
 
-    public function after(\PhpTal\Php\CodeWriter $codewriter)
+    /**
+     * Called after element printing.
+     *
+     * @param CodeWriter $codewriter
+     *
+     * @return void
+     * @throws \PhpTal\Exception\ConfigurationException
+     */
+    public function after(CodeWriter $codewriter)
     {
         // restore domain
-        $code = $codewriter->getTranslatorReference().'->useDomain(array_pop($_i18n_domains))';
+        $code = $codewriter->getTranslatorReference() . '->useDomain(array_pop($_i18n_domains))';
         $codewriter->pushCode($code);
     }
 }

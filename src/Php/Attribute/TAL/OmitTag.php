@@ -14,6 +14,9 @@
 
 namespace PhpTal\Php\Attribute\TAL;
 
+use PhpTal\Php\Attribute;
+use PhpTal\Php\CodeWriter;
+
 /**
  * TAL Specifications 1.4
  *
@@ -44,27 +47,46 @@ namespace PhpTal\Php\Attribute\TAL;
  * @package PHPTAL
  * @author Laurent Bedubourg <lbedubourg@motion-twin.com>
  */
-class OmitTag extends \PhpTal\Php\Attribute
+class OmitTag extends Attribute
 {
+    /**
+     * @var string
+     */
     private $varname;
 
-    public function before(\PhpTal\Php\CodeWriter $codewriter)
+    /**
+     * Called before element printing.
+     *
+     * @param CodeWriter $codewriter
+     *
+     * @return void
+     */
+    public function before(CodeWriter $codewriter)
     {
-        if (trim($this->expression) == '') {
+        if (trim($this->expression) === '') {
             $this->phpelement->headFootDisabled = true;
         } else {
-
             $this->varname = $codewriter->createTempVariable();
 
             // print tag header/foot only if condition is false
             $cond = $codewriter->evaluateExpression($this->expression);
-            $this->phpelement->headPrintCondition = '('.$this->varname.' = !\PhpTal\Helper::phptal_unravel_closure('.$cond.'))';
+            $this->phpelement->headPrintCondition = '(' . $this->varname . ' = !\PhpTal\Helper::phptal_unravel_closure(' . $cond . '))';
             $this->phpelement->footPrintCondition = $this->varname;
         }
     }
 
-    public function after(\PhpTal\Php\CodeWriter $codewriter)
+    /**
+     * Called after element printing.
+     *
+     * @param CodeWriter $codewriter
+     *
+     * @return void
+     * @throws \PhpTal\Exception\PhpTalException
+     */
+    public function after(CodeWriter $codewriter)
     {
-        if ($this->varname) $codewriter->recycleTempVariable($this->varname);
+        if ($this->varname) {
+            $codewriter->recycleTempVariable($this->varname);
+        }
     }
 }

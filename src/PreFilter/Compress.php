@@ -13,6 +13,8 @@
 
 namespace PhpTal\PreFilter;
 
+use PhpTal\Dom\Element;
+use PhpTal\Dom\Text;
 use PhpTal\Dom\XmlDeclaration;
 use PhpTal\TalNamespace\Builtin;
 
@@ -26,26 +28,144 @@ class Compress extends Normalize
     /**
      * keeps track whether last element had trailing whitespace (or didn't need it).
      * If had_space==false, next element must keep leading space.
+     *
+     * @var bool
      */
-    private $had_space=false;
+    private $had_space = false;
 
     /**
      * last text node before closing tag that may need trailing whitespace trimmed.
      * It's often last-child, but comments, multiple end tags make that trickier.
+     *
+     * @var Text
      */
-    private $most_recent_text_node=null;
+    private $most_recent_text_node;
 
-    function filterDOM(\PhpTal\Dom\Element $root)
+    /**
+     * @var array
+     */
+    private static $no_interelement_space = [
+        'html',
+        'head',
+        'table',
+        'thead',
+        'tfoot',
+        'select',
+        'optgroup',
+        'dl',
+        'ol',
+        'ul',
+        'tr',
+        'datalist',
+    ];
+
+    /**
+     *  li is deliberately omitted, as it's commonly used with display:inline in menus.
+     *
+     * @var array
+     */
+    private static $breaks_line = [
+        'address',
+        'article',
+        'aside',
+        'base',
+        'blockquote',
+        'body',
+        'br',
+        'dd',
+        'div',
+        'dl',
+        'dt',
+        'fieldset',
+        'figure',
+        'footer',
+        'form',
+        'h1',
+        'h2',
+        'h3',
+        'h4',
+        'h5',
+        'h6',
+        'head',
+        'header',
+        'hgroup',
+        'hr',
+        'html',
+        'legend',
+        'link',
+        'meta',
+        'nav',
+        'ol',
+        'option',
+        'p',
+        'param',
+        'pre',
+        'section',
+        'style',
+        'table',
+        'tbody',
+        'td',
+        'th',
+        'thead',
+        'title',
+        'tr',
+        'ul',
+        'details',
+    ];
+
+    /**
+     *  replaced elements need to preserve spaces before and after
+     *
+     * @var array
+     */
+    private static $inline_blocks = [
+        'select',
+        'input',
+        'button',
+        'img',
+        'textarea',
+        'output',
+        'progress',
+        'meter',
+    ];
+
+    /**
+     * pre-defined order of attributes roughly by popularity
+     *
+     * @var array
+     */
+    private static $attributes_order = [
+        'href',
+        'src',
+        'class',
+        'rel',
+        'type',
+        'title',
+        'width',
+        'height',
+        'alt',
+        'content',
+        'name',
+        'style',
+        'lang',
+        'id',
+    ];
+
+    /**
+     * @param Element $root
+     * @return void
+     */
+    public function filterDOM(Element $root)
     {
         // let xml:space=preserve preserve everything
-        if ($root->getAttributeNS(Builtin::NS_XML, 'space') == 'preserve') {
+        if ($root->getAttributeNS(Builtin::NS_XML, 'space') === 'preserve') {
             $this->most_recent_text_node = null;
             $this->findElementToFilter($root);
             return;
         }
 
         // tal:replace makes element behave like text
-        if ($root->getAttributeNS(Builtin::NS_TAL,'replace')) {
+        if ($root->getAttributeNS(Builtin::NS_TAL, 'replace')) {
             $this->most_recent_text_node = null;
             $this->had_space = false;
             return;
@@ -59,7 +179,7 @@ class Compress extends Normalize
 
         // mostly block-level elements
         // if element is conditional, it may not always break the line
-        $breaks_line = $no_spaces || ($this->breaksLine($root) && !$root->getAttributeNS(Builtin::NS_TAL,'condition'));
+        $breaks_line = $no_spaces || ($this->breaksLine($root) && !$root->getAttributeNS(Builtin::NS_TAL, 'condition'));
 
         // start tag newline
         if ($breaks_line) {
@@ -68,7 +188,7 @@ class Compress extends Normalize
                 $this->most_recent_text_node = null;
             }
             $this->had_space = true;
-        } else if ($this->isInlineBlock($root)) {
+        } elseif ($this->isInlineBlock($root)) {
             // spaces around <img> must be kept
             $this->most_recent_text_node = null;
             $this->had_space = false;
@@ -79,18 +199,18 @@ class Compress extends Normalize
             $this->most_recent_text_node = null;
 
             // HTML 5 (9.1.2.5) specifies quirk that a first *single* newline in <pre> can be removed
-            if (count($root->childNodes) && $root->childNodes[0] instanceof \PhpTal\Dom\Text) {
-                if (preg_match('/^\n[^\n]/', $root->childNodes[0]->getValueEscaped())) {
-                    $root->childNodes[0]->setValueEscaped(substr($root->childNodes[0]->getValueEscaped(),1));
-                }
+            if (count($root->childNodes) &&
+                $root->childNodes[0] instanceof Text &&
+                preg_match('/^\n[^\n]/', $root->childNodes[0]->getValueEscaped())
+            ) {
+                $root->childNodes[0]->setValueEscaped(substr($root->childNodes[0]->getValueEscaped(), 1));
             }
             $this->findElementToFilter($root);
             return;
         }
 
         foreach ($root->childNodes as $node) {
-
-            if ($node instanceof \PhpTal\Dom\Text) {
+            if ($node instanceof Text) {
                 // replaces runs of whitespace with ' '
                 $norm = $this->normalizeSpace($node->getValueEscaped(), $node->getEncoding());
 
@@ -102,16 +222,17 @@ class Compress extends Normalize
 
                 $node->setValueEscaped($norm);
 
-                // collapsed whitespace-only nodes are ignored (otherwise trimming of most_recent_text_node would be useless)
+                // collapsed whitespace-only nodes are ignored
+                // (otherwise trimming of most_recent_text_node would be useless)
                 if ($norm !== '') {
                     $this->most_recent_text_node = $node;
-                    $this->had_space = (substr($norm,-1) == ' ');
+                    $this->had_space = (substr($norm, -1) === ' ');
                 }
-            } else if ($node instanceof \PhpTal\Dom\Element) {
+            } elseif ($node instanceof Element) {
                 $this->filterDOM($node);
-            } else if ($node instanceof \PhpTal\Dom\DocumentType || $node instanceof XmlDeclaration) {
+            } elseif ($node instanceof \PhpTal\Dom\DocumentType || $node instanceof XmlDeclaration) {
                 $this->had_space = true;
-            } else if ($node instanceof \PhpTal\Dom\ProcessingInstruction) {
+            } elseif ($node instanceof \PhpTal\Dom\ProcessingInstruction) {
                 // PI may output something requiring spaces
                 $this->most_recent_text_node = null;
                 $this->had_space = false;
@@ -119,12 +240,12 @@ class Compress extends Normalize
         }
 
         // repeated element may need trailing space.
-        if (!$breaks_line && $root->getAttributeNS(Builtin::NS_TAL,'repeat')) {
+        if (!$breaks_line && $root->getAttributeNS(Builtin::NS_TAL, 'repeat')) {
             $this->most_recent_text_node = null;
         }
 
         // tal:content may replace element with something without space
-        if (!$breaks_line && $root->getAttributeNS(Builtin::NS_TAL,'content')) {
+        if (!$breaks_line && $root->getAttributeNS(Builtin::NS_TAL, 'content')) {
             $this->had_space = false;
             $this->most_recent_text_node = null;
         }
@@ -139,35 +260,30 @@ class Compress extends Normalize
         }
     }
 
-    private static $no_interelement_space = array(
-        'html','head','table','thead','tfoot','select','optgroup','dl','ol','ul','tr','datalist',
-    );
-
-    private function hasNoInterelementSpace(\PhpTal\Dom\Element $element)
+    /**
+     * @param Element $element
+     * @return bool
+     */
+    private function hasNoInterelementSpace(Element $element)
     {
+        $namespaceURI = $element->getNamespaceURI();
         if ($element->getLocalName() === 'block'
             && $element->parentNode
-            && $element->getNamespaceURI() === Builtin::NS_TAL) {
+            && $namespaceURI === Builtin::NS_TAL) {
             return $this->hasNoInterelementSpace($element->parentNode);
         }
 
         return in_array($element->getLocalName(), self::$no_interelement_space)
-            && ($element->getNamespaceURI() === Builtin::NS_XHTML || $element->getNamespaceURI() === '');
+            && ($namespaceURI === Builtin::NS_XHTML || $namespaceURI === '');
     }
 
     /**
-     *  li is deliberately omitted, as it's commonly used with display:inline in menus.
+     * @param Element $element
+     * @return bool
      */
-    private static $breaks_line = array(
-        'address','article','aside','base','blockquote','body','br','dd','div','dl','dt','fieldset','figure',
-        'footer','form','h1','h2','h3','h4','h5','h6','head','header','hgroup','hr','html','legend','link',
-        'meta','nav','ol','option','p','param','pre','section','style','table','tbody','td','th','thead',
-        'title','tr','ul','details',
-    );
-
-    private function breaksLine(\PhpTal\Dom\Element $element)
+    private function breaksLine(Element $element)
     {
-        if ($element->getAttributeNS(Builtin::NS_METAL,'define-macro')) {
+        if ($element->getAttributeNS(Builtin::NS_METAL, 'define-macro')) {
             return true;
         }
 
@@ -175,26 +291,23 @@ class Compress extends Normalize
             return true;
         }
 
-        if ($element->getNamespaceURI() !== Builtin::NS_XHTML
-	        && $element->getNamespaceURI() !== '') {
-	        return false;
+        $namespaceURI = $element->getNamespaceURI();
+        if ($namespaceURI !== Builtin::NS_XHTML && $namespaceURI !== '') {
+            return false;
         }
 
         return in_array($element->getLocalName(), self::$breaks_line);
     }
 
     /**
-     *  replaced elements need to preserve spaces before and after
+     * @param Element $element
+     * @return bool
      */
-    private static $inline_blocks = array(
-        'select','input','button','img','textarea','output','progress','meter',
-    );
-
-    private function isInlineBlock(\PhpTal\Dom\Element $element)
+    private function isInlineBlock(Element $element)
     {
-        if ($element->getNamespaceURI() !== Builtin::NS_XHTML
-	        && $element->getNamespaceURI() !== '') {
-	        return false;
+        $namespaceURI = $element->getNamespaceURI();
+        if ($namespaceURI !== Builtin::NS_XHTML && $namespaceURI !== '') {
+            return false;
         }
 
         return in_array($element->getLocalName(), self::$inline_blocks);
@@ -202,56 +315,58 @@ class Compress extends Normalize
 
     /**
      * Consistent sorting of attributes might give slightly better gzip performance
+     * @param Element $element
      */
-    protected function normalizeAttributes(\PhpTal\Dom\Element $element)
+    protected function normalizeAttributes(Element $element)
     {
         parent::normalizeAttributes($element);
 
-        $attrs_by_qname = array();
+        $attrs_by_qname = [];
         foreach ($element->getAttributeNodes() as $attrnode) {
             // safe, as there can't be two attrs with same qname
             $attrs_by_qname[$attrnode->getQualifiedName()] = $attrnode;
         }
 
-	if (count($attrs_by_qname) > 1) {
-		uksort($attrs_by_qname, array($this, 'compareQNames'));
-		$element->setAttributeNodes(array_values($attrs_by_qname));
-	}
+        if (count($attrs_by_qname) > 1) {
+            uksort($attrs_by_qname, [$this, 'compareQNames']);
+            $element->setAttributeNodes(array_values($attrs_by_qname));
+        }
     }
 
     /**
-	 * pre-defined order of attributes roughly by popularity
-	 */
-	private static $attributes_order = array(
-        'href','src','class','rel','type','title','width','height','alt','content','name','style','lang','id',
-    );
+     * compare names according to $attributes_order array.
+     * Elements that are not in array, are considered greater than all elements in array,
+     * and are sorted alphabetically.
+     *
+     * @param string $a
+     * @param string $b
+     *
+     * @return int
+     */
+    private static function compareQNames($a, $b)
+    {
+        $a_index = array_search($a, self::$attributes_order);
+        $b_index = array_search($b, self::$attributes_order);
 
-	/**
-	 * compare names according to $attributes_order array.
-	 * Elements that are not in array, are considered greater than all elements in array,
-	 * and are sorted alphabetically.
-	 */
-	private static function compareQNames($a, $b) {
-		$a_index = array_search($a, self::$attributes_order);
-		$b_index = array_search($b, self::$attributes_order);
-
-		if ($a_index !== false && $b_index !== false) {
-			return $a_index - $b_index;
-		}
-		if ($a_index === false && $b_index === false) {
-			return strcmp($a, $b);
-		}
-		return ($a_index === false) ? 1 : -1;
-	}
+        if ($a_index !== false && $b_index !== false) {
+            return $a_index - $b_index;
+        }
+        if ($a_index === false && $b_index === false) {
+            return strcmp($a, $b);
+        }
+        return ($a_index === false) ? 1 : -1;
+    }
 
     /**
      * HTML5 doesn't care about boilerplate
+     *
+     * @param Element $element
      */
-	private function elementSpecificOptimizations(\PhpTal\Dom\Element $element)
-	{
-	    if ($element->getNamespaceURI() !== Builtin::NS_XHTML
-	     && $element->getNamespaceURI() !== '') {
-	        return;
+    private function elementSpecificOptimizations(Element $element)
+    {
+        $namespaceURI = $element->getNamespaceURI();
+        if ($namespaceURI !== Builtin::NS_XHTML && $namespaceURI !== '') {
+            return;
         }
 
         if ($this->getPHPTAL()->getOutputMode() !== \PhpTal\PHPTAL::HTML5) {
@@ -259,27 +374,27 @@ class Compress extends Normalize
         }
 
         // <meta charset>
-	    if ('meta' === $element->getLocalName() &&
-	        $element->getAttributeNS('','http-equiv') === 'Content-Type') {
-	            $element->removeAttributeNS('','http-equiv');
-	            $element->removeAttributeNS('','content');
-	            $element->setAttributeNS('','charset',strtolower($this->getPHPTAL()->getEncoding()));
-        }
-        elseif (('link' === $element->getLocalName() && $element->getAttributeNS('','rel') === 'stylesheet') ||
-            ('style' === $element->getLocalName())) {
+        $localName = $element->getLocalName();
+        if ($localName === 'meta' &&
+            $element->getAttributeNS('', 'http-equiv') === 'Content-Type') {
+            $element->removeAttributeNS('', 'http-equiv');
+            $element->removeAttributeNS('', 'content');
+            $element->setAttributeNS('', 'charset', strtolower($this->getPHPTAL()->getEncoding()));
+        } elseif (($localName === 'link' && $element->getAttributeNS('', 'rel') === 'stylesheet') ||
+            $localName === 'style') {
             // There's only one type of stylesheets that works.
-            $element->removeAttributeNS('','type');
+            $element->removeAttributeNS('', 'type');
 
-        } elseif ('script' === $element->getLocalName()) {
-            $element->removeAttributeNS('','language');
+        } elseif ($localName === 'script') {
+            $element->removeAttributeNS('', 'language');
 
             // Only remove type that matches default. E4X, vbscript, coffeescript, etc. must be preserved
-            $type = $element->getAttributeNS('','type');
+            $type = $element->getAttributeNS('', 'type');
             $is_std = preg_match('/^(?:text|application)\/(?:ecma|java)script(\s*;\s*charset\s*=\s*[^;]*)?$/', $type);
 
             // Remote scripts should have type specified in HTTP headers.
-            if ($is_std || $element->getAttributeNS('','src')) {
-                $element->removeAttributeNS('','type');
+            if ($is_std || $element->getAttributeNS('', 'src')) {
+                $element->removeAttributeNS('', 'type');
             }
         }
     }

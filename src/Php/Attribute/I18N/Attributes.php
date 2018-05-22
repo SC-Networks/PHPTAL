@@ -14,6 +14,11 @@
 
 namespace PhpTal\Php\Attribute\I18N;
 
+use PhpTal\Dom\Attr;
+use PhpTal\Exception\TemplateException;
+use PhpTal\Php\CodeWriter;
+use PhpTal\Php\TalesInternal;
+
 /**
  *  i18n:attributes
  *
@@ -61,7 +66,13 @@ namespace PhpTal\Php\Attribute\I18N;
  */
 class Attributes extends \PhpTal\Php\Attribute
 {
-    public function before(\PhpTal\Php\CodeWriter $codewriter)
+    /**
+     * Called before element printing.
+     * @param CodeWriter $codewriter
+     * @throws \PhpTal\Exception\ConfigurationException
+     * @throws TemplateException
+     */
+    public function before(CodeWriter $codewriter)
     {
         // split attributes to translate
         foreach ($codewriter->splitExpression($this->expression) as $exp) {
@@ -70,48 +81,63 @@ class Attributes extends \PhpTal\Php\Attribute
             // if the translation key is specified and not empty (but may be '0')
             if (strlen($key)) {
                 // we use it and replace the tag attribute with the result of the translation
-                $code = $this->_getTranslationCode($codewriter, $key);
+                $code = $this->getTranslationCode($codewriter, $key);
             } else {
                 $attr = $this->phpelement->getAttributeNode($qname);
-                if (!$attr) throw new \PhpTal\Exception\TemplateException("Unable to translate attribute $qname, because there is no translation key specified",
-                                        $this->phpelement->getSourceFile(), $this->phpelement->getSourceLine());
+                if (!$attr) {
+                    throw new TemplateException(
+                        "Unable to translate attribute $qname, because there is no translation key specified",
+                        $this->phpelement->getSourceFile(),
+                        $this->phpelement->getSourceLine()
+                    );
+                }
 
-                if ($attr->getReplacedState() === \PhpTal\Dom\Attr::NOT_REPLACED) {
-                    $code = $this->_getTranslationCode($codewriter, $attr->getValue());
-                } elseif ($attr->getReplacedState() === \PhpTal\Dom\Attr::VALUE_REPLACED && $attr->getOverwrittenVariableName()) {
+                if ($attr->getReplacedState() === Attr::NOT_REPLACED) {
+                    $code = $this->getTranslationCode($codewriter, $attr->getValue());
+                } elseif ($attr->getReplacedState() === Attr::VALUE_REPLACED && $attr->getOverwrittenVariableName()) {
                     // sadly variables won't be interpolated in this translation
-                    $code = 'echo '.$codewriter->escapeCode($codewriter->getTranslatorReference(). '->translate('.$attr->getOverwrittenVariableName().', false)');
+                    $code = 'echo ' . $codewriter->escapeCode($codewriter->getTranslatorReference() . '->translate(' . $attr->getOverwrittenVariableName() . ', false)');
                 } else {
-                    throw new \PhpTal\Exception\TemplateException("Unable to translate attribute $qname, because other TAL attributes are using it",
-                                $this->phpelement->getSourceFile(), $this->phpelement->getSourceLine());
+                    throw new TemplateException(
+                        "Unable to translate attribute $qname, because other TAL attributes are using it",
+                        $this->phpelement->getSourceFile(),
+                        $this->phpelement->getSourceLine()
+                    );
                 }
             }
             $this->phpelement->getOrCreateAttributeNode($qname)->overwriteValueWithCode($code);
         }
     }
 
-    public function after(\PhpTal\Php\CodeWriter $codewriter)
+    /**
+     * Called after element printing.
+     * @param CodeWriter $codewriter
+     */
+    public function after(CodeWriter $codewriter)
     {
     }
 
     /**
-     * @param key - unescaped string (not PHP code) for the key
+     * @param CodeWriter $codewriter
+     * @param string $key - unescaped string (not PHP code) for the key
+     * @return string
+     * @throws \PhpTal\Exception\ConfigurationException
      */
-    private function _getTranslationCode(\PhpTal\Php\CodeWriter $codewriter, $key)
+    private function getTranslationCode(CodeWriter $codewriter, $key)
     {
         $code = '';
         if (preg_match_all('/\$\{(.*?)\}/', $key, $m)) {
             array_shift($m);
             $m = array_shift($m);
             foreach ($m as $name) {
-                $code .= "\n".$codewriter->getTranslatorReference(). '->setVar('.$codewriter->str($name).','.\PhpTal\Php\TalesInternal::compileToPHPExpression($name).');'; // allow more complex TAL expressions
+                $code .= "\n" . $codewriter->getTranslatorReference() . '->setVar(' . $codewriter->str($name) . ',' . TalesInternal::compileToPHPExpression($name) . ');'; // allow more complex TAL expressions
             }
             $code .= "\n";
         }
 
         // notice the false boolean which indicate that the html is escaped
         // elsewhere looks like an hack doesn't it ? :)
-        $code .= 'echo '.$codewriter->escapeCode($codewriter->getTranslatorReference().'->translate('.$codewriter->str($key).', false)');
+        $code .= 'echo ' . $codewriter->escapeCode($codewriter->getTranslatorReference() . '->translate(' . $codewriter->str($key) . ', false)');
         return $code;
     }
 }

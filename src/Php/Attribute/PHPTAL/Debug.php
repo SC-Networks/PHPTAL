@@ -14,22 +14,42 @@
 
 namespace PhpTal\Php\Attribute\PHPTAL;
 
+use PhpTal\Php\Attribute;
+use PhpTal\Php\CodeWriter;
+
 /**
  * @package PHPTAL
  * @author Laurent Bedubourg <lbedubourg@motion-twin.com>
  */
-class Debug extends \PhpTal\Php\Attribute
+class Debug extends Attribute
 {
 
-    private $_oldMode;
+    /**
+     * @var bool
+     */
+    private $oldMode;
 
-    public function before(\PhpTal\Php\CodeWriter $codewriter)
+    /**
+     * Called before element printing.
+     *
+     * @param CodeWriter $codewriter
+     *
+     * @return void
+     */
+    public function before(CodeWriter $codewriter)
     {
-        $this->_oldMode = $codewriter->setDebug(true);
+        $this->oldMode = $codewriter->setDebug(true);
     }
 
-    public function after(\PhpTal\Php\CodeWriter $codewriter)
+    /**
+     * Called after element printing.
+     *
+     * @param CodeWriter $codewriter
+     *
+     * @return void
+     */
+    public function after(CodeWriter $codewriter)
     {
-        $codewriter->setDebug($this->_oldMode);
+        $codewriter->setDebug($this->oldMode);
     }
 }

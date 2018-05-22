@@ -14,6 +14,8 @@
 
 namespace PhpTal\Php\Attribute\I18N;
 
+use PhpTal\Php\CodeWriter;
+
 /**
  * i18n:source
  *
@@ -26,21 +28,40 @@ namespace PhpTal\Php\Attribute\I18N;
  */
 class Source extends \PhpTal\Php\Attribute
 {
-    public function before(\PhpTal\Php\CodeWriter $codewriter)
+    /**
+     * Called before element printing.
+     *
+     * @param CodeWriter $codewriter
+     *
+     * @return void
+     * @throws \PhpTal\Exception\ConfigurationException
+     * @throws \PhpTal\Exception\PhpTalException
+     */
+    public function before(CodeWriter $codewriter)
     {
         // ensure that a sources stack exists or create it
         $codewriter->doIf('!isset($_i18n_sources)');
         $codewriter->pushCode('$_i18n_sources = array()');
-        $codewriter->end();
+        $codewriter->doEnd();
 
         // push current source and use new one
-        $codewriter->pushCode('$_i18n_sources[] = ' . $codewriter->getTranslatorReference(). '->setSource('.$codewriter->str($this->expression).')');
+        $codewriter->pushCode(
+            '$_i18n_sources[] = ' . $codewriter->getTranslatorReference() . '->setSource(' . $codewriter->str($this->expression) . ')'
+        );
     }
 
-    public function after(\PhpTal\Php\CodeWriter $codewriter)
+    /**
+     * Called after element printing.
+     *
+     * @param CodeWriter $codewriter
+     *
+     * @return void
+     * @throws \PhpTal\Exception\ConfigurationException
+     */
+    public function after(CodeWriter $codewriter)
     {
         // restore source
-        $code = $codewriter->getTranslatorReference().'->setSource(array_pop($_i18n_sources))';
+        $code = $codewriter->getTranslatorReference() . '->setSource(array_pop($_i18n_sources))';
         $codewriter->pushCode($code);
     }
 }

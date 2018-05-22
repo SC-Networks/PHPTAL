@@ -14,6 +14,9 @@
 
 namespace PhpTal\Php\Attribute\TAL;
 
+use PhpTal\Php\Attribute;
+use PhpTal\Php\CodeWriter;
+
 /**
  * TAL Specifications 1.4
  *
@@ -66,11 +69,21 @@ namespace PhpTal\Php\Attribute\TAL;
  * @package PHPTAL
  * @author Laurent Bedubourg <lbedubourg@motion-twin.com>
  */
-class Repeat extends \PhpTal\Php\Attribute
+class Repeat extends Attribute
 {
+    /**
+     * @var string
+     */
     private $var;
 
-    public function before(\PhpTal\Php\CodeWriter $codewriter)
+    /**
+     * Called before element printing.
+     *
+     * @param CodeWriter $codewriter
+     *
+     * @return void
+     */
+    public function before(CodeWriter $codewriter)
     {
         $this->var = $codewriter->createTempVariable();
 
@@ -81,7 +94,7 @@ class Repeat extends \PhpTal\Php\Attribute
         $code = $codewriter->evaluateExpression($expression);
 
         // instantiate controller using expression
-        $codewriter->doSetVar( $this->var.'->'.$varName, 'new \PhpTal\RepeatController('.$code.')'."\n" );
+        $codewriter->doSetVar($this->var.'->'.$varName, 'new \PhpTal\RepeatController('.$code.')'."\n");
 
         $codewriter->pushContext();
 
@@ -89,7 +102,15 @@ class Repeat extends \PhpTal\Php\Attribute
         $codewriter->doForeach('$ctx->'.$varName, $this->var.'->'.$varName);
     }
 
-    public function after(\PhpTal\Php\CodeWriter $codewriter)
+    /**
+     * Called after element printing.
+     *
+     * @param CodeWriter $codewriter
+     *
+     * @return void
+     * @throws \PhpTal\Exception\PhpTalException
+     */
+    public function after(CodeWriter $codewriter)
     {
         $codewriter->doEnd('foreach');
         $codewriter->popContext();

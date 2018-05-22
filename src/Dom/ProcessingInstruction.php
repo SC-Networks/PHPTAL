@@ -14,14 +14,21 @@
 
 namespace PhpTal\Dom;
 
+use PhpTal\Php\CodeWriter;
+
 /**
  * processing instructions, including <?php blocks
  *
  * @package PHPTAL
  */
-class ProcessingInstruction extends \PhpTal\Dom\Node
+class ProcessingInstruction extends Node
 {
-    public function generateCode(\PhpTal\Php\CodeWriter $codewriter)
+    /**
+     * use CodeWriter to compile this element to PHP code
+     *
+     * @param CodeWriter $codewriter
+     */
+    public function generateCode(CodeWriter $codewriter)
     {
         if (preg_match('/^<\?(?:php|[=\s])/i', $this->getValueEscaped())) {
             // block will be executed as PHP

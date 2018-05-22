@@ -14,6 +14,10 @@
 
 namespace PhpTal\Php\Attribute\METAL;
 
+use PhpTal\Dom\Element;
+use PhpTal\Dom\Node;
+use PhpTal\Exception\TemplateException;
+use PhpTal\Php\CodeWriter;
 use PhpTal\TalNamespace\Builtin;
 
 /**
@@ -38,13 +42,25 @@ use PhpTal\TalNamespace\Builtin;
  */
 class UseMacro extends \PhpTal\Php\Attribute
 {
-    static $ALLOWED_ATTRIBUTES = [
+    /**
+     * @var array
+     */
+    public static $ALLOWED_ATTRIBUTES = [
         'fill-slot' => Builtin::NS_METAL,
         'define-macro' => Builtin::NS_METAL,
         'define' => Builtin::NS_TAL,
     ];
 
-    public function before(\PhpTal\Php\CodeWriter $codewriter)
+    /**
+     * Called before element printing.
+     *
+     * @param CodeWriter $codewriter
+     *
+     * @return void
+     * @throws TemplateException
+     * @throws \PhpTal\Exception\PhpTalException
+     */
+    public function before(CodeWriter $codewriter)
     {
         $this->pushSlots($codewriter);
 
@@ -52,33 +68,41 @@ class UseMacro extends \PhpTal\Php\Attribute
             $this->generateFillSlots($codewriter, $child);
         }
 
-        $macroname = strtr($this->expression, '-', '_');
+        $macroname = str_replace('-', '_', $this->expression);
 
-	// throw error if attempting to define and use macro at same time
-	// [should perhaps be a TemplateException? but I don't know how to set that up...]
-	if ($defineAttr = $this->phpelement->getAttributeNodeNS(
-        Builtin::NS_METAL, 'define-macro')) {
-		if ($defineAttr->getValue() == $macroname) 
-            		throw new \PhpTal\Exception\TemplateException("Cannot simultaneously define and use macro '$macroname'",
-                		$this->phpelement->getSourceFile(), $this->phpelement->getSourceLine());			
-	}
+        // throw error if attempting to define and use macro at same time
+        // [should perhaps be a TemplateException? but I don't know how to set that up...]
+        $defineAttr = $this->phpelement->getAttributeNodeNS(Builtin::NS_METAL, 'define-macro');
+        if ($defineAttr && $defineAttr->getValue() === $macroname) {
+            throw new TemplateException(
+                "Cannot simultaneously define and use macro '$macroname'",
+                $this->phpelement->getSourceFile(),
+                $this->phpelement->getSourceLine()
+            );
+        }
 
         // local macro (no filename specified) and non dynamic macro name
         // can be called directly if it's a known function (just generated or seen in previous compilation)
         if (preg_match('/^[a-z0-9_]+$/i', $macroname) && $codewriter->functionExists($macroname)) {
             $code = $codewriter->getFunctionPrefix() . $macroname . '($_thistpl, $tpl)';
             $codewriter->pushCode($code);
-        }
-        // external macro or ${macroname}, use PHPTAL at runtime to resolve it
+        } // external macro or ${macroname}, use PHPTAL at runtime to resolve it
         else {
             $code = $codewriter->interpolateTalesVarsInString($this->expression);
-            $codewriter->pushCode('$tpl->executeMacroOfTemplate('.$code.', $_thistpl)');
+            $codewriter->pushCode('$tpl->executeMacroOfTemplate(' . $code . ', $_thistpl)');
         }
 
         $this->popSlots($codewriter);
     }
 
-    public function after(\PhpTal\Php\CodeWriter $codewriter)
+    /**
+     * Called after element printing.
+     *
+     * @param CodeWriter $codewriter
+     *
+     * @return void
+     */
+    public function after(CodeWriter $codewriter)
     {
     }
 
@@ -94,8 +118,10 @@ class UseMacro extends \PhpTal\Php\Attribute
      * we may define a member.html macro which use the design.html macro
      * for the general layout, fill the menu slot and let caller templates
      * fill the parent content slot without interfering.
+     *
+     * @param CodeWriter $codewriter
      */
-    private function pushSlots(\PhpTal\Php\CodeWriter $codewriter)
+    private function pushSlots(CodeWriter $codewriter)
     {
         if (!$this->phpelement->hasAttributeNS(Builtin::NS_METAL, 'define-macro')) {
             $codewriter->pushCode('$ctx->pushSlots()');
@@ -105,8 +131,10 @@ class UseMacro extends \PhpTal\Php\Attribute
     /**
      * generate code that pops macro slots
      * (restore slots if not inherited macro)
+     *
+     * @param CodeWriter $codewriter
      */
-    private function popSlots(\PhpTal\Php\CodeWriter $codewriter)
+    private function popSlots(CodeWriter $codewriter)
     {
         if (!$this->phpelement->hasAttributeNS(Builtin::NS_METAL, 'define-macro')) {
             $codewriter->pushCode('$ctx->popSlots()');
@@ -115,10 +143,15 @@ class UseMacro extends \PhpTal\Php\Attribute
 
     /**
      * recursively generates code for slots
+     * @param CodeWriter $codewriter
+     * @param Node|Element $phpelement
+     *
+     * @throws \PhpTal\Exception\PhpTalException
+     * @throws TemplateException
      */
-    private function generateFillSlots(\PhpTal\Php\CodeWriter $codewriter, \PhpTal\Dom\Node $phpelement)
+    private function generateFillSlots(CodeWriter $codewriter, Node $phpelement)
     {
-        if (false == ($phpelement instanceof \PhpTal\Dom\Element)) {
+        if ($phpelement instanceof Element === false) {
             return;
         }
 

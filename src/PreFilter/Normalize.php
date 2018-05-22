@@ -13,6 +13,8 @@
 
 namespace PhpTal\PreFilter;
 
+use PhpTal\Dom\Element;
+use PhpTal\Dom\Text;
 use PhpTal\TalNamespace\Builtin;
 
 /**
@@ -20,15 +22,38 @@ use PhpTal\TalNamespace\Builtin;
  */
 class Normalize extends \PhpTal\PreFilter
 {
+    /**
+     * Receives template source code and is expected to return new source.
+     * Prefilters are called only once before template is compiled, so they can be slow.
+     *
+     * Default implementation does nothing. Override it.
+     *
+     * @param string $src markup to filter
+     *
+     * @return string
+     */
     public function filter($src)
     {
         return str_replace("\r\n", "\n", $src);
     }
 
-    public function filterDOM(\PhpTal\Dom\Element $root)
+    /**
+     * Receives root PHPTAL DOM node of parsed file and should edit it in place.
+     * Prefilters are called only once before template is compiled, so they can be slow.
+     *
+     * Default implementation does nothing. Override it.
+     *
+     * @see \PhpTal\Dom\Element class for methods and fields available.
+     *
+     * @param Element $root PHPTAL DOM node to modify in place
+     *
+     * @return void
+     * @throws \PhpTal\Exception\PhpTalException
+     */
+    public function filterDOM(Element $root)
     {
         // let xml:space=preserve preserve attributes as well
-        if ($root->getAttributeNS(Builtin::NS_XML, 'space') == 'preserve') {
+        if ($root->getAttributeNS(Builtin::NS_XML, 'space') === 'preserve') {
             $this->findElementToFilter($root);
             return;
         }
@@ -41,19 +66,19 @@ class Normalize extends \PhpTal\PreFilter
             return;
         }
 
+        /** @var Text $lastTextNode */
         $lastTextNode = null;
         foreach ($root->childNodes as $node) {
-
             // CDATA is not normalized by design
-            if ($node instanceof \PhpTal\Dom\Text) {
+            if ($node instanceof Text) {
                 $norm = $this->normalizeSpace($node->getValueEscaped(), $node->getEncoding());
                 $node->setValueEscaped($norm);
 
-                if ('' === $norm) {
+                if ($norm === '') {
                     $root->removeChild($node);
-                } else if ($lastTextNode) {
+                } elseif ($lastTextNode) {
                     // "foo " . " bar" gives 2 spaces.
-                    $norm = $lastTextNode->getValueEscaped().ltrim($norm,' ');
+                    $norm = $lastTextNode->getValueEscaped() . ltrim($norm, ' ');
 
                     $lastTextNode->setValueEscaped($norm); // assumes all nodes use same encoding (they do)
                     $root->removeChild($node);
@@ -62,26 +87,40 @@ class Normalize extends \PhpTal\PreFilter
                 }
             } else {
                 $lastTextNode = null;
-                if ($node instanceof \PhpTal\Dom\Element) {
+                if ($node instanceof Element) {
                     $this->filterDOM($node);
                 }
             }
         }
     }
 
-    protected function isSpaceSensitiveInXHTML(\PhpTal\Dom\Element $element)
+    /**
+     * @param Element $element
+     *
+     * @return bool
+     */
+    protected function isSpaceSensitiveInXHTML(Element $element)
     {
         $ln = $element->getLocalName();
+        $namespaceURI = $element->getNamespaceURI();
         return ($ln === 'script' || $ln === 'pre' || $ln === 'textarea')
-            && ($element->getNamespaceURI() === Builtin::NS_XHTML || $element->getNamespaceURI() === '');
+            && ($namespaceURI === Builtin::NS_XHTML || $namespaceURI === '');
     }
 
-    protected function findElementToFilter(\PhpTal\Dom\Element $root)
+    /**
+     * @param Element $root
+     *
+     * @return void
+     * @throws \PhpTal\Exception\PhpTalException
+     */
+    protected function findElementToFilter(Element $root)
     {
         foreach ($root->childNodes as $node) {
-            if (!$node instanceof \PhpTal\Dom\Element) continue;
+            if (!$node instanceof Element) {
+                continue;
+            }
 
-            if ($node->getAttributeNS(Builtin::NS_XML, 'space') == 'default') {
+            if ($node->getAttributeNS(Builtin::NS_XML, 'space') === 'default') {
                 $this->filterDOM($node);
             }
         }
@@ -89,20 +128,30 @@ class Normalize extends \PhpTal\PreFilter
 
     /**
      * does not trim
+     *
+     * @param string $text
+     * @param string $encoding
+     *
+     * @return string
      */
     protected function normalizeSpace($text, $encoding)
     {
-        $utf_regex_mod = ($encoding=='UTF-8'?'u':'');
+        $utf_regex_mod = $encoding === 'UTF-8' ? 'u' : '';
 
-        return preg_replace('/[ \t\r\n]+/'.$utf_regex_mod, ' ', $text); // \s removes nbsp
+        return preg_replace('/[ \t\r\n]+/' . $utf_regex_mod, ' ', $text); // \s removes nbsp
     }
 
-    protected function normalizeAttributes(\PhpTal\Dom\Element $element)
+    /**
+     * @param Element $element
+     * @return void
+     */
+    protected function normalizeAttributes(Element $element)
     {
         foreach ($element->getAttributeNodes() as $attrnode) {
-
             // skip replaced attributes (because getValueEscaped on them is meaningless)
-            if ($attrnode->getReplacedState() !== \PhpTal\Dom\Attr::NOT_REPLACED) continue;
+            if ($attrnode->getReplacedState() !== \PhpTal\Dom\Attr::NOT_REPLACED) {
+                continue;
+            }
 
             $val = $this->normalizeSpace($attrnode->getValueEscaped(), $attrnode->getEncoding());
             $attrnode->setValueEscaped(trim($val, ' '));

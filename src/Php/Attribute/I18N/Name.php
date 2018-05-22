@@ -14,6 +14,8 @@
 
 namespace PhpTal\Php\Attribute\I18N;
 
+use PhpTal\Php\CodeWriter;
+
 /** i18n:name
  *
  * Name the content of the current element for use in interpolation within
@@ -34,13 +36,30 @@ namespace PhpTal\Php\Attribute\I18N;
  */
 class Name extends \PhpTal\Php\Attribute
 {
-    public function before(\PhpTal\Php\CodeWriter $codewriter)
+    /**
+     * Called before element printing.
+     *
+     * @param CodeWriter $codewriter
+     *
+     * @return void
+     */
+    public function before(CodeWriter $codewriter)
     {
         $codewriter->pushCode('ob_start()');
     }
 
-    public function after(\PhpTal\Php\CodeWriter $codewriter)
+    /**
+     * Called after element printing.
+     *
+     * @param CodeWriter $codewriter
+     *
+     * @return void
+     * @throws \PhpTal\Exception\ConfigurationException
+     */
+    public function after(CodeWriter $codewriter)
     {
-        $codewriter->pushCode($codewriter->getTranslatorReference().'->setVar('.$codewriter->str($this->expression).', ob_get_clean())');
+        $codewriter->pushCode(
+            $codewriter->getTranslatorReference() . '->setVar(' . $codewriter->str($this->expression) . ', ob_get_clean())'
+        );
     }
 }

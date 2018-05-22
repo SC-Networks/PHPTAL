@@ -84,7 +84,7 @@ class Element extends Node
 
     /**
      * W3C DOM interface
-     * @var array
+     * @var Node[]
      */
     public $childNodes = [];
 
@@ -102,7 +102,7 @@ class Element extends Node
      * @throws ParserException
      * @throws TemplateException
      */
-    public function __construct($qname, $namespace_uri, array $attribute_nodes, \PhpTal\Dom\XmlnsState $xmlns)
+    public function __construct($qname, $namespace_uri, array $attribute_nodes, XmlnsState $xmlns)
     {
         $this->qualifiedName = $qname;
         $this->attribute_nodes = $attribute_nodes;

@@ -14,15 +14,27 @@
 
 namespace PhpTal\Php\Attribute\PHPTAL;
 
+use PhpTal\Php\CodeWriter;
+
 /**
  * @package PHPTAL
  * @author Laurent Bedubourg <lbedubourg@motion-twin.com>
  */
 class Id extends \PhpTal\Php\Attribute
 {
+    /**
+     * @var
+     */
     private $var;
 
-    public function before(\PhpTal\Php\CodeWriter $codewriter)
+    /**
+     * Called before element printing.
+     *
+     * @param CodeWriter $codewriter
+     *
+     * @return void
+     */
+    public function before(CodeWriter $codewriter)
     {
         // retrieve trigger
         $this->var = $codewriter->createTempVariable();
@@ -38,7 +50,15 @@ class Id extends \PhpTal\Php\Attribute
             '.$this->var.'->start('.$codewriter->str($this->expression).', $tpl) === \PhpTal\TriggerInterface::PROCEED');
     }
 
-    public function after(\PhpTal\Php\CodeWriter $codewriter)
+    /**
+     * Called after element printing.
+     *
+     * @param CodeWriter $codewriter
+     *
+     * @return void
+     * @throws \PhpTal\Exception\PhpTalException
+     */
+    public function after(CodeWriter $codewriter)
     {
         // end of if PROCEED
         $codewriter->doEnd('if');

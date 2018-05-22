@@ -23,30 +23,56 @@ class StringSource implements SourceInterface
 {
     const NO_PATH_PREFIX = '<string ';
 
+    /**
+     * @var string
+     */
+    private $data;
+
+    /**
+     * @var string
+     */
+    private $realpath;
+
+
+    /**
+     * StringSource constructor.
+     *
+     * @param string $data
+     * @param string $realpath
+     */
     public function __construct($data, $realpath = null)
     {
-        $this->_data = $data;
-        $this->_realpath = $realpath ? $realpath : self::NO_PATH_PREFIX.md5($data).'>';
+        $this->data = $data;
+        $this->realpath = $realpath ?: self::NO_PATH_PREFIX . md5($data) . '>';
     }
 
+    /**
+     * @return int
+     */
     public function getLastModifiedTime()
     {
-        if (substr($this->_realpath, 0, 8) !== self::NO_PATH_PREFIX && file_exists($this->_realpath)) {
-            return @filemtime($this->_realpath);
+        if (strpos($this->realpath, self::NO_PATH_PREFIX) !== 0 && file_exists($this->realpath)) {
+            return @filemtime($this->realpath);
         }
+
         return 0;
     }
 
+    /**
+     * @return string
+     */
     public function getData()
     {
-        return $this->_data;
+        return $this->data;
     }
 
     /**
      * well, this is not always a real path. If it starts with self::NO_PATH_PREFIX, then it's fake.
+     *
+     * @return string
      */
     public function getRealPath()
     {
-        return $this->_realpath;
+        return $this->realpath;
     }
 }
