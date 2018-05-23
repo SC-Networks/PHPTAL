@@ -59,7 +59,8 @@
         "bin-dir": "bin"
     },
     "scripts": {
-        "tests": "bin/phpunit -c phpunit.xml"
+        "tests": "bin/phpunit -c phpunit.xml",
+        "sniff": "bin/phpcs -p src/"
     },
     "scripts-descriptions": {
         "tests": "Run the project's unittest"
