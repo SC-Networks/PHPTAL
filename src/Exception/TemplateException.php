@@ -14,6 +14,8 @@
 
 namespace PhpTal\Exception;
 
+use PhpTal\PHPTAL;
+
 /**
  * Exception that is related to location within a template.
  * You can check srcFile and srcLine to find source of the error.
@@ -22,11 +24,29 @@ namespace PhpTal\Exception;
  */
 class TemplateException extends PhpTalException
 {
+    /**
+     * @var string
+     */
     public $srcFile;
+
+    /**
+     * @var int
+     */
     public $srcLine;
+
+    /**
+     * @var bool
+     */
     private $is_src_accurate;
 
-    public function __construct($msg, $srcFile='', $srcLine=0)
+    /**
+     * Construct the exception. Note: The message is NOT binary safe.
+     *
+     * @param string $msg
+     * @param string $srcFile
+     * @param int $srcLine
+     */
+    public function __construct($msg, $srcFile = '', $srcLine = 0)
     {
         parent::__construct($msg);
 
@@ -44,14 +64,21 @@ class TemplateException extends PhpTalException
         }
     }
 
+    /**
+     * @return string the string representation of the exception.
+     */
     public function __toString()
     {
-        if (!$this->srcFile || $this->is_src_accurate) return parent::__toString();
-        return "From {$this->srcFile} around line {$this->srcLine}\n".parent::__toString();
+        if (!$this->srcFile || $this->is_src_accurate) {
+            return parent::__toString();
+        }
+        return "From {$this->srcFile} around line {$this->srcLine}\n" . parent::__toString();
     }
 
     /**
      * Set new TAL source file/line if it isn't known already
+     * @param string $srcFile
+     * @param int $srcLine
      */
     public function hintSrcPosition($srcFile, $srcLine)
     {
@@ -60,7 +87,7 @@ class TemplateException extends PhpTalException
                 $this->srcFile = $srcFile;
                 $this->srcLine = $srcLine;
                 $this->is_src_accurate = true;
-            } else if ($this->srcLine <= 1 && $this->srcFile === $srcFile) {
+            } elseif ($this->srcLine <= 1 && $this->srcFile === $srcFile) {
                 $this->srcLine = $srcLine;
             }
         }
@@ -71,40 +98,49 @@ class TemplateException extends PhpTalException
         }
     }
 
+    /**
+     * @param string $path
+     *
+     * @return false|int
+     */
     private function isTemplatePath($path)
     {
         return preg_match('/[\\\\\/]tpl_[0-9a-f]{8}_[^\\\\]+$/', $path);
     }
 
+    /**
+     * @return array
+     */
     private function findFileAndLine()
     {
         if ($this->isTemplatePath($this->file)) {
-            return array($this->file, $this->line);
+            return [$this->file, $this->line];
         }
 
         $eval_line = 0;
-        $eval_path = NULL;
+        $eval_path = null;
 
         // searches backtrace to find template file
-        foreach($this->getTrace() as $tr) {
-            if (!isset($tr['file'],$tr['line'])) continue;
+        foreach ($this->getTrace() as $tr) {
+            if (!isset($tr['file'], $tr['line'])) {
+                continue;
+            }
 
             if ($this->isTemplatePath($tr['file'])) {
-                return array($tr['file'], $tr['line']);
+                return [$tr['file'], $tr['line']];
             }
 
             // PHPTAL.php uses eval() on first run to catch fatal errors. This makes template path invisible.
             // However, function name matches template path and eval() is visible in backtrace.
-            if (false !== strpos($tr['file'], 'eval()')) {
+            if (strpos($tr['file'], 'eval()') !== false) {
                 $eval_line = $tr['line'];
-            }
-            else if ($eval_line && isset($tr['function'],$tr['args'],$tr['args'][0]) &&
-                $this->isTemplatePath("/".$tr['function'].".php") && $tr['args'][0] instanceof \PhpTal\PHPTAL) {
-                return array($tr['args'][0]->getCodePath(), $eval_line);
+            } elseif ($eval_line && isset($tr['function'], $tr['args'][0]) &&
+                $this->isTemplatePath('/' . $tr['function'] . '.php') && $tr['args'][0] instanceof PHPTAL) {
+                return [$tr['args'][0]->getCodePath(), $eval_line];
             }
         }
 
-        return array(NULL,NULL);
+        return [null, null];
     }
 
     /**
@@ -119,9 +155,9 @@ class TemplateException extends PhpTalException
         $this->srcFile = $this->file;
         $this->srcLine = $this->line;
 
-        list($file,$line) = $this->findFileAndLine();
+        list($file, $line) = $this->findFileAndLine();
 
-        if (NULL === $file) {
+        if ($file === null) {
             return false;
         }
 
@@ -134,23 +170,23 @@ class TemplateException extends PhpTalException
             return false;
         }
 
-        $found_line=false;
-        $found_file=false;
+        $found_line = false;
+        $found_file = false;
 
         // scan lines backwards looking for "from line" comments
-        $end = min(count($lines), $line)-1;
-        for($i=$end; $i >= 0; $i--) {
+        $end = min(count($lines), $line) - 1;
+        for ($i = $end; $i >= 0; $i--) {
             if (preg_match('/tag "[^"]*" from line (\d+)/', $lines[$i], $m)) {
-                $this->srcLine = intval($m[1]);
-                $found_line=true;
+                $this->srcLine = (int)$m[1];
+                $found_line = true;
                 break;
             }
         }
 
-        foreach(preg_grep('/Generated by PHPTAL from/',$lines) as $line) {
+        foreach (preg_grep('/Generated by PHPTAL from/', $lines) as $line) {
             if (preg_match('/Generated by PHPTAL from (.*) \(/', $line, $m)) {
                 $this->srcFile = $m[1];
-                $found_file=true;
+                $found_file = true;
                 break;
             }
         }

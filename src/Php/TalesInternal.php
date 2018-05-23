@@ -15,6 +15,9 @@
 
 namespace PhpTal\Php;
 
+use PhpTal\Exception\ParserException;
+use PhpTal\Exception\UnknownModifierException;
+
 /**
  * TALES Specification 1.3
  *
@@ -52,7 +55,13 @@ class TalesInternal implements \PhpTal\TalesInterface
     const DEFAULT_KEYWORD = 'new \PhpTal\DefaultKeyword';
     const NOTHING_KEYWORD = 'new \PhpTal\NothingKeyword';
 
-    static public function true($src, $nothrow)
+    /**
+     * @param string $src
+     * @param bool $nothrow
+     *
+     * @return string
+     */
+    public static function true($src, $nothrow)
     {
         return '\PhpTal\Helper::phptal_true(' . self::compileToPHPExpression($src, true) . ')';
     }
@@ -80,8 +89,13 @@ class TalesInternal implements \PhpTal\TalesInterface
      *      not: php: object.hasChildren()
      *      not: string:${foo}
      *      not: foo/bar/booleancomparable
+     *
+     * @param string $expression
+     * @param bool $nothrow
+     *
+     * @return string
      */
-    static public function not($expression, $nothrow)
+    public static function not($expression, $nothrow)
     {
         return '!\PhpTal\Helper::phptal_true(' . self::compileToPHPExpression($expression, $nothrow) . ')';
     }
@@ -118,23 +132,35 @@ class TalesInternal implements \PhpTal\TalesInterface
      *     // process default tag content
      * }
      *
-     * @returns string or array
+     * @param string $expression
+     * @param bool $nothrow
+     *
+     * @return array|string
+     * @throws ParserException
+     * @throws UnknownModifierException
      */
-    static public function path($expression, $nothrow=false)
+    public static function path($expression, $nothrow = false)
     {
         $expression = trim($expression);
-        if ($expression == 'default') return self::DEFAULT_KEYWORD;
-        if ($expression == 'nothing') return self::NOTHING_KEYWORD;
-        if ($expression == '')        return self::NOTHING_KEYWORD;
+        if ($expression === 'default') {
+            return self::DEFAULT_KEYWORD;
+        }
+        if ($expression === 'nothing') {
+            return self::NOTHING_KEYWORD;
+        }
+        if ($expression === '') {
+            return self::NOTHING_KEYWORD;
+        }
+
+        $string = null;
 
         // split OR expressions terminated by a string
         if (preg_match('/^(.*?)\s*\|\s*?(string:.*)$/sm', $expression, $m)) {
             list(, $expression, $string) = $m;
-        }
-        // split OR expressions terminated by a 'fast' string
+        } // split OR expressions terminated by a 'fast' string
         elseif (preg_match('/^(.*?)\s*\|\s*\'((?:[^\'\\\\]|\\\\.)*)\'\s*$/sm', $expression, $m)) {
             list(, $expression, $string) = $m;
-            $string = 'string:'.stripslashes($string);
+            $string = 'string:' . stripslashes($string);
         }
 
         // split OR expressions
@@ -142,18 +168,17 @@ class TalesInternal implements \PhpTal\TalesInterface
 
         // if (many expressions) or (expressions or terminating string) found then
         // generate the array of sub expressions and return it.
-        if (count($exps) > 1 || isset($string)) {
-            $result = array();
-            foreach ($exps as $i=>$exp) {
-                if(isset($string) || $i < count($exps) - 1) {
+        if (count($exps) > 1 || $string !== null) {
+            $result = [];
+            foreach ($exps as $i => $exp) {
+                if ($string !== null || $i < count($exps) - 1) {
                     $result[] = self::compileToPHPExpressions(trim($exp), true);
-                }
-                else {
+                } else {
                     // the last expression can thorw exception.
                     $result[] = self::compileToPHPExpressions(trim($exp), false);
                 }
             }
-            if (isset($string)) {
+            if ($string !== null) {
                 $result[] = self::compileToPHPExpressions($string, true);
             }
             return $result;
@@ -161,17 +186,16 @@ class TalesInternal implements \PhpTal\TalesInterface
 
 
         // see if there are subexpressions, but skip interpolated parts, i.e. ${a/b}/c is 2 parts
-        if (preg_match('/^((?:[^$\/]+|\$\$|\${[^}]+}|\$))\/(.+)$/s', $expression, $m))
-        {
+        if (preg_match('/^((?:[^$\/]+|\$\$|\${[^}]+}|\$))\/(.+)$/s', $expression, $m)) {
             if (!self::checkExpressionPart($m[1])) {
-                throw new \PhpTal\Exception\ParserException("Invalid TALES path: '$expression', expected '{$m[1]}' to be variable name");
+                throw new ParserException("Invalid TALES path: '$expression', expected '{$m[1]}' to be variable name");
             }
 
             $next = self::string($m[1]);
             $expression = self::string($m[2]);
         } else {
             if (!self::checkExpressionPart($expression)) {
-                throw new \PhpTal\Exception\ParserException("Invalid TALES path: '$expression', expected variable name. Complex expressions need php: modifier.");
+                throw new ParserException("Invalid TALES path: '$expression', expected variable name. Complex expressions need php: modifier.");
             }
 
             $next = self::string($expression);
@@ -179,25 +203,33 @@ class TalesInternal implements \PhpTal\TalesInterface
         }
 
         if ($nothrow) {
-            return '$ctx->path($ctx, ' . $next . ($expression === null ? '' : '."/".'.$expression) . ', true)';
+            return '$ctx->path($ctx, ' . $next . ($expression === null ? '' : '."/".' . $expression) . ', true)';
         }
 
-        if (preg_match('/^\'[a-z][a-z0-9_]*\'$/i', $next)) $next = substr($next, 1, -1); else $next = '{'.$next.'}';
+        if (preg_match('/^\'[a-z][a-z0-9_]*\'$/i', $next)) {
+            $next = substr($next, 1, -1);
+        } else {
+            $next = '{' . $next . '}';
+        }
 
         // if no sub part for this expression, just optimize the generated code
         // and access the $ctx->var
         if ($expression === null) {
-            return '$ctx->'.$next;
+            return '$ctx->' . $next;
         }
 
         // otherwise we have to call Context::path() to resolve the path at runtime
         // extract the first part of the expression (it will be the Context::path()
         // $base and pass the remaining of the path to Context::path()
-        return '$ctx->path($ctx->'.$next.', '.$expression.')';
+        return '$ctx->path($ctx->' . $next . ', ' . $expression . ')';
     }
 
     /**
      * check if part of exprssion (/foo/ or /foo${bar}/) is alphanumeric
+     *
+     * @param string $expression
+     *
+     * @return false|int
      */
     private static function checkExpressionPart($expression)
     {
@@ -220,15 +252,19 @@ class TalesInternal implements \PhpTal\TalesInterface
      *      string:hello, ${user/name}
      *      string:you have $$130 in your bank account
      */
-    static public function string($expression, $nothrow=false)
+    public static function string($expression, $nothrow = false)
     {
         return self::parseString($expression, $nothrow, '');
     }
 
     /**
+     * @param string $expression
+     * @param bool $nothrow
      * @param string $tales_prefix prefix added to all TALES in the string
+     *
+     * @return null|string|string[]
      */
-    static public function parseString($expression, $nothrow, $tales_prefix)
+    public static function parseString($expression, $nothrow, $tales_prefix)
     {
         // This is a simple parser which evaluates ${foo} inside
         // 'string:foo ${foo} bar' expressions, it returns the php code which will
@@ -239,8 +275,9 @@ class TalesInternal implements \PhpTal\TalesInterface
         $inAccoladePath = false;
         $lastWasDollar = false;
         $result = '';
+        $subPath = '';
         $len = strlen($expression);
-        for ($i=0; $i<$len; $i++) {
+        for ($i = 0; $i < $len; $i++) {
             $c = $expression[$i];
             switch ($c) {
                 case '$':
@@ -259,8 +296,7 @@ class TalesInternal implements \PhpTal\TalesInterface
                     if ($inAccoladePath) {
                         $subPath .= $c;
                         $c = '';
-                    }
-                    else {
+                    } else {
                         $c = '\\\\';
                     }
                     break;
@@ -269,8 +305,7 @@ class TalesInternal implements \PhpTal\TalesInterface
                     if ($inAccoladePath) {
                         $subPath .= $c;
                         $c = '';
-                    }
-                    else {
+                    } else {
                         $c = '\\\'';
                     }
                     break;
@@ -290,7 +325,7 @@ class TalesInternal implements \PhpTal\TalesInterface
                 case '}':
                     if ($inAccoladePath) {
                         $inAccoladePath = false;
-                        $subEval = self::compileToPHPExpression($tales_prefix.$subPath,false);
+                        $subEval = self::compileToPHPExpression($tales_prefix . $subPath);
                         $result .= "'.(" . $subEval . ").'";
                         $subPath = '';
                         $lastWasDollar = false;
@@ -309,26 +344,26 @@ class TalesInternal implements \PhpTal\TalesInterface
                         $c = '';
                     } elseif ($inPath) {
                         $t = strtolower($c);
-                        if (($t >= 'a' && $t <= 'z') || ($t >= '0' && $t <= '9') || ($t == '_')) {
+                        if (($t >= 'a' && $t <= 'z') || ($t >= '0' && $t <= '9') || ($t === '_')) {
                             $subPath .= $c;
                             $c = '';
                         } else {
                             $inPath = false;
-                            $subEval = self::compileToPHPExpression($tales_prefix.$subPath,false);
+                            $subEval = self::compileToPHPExpression($tales_prefix . $subPath);
                             $result .= "'.(" . $subEval . ").'";
-                            }
                         }
+                    }
                     break;
             }
             $result .= $c;
         }
         if ($inPath) {
-            $subEval = self::compileToPHPExpression($tales_prefix.$subPath, false);
+            $subEval = self::compileToPHPExpression($tales_prefix . $subPath);
             $result .= "'.(" . $subEval . ").'";
         }
 
         // optimize ''.foo.'' to foo
-        $result = preg_replace("/^(?:''\.)?(.*?)(?:\.'')?$/", '\1', '\''.$result.'\'');
+        $result = preg_replace("/^(?:''\.)?(.*?)(?:\.'')?$/", '\1', '\'' . $result . '\'');
 
         /*
             The following expression (with + in first alternative):
@@ -348,21 +383,33 @@ class TalesInternal implements \PhpTal\TalesInterface
      * php: modifier.
      *
      * Transform the expression into a regular PHP expression.
+     *
+     * @param string $src
+     *
+     * @return string
+     * @throws ParserException
      */
-    static public function php($src)
+    public static function php($src)
     {
-        return \PhpTal\Php\Transformer::transform($src, '$ctx->');
+        return Transformer::transform($src, '$ctx->');
     }
 
     /**
      * exists: modifier.
      *
      * Returns the code required to invoke Context::exists() on specified path.
+     *
+     * @param string $src
+     * @param bool $nothrow
+     *
+     * @return string
      */
-    static public function exists($src, $nothrow)
+    public static function exists($src, $nothrow)
     {
         $src = trim($src);
-        if (ctype_alnum($src)) return 'isset($ctx->'.$src.')';
+        if (ctype_alnum($src)) {
+            return 'isset($ctx->' . $src . ')';
+        }
         return '(null !== ' . self::compileToPHPExpression($src, true) . ')';
     }
 
@@ -370,27 +417,45 @@ class TalesInternal implements \PhpTal\TalesInterface
      * number: modifier.
      *
      * Returns the number as is.
+     *
+     * @param string $src
+     * @param bool $nothrow
+     *
+     * @return string
+     * @throws ParserException
      */
-    static public function number($src, $nothrow)
+    public static function number($src, $nothrow)
     {
-        if (!is_numeric(trim($src))) throw new \PhpTal\Exception\ParserException("'$src' is not a number");
+        if (!is_numeric(trim($src))) {
+            throw new ParserException("'$src' is not a number");
+        }
         return trim($src);
     }
 
     /**
      * json: modifier. Serializes anything as JSON.
+     *
+     * @param string $src
+     * @param string $nothrow
+     *
+     * @return string
      */
-    static public function json($src, $nothrow)
+    public static function json($src, $nothrow)
     {
-        return 'json_encode('.static::compileToPHPExpression($src,$nothrow).')';
+        return 'json_encode(' . static::compileToPHPExpression($src, $nothrow) . ')';
     }
 
     /**
      * urlencode: modifier. Escapes a string.
+     *
+     * @param string $src
+     * @param bool $nothrow
+     *
+     * @return string
      */
-    static public function urlencode($src, $nothrow)
+    public static function urlencode($src, $nothrow)
     {
-        return 'rawurlencode('.static::compileToPHPExpression($src,$nothrow).')';
+        return 'rawurlencode(' . static::compileToPHPExpression($src, $nothrow) . ')';
     }
 
     /**
@@ -398,30 +463,41 @@ class TalesInternal implements \PhpTal\TalesInterface
      * Identical to compileToPHPExpressions() for singular expressions.
      *
      * @see \PhpTal\Php\TalesInternal::compileToPHPExpressions()
+     *
+     * @param string $expression
+     * @param bool $nothrow
+     *
      * @return string
+     * @throws UnknownModifierException
      */
-    public static function compileToPHPExpression($expression, $nothrow=false)
+    public static function compileToPHPExpression($expression, $nothrow = false)
     {
         $r = self::compileToPHPExpressions($expression, $nothrow);
-        if (!is_array($r)) return $r;
+        if (!is_array($r)) {
+            return $r;
+        }
 
         // this weird ternary operator construct is to execute noThrow inside the expression
-        return '($ctx->noThrow(true)||1?'.self::convertExpressionsToExpression($r, $nothrow).':"")';
+        return '($ctx->noThrow(true)||1?' . self::convertExpressionsToExpression($r, $nothrow) . ':"")';
     }
 
-    /*
-     * helper function for compileToPHPExpression
-     * @access private
+    /**
+     * @param array $array
+     * @param bool $nothrow
+     *
+     * @return string
      */
     private static function convertExpressionsToExpression(array $array, $nothrow)
     {
-        if (count($array)==1) return '($ctx->noThrow('.($nothrow?'true':'false').')||1?('.
-            ($array[0]==self::NOTHING_KEYWORD?'null':$array[0]).
-            '):"")';
+        if (count($array) === 1) {
+            return '($ctx->noThrow(' . ($nothrow ? 'true' : 'false') . ')||1?(' .
+                ($array[0] === self::NOTHING_KEYWORD ? 'null' : $array[0]) .
+                '):"")';
+        }
 
         $expr = array_shift($array);
 
-        return "(!\PhpTal\Helper::phptal_isempty(\$_tmp5=$expr) && (\$ctx->noThrow(false)||1)?\$_tmp5:".self::convertExpressionsToExpression($array, $nothrow).')';
+        return "(!\PhpTal\Helper::phptal_isempty(\$_tmp5=$expr) && (\$ctx->noThrow(false)||1)?\$_tmp5:" . self::convertExpressionsToExpression($array, $nothrow) . ')';
     }
 
     /**
@@ -431,50 +507,58 @@ class TalesInternal implements \PhpTal\TalesInterface
      * Expressions with alternatives ("foo | bar") will cause it to return array
      * Use \PhpTal\Php\TalesInternal::compileToPHPExpression() if you always want string.
      *
+     * @param string $expression
      * @param bool $nothrow if true, invalid expression will return NULL (at run time) rather than throwing exception
      *
      * @return string or array
+     * @throws ParserException
+     * @throws UnknownModifierException
+     * @throws \ReflectionException
      */
-    public static function compileToPHPExpressions($expression, $nothrow=false)
+    public static function compileToPHPExpressions($expression, $nothrow = false)
     {
         $expression = trim($expression);
 
         // Look for tales modifier (string:, exists:, Namespaced\Tale:, etc...)
         if (preg_match('/^([a-z](?:[a-z0-9._\\\\-]*[a-z0-9])?):(.*)$/si', $expression, $m)) {
             list(, $typePrefix, $expression) = $m;
-        }
-        // may be a 'string'
+        } // may be a 'string'
         elseif (preg_match('/^\'((?:[^\']|\\\\.)*)\'$/s', $expression, $m)) {
             $expression = stripslashes($m[1]);
             $typePrefix = 'string';
-        }
-        // failback to path:
+        } // failback to path:
         else {
             $typePrefix = 'path';
         }
 
         // is a registered TALES expression modifier
         $callback = \PhpTal\TalesRegistry::getInstance()->getCallback($typePrefix);
-        if ($callback !== NULL)
-        {
-            $result = call_user_func($callback, $expression, $nothrow);
+        if ($callback !== null) {
+            $result = $callback($expression, $nothrow);
             self::verifyPHPExpressions($typePrefix, $result);
             return $result;
         }
 
-        $func = 'phptal_tales_'.str_replace('-', '_', $typePrefix);
-        throw new \PhpTal\Exception\UnknownModifierException("Unknown phptal modifier '$typePrefix'. Function '$func' does not exist", $typePrefix);
+        $func = 'phptal_tales_' . str_replace('-', '_', $typePrefix);
+        throw new UnknownModifierException("Unknown phptal modifier '$typePrefix'. Function '$func' does not exist", $typePrefix);
     }
 
-    private static function verifyPHPExpressions($typePrefix,$expressions)
+    /**
+     * @param string $typePrefix
+     * @param array $expressions
+     *
+     * @return void
+     * @throws ParserException
+     */
+    private static function verifyPHPExpressions($typePrefix, $expressions)
     {
         if (!is_array($expressions)) {
-            $expressions = array($expressions);
+            $expressions = [$expressions];
         }
 
-        foreach($expressions as $expr) {
+        foreach ($expressions as $expr) {
             if (preg_match('/;\s*$/', $expr)) {
-                throw new \PhpTal\Exception\ParserException("Modifier $typePrefix generated PHP statement rather than expression (don't add semicolons)");
+                throw new ParserException("Modifier $typePrefix generated PHP statement rather than expression (don't add semicolons)");
             }
         }
     }

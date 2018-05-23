@@ -20,5 +20,3 @@ namespace PhpTal\Exception;
 class PhpTalException extends \Exception
 {
 }
-
-

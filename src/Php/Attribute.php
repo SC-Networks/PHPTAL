@@ -14,6 +14,8 @@
 
 namespace PhpTal\Php;
 
+use PhpTal\Dom\Element;
+
 /**
  * Base class for all PHPTAL attributes.
  *
@@ -35,10 +37,16 @@ abstract class Attribute
      */
     protected $echoType = Attribute::ECHO_TEXT;
 
-    /** Attribute value specified by the element. */
+    /**
+     * Attribute value specified by the element.
+     * @string
+     */
     protected $expression;
 
-    /** Element using this attribute (PHPTAL's counterpart of XML node) */
+    /**
+     * Element using this attribute (PHPTAL's counterpart of XML node)
+     * @var Element
+     */
     protected $phpelement;
 
     /**
@@ -59,7 +67,12 @@ abstract class Attribute
      */
     abstract public function after(CodeWriter $codewriter);
 
-    function __construct(\PhpTal\Dom\Element $phpelement, $expression)
+    /**
+     * Attribute constructor.
+     * @param Element $phpelement
+     * @param string $expression
+     */
+    public function __construct(Element $phpelement, $expression)
     {
         $this->expression = $expression;
         $this->phpelement = $phpelement;
@@ -75,6 +88,10 @@ abstract class Attribute
      * ...
      *
      * $this->doEcho($code);
+     *
+     * @param string $expression
+     *
+     * @return string
      */
     protected function extractEchoType($expression)
     {
@@ -87,6 +104,12 @@ abstract class Attribute
         return trim($expression);
     }
 
+    /**
+     * @param CodeWriter $codewriter
+     * @param string $code
+     *
+     * @return void
+     */
     protected function doEchoAttribute(CodeWriter $codewriter, $code)
     {
         if ($this->echoType === self::ECHO_TEXT) {
@@ -96,14 +119,19 @@ abstract class Attribute
         }
     }
 
+    /**
+     * @param string $exp
+     *
+     * @return array
+     */
     protected function parseSetExpression($exp)
     {
         $exp = trim($exp);
         // (dest) (value)
         if (preg_match('/^([a-z0-9:\-_]+)\s+(.*?)$/si', $exp, $m)) {
-            return array($m[1], trim($m[2]));
+            return [$m[1], trim($m[2])];
         }
         // (dest)
-        return array($exp, null);
+        return [$exp, null];
     }
 }

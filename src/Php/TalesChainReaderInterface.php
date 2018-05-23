@@ -19,7 +19,23 @@ namespace PhpTal\Php;
  */
 interface TalesChainReaderInterface
 {
+    /**
+     * @param TalesChainExecutor $executor
+     * @return mixed
+     */
     public function talesChainNothingKeyword(TalesChainExecutor $executor);
+
+    /**
+     * @param TalesChainExecutor $executor
+     * @return mixed
+     */
     public function talesChainDefaultKeyword(TalesChainExecutor $executor);
+
+    /**
+     * @param TalesChainExecutor $executor
+     * @param $expression
+     * @param $islast
+     * @return mixed
+     */
     public function talesChainPart(TalesChainExecutor $executor, $expression, $islast);
 }
