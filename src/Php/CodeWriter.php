@@ -220,7 +220,11 @@ class CodeWriter
 
     /**
      * @param string $src
+     *
      * @return string
+     * @throws \PhpTal\Exception\ParserException
+     * @throws \PhpTal\Exception\UnknownModifierException
+     * @throws \ReflectionException
      */
     public function evaluateExpression($src)
     {

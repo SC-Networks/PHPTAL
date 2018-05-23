@@ -384,7 +384,6 @@ class Compress extends Normalize
             $localName === 'style') {
             // There's only one type of stylesheets that works.
             $element->removeAttributeNS('', 'type');
-
         } elseif ($localName === 'script') {
             $element->removeAttributeNS('', 'language');
 

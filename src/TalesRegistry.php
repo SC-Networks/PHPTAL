@@ -117,7 +117,6 @@ class TalesRegistry
             }
 
             // maybe we want to check the parameters the method takes
-
         } elseif (!function_exists($callback)) {
             throw new Exception\ConfigurationException('The function you are trying to register does not exist.');
         }

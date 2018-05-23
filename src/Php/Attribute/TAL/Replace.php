@@ -36,7 +36,6 @@ use PhpTal\Php\TalesChainExecutor;
  * @author Laurent Bedubourg <lbedubourg@motion-twin.com>
  */
 class Replace extends Attribute implements \PhpTal\Php\TalesChainReaderInterface
-
 {
     /**
      * Called before element printing.
@@ -45,6 +44,7 @@ class Replace extends Attribute implements \PhpTal\Php\TalesChainReaderInterface
      *
      * @return void
      * @throws \PhpTal\Exception\PhpTalException
+     * @throws \ReflectionException
      */
     public function before(CodeWriter $codewriter)
     {
@@ -90,8 +90,11 @@ class Replace extends Attribute implements \PhpTal\Php\TalesChainReaderInterface
 
     /**
      * support expressions like "foo | bar"
+     *
      * @param CodeWriter $codewriter
      * @param array $expArray
+     *
+     * @throws \PhpTal\Exception\PhpTalException
      */
     private function replaceByChainedExpression(CodeWriter $codewriter, $expArray)
     {

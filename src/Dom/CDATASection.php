@@ -43,8 +43,7 @@ class CDATASection extends Node
             $codewriter->pushHTML($codewriter->interpolateCDATA(str_replace('</', '<\/', $value)));
         } elseif (($mode === \PhpTal\PHPTAL::XHTML && $inCDATAelement)  // safe for text/html
             || ($mode === \PhpTal\PHPTAL::XML && preg_match('/[<>&]/', $value))  // non-useless in XML
-            || ($mode !== \PhpTal\PHPTAL::HTML5 && preg_match('/<\?|\${structure/', $value)))  // hacks with structure (in X[HT]ML) may need it
-        {
+            || ($mode !== \PhpTal\PHPTAL::HTML5 && preg_match('/<\?|\${structure/', $value))) { // hacks with structure (in X[HT]ML) may need it
             // in text/html "</" is dangerous and the only sensible way to escape is ECMAScript string escapes.
             if ($mode === \PhpTal\PHPTAL::XHTML) {
                 $value = str_replace('</', '<\/', $value);
