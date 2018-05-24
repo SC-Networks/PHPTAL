@@ -94,6 +94,25 @@ class TalesRegistryTest extends PHPTAL_TestCase
         \PhpTal\TalesRegistry::getInstance()->registerPrefix('registry_test_6', 'registry_test_callback2');
         \PhpTal\TalesRegistry::getInstance()->registerPrefix('registry_test_6', 'registry_test_callback', true);
     }
+
+    public function testIsRegisteredIsAccessible()
+    {
+        $this->assertFalse(
+            \PhpTal\TalesRegistry::getInstance()->isRegistered('some-custom-modifier')
+        );
+    }
+
+    public function testIsRegisteredReturnsTrueIfAlreadyRegistered()
+    {
+        $instance = \PhpTal\TalesRegistry::getInstance();
+        $modifier_key = 'registry_test_7';
+
+        $instance->registerPrefix($modifier_key, 'registry_test_callback');
+
+        $this->assertTrue(
+            $instance->isRegistered($modifier_key)
+        );
+    }
 }
 
 function registry_test_callback($arg, $nothrow)
