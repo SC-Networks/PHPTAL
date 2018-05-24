@@ -21,7 +21,7 @@ use PhpTal\Php\TalesInternal;
  *
  * @package PHPTAL
  */
-class TalesRegistry
+class TalesRegistry implements TalesRegistryInterface
 {
     /**
      * @var TalesRegistry
@@ -131,7 +131,7 @@ class TalesRegistry
      *
      * @return bool
      */
-    private function isRegistered($prefix)
+    public function isRegistered($prefix)
     {
         return array_key_exists($prefix, $this->callbacks);
     }
