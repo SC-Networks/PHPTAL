@@ -15,15 +15,13 @@
 error_reporting( E_ALL | E_STRICT );
 assert_options(ASSERT_ACTIVE, 1);
 
-require_once __DIR__ . '/../vendor/autoload.php';
-
 abstract class PHPTAL_TestCase extends PHPUnit_Framework_TestCase
 {
     private $cwd_backup, $buffer_level;
 
     function setUp()
     {
-        $this->assertTrue(\PhpTal\PHPTAL::PHPTAL_VERSION >= '1_2_2');
+        $this->assertTrue(\PhpTal\PHPTAL::PHPTAL_VERSION >= '2_0_0');
 
         $this->buffer_level = ob_get_level();
 

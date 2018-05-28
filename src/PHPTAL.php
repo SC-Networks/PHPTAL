@@ -743,6 +743,7 @@ class PHPTAL implements PhpTalInterface
      * @param string $path
      * @param PhpTalInterface $local_tpl is PHPTAL instance of the file in which macro is defined
      *                          (it will be different from $this if it's external macro call)
+     *
      * @throws Exception\IOException
      * @throws Exception\MacroMissingException
      * @throws Exception\TemplateException

@@ -2882,9 +2882,8 @@ msgstr "Bienvenue ${name} vous avez recu ${n} messages!"
         <acronym>PHP</acronym> files and reparse      all templates using it.      
       </para>
       <para>      Please note that modifiers produce code, and mustn't echo data!      </para>
-      <para>      Any 
-        <acronym>PHP</acronym> function starting with "
-        <constant>phptal_tales_</constant>" is usable as a      modifier.      
+      <para>      You might use functions in the global namespace as well as static methods inside a class as modifier. That class must implement the
+        <code>TalesInterface</code> interface.
       </para>
       <para>      Modifiers takes two arguments:      </para>
       <itemizedlist>
@@ -2895,11 +2894,8 @@ msgstr "Bienvenue ${name} vous avez recu ${n} messages!"
         </listitem>
         <listitem>
           <para>
-            <varname>$nothrow</varname>: a boolean which determines whether exceptions may	  be thrown or not by 
-            <function>phptal_path()</function> resolution. This boolean	  must be propagated whenever you call another 
-            <function>phptal_tales_
-              <replaceable>*</replaceable>
-            </function>	  modifier from within your own modifier.	
+            <varname>$nothrow</varname>: a boolean which determines whether exceptions may be thrown or not. This boolean
+            must be propagated whenever you call another modifier from within your own modifier.
           </para>
         </listitem>
       </itemizedlist>
@@ -2978,12 +2974,28 @@ msgstr "Bienvenue ${name} vous avez recu ${n} messages!"
 // @return string
 //      PHP code to include in the template
 //
-function phptal_tales_money( $src, $nothrow )
+public function money_callback($src, $nothrow)
 {
     // remove spaces we do not require here
     $src = trim($src);
     return 'sprintf("%01.2f", '.phptal_tales($src, $nothrow).')';
 }
+
+TalesRegistry::registerPrefix('money', 'money_callback');
+
+// or
+
+class MyRegistry implements TalesInterface {
+
+    public static function money($src, $nothrow) {
+      // remove spaces we do not require here
+      $src = trim($src);
+      return 'sprintf("%01.2f", '.phptal_tales($src, $nothrow).')';
+    }
+}
+
+TalesRegistry::registerPrefix('money', [MyRegistry::class, 'money']);
+
 ]]>
         </programlisting>
       </informalexample>

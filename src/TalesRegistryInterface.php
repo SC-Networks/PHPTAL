@@ -11,19 +11,24 @@ use PhpTal\Php\TalesInternal;
 interface TalesRegistryInterface
 {
 
-    /**
-     * This is a singleton
-     *
-     * @return TalesRegistryInterface
-     */
-    public static function getInstance();
 
     /**
-     * Unregisters a expression modifier
+     * get callback for the prefix
+     *
+     * @param $prefix
+     *
+     * @return callback or NULL
+     */
+    public static function getCallback($prefix);
+
+    /**
+     * true if given prefix is taken
      *
      * @param string $prefix
+     *
+     * @return bool
      */
-    public function unregisterPrefix($prefix);
+    public static function isRegistered($prefix);
 
     /**
      *
@@ -33,24 +38,18 @@ interface TalesRegistryInterface
      * @param string $prefix
      * @param mixed $callback
      * @param bool $is_fallback if true, method will be used as last resort (if there's no phptal_tales_foo)
+     *
+     * @throws Exception\ConfigurationException
+     * @throws \ReflectionException
      */
-    public function registerPrefix($prefix, $callback, $is_fallback = false);
+    public static function registerPrefix($prefix, $callback, $is_fallback = false);
 
     /**
-     * true if given prefix is taken
+     * Unregisters a expression modifier
      *
      * @param string $prefix
      *
-     * @return bool
+     * @throws Exception\ConfigurationException
      */
-    public function isRegistered($prefix);
-
-    /**
-     * get callback for the prefix
-     *
-     * @param $prefix
-     *
-     * @return callback or NULL
-     */
-    public function getCallback($prefix);
+    public static function unregisterPrefix($prefix);
 }
