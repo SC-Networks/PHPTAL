@@ -1161,6 +1161,7 @@ class PHPTAL implements PhpTalInterface
      * @throws Exception\ConfigurationException
      * @throws Exception\ParserException
      * @throws Exception\TemplateException
+     * @throws Exception\PhpTalException
      */
     protected function parse()
     {
