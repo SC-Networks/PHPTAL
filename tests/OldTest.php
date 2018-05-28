@@ -120,16 +120,6 @@ class OldTest extends PHPTAL_TestCase
         $this->assertEquals($res, $exp);
     }
 
-
-    function test23() // test custom modifier
-    {
-        $tpl = $this->newPHPTAL('input/old-23.html');
-        $res = normalize_html($tpl->execute());
-        $exp = normalize_html_file('output/old-23.html');
-        $this->assertEquals($res, $exp);
-    }
-
-
     function test29() // test doctype inherited from macro
     {
         $tpl = $this->newPHPTAL('input/old-29.html');
@@ -184,10 +174,3 @@ class OldTest extends PHPTAL_TestCase
         $this->assertEquals($exp, $res);
     }
 }
-
-
-function phptal_tales_my_modifier( $arg, $nothrow )
-{
-    return "strtoupper('$arg')";
-}
-

@@ -212,6 +212,7 @@ interface PhpTalInterface
      * Register a trigger for specified phptal:id.
      *
      * @param string $id phptal:id to look for
+     * @param TriggerInterface $trigger
      *
      * @return $this
      */
@@ -258,8 +259,10 @@ interface PhpTalInterface
      *
      * $this is caller's context (the file where execution had originally started)
      *
+     * @param string $path
      * @param PhpTalInterface $local_tpl is PHPTAL instance of the file in which macro is defined
      *                          (it will be different from $this if it's external macro call)
+     * @return void
      */
     public function executeMacroOfTemplate($path, PhpTalInterface $local_tpl);
 

@@ -134,14 +134,6 @@ EOT;
         $this->assertEquals($res, '<p></p>');
     }
 
-    function testNULLValue()
-    {
-        $tpl = $this->newPHPTAL();
-        $tpl->setSource('<p tal:attributes="title missing | php:NULL"></p><p tal:attributes="class \'ok\'; title null:blah"></p>');
-        $res = $tpl->execute();
-        $this->assertEquals('<p></p><p class="ok"></p>', $res);
-    }
-
     function testNULLValueNoAlternative()
     {
         $tpl = $this->newPHPTAL();
@@ -205,10 +197,4 @@ EOT;
             $this->assertEquals('<p></p>', $res);
         }
     }
-}
-
-
-function phptal_tales_null($code, $nothrow)
-{
-    return 'NULL';
 }
