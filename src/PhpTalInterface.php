@@ -215,27 +215,16 @@ interface PhpTalInterface
      *
      * @return $this
      */
-    public function addTrigger($id, \PhpTal\TriggerInterface $trigger);
+    public function addTrigger($id, TriggerInterface $trigger);
 
     /**
      * Returns trigger for specified phptal:id.
      *
      * @param string $id phptal:id
      *
-     * @return \PhpTal\TriggerInterface|null
+     * @return TriggerInterface|null
      */
     public function getTrigger($id);
-
-    /**
-     * Set a context variable.
-     * Use it by setting properties on PHPTAL object.
-     *
-     * @param string $varname
-     * @param mixed $value
-     *
-     * @return void
-     */
-    public function __set($varname, $value);
 
     /**
      * Set a context variable.
