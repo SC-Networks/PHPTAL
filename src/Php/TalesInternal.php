@@ -572,7 +572,7 @@ class TalesInternal implements \PhpTal\TalesInterface
         }
 
         throw new UnknownModifierException(
-            sprintf('Unknown phptal modifier %s. Support for custom modifiers has been dropped.', $typePrefix)
+            sprintf('Unknown phptal modifier %s. Custom modifiers have to be registered explicitly.', $typePrefix)
         );
     }
 
