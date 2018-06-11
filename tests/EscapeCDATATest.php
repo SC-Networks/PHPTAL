@@ -86,13 +86,13 @@ class EscapeCDATATest extends PHPTAL_TestCase {
     function testEntityInPHP3()
     {
         $res = $this->executeString('<div><![CDATA[<?php echo strlen(\'&quot;&amp;&lt;\')?>,<?php echo strlen(\'<"&\') ?>]]></div>');
-        $this->assertEquals('<div><![CDATA[15,3]]></div>', $res);
+        $this->assertEquals('<div><![CDATA[<_ echo strlen(\'&quot;&amp;&lt;\')?>,<_ echo strlen(\'<"&\') ?>]]></div>', $res);
     }
 
     function testNoEncodingAfterPHP()
     {
         $res = $this->executeString('<div><![CDATA[${php:urldecode(\'%26%22%3C\')},${structure php:urldecode(\'%26%22%3C\')},<?php echo urldecode(\'%26%22%3C\') ?>]]></div>');
-        $this->assertEquals('<div><![CDATA[&"<,&"<,&"<]]></div>', $res);
+        $this->assertEquals('<div><![CDATA[&"<,&"<,<_ echo urldecode(\'%26%22%3C\') ?>]]></div>', $res);
     }
 
     /**

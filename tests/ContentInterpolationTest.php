@@ -258,7 +258,7 @@ EOT;
     {
         $tpl = $this->newPHPTAL();
         $tpl->setSource('<p>test<?php echo "<x>"; ?>test<?php print("&amp;") ?>test</p>');
-        $this->assertEquals('<p>test<x>test&amp;test</p>', $tpl->execute());
+        $this->assertEquals('<p>test<_ echo "<x>"; ?>test<_ print("&amp;") ?>test</p>', $tpl->execute());
     }
 
     public function testPHPBlock54()
@@ -269,7 +269,7 @@ EOT;
         try
         {
             // PHP 5.4: short tag <?= is always enabled.
-            $this->assertEquals('<p>test<? print("<x>"); ?>test&amp;test</p>', $tpl->execute());
+            $this->assertEquals('<p>test<? print("<x>"); ?>test<_ "&amp;" ?>test</p>', $tpl->execute());
         }
         catch(\PhpTal\Exception\ParserException $e) {/* xml ill-formedness error is ok too */}
         ini_restore('short_open_tag');
