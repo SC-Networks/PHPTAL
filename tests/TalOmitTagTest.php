@@ -56,7 +56,7 @@ class TalOmitTagTest extends PHPTAL_TestCase
     {
         $this->call_count=0;
         $tpl = $this->newPHPTAL();
-        $tpl->setSource('<span tal:omit-tag="php:true">a<span tal:omit-tag="php:false">b<span tal:omit-tag="php:true">c<span tal:omit-tag="php:false">d<span tal:omit-tag="php:false">e<span tal:omit-tag="php:true">f<span tal:omit-tag="php:true">g</span>h</span>i</span>j</span>k</span></span></span>');
+        $tpl->setSource('<span tal:omit-tag="true">a<span tal:omit-tag="false">b<span tal:omit-tag="true">c<span tal:omit-tag="false">d<span tal:omit-tag="false">e<span tal:omit-tag="true">f<span tal:omit-tag="true">g</span>h</span>i</span>j</span>k</span></span></span>');
 
         $this->assertEquals('a<span>bc<span>d<span>efghi</span>j</span>k</span>', $tpl->execute());
     }

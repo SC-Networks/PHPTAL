@@ -1,4 +1,11 @@
 <?php
+
+namespace Tests;
+
+use PhpTal\Exception\ParserException;
+use PhpTal\Exception\VariableNotFoundException;
+use PhpTal\Php\TalesInternal;
+
 /**
  * PHPTAL templating engine
  *
@@ -13,8 +20,15 @@
  */
 
 
-class ContentInterpolationTest extends PHPTAL_TestCase
+class ContentInterpolationTest extends \PHPTAL_TestCase
 {
+
+    public function tearDown()
+    {
+        TalesInternal::setFunctionWhitelist([]);
+        parent::tearDown();
+    }
+
     public function testInterpol()
     {
         $src = <<<EOT
@@ -92,7 +106,7 @@ EOT;
     }
 
 
-    function testUnescape()
+    public function testUnescape()
     {
         $tpl = $this->newPHPTAL();
 
@@ -119,7 +133,7 @@ EOT;
         </p>'), normalize_html($tpl->execute()));
     }
 
-    function testUnescapeString()
+    public function testUnescapeString()
     {
         $tpl = $this->newPHPTAL();
 
@@ -146,7 +160,7 @@ EOT;
          </p>'), normalize_html($tpl->execute()));
     }
 
-    function testUnescapeStructure()
+    public function testUnescapeStructure()
     {
         $tpl = $this->newPHPTAL();
 
@@ -173,7 +187,7 @@ EOT;
         </p>'), normalize_html($tpl->execute()));
     }
 
-    function testUnescapeCDATA()
+    public function testUnescapeCDATA()
     {
         $tpl = $this->newPHPTAL();
 
@@ -200,7 +214,7 @@ EOT;
         ]]></script>'), normalize_html($tpl->execute()));
     }
 
-    function testUnescapeCDATAStructure()
+    public function testUnescapeCDATAStructure()
     {
         $tpl = $this->newPHPTAL();
 
@@ -227,7 +241,7 @@ EOT;
         ]]></script>'), normalize_html($tpl->execute()));
     }
 
-    function testUnescapePHPTales()
+    public function testUnescapePHPTales()
     {
         $tpl = $this->newPHPTAL();
 
@@ -275,45 +289,39 @@ EOT;
         ini_restore('short_open_tag');
     }
 
-    /**
-     * @expectedException \PhpTal\Exception\VariableNotFoundException
-     */
-    function testErrorsThrow()
+    public function testErrorsThrow()
     {
         $tpl = $this->newPHPTAL();
         $tpl->setSource('<p>${error}</p>');
+        $this->expectException(VariableNotFoundException::class);
         $tpl->execute();
     }
 
-    /**
-     * @expectedException \PhpTal\Exception\VariableNotFoundException
-     */
-    function testErrorsThrow2()
+    public function testErrorsThrow2()
     {
         $tpl = $this->newPHPTAL();
         $tpl->setSource('<p>${error | error}</p>');
+        $this->expectException(VariableNotFoundException::class);
         $tpl->execute();
     }
 
-    /**
-     * @expectedException \PhpTal\Exception\VariableNotFoundException
-     */
-    function testErrorsThrow3()
+    public function testErrorsThrow3()
     {
         $tpl = $this->newPHPTAL();
         $tpl->foo = array();
         $tpl->setSource('<p>${foo/error | foo/error}</p>');
+        $this->expectException(VariableNotFoundException::class);
         $tpl->execute();
     }
 
-    function testErrorsSilenced()
+    public function testErrorsSilenced()
     {
         $tpl = $this->newPHPTAL();
         $tpl->setSource('<p>${error | nothing}</p>');
         $this->assertEquals('<p></p>', $tpl->execute());
     }
 
-    function testZeroIsNotEmpty()
+    public function testZeroIsNotEmpty()
     {
         $tpl = $this->newPHPTAL();
         $tpl->zero = '0';
@@ -321,7 +329,7 @@ EOT;
         $this->assertEquals('<p>0</p>', $tpl->execute());
     }
 
-    function testPreservesNewline()
+    public function testPreservesNewline()
     {
         $tpl = $this->newPHPTAL()->setSource('<body>
 ${variable1 | string:Line 1}
@@ -336,13 +344,15 @@ Line 3
 </body>', $tpl->execute(), $tpl->getCodePath());
     }
 
-    function testMultilineInterpolationPHP()
+    public function testMultilineInterpolationPHP()
     {
         $res = $this->newPHPTAL()->setSource('<p>${php:\'foo
         bar\'}</p>')->execute();
 
         $this->assertEquals('<p>foo
         bar</p>', $res);
+
+        TalesInternal::setFunctionWhitelist(['substr']);
 
         $res = $this->newPHPTAL()->setSource('<p>${php:\'foo\' .
         substr(\'barz\' ,
@@ -352,7 +362,7 @@ Line 3
     }
 
 
-    function testMultilineInterpolation()
+    public function testMultilineInterpolation()
     {
         $res = $this->newPHPTAL()->setSource('<p>${string:foo
         bar}</p>')->execute();
@@ -367,14 +377,14 @@ Line 3
         bar</p>', $res);
     }
 
-    function testTagsBreakTALES()
+    public function testTagsBreakTALES()
     {
         $res = $this->newPHPTAL()->setSource('<p>${foo<br/>bar}</p>')->execute();
 
         $this->assertEquals('<p>${foo<br/>bar}</p>', $res);
     }
 
-    function testEscapedTagsDontBreakTALES()
+    public function testEscapedTagsDontBreakTALES()
     {
         $res = $this->newPHPTAL()->setSource('<p>${structure string:foo&lt;br  />bar}</p>')->execute();
 

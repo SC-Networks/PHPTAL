@@ -1,4 +1,10 @@
 <?php
+
+namespace Tests;
+
+use PhpTal\Exception\ConfigurationException;
+use Tests\Testhelper\DummyTranslator;
+
 /**
  * PHPTAL templating engine
  *
@@ -11,22 +17,17 @@
  * @license  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
  * @link     http://phptal.org/
  */
-
-require_once 'I18NDummyTranslator.php';
-
-
-class I18NTranslateTest extends PHPTAL_TestCase
+class I18NTranslateTest extends \PHPTAL_TestCase
 {
-    /**
-     * @expectedException \PhpTal\Exception\ConfigurationException
-     */
-    function testFailsWhenTranslatorNotSet()
+
+    public function testFailsWhenTranslatorNotSet()
     {
         $tpl = $this->newPHPTAL('input/i18n-translate-01.html');
+        $this->expectException(ConfigurationException::class);
         $tpl->execute();
     }
 
-    function testStringTranslate()
+    public function testStringTranslate()
     {
         $tpl = $this->newPHPTAL('input/i18n-translate-01.html');
         $tpl->setTranslator( new DummyTranslator() );
@@ -36,7 +37,7 @@ class I18NTranslateTest extends PHPTAL_TestCase
         $this->assertEquals($exp, $res);
     }
 
-    function testEvalTranslate()
+    public function testEvalTranslate()
     {
         $tpl = $this->newPHPTAL('input/i18n-translate-02.html');
         $tpl->setTranslator( new DummyTranslator() );
@@ -47,7 +48,7 @@ class I18NTranslateTest extends PHPTAL_TestCase
         $this->assertEquals($exp, $res);
     }
 
-    function testStructureTranslate()
+    public function testStructureTranslate()
     {
         $tpl = $this->newPHPTAL();
         $tpl->setTranslator( new DummyTranslator() );
@@ -55,7 +56,7 @@ class I18NTranslateTest extends PHPTAL_TestCase
         $this->assertEquals('<p>translate<b>this</b></p>', $tpl->execute());
     }
 
-    function testStructureTranslate2()
+    public function testStructureTranslate2()
     {
         $tpl = $this->newPHPTAL();
         $tpl->setTranslator( new DummyTranslator() );
@@ -68,7 +69,7 @@ class I18NTranslateTest extends PHPTAL_TestCase
         $this->assertEquals('<p>translate <b class="foo&amp;bar"> this </b></p>', $tpl->execute());
     }
 
-    function testStructureTranslate3()
+    public function testStructureTranslate3()
     {
         $tpl = $this->newPHPTAL();
         $tpl->setTranslator( $t = new DummyTranslator() );
@@ -85,7 +86,7 @@ class I18NTranslateTest extends PHPTAL_TestCase
     }
 
 
-    function testDomain()
+    public function testDomain()
     {
         $tpl = $this->newPHPTAL();
 
@@ -99,20 +100,7 @@ class I18NTranslateTest extends PHPTAL_TestCase
 
     }
 
-    function testPHPTalesDomain()
-    {
-        $tpl = $this->newPHPTAL();
-
-        $tpl->bar = '1';
-
-        $tpl->setTranslator( $t = new DummyTranslator() );
-        $tpl->t = $t;
-
-        $tpl->setSource('<div phptal:tales="php" i18n:domain="foo${bar+1}$${quz}">${t.domain}</div>');
-        $this->assertEquals(normalize_html('<div>foo2${quz}</div>'), normalize_html($tpl->execute()));
-    }
-
-    function testTranslateChain()
+    public function testTranslateChain()
     {
         $tpl = $this->newPHPTAL();
         $tpl->setTranslator( $t = new DummyTranslator() );
@@ -123,7 +111,7 @@ class I18NTranslateTest extends PHPTAL_TestCase
         $this->assertEquals('<div>&lt;bar&gt; translated</div>', $tpl->execute());
     }
 
-    function testTranslateChainString()
+    public function testTranslateChainString()
     {
         $tpl = $this->newPHPTAL();
         $tpl->setTranslator( $t = new DummyTranslator() );
@@ -133,7 +121,7 @@ class I18NTranslateTest extends PHPTAL_TestCase
         $this->assertEquals('<div>&lt;bar&gt; translated</div>', $tpl->execute());
     }
 
-    function testTranslateChainExists()
+    public function testTranslateChainExists()
     {
         $tpl = $this->newPHPTAL();
         $tpl->setTranslator( $t = new DummyTranslator() );
@@ -144,7 +132,7 @@ class I18NTranslateTest extends PHPTAL_TestCase
         $this->assertEquals('<div>&lt;foo&gt; value</div>', $tpl->execute());
     }
 
-    function testTranslateChainExistsTranslated()
+    public function testTranslateChainExistsTranslated()
     {
         $tpl = $this->newPHPTAL();
         $tpl->setTranslator( $t = new DummyTranslator() );
@@ -160,7 +148,7 @@ class I18NTranslateTest extends PHPTAL_TestCase
     /**
      * @expectedException \PhpTal\Exception\TemplateException
      */
-    function testRejectsEmptyKey()
+    public function testRejectsEmptyKey()
     {
         $this->newPHPTAL()->setTranslator( $t = new DummyTranslator() )->setSource('<div i18n:translate=""></div>')->execute();
     }
@@ -168,13 +156,13 @@ class I18NTranslateTest extends PHPTAL_TestCase
     /**
      * @expectedException \PhpTal\Exception\TemplateException
      */
-    function testRejectsEmptyKeyMarkup()
+    public function testRejectsEmptyKeyMarkup()
     {
         $this->newPHPTAL()->setTranslator( $t = new DummyTranslator() )->setSource('<div i18n:translate=""> <span tal:content="string:test"> </span> </div>')->execute();
     }
 
 
-    function testTranslateChainStructureExistsTranslated()
+    public function testTranslateChainStructureExistsTranslated()
     {
         $tpl = $this->newPHPTAL();
         $tpl->setTranslator( $t = new DummyTranslator() );

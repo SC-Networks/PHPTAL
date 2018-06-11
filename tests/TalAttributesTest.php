@@ -1,4 +1,7 @@
 <?php
+
+namespace Tests;
+
 /**
  * PHPTAL templating engine
  *
@@ -13,9 +16,10 @@
  */
 
 
-class TalAttributesTest extends PHPTAL_TestCase
+class TalAttributesTest extends \PHPTAL_TestCase
 {
-    function testSimple()
+
+    public function testSimple()
     {
         $tpl = $this->newPHPTAL('input/tal-attributes.01.html');
         $res = normalize_html($tpl->execute());
@@ -23,7 +27,7 @@ class TalAttributesTest extends PHPTAL_TestCase
         $this->assertEquals($exp, $res);
     }
 
-    function testWithContent()
+    public function testWithContent()
     {
         $tpl = $this->newPHPTAL('input/tal-attributes.02.html');
         $tpl->spanClass = 'dummy';
@@ -32,7 +36,7 @@ class TalAttributesTest extends PHPTAL_TestCase
         $this->assertEquals($exp, $res);
     }
 
-    function testMultiples()
+    public function testMultiples()
     {
         $tpl = $this->newPHPTAL('input/tal-attributes.03.html');
         $tpl->spanClass = 'dummy';
@@ -41,7 +45,7 @@ class TalAttributesTest extends PHPTAL_TestCase
         $this->assertEquals($exp, $res);
     }
 
-    function testChain()
+    public function testChain()
     {
         $tpl = $this->newPHPTAL('input/tal-attributes.04.html');
         $tpl->spanClass = 'dummy';
@@ -50,7 +54,7 @@ class TalAttributesTest extends PHPTAL_TestCase
         $this->assertEquals($exp, $res);
     }
 
-    function testMultipleChains()
+    public function testMultipleChains()
     {
         $tpl = $this->newPHPTAL('input/tal-attributes.05.html');
         $tpl->spanClass = 'dummy';
@@ -59,7 +63,7 @@ class TalAttributesTest extends PHPTAL_TestCase
         $this->assertEquals($exp, $res);
     }
 
-    function testEncoding()
+    public function testEncoding()
     {
         $tpl = $this->newPHPTAL('input/tal-attributes.06.html');
         $tpl->href = "http://www.test.com/?foo=bar&buz=biz&<thisissomething";
@@ -70,7 +74,7 @@ class TalAttributesTest extends PHPTAL_TestCase
         $this->assertEquals($exp, $res);
     }
 
-    function testZeroValues()
+    public function testZeroValues()
     {
         $tpl = $this->newPHPTAL('input/tal-attributes.07.html');
         $tpl->href1 = 0;
@@ -81,7 +85,7 @@ class TalAttributesTest extends PHPTAL_TestCase
         $this->assertEquals($exp, $res);
     }
 
-    function testEmpty()
+    public function testEmpty()
     {
         $src = <<<EOT
 <span class="&quot;'default" tal:attributes="class nullv | falsev | emptystrv | zerov | default"></span>
@@ -99,7 +103,7 @@ EOT;
         $this->assertEquals($exp, $res);
     }
 
-    function testSingleQuote()
+    public function testSingleQuote()
     {
         $exp = normalize_html_file('output/tal-attributes.08.html');
         $tpl = $this->newPHPTAL('input/tal-attributes.08.html');
@@ -107,7 +111,7 @@ EOT;
         $this->assertEquals($exp, $res);
     }
 
-    function testStructure()
+    public function testStructure()
     {
         $exp = normalize_html_file('output/tal-attributes.09.html');
         $tpl = $this->newPHPTAL('input/tal-attributes.09.html');
@@ -116,7 +120,7 @@ EOT;
         $this->assertEquals($exp, $res);
     }
 
-    function testChainedStructure()
+    public function testChainedStructure()
     {
         $exp = normalize_html_file('output/tal-attributes.10.html');
         $tpl = $this->newPHPTAL('input/tal-attributes.10.html');
@@ -126,31 +130,23 @@ EOT;
         $this->assertEquals($exp, $res);
     }
 
-    function testNothingValue()
+    public function testNothingValue()
     {
         $tpl = $this->newPHPTAL();
         $tpl->setSource('<p tal:attributes="title missing | nothing"></p>');
         $res = $tpl->execute();
-        $this->assertEquals($res, '<p></p>');
+        $this->assertSame($res, '<p></p>');
     }
 
-    function testNULLValueNoAlternative()
+    public function testNULLValueNoAlternative()
     {
         $tpl = $this->newPHPTAL();
-        $tpl->setSource('<p tal:attributes="title php:NULL"></p>');
+        $tpl->setSource('<p tal:attributes="title NULL"></p>');
         $res = $tpl->execute();
-        $this->assertEquals('<p></p>', $res);
+        $this->assertSame('<p></p>', $res);
     }
 
-    function testNULLValueReversed()
-    {
-        $tpl = $this->newPHPTAL();
-        $tpl->setSource('<p tal:attributes="title php:true ? NULL : false; class structure php:false ? NULL : \'fo\\\'o\'; style structure php:true ? NULL : false;"></p>');
-        $res = $tpl->execute();
-        $this->assertEquals('<p class="fo\'o"></p>', $res);
-    }
-
-    function testEmptyValue()
+    public function testEmptyValue()
     {
         $tpl = $this->newPHPTAL();
         $tpl->setSource('<p tal:attributes="title missing | \'\'"></p><p tal:attributes="title missing | php:\'\'"></p>');
@@ -158,7 +154,7 @@ EOT;
         $this->assertEquals('<p title=""></p><p title=""></p>', $res);
     }
 
-    function testSemicolon()
+    public function testSemicolon()
     {
         $tpl = $this->newPHPTAL();
         $tpl->setSource('<div><p tal:content="\'\\\'a;b;;c;;;d\'" tal:attributes="style \'color:red;; font-weight:bold;;;;\'; title php:\'\\\'test;;test;;;;test\'"></p></div>');
@@ -166,7 +162,7 @@ EOT;
         $this->assertEquals($res, '<div><p style="color:red; font-weight:bold;;" title="&#039;test;test;;test">&#039;a;b;;c;;;d</p></div>');
     }
 
-    function testBoolean()
+    public function testBoolean()
     {
         $booleanAttrs = array(
             'checked','disabled','autoplay','async','autofocus','controls',

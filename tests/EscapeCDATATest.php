@@ -1,4 +1,9 @@
 <?php
+
+namespace Tests;
+
+use PhpTal\Php\TalesInternal;
+
 /**
  * PHPTAL templating engine
  *
@@ -13,9 +18,19 @@
  */
 
 
-class EscapeCDATATest extends PHPTAL_TestCase {
+class EscapeCDATATest extends \PHPTAL_TestCase
+{
 
+    /**
+     * @var string
+     */
     private $last_code_path;
+
+    public function tearDown()
+    {
+        TalesInternal::setFunctionWhitelist([]);
+        parent::tearDown();
+    }
 
     private function executeString($str, $params = array())
     {
@@ -26,7 +41,10 @@ class EscapeCDATATest extends PHPTAL_TestCase {
         return $tpl->execute();
     }
 
-    function testTrimString()
+    /**
+     * @return void
+     */
+    public function testTrimString()
     {
         $this->assertEquals(
             normalize_html('<foo><bar>]]&gt; foo ]> bar</bar></foo>'),
@@ -37,17 +55,17 @@ class EscapeCDATATest extends PHPTAL_TestCase {
             normalize_html('foo]]>bar'),
             normalize_html('foo]]&gt;bar')
         );
-
     }
 
-    function testDoesEscapeHTMLContent(){
+    public function testDoesEscapeHTMLContent()
+    {
         $tpl = $this->newPHPTAL('input/escape.html');
         $exp = normalize_html_file('output/escape.html');
         $res = normalize_html($tpl->execute());
         $this->assertEquals($exp, $res);
     }
 
-    function testEntityTextInPath()
+    public function testEntityTextInPath()
     {
         $res = $this->executeString('<div><![CDATA[${text \'"< & &amp; &quot; &lt;\'},${false | string:"< & &amp; &quot; &lt;}]]></div>');
 
@@ -59,38 +77,42 @@ class EscapeCDATATest extends PHPTAL_TestCase {
         }
     }
 
-    function testEntityStructureInPath()
+    public function testEntityStructureInPath()
     {
         $res = $this->executeString('<div><![CDATA[${structure \'"< & &amp; &quot; &lt;\'},${structure false | string:"< & &amp; &quot; &lt;}]]></div>');
         $this->assertEquals('<div><![CDATA["< & &amp; &quot; &lt;,"< & &amp; &quot; &lt;]]></div>', $res);
     }
 
-    function testEntityInContentPHP()
+    public function testEntityInContentPHP()
     {
+        TalesInternal::setFunctionWhitelist(['strlen']);
         $res = $this->executeString('<div><![CDATA[${php:strlen(\'&quot;&amp;&lt;\')},${php:strlen(\'<"&\')}]]></div>');
         $this->assertEquals('<div>15,3</div>', $res);
     }
 
-    function testEntityInScriptPHP()
+    public function testEntityInScriptPHP()
     {
+        TalesInternal::setFunctionWhitelist(['strlen']);
         $res = $this->executeString('<script><![CDATA[${php:strlen(\'&quot;&amp;&lt;\')},${php:strlen(\'<"&\')}]]></script>');
         $this->assertEquals('<script><![CDATA[15,3]]></script>', $res);
     }
 
-    function testEntityInPHP2()
+    public function testEntityInPHP2()
     {
+        TalesInternal::setFunctionWhitelist(['strlen']);
         $res = $this->executeString('<div><![CDATA[${structure php:strlen(\'&quot;&amp;&lt;\')},${structure php:strlen(\'<"&\')}]]></div>');
         $this->assertEquals('<div><![CDATA[15,3]]></div>', $res);
     }
 
-    function testEntityInPHP3()
+    public function testEntityInPHP3()
     {
         $res = $this->executeString('<div><![CDATA[<?php echo strlen(\'&quot;&amp;&lt;\')?>,<?php echo strlen(\'<"&\') ?>]]></div>');
         $this->assertEquals('<div><![CDATA[<_ echo strlen(\'&quot;&amp;&lt;\')?>,<_ echo strlen(\'<"&\') ?>]]></div>', $res);
     }
 
-    function testNoEncodingAfterPHP()
+    public function testNoEncodingAfterPHP()
     {
+        TalesInternal::setFunctionWhitelist(['urldecode']);
         $res = $this->executeString('<div><![CDATA[${php:urldecode(\'%26%22%3C\')},${structure php:urldecode(\'%26%22%3C\')},<?php echo urldecode(\'%26%22%3C\') ?>]]></div>');
         $this->assertEquals('<div><![CDATA[&"<,&"<,<_ echo urldecode(\'%26%22%3C\') ?>]]></div>', $res);
     }
@@ -98,11 +120,11 @@ class EscapeCDATATest extends PHPTAL_TestCase {
     /**
      * normal XML behavior expected
      */
-    function testEscapeCDATAXML()
+    public function testEscapeCDATAXML()
     {
         $tpl = $this->newPHPTAL();
         $tpl->setOutputMode(\PhpTal\PHPTAL::XML);
-        $tpl->setSource('<y><![CDATA[${cdata}; ${php:cdata};]]></y>     <y><![CDATA[${structure cdata}]]></y>');
+        $tpl->setSource('<y><![CDATA[${cdata}; ${cdata};]]></y>     <y><![CDATA[${structure cdata}]]></y>');
         $tpl->cdata = ']]></x>';
         $res = $tpl->execute();
         $this->assertEquals('<y>]]&gt;&lt;/x&gt;; ]]&gt;&lt;/x&gt;;</y>     <y><![CDATA[]]></x>]]></y>', $res);
@@ -111,22 +133,22 @@ class EscapeCDATATest extends PHPTAL_TestCase {
     /**
      * ugly hybrid between HTML (XHTML as text/html) and XML
      */
-    function testEscapeCDATAXHTML()
+    public function testEscapeCDATAXHTML()
     {
         $tpl = $this->newPHPTAL();
         $tpl->setOutputMode(\PhpTal\PHPTAL::XHTML);
-        $tpl->setSource('<script><![CDATA[${cdata}; ${php:cdata};]]></script>     <y><![CDATA[${structure cdata}]]></y>');
+        $tpl->setSource('<script><![CDATA[${cdata}; ${cdata};]]></script>     <y><![CDATA[${structure cdata}]]></y>');
         $tpl->cdata = ']]></x>';
         $res = $tpl->execute();
         $this->assertEquals('<script><![CDATA[]]]]><![CDATA[><\/x>; ]]]]><![CDATA[><\/x>;]]></script>     <y><![CDATA[]]></x>]]></y>', $res);
     }
 
 
-    function testEscapeCDATAHTML()
+    public function testEscapeCDATAHTML()
     {
         $tpl = $this->newPHPTAL();
         $tpl->setOutputMode(\PhpTal\PHPTAL::HTML5);
-        $tpl->setSource('<y><![CDATA[${cdata}; ${php:cdata};]]></y>     <y><![CDATA[${structure cdata}]]></y>');
+        $tpl->setSource('<y><![CDATA[${cdata}; ${cdata};]]></y>     <y><![CDATA[${structure cdata}]]></y>');
         $tpl->cdata = ']]></x>';
         $res = $tpl->execute();
         $this->assertEquals('<y>]]&gt;&lt;/x&gt;; ]]&gt;&lt;/x&gt;;</y>     <y>]]></x></y>', $res);
@@ -134,31 +156,31 @@ class EscapeCDATATest extends PHPTAL_TestCase {
 
 
 
-    function testAutoCDATA()
+    public function testAutoCDATA()
     {
         $res = $this->executeString('<script> 1 < 2 </script>');
         $this->assertEquals('<script>/*<![CDATA[*/ 1 < 2 /*]]>*/</script>', $res, $this->last_code_path);
     }
 
-    function testAutoCDATA2()
+    public function testAutoCDATA2()
     {
         $res = $this->executeString('<xhtmlz:script xmlns:xhtmlz="http://www.w3.org/1999/xhtml"> 1 < 2 ${php:\'&\' . \'&amp;\'} </xhtmlz:script>');
         $this->assertEquals('<xhtmlz:script xmlns:xhtmlz="http://www.w3.org/1999/xhtml">/*<![CDATA[*/ 1 < 2 && /*]]>*/</xhtmlz:script>', $res, $this->last_code_path);
     }
 
-    function testNoAutoCDATA()
+    public function testNoAutoCDATA()
     {
         $res = $this->executeString('<script> "1 \' 2" </script><script xmlns="foo"> 1 &lt; 2 </script>');
         $this->assertEquals('<script> "1 \' 2" </script><script xmlns="foo"> 1 &lt; 2 </script>', $res, $this->last_code_path);
     }
 
-    function testNoAutoCDATA2()
+    public function testNoAutoCDATA2()
     {
         $res = $this->executeString('<script> a && ${structure foo} </script><script xmlns="foo"> 1 &lt; 2 </script>', array('foo'=>'<foo/>'));
         $this->assertEquals('<script> a &amp;&amp; <foo/> </script><script xmlns="foo"> 1 &lt; 2 </script>', $res, $this->last_code_path);
     }
 
-    function testNoAutoCDATA3()
+    public function testNoAutoCDATA3()
     {
         $res = $this->executeString('<style> html > body </style>');
         $this->assertEquals('<style> html > body </style>', $res, $this->last_code_path);

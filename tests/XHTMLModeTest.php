@@ -1,4 +1,9 @@
 <?php
+
+namespace Tests;
+
+use PhpTal\Php\TalesInternal;
+
 /**
  * PHPTAL templating engine
  *
@@ -13,9 +18,16 @@
  */
 
 
-class XHTMLModeTest extends PHPTAL_TestCase
+class XHTMLModeTest extends \PHPTAL_TestCase
 {
-    function testEmpty()
+
+    public function tearDown()
+    {
+        TalesInternal::setFunctionWhitelist([]);
+        parent::tearDown();
+    }
+
+    public function testEmpty()
     {
         $tpl = $this->newPHPTAL();
         $tpl->setSource('<html xmlns="http://www.w3.org/1999/xhtml">
@@ -65,7 +77,7 @@ class XHTMLModeTest extends PHPTAL_TestCase
         $this->assertEquals($exp, $res);
     }
 
-    function testEmptyAll()
+    public function testEmptyAll()
     {
         $emptyElements = array(
             'area','base','basefont','br','col',
@@ -81,8 +93,8 @@ class XHTMLModeTest extends PHPTAL_TestCase
         }
     }
 
-   function testColgroup()
-   {
+    public function testColgroup()
+    {
         $code = '<colgroup>
 <col class="col1" />
 <col class="col2" />
@@ -90,18 +102,19 @@ class XHTMLModeTest extends PHPTAL_TestCase
 </colgroup>';
 
         $this->assertHTMLEquals($this->newPHPTAL()->setSource($code)->execute($code), $code);
-   }
+    }
 
-    function testBoolean()
+    public function testBoolean()
     {
+        TalesInternal::setFunctionWhitelist(['range']);
         $tpl = $this->newPHPTAL();
         $tpl->setSource('
         <html xmlns="http://www.w3.org/1999/xhtml">
         <body>
             <input type="checkbox" checked="checked"></input>
             <input type="text" tal:attributes="readonly \'readonly\'"/>
-            <input type="radio" tal:attributes="checked php:true; readonly \'readonly\'"/>
-            <input type="radio" tal:attributes="checked php:false; readonly bogus | nothing"/>
+            <input type="radio" tal:attributes="checked true; readonly \'readonly\'"/>
+            <input type="radio" tal:attributes="checked false; readonly bogus | nothing"/>
             <select>
                 <option selected="unexpected value"/>
                 <option tal:repeat="n php:range(0,5)" tal:attributes="selected repeat/n/odd"/>
@@ -130,7 +143,7 @@ class XHTMLModeTest extends PHPTAL_TestCase
         $this->assertEquals($exp, $res);
     }
 
-    function testBooleanOrNothing()
+    public function testBooleanOrNothing()
     {
         $tpl = $this->newPHPTAL()->setSource('
         <select>
@@ -161,4 +174,3 @@ class XHTMLModeTest extends PHPTAL_TestCase
         </select>'), normalize_html($tpl->execute()));
     }
 }
-

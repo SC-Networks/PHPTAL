@@ -1,4 +1,7 @@
 <?php
+
+namespace Tests;
+
 /**
  * PHPTAL templating engine
  *
@@ -13,88 +16,95 @@
  */
 
 
-class ReadableErrorTest extends PHPTAL_TestCase
+class ReadableErrorTest extends \PHPTAL_TestCase
 {
-    function testSimple()
+    public function testSimple()
     {
         $this->assertThrowsInLine(2, 'input/error-01.html');
     }
 
-    function testMacro()
+    public function testMacro()
     {
         $this->assertThrowsInLine(2, 'input/error-02.html', 'input/error-02.macro.html');
     }
 
-    function testAfterMacro()
+    public function testAfterMacro()
     {
         $this->assertThrowsInLine(3, 'input/error-03.html');
     }
 
-    function testParseError()
+    public function testParseError()
     {
         $this->assertThrowsInLine(7, 'input/error-04.html');
     }
 
-    function testMissingVar()
+    public function testMissingVar()
     {
         $this->assertThrowsInLine(5, 'input/error-05.html');
     }
 
-    function testMissingVarInterpol()
+    public function testMissingVarInterpol()
     {
-        $this->markTestSkipped("can't fix it now");
-        $this->assertThrowsInLine(5, 'input/error-06.html');
+        $this->assertThrowsInLine(3, 'input/error-06.html');
     }
 
-    function testMissingExpr()
+    public function testMissingExpr()
     {
         $this->assertThrowsInLine(6, 'input/error-07.html');
     }
 
-    function testPHPSyntax()
+    public function testPHPSyntax()
     {
         $this->assertThrowsInLine(9, 'input/error-08.html');
     }
 
-    function testTranslate()
+    public function testTranslate()
     {
         $this->assertThrowsInLine(8, 'input/error-09.html');
     }
 
-    function testMacroName()
+    public function testMacroName()
     {
         $this->assertThrowsInLine(4, 'input/error-10.html');
     }
 
-    function testTALESParse()
+    public function testTALESParse()
     {
         $this->assertThrowsInLine(2, 'input/error-11.html');
     }
 
-    function testMacroNotExists()
+    public function testMacroNotExists()
     {
         $this->assertThrowsInLine(3, 'input/error-12.html');
     }
 
-    function testLocalMacroNotExists()
+    public function testLocalMacroNotExists()
     {
         $this->assertThrowsInLine(5, 'input/error-13.html');
     }
 
-    function assertThrowsInLine($line, $file, $expected_file = NULL)
+    /**
+     * @param int $line
+     * @param string $file
+     * @param string $expected_file
+     *
+     * @return void
+     * @throws \PhpTal\Exception\ConfigurationException
+     * @throws \PhpTal\Exception\IOException
+     * @throws \Throwable
+     */
+    public function assertThrowsInLine($line, $file, $expected_file = null)
     {
         try {
             $tpl = $this->newPHPTAL($file);
             $tpl->a_number = 1;
-            $res = $tpl->execute();
-            $this->fail("Not thrown");
-        }
-        catch (\PhpTal\Exception\TemplateException $e) {
+            $tpl->execute();
+            static::fail('Not thrown');
+        } catch (\PhpTal\Exception\TemplateException $e) {
             $msg = $e->getMessage();
-            $this->assertInternalType('string',$e->srcFile, $msg);
-            $this->assertContains($expected_file ? $expected_file : $file, $e->srcFile, $msg);
-            $this->assertEquals($line, $e->srcLine, "Wrong line number: ". $msg . "\n". $tpl->getCodePath());
+            static::assertInternalType('string', $e->srcFile, $msg);
+            static::assertContains($expected_file ?: $file, $e->srcFile, $msg);
+            static::assertEquals($line, $e->srcLine, 'Wrong line number: ' . $msg . "\n". $tpl->getCodePath());
         }
     }
 }
-

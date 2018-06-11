@@ -1,5 +1,8 @@
 <?php
 
+namespace Tests;
+
+use PhpTal\Exception\ParserException;
 use PhpTal\Exception\UnknownModifierException;
 use PhpTal\Php\TalesInternal;
 
@@ -18,6 +21,13 @@ use PhpTal\Php\TalesInternal;
 
 class TalesTest extends \PHPTAL_TestCase
 {
+
+    public function tearDown()
+    {
+        TalesInternal::setFunctionWhitelist([]);
+        parent::tearDown();
+    }
+
     public function testString()
     {
         $src = 'string:foo bar baz';
@@ -29,25 +39,11 @@ class TalesTest extends \PHPTAL_TestCase
         $this->assertEquals("'foo bar baz'", $res);
     }
 
-    public function testPhp()
-    {
-        $src = 'php: foo.x[10].doBar()';
-        $res = TalesInternal::compileToPHPExpressions($src);
-        $this->assertEquals('$ctx->foo->x[10]->doBar()', $res);
-    }
-
     public function testPath()
     {
         $src = 'foo/x/y';
         $res = TalesInternal::compileToPHPExpressions($src);
         $this->assertEquals("\$ctx->path(\$ctx->foo, 'x/y')", $res);
-    }
-
-    public function testNot()
-    {
-        $src = "not: php: foo()";
-        $res = TalesInternal::compileToPHPExpressions($src);
-        $this->assertEquals("!\PhpTal\Helper::phptal_true(foo())", $res);
     }
 
     public function testNotVar()
@@ -126,13 +122,6 @@ class TalesTest extends \PHPTAL_TestCase
         $this->assertEquals('$ctx->path($ctx->{\'_GET\'}, \'a\')', TalesInternal::compileToPHPExpressions('_GET/a'));
     }
 
-    public function testInterpolatedPHP1()
-    {
-        $tpl = $this->newPHPTAL();
-        $tpl->setSource('<div tal:content="string:foo${php:true?&apos;bar&apos;:0}${php:false?0:\'b$$a$z\'}"/>');
-        $this->assertEquals('<div>foobarb$$a$z</div>', $tpl->execute());
-    }
-
     public function testInterpolatedTALES()
     {
         $tpl = $this->newPHPTAL();
@@ -145,7 +134,7 @@ class TalesTest extends \PHPTAL_TestCase
     {
         $tpl = $this->newPHPTAL();
         $tpl->somearray = array(1=>9, 9, 9);
-        $tpl->setSource('<div tal:repeat="x php:somearray"><x tal:replace=\'repeat/${php:
+        $tpl->setSource('<div tal:repeat="x somearray"><x tal:replace=\'repeat/${php:
             "x"}/key\'/></div>');
         $this->assertEquals('<div>1</div><div>2</div><div>3</div>', $tpl->execute());
     }
@@ -160,11 +149,9 @@ class TalesTest extends \PHPTAL_TestCase
         $tpl->execute();
     }
 
-    /**
-     * @expectedException \PhpTal\Exception\ParserException
-     */
     public function testThrowsInvalidPath()
     {
+        $this->expectException(ParserException::class);
         TalesInternal::compileToPHPExpressions("I am not valid expression");
     }
 
@@ -177,23 +164,27 @@ class TalesTest extends \PHPTAL_TestCase
         }
     }
 
-
     public function testNamespaceFunction()
     {
-        $this->assertEquals('\strlen($ctx->x)', TalesInternal::compileToPHPExpressions('php:\strlen(x)'));
-        $this->assertEquals('my\len($ctx->x)', TalesInternal::compileToPHPExpressions('php:my\len(x)'));
-        $this->assertEquals('my\subns\len($ctx->x)', TalesInternal::compileToPHPExpressions('php:my\subns\len(x)'));
+        // todo: namespacing is gone for now, this maybe should be implemented again somehow
+        TalesInternal::setFunctionWhitelist(['strlen', 'x']);
+        TalesInternal::setPhpModifierAllowed(true);
+        $this->assertSame('\strlen($ctx->x)', TalesInternal::compileToPHPExpressions('php:\strlen(x)'));
+//        $this->assertSame('my\len($ctx->x)', TalesInternal::compileToPHPExpressions('php:my\len(x)'));
+//        $this->assertSame('my\subns\len($ctx->x)', TalesInternal::compileToPHPExpressions('php:my\subns\len(x)'));
     }
 
     public function testNamespaceClass()
     {
-        $this->assertEquals('\Foo::strlen($ctx->x)', TalesInternal::compileToPHPExpressions('php:\Foo::strlen(x)'));
-        $this->assertEquals('My\Foo::strlen($ctx->x)', TalesInternal::compileToPHPExpressions('php:My\Foo::strlen(x)'));
+        static::markTestSkipped('namespacing is gone for now, this maybe should be implemented again somehow');
+        $this->assertSame('\Foo::strlen($ctx->x)', TalesInternal::compileToPHPExpressions('php:\Foo::strlen(x)'));
+        $this->assertSame('My\Foo::strlen($ctx->x)', TalesInternal::compileToPHPExpressions('php:My\Foo::strlen(x)'));
     }
 
     public function testNamespaceConstant()
     {
-        $this->assertEquals('My\Foo::TAU', TalesInternal::compileToPHPExpressions('php:My\Foo::TAU'));
-        $this->assertEquals('$ctx->date_filter->isFilterApplied(\My\Foo::TODAY)', TalesInternal::compileToPHPExpressions("php: date_filter.isFilterApplied(\My\Foo::TODAY)"));
+        static::markTestSkipped('namespacing is gone for now, this maybe should be implemented again somehow');
+        $this->assertSame('My\Foo::TAU', TalesInternal::compileToPHPExpressions('php:My\Foo::TAU'));
+        $this->assertSame('$ctx->date_filter->isFilterApplied(\My\Foo::TODAY)', TalesInternal::compileToPHPExpressions("php: date_filter.isFilterApplied(\My\Foo::TODAY)"));
     }
 }

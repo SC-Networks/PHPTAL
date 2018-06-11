@@ -1,4 +1,9 @@
 <?php
+
+namespace Tests;
+
+use PhpTal\Php\TalesInternal;
+
 /**
  * PHPTAL templating engine
  *
@@ -13,7 +18,14 @@
  */
 
 
-class EscapeHTMLTest extends PHPTAL_TestCase {
+class EscapeHTMLTest extends \PHPTAL_TestCase
+{
+
+    public function tearDown()
+    {
+        TalesInternal::setFunctionWhitelist([]);
+        parent::tearDown();
+    }
 
     private function executeString($str, $params = array())
     {
@@ -23,21 +35,23 @@ class EscapeHTMLTest extends PHPTAL_TestCase {
         return $tpl->execute();
     }
 
-    function testDoesEscapeHTMLContent(){
+    public function testDoesEscapeHTMLContent()
+    {
         $tpl = $this->newPHPTAL('input/escape.html');
         $exp = normalize_html_file('output/escape.html');
         $res = normalize_html($tpl->execute());
         $this->assertEquals($exp, $res);
     }
 
-    function testEntityDecodingPath1()
+    public function testEntityDecodingPath1()
     {
         $res = $this->executeString('<div title="&quot;" class=\'&quot;\' tal:content="\'&quot; quote character\'" />');
         $this->assertNotContains('&amp;', $res);
     }
 
-    function testEntityDecodingBeforePHP()
+    public function testEntityDecodingBeforePHP()
     {
+        TalesInternal::setFunctionWhitelist(['strlen']);
         /* PHP block in attributes gets raw input (that's not XML style, but PHP style) */
         $res = $this->executeString(
             '<div title="${php:strlen(\'&quot;&amp;\')}">'.
@@ -46,14 +60,16 @@ class EscapeHTMLTest extends PHPTAL_TestCase {
         $this->assertEquals('<div title="2">2,2</div>', $res);
     }
 
-    function testEntityEncodingAfterPHP()
+    public function testEntityEncodingAfterPHP()
     {
+        TalesInternal::setFunctionWhitelist(['urldecode']);
         $res = $this->executeString('<div title="${php:urldecode(\'%26%22%3C\')}"><tal:block tal:content="php:urldecode(\'%26%22%3C\')" />,${php:urldecode(\'%26%22%3C\')}</div>');
         $this->assertEquals('<div title="&amp;&quot;&lt;">&amp;&quot;&lt;,&amp;&quot;&lt;</div>', $res);
     }
 
-    function testNoEntityEncodingAfterStructurePHP()
+    public function testNoEntityEncodingAfterStructurePHP()
     {
+        TalesInternal::setFunctionWhitelist(['urldecode']);
         $res = $this->executeString(
             '<div title="${structure php:urldecode(\'%26%20%3E%27\')}">'.
             '<tal:block tal:content="structure php:urldecode(\'%26%20%3E%22\')" />,${structure php:urldecode(\'%26%20%3E%22\')}</div>'
@@ -64,44 +80,44 @@ class EscapeHTMLTest extends PHPTAL_TestCase {
         );
     }
 
-    function testDecodingBeforeStructure()
+    public function testDecodingBeforeStructure()
     {
         $res = $this->executeString('<div tal:content="structure php:\'&amp; quote character\'" />');
         $this->assertNotContains('&amp;', $res);
     }
 
-    function testEntityDecodingPHP1()
+    public function testEntityDecodingPHP1()
     {
         $res = $this->executeString('<div tal:content="php:\'&quot; quote character\'" />');
         $this->assertNotContains('&amp;', $res);
     }
 
-    function testEntityDecodingPath2()
+    public function testEntityDecodingPath2()
     {
         $res = $this->executeString('<div tal:attributes="title \'&quot; quote character\'" />');
         $this->assertNotContains('&amp;', $res);
     }
 
-    function testEntityDecodingPHP2()
+    public function testEntityDecodingPHP2()
     {
         $res = $this->executeString('<div tal:attributes="title php:\'&quot; quote character\'" />');
         $this->assertNotContains('&amp;', $res);
     }
 
-    function testEntityDecodingPath3()
+    public function testEntityDecodingPath3()
     {
         $res = $this->executeString('<p>${\'&quot; quote character\'}</p>');
         $this->assertNotContains('&amp;', $res);
     }
 
-    function testEntityDecodingPHP3()
+    public function testEntityDecodingPHP3()
     {
         $res = $this->executeString('<p>${php:\'&quot; quote character\'}</p>');
         $this->assertNotContains('&amp;', $res);
     }
 
 
-    function testEntityEncodingPath1()
+    public function testEntityEncodingPath1()
     {
         $res = $this->executeString('<div tal:content="\'&amp; ampersand character\'" />');
         $this->assertContains('&amp;', $res);
@@ -109,7 +125,7 @@ class EscapeHTMLTest extends PHPTAL_TestCase {
         $this->assertNotContains('&amp;&amp;', $res);
     }
 
-    function testEntityEncodingPHP1()
+    public function testEntityEncodingPHP1()
     {
         $res = $this->executeString('<div tal:content="php:\'&amp; ampersand character\'" />');
         $this->assertContains('&amp;', $res);
@@ -117,7 +133,7 @@ class EscapeHTMLTest extends PHPTAL_TestCase {
         $this->assertNotContains('&amp;&amp;', $res);
     }
 
-    function testEntityEncodingPath2()
+    public function testEntityEncodingPath2()
     {
         $res = $this->executeString('<div tal:attributes="title \'&amp; ampersand character\'" />');
         $this->assertContains('&amp;', $res);
@@ -125,16 +141,16 @@ class EscapeHTMLTest extends PHPTAL_TestCase {
         $this->assertNotContains('&amp;&amp;', $res);
     }
 
-    function testEntityEncodingVariables()
+    public function testEntityEncodingVariables()
     {
-        $res = $this->executeString('<div tal:attributes="title variable; class variable">${variable}${php:variable}</div>',
+        $res = $this->executeString('<div tal:attributes="title variable; class variable">${variable}${variable}</div>',
                                     array('variable'=>'& = ampersand, " = quote, \' = apostrophe'));
         $this->assertContains('&amp;',$res);
         $this->assertNotContains('&amp;amp;',$res);
         $this->assertNotContains('&amp;&amp;',$res);
     }
 
-    function testEntityEncodingAttributesDefault1()
+    public function testEntityEncodingAttributesDefault1()
     {
         $res = $this->executeString('<div tal:attributes="title idontexist | default" title=\'&amp; ampersand character\' />');
         $this->assertContains('&amp;', $res);
@@ -142,14 +158,14 @@ class EscapeHTMLTest extends PHPTAL_TestCase {
         $this->assertNotContains('&amp;&amp;', $res);
     }
 
-    function testEntityEncodingAttributesDefault2()
+    public function testEntityEncodingAttributesDefault2()
     {
         $res = $this->executeString('<div tal:attributes="title idontexist | default" title=\'&quot;&apos;\' />');
         $this->assertNotContains('&amp;', $res);
         $this->assertContains('&quot;', $res); // or apos...
     }
 
-    function testEntityEncodingPHP2()
+    public function testEntityEncodingPHP2()
     {
         $res = $this->executeString('<div tal:attributes="title php:\'&amp; ampersand character\'" />');
         $this->assertContains('&amp;', $res);
@@ -157,7 +173,7 @@ class EscapeHTMLTest extends PHPTAL_TestCase {
         $this->assertNotContains('&amp;&amp;', $res);
     }
 
-    function testEntityEncodingPath3()
+    public function testEntityEncodingPath3()
     {
         $res = $this->executeString('<p>${\'&amp; ampersand character\'}</p>');
         $this->assertContains('&amp;', $res);
@@ -165,7 +181,7 @@ class EscapeHTMLTest extends PHPTAL_TestCase {
         $this->assertNotContains('&amp;&amp;', $res);
     }
 
-    function testEntityEncodingPHP3()
+    public function testEntityEncodingPHP3()
     {
         $res = $this->executeString('<p>&{php:\'&amp; ampersand character\'}</p>');
         $this->assertContains('&amp;', $res);
@@ -173,29 +189,29 @@ class EscapeHTMLTest extends PHPTAL_TestCase {
         $this->assertNotContains('&amp;&amp;', $res);
     }
 
-    function testSimpleXML()
+    public function testSimpleXML()
     {
         $tpl = $this->newPHPTAL();
         $tpl->setSource('<p>${x} ${y}</p>');
-        $simplexml = new SimpleXMLElement('<foo title="bar&amp;&lt;" empty="">foo&amp;&lt;</foo>');
+        $simplexml = new \SimpleXMLElement('<foo title="bar&amp;&lt;" empty="">foo&amp;&lt;</foo>');
 
         $tpl->x = $simplexml['title'];
         $tpl->y = $simplexml['empty'];
         $this->assertEquals('<p>bar&amp;&lt; </p>', $tpl->execute());
     }
 
-    function testStructureSimpleXML()
+    public function testStructureSimpleXML()
     {
         $tpl = $this->newPHPTAL();
         $tpl->setSource('<p>${structure x} ${structure y}</p>');
-        $simplexml = new SimpleXMLElement('<foo title="bar&amp;&lt;" empty="">foo&amp;&lt;</foo>');
+        $simplexml = new  \SimpleXMLElement('<foo title="bar&amp;&lt;" empty="">foo&amp;&lt;</foo>');
 
         $tpl->x = $simplexml['title'];
         $tpl->y = $simplexml['empty'];
         $this->assertEquals('<p>bar&< </p>', $tpl->execute());
     }
 
-    function testUnicodeUnescaped()
+    public function testUnicodeUnescaped()
     {
         $tpl = $this->newPHPTAL();
         $tpl->World = '${World}'; // a quine! ;)

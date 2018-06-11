@@ -1,4 +1,9 @@
 <?php
+
+namespace Tests;
+
+use PhpTal\Php\TalesInternal;
+
 /**
  * PHPTAL templating engine
  *
@@ -11,11 +16,16 @@
  * @license  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
  * @link     http://phptal.org/
  */
-
-
-class HTML5ModeTest extends PHPTAL_TestCase
+class HTML5ModeTest extends \PHPTAL_TestCase
 {
-    function testCDATAScript()
+
+    public function tearDown()
+    {
+        TalesInternal::setFunctionWhitelist([]);
+        parent::tearDown();
+    }
+
+    public function testCDATAScript()
     {
         $tpl = $this->newPHPTAL();
         $tpl->setOutputMode(\PhpTal\PHPTAL::HTML5);
@@ -28,7 +38,7 @@ class HTML5ModeTest extends PHPTAL_TestCase
         $this->assertHTMLEquals('<!DOCTYPE html><script> if (2 < 5) { alert("<\/foo>"); } </script>', $tpl->execute());
     }
 
-    function testCDATAContent()
+    public function testCDATAContent()
     {
         $tpl = $this->newPHPTAL();
         $tpl->setOutputMode(\PhpTal\PHPTAL::HTML5);
@@ -36,7 +46,7 @@ class HTML5ModeTest extends PHPTAL_TestCase
         $this->assertHTMLEquals('<!DOCTYPE html><p>&lt;hello&gt;</p>', $tpl->execute());
     }
 
-    function testRemovesXHTMLNS()
+    public function testRemovesXHTMLNS()
     {
         $tpl = $this->newPHPTAL()->setOutputMode(\PhpTal\PHPTAL::HTML5)->setSource('
         <html     xmlns="http://www.w3.org/1999/xhtml">
@@ -44,10 +54,9 @@ class HTML5ModeTest extends PHPTAL_TestCase
             ');
 
         $this->assertHTMLEquals('<html><head></head></html>', $tpl->execute());
-
     }
 
-    function testDoctype()
+    public function testDoctype()
     {
         $tpl = $this->newPHPTAL();
         $tpl->setOutputMode(\PhpTal\PHPTAL::HTML5);
@@ -55,7 +64,7 @@ class HTML5ModeTest extends PHPTAL_TestCase
         $this->assertHTMLEquals('<!DOCTYPE html><p>&lt;hello&gt;</p>', $tpl->execute());
     }
 
-    function testProlog()
+    public function testProlog()
     {
         $tpl = $this->newPHPTAL();
         $tpl->setOutputMode(\PhpTal\PHPTAL::HTML5);
@@ -63,13 +72,13 @@ class HTML5ModeTest extends PHPTAL_TestCase
         $this->assertHTMLEquals('<!DOCTYPE html><p>&lt;hello&gt;</p>', $tpl->execute());
     }
 
-    function testAttr()
+    public function testAttr()
     {
         $this->assertEquals('<html url=http://example.com/?test#test foo=" foo" bar=/bar quz="quz/"></html>',
             $this->newPHPTAL()->setOutputMode(\PhpTal\PHPTAL::HTML5)->setSource('<html url="http://example.com/?test#test" foo=" foo" bar="/bar" quz="quz/"></html>')->execute());
     }
 
-    function testEmpty()
+    public function testEmpty()
     {
         $tpl = $this->newPHPTAL();
         $tpl->setOutputMode(\PhpTal\PHPTAL::HTML5);
@@ -119,7 +128,7 @@ class HTML5ModeTest extends PHPTAL_TestCase
     }
 
 
-    function testEmptyAll()
+    public function testEmptyAll()
     {
         $emptyElements = array(
             'area','base','basefont','br','col',
@@ -135,8 +144,10 @@ class HTML5ModeTest extends PHPTAL_TestCase
         }
     }
 
-    function testBoolean()
+    public function testBoolean()
     {
+        TalesInternal::setFunctionWhitelist(['range']);
+
         $tpl = $this->newPHPTAL();
         $tpl->setOutputMode(\PhpTal\PHPTAL::HTML5);
         $tpl->setSource('
@@ -144,8 +155,8 @@ class HTML5ModeTest extends PHPTAL_TestCase
         <body>
             <input type="checkbox" checked="checked"></input>
             <input type="text" tal:attributes="readonly \'readonly\'"/>
-            <input type="radio" tal:attributes="checked php:true; readonly \'readonly\'"/>
-            <input type="radio" tal:attributes="checked php:false; readonly bogus | nothing"/>
+            <input type="radio" tal:attributes="checked true; readonly \'readonly\'"/>
+            <input type="radio" tal:attributes="checked false; readonly bogus | nothing"/>
             <select>
                 <option selected="unexpected value"/>
                 <option tal:repeat="n php:range(0,5)" tal:attributes="selected repeat/n/odd"/>
@@ -200,9 +211,10 @@ class HTML5ModeTest extends PHPTAL_TestCase
        );
    }
 
-   function testAttributeQuotes()
-   {
-       $res = $this->newPHPTAL()->setSource('<a test=\'${php:chr(34)}\' tal:attributes="foo php:chr(34)"
+    public function testAttributeQuotes()
+    {
+        TalesInternal::setFunctionWhitelist(['chr']);
+        $res = $this->newPHPTAL()->setSource('<a test=\'${php:chr(34)}\' tal:attributes="foo php:chr(34)"
        class=\'email
         href="mailto:me"
        \'
@@ -220,4 +232,3 @@ class HTML5ModeTest extends PHPTAL_TestCase
           " foo="&quot;">contact me</a>'),$this->decodeNumericEntities($res));
    }
 }
-

@@ -1,4 +1,9 @@
 <?php
+
+namespace Test;
+
+use PhpTal\Exception\PhpNotAllowedException;
+
 /**
  * PHPTAL templating engine
  *
@@ -12,15 +17,23 @@
  * @link     http://phptal.org/
  */
 
-
-class TalesPhpWithReplaceTest extends PHPTAL_TestCase
+class TalesPhpWithReplaceTest extends \PHPTAL_TestCase
 {
-    function testIt()
+    public function testMix()
     {
         $tpl = $this->newPHPTAL('input/talesphpwithreplace.01.html');
         $res = normalize_html($tpl->execute());
         $exp = normalize_html_file('output/talesphpwithreplace.01.html');
         $this->assertEquals($exp, $res);
     }
-}
 
+    public function testPhpModifierDisabledThrowsException()
+    {
+        $tpl = $this->newPHPTAL('input/tal-define.12.html');
+        $tpl->real = 'real value';
+        $tpl->foo = 'real';
+        $tpl->disallowPhpModifier();
+        $this->expectException(PhpNotAllowedException::class);
+        $tpl->execute();
+    }
+}

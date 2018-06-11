@@ -127,17 +127,9 @@ class TalRepeatTest extends PHPTAL_TestCase
         $this->assertEquals($exp, $res);
     }
 
-    function testInterpolatedPHP()
-    {
-        $tpl = $this->newPHPTAL();
-        $tpl->y = 'somearray';
-        $tpl->somearray = array(1=>9, 9, 9);
-        $tpl->setSource('<div tal:repeat="x php:${y}">${repeat/x/key}</div>');
-        $this->assertEquals('<div>1</div><div>2</div><div>3</div>', $tpl->execute());
-    }
-
     function testTraversableRepeat()
     {
+        static::markTestSkipped('this condition works with php only. maybe add comparism-operators to tal:condition?');
         $doc = new DOMDocument();
         $doc->loadXML('<a><b/><c/><d/><e/><f/><g/></a>');
 
@@ -237,7 +229,7 @@ class TalRepeatTest extends PHPTAL_TestCase
     function testSimpleXML()
     {
         $tpl = $this->newPHPTAL();
-        $tpl->setSource("<tal:block tal:repeat='s php:sxml'><b tal:content='structure s' />\n</tal:block>");
+        $tpl->setSource("<tal:block tal:repeat='s sxml'><b tal:content='structure s' />\n</tal:block>");
         $tpl->sxml = new SimpleXMLElement("<x><y>test</y><y attr=\"test\"><z>test</z></y><y/></x>");
         $this->assertEquals("<b><y>test</y></b>\n<b><y attr=\"test\"><z>test</z></y></b>\n<b><y/></b>\n", $tpl->execute());
     }

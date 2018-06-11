@@ -1,4 +1,7 @@
 <?php
+
+use Tests\Testhelper\DummyTranslator;
+
 /**
  * PHPTAL templating engine
  *
@@ -11,9 +14,6 @@
  * @license  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
  * @link     http://phptal.org/
  */
-
-
-require_once 'I18NDummyTranslator.php';
 
 class I18NNameTest extends PHPTAL_TestCase
 {

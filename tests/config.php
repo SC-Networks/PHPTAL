@@ -48,8 +48,6 @@ abstract class PHPTAL_TestCase extends PHPUnit_Framework_TestCase
             ob_end_flush(); $unflushed++;
         }
 
-        if (strlen($content)) throw new \Exception("Test {$this->getName()} output: $content");
-
         if ($unflushed) throw new \Exception("Unflushed buffers: $unflushed");
     }
 
@@ -62,6 +60,7 @@ abstract class PHPTAL_TestCase extends PHPUnit_Framework_TestCase
     {
         $p = new \PhpTal\PHPTAL($tpl);
         $p->setForceReparse(true);
+        $p->allowPhpModifier(); // many existing tests make use of php modifier
         return $p;
     }
 
