@@ -380,4 +380,14 @@ interface PhpTalInterface
      * @return StringSource
      */
     public function getSource();
+
+    /**
+     * @return PHPTAL
+     */
+    public function allowPhpModifier();
+
+    /**
+     * @return PHPTAL
+     */
+    public function disallowPhpModifier();
 }

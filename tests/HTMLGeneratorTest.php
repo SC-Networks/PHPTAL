@@ -1,4 +1,7 @@
 <?php
+
+namespace Tests;
+
 /**
  * PHPTAL templating engine
  *
@@ -13,14 +16,15 @@
  */
 
 
-class HTMLGeneratorTest extends PHPTAL_TestCase {
+class HTMLGeneratorTest extends \PHPTAL_TestCase
+{
 
-    function testTalDoesntConsumeNewline()
+    public function testTalDoesntConsumeNewline()
     {
-        $res = $this->newPHPTAL()->setSource('<tal:block tal:condition="php:true">I\'m on a line</tal:block>
-<tal:block tal:condition="php:true">I\'m on a line</tal:block>')->execute();
+        $res = $this->newPHPTAL()->setSource('<tal:block tal:condition="true">I\'m on a line</tal:block>
+<tal:block tal:condition="true">I\'m on a line</tal:block>')->execute();
 
-        $this->assertEquals('I\'m on a line
+        static::assertSame('I\'m on a line
 I\'m on a line', $res);
     }
 }

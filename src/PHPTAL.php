@@ -14,6 +14,8 @@
 
 namespace PhpTal;
 
+use PhpTal\Php\TalesInternal;
+
 /**
  * PHPTAL template entry point.
  *
@@ -1237,5 +1239,23 @@ class PHPTAL implements PhpTalInterface
     public function getSource()
     {
         return $this->source;
+    }
+
+    /**
+     * @return PHPTAL
+     */
+    public function allowPhpModifier()
+    {
+        TalesInternal::setPhpModifierAllowed(true);
+        return $this;
+    }
+
+    /**
+     * @return PHPTAL
+     */
+    public function disallowPhpModifier()
+    {
+        TalesInternal::setPhpModifierAllowed(false);
+        return $this;
     }
 }

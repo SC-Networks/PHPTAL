@@ -14,7 +14,6 @@
 
 namespace PhpTal\Php;
 
-use PhpTal\Context;
 use PhpTal\Dom\Element;
 use PhpTal\Exception\ConfigurationException;
 use PhpTal\Exception\PhpTalException;

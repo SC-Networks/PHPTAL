@@ -1,4 +1,9 @@
 <?php
+
+namespace Tests;
+
+use PhpTal\Php\TalesInternal;
+
 /**
  * PHPTAL templating engine
  *
@@ -13,24 +18,32 @@
  */
 
 
-class PhpModeTest extends PHPTAL_TestCase
+class PhpModeTest extends \PHPTAL_TestCase
 {
-    function testSimple()
+
+    public function tearDown()
     {
+        TalesInternal::setFunctionWhitelist([]);
+        parent::tearDown();
+    }
+
+    public function testSimple()
+    {
+        TalesInternal::setFunctionWhitelist(['strtolower']);
         $tpl = $this->newPHPTAL('input/php-mode.01.xml');
         $res = $tpl->execute();
         $exp = normalize_html_file('output/php-mode.01.xml');
         $res = normalize_html($res);
-        $this->assertEquals($exp, $res);
+        static::assertEquals($exp, $res);
     }
 
-    function testInContent()
+    public function testInContent()
     {
+        TalesInternal::setFunctionWhitelist(['strtolower']);
         $tpl = $this->newPHPTAL('input/php-mode.02.xml');
         $res = $tpl->execute();
         $exp = normalize_html_file('output/php-mode.02.xml');
         $res = normalize_html($res);
-        $this->assertEquals($exp, $res);
+        static::assertEquals($exp, $res);
     }
 }
-

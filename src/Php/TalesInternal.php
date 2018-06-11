@@ -16,6 +16,7 @@
 namespace PhpTal\Php;
 
 use PhpTal\Exception\ParserException;
+use PhpTal\Exception\PhpNotAllowedException;
 use PhpTal\Exception\UnknownModifierException;
 use PhpTal\TalesRegistry;
 
@@ -55,6 +56,41 @@ class TalesInternal implements \PhpTal\TalesInterface
 {
     const DEFAULT_KEYWORD = 'new \PhpTal\DefaultKeyword';
     const NOTHING_KEYWORD = 'new \PhpTal\NothingKeyword';
+
+    /**
+     * @var bool
+     */
+    private static $phpModifierAllowed = false;
+
+    /**
+     * @var array
+     */
+    private static $tokenBlacklist = [
+        T_CLASS_C,
+        T_FUNC_C,
+        T_METHOD_C,
+        T_NS_C,
+        T_DIR,
+        T_FILE,
+        T_LINE, // magic constants (__XXX__)
+        T_NEW,
+        T_CLONE, // object instanciation
+        T_DECLARE,
+        T_FUNCTION, // declarations
+        T_INCLUDE,
+        T_INCLUDE_ONCE,
+        T_REQUIRE,
+        T_REQUIRE_ONCE, // file inclusion
+        T_EVAL, // eval()
+        T_GLOBAL, // global $...
+        T_GOTO, // undocumented, available since PHP 5.3.0
+        T_USE, // use Namespace
+    ];
+
+    /**
+     * @var array
+     */
+    private static $functionWhitelist = [];
 
     /**
      * @param string $src
@@ -407,9 +443,16 @@ class TalesInternal implements \PhpTal\TalesInterface
      *
      * @return string
      * @throws ParserException
+     * @throws PhpNotAllowedException
      */
     public static function php($src)
     {
+        if (!static::isPhpModifierAllowed()) {
+            throw new PhpNotAllowedException('The php modifier has been disabled, you must not use it.');
+        }
+
+        static::checkTokens($src);
+
         return Transformer::transform($src, '$ctx->');
     }
 
@@ -594,5 +637,92 @@ class TalesInternal implements \PhpTal\TalesInterface
                 throw new ParserException("Modifier $typePrefix generated PHP statement rather than expression (don't add semicolons)");
             }
         }
+    }
+
+    /**
+     * @return bool
+     */
+    public static function isPhpModifierAllowed()
+    {
+        return static::$phpModifierAllowed;
+    }
+
+    /**
+     * @param bool $phpModifierAllowed
+     */
+    public static function setPhpModifierAllowed($phpModifierAllowed)
+    {
+        static::$phpModifierAllowed = (bool) $phpModifierAllowed;
+    }
+
+
+    /**
+     * Tokenizes and filters PHP source
+     *
+     * @param string $src
+     *
+     * @return array
+     */
+    private static function tokenize($src)
+    {
+        $tokens = token_get_all("<?php $src ?>");
+        $clear = [];
+
+        for ($i = 0, $iMax = count($tokens); $i < $iMax; $i++) {
+            $token = $tokens[$i];
+            if (is_array($token)) {
+                switch ($token[0]) {
+                    default:
+                        $clear[] = $token;
+                    case T_OPEN_TAG:
+                    case T_CLOSE_TAG:
+                    case T_WHITESPACE:
+                    case T_VARIABLE:
+                        break;
+                    case T_OBJECT_OPERATOR: // skip next token (variable or method access)
+                        $i++;
+                        break;
+                }
+            }
+        }
+
+        return $clear;
+    }
+
+    /**
+     * Checks for blacklisted tokens and non-whitelisted global function calls
+     *
+     * @param string $src
+     *
+     * @return void
+     * @throws ParserException
+     */
+    private static function checkTokens($src)
+    {
+
+        foreach (static::tokenize($src) as $token) {
+            if (in_array($token[0], static::$tokenBlacklist)) {
+                $message = 'User tried to execute disallowed php token ' . token_name($token[0]);
+                throw new ParserException($message);
+            }
+
+            if ($token[0] === T_STRING && !in_array(strtolower($token[1]), static::$functionWhitelist)) {
+                $message = "User tried to execute not whitelisted statement '" . $token[1] . "'";
+                throw new ParserException($message);
+            }
+        }
+    }
+
+    /**
+     * @param array $functionWhitelist
+     */
+    public static function setFunctionWhitelist(array $functionWhitelist)
+    {
+
+        $functionWhitelist = array_map(function ($e) {
+            return strtolower(trim($e));
+        }, $functionWhitelist);
+
+        self::$functionWhitelist = $functionWhitelist;
     }
 }

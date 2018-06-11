@@ -1,4 +1,9 @@
 <?php
+
+namespace Tests;
+
+use Tests\Testhelper\DummyTranslator;
+
 /**
  * PHPTAL templating engine
  *
@@ -12,10 +17,7 @@
  * @link     http://phptal.org/
  */
 
-require_once 'I18NDummyTranslator.php';
-
-
-class I18NAttributesTest extends PHPTAL_TestCase
+class I18NAttributesTest extends \PHPTAL_TestCase
 {
     function testSingle()
     {

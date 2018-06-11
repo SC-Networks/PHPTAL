@@ -1,4 +1,9 @@
 <?php
+
+namespace Tests;
+
+use PhpTal\Php\TalesInternal;
+
 /**
  * PHPTAL templating engine
  *
@@ -13,9 +18,10 @@
  */
 
 
-class DoctypeTest extends PHPTAL_TestCase
+class DoctypeTest extends \PHPTAL_TestCase
 {
-    function testSimple()
+
+    public function testSimple()
     {
         $tpl = $this->newPHPTAL('input/doctype.01.html');
         $res = $tpl->execute();
@@ -24,7 +30,7 @@ class DoctypeTest extends PHPTAL_TestCase
         $this->assertEquals($exp, $res);
     }
 
-    function testPreservesNewlineAfterDoctype()
+    public function testPreservesNewlineAfterDoctype()
     {
         $src = "<!DOCTYPE html>\n\n\n<html></html>";
         $tpl = $this->newPHPTAL()->setSource($src);
@@ -35,7 +41,7 @@ class DoctypeTest extends PHPTAL_TestCase
         $this->assertEquals($src,$tpl->execute());
     }
 
-    function testMacro()
+    public function testMacro()
     {
         $tpl = $this->newPHPTAL('input/doctype.02.user.html');
         $res = $tpl->execute();
@@ -44,7 +50,7 @@ class DoctypeTest extends PHPTAL_TestCase
         $this->assertEquals($exp, $res);
     }
 
-    function testDeepMacro()
+    public function testDeepMacro()
     {
         $tpl = $this->newPHPTAL('input/doctype.03.html');
         $res = $tpl->execute();
@@ -53,7 +59,7 @@ class DoctypeTest extends PHPTAL_TestCase
         $this->assertEquals($exp, $res);
     }
 
-    function testDtdInline()
+    public function testDtdInline()
     {
         $tpl = $this->newPHPTAL('input/doctype.04.html');
         $res = $tpl->execute();
@@ -62,7 +68,7 @@ class DoctypeTest extends PHPTAL_TestCase
         $this->assertEquals($exp, $res);
     }
 
-    function testClearedOnReexecution()
+    public function testClearedOnReexecution()
     {
         $tpl = $this->newPHPTAL();
         $tpl->setSource('<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><whatever/>');
@@ -74,20 +80,5 @@ class DoctypeTest extends PHPTAL_TestCase
 
         $this->assertNotContains("DOCTYPE html PUBLIC", $tpl->execute());
         $this->assertNotContains("DOCTYPE html PUBLIC", $tpl->execute());
-    }
-
-    /**
-     * this is pretty crazy case of PHPTAL being reused while template is still being executed
-     */
-    function testClearedOnNestedReexecution()
-    {
-        $tpl = $this->newPHPTAL();
-        $tpl->tpl = $tpl;
-
-        $tpl->setSource('<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-        <hack tal:define="hack php:tpl.setSource(&quot;&lt;hacked/&gt;&quot;)" tal:content="structure hack/execute"/>');
-
-        $this->assertEquals(normalize_html('<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><hack><hacked></hacked></hack>'),
-                            normalize_html($tpl->execute()));
     }
 }

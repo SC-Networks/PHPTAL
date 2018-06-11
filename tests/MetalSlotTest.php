@@ -1,4 +1,11 @@
 <?php
+
+namespace Tests;
+
+use PhpTal\Php\Attribute\METAL\FillSlot;
+use PhpTal\Php\TalesInternal;
+use Tests\Testhelper\DummyTranslator;
+
 /**
  * PHPTAL templating engine
  *
@@ -12,11 +19,15 @@
  * @link     http://phptal.org/
  */
 
-require_once 'I18NDummyTranslator.php';
-
-class MetalSlotTest extends PHPTAL_TestCase
+class MetalSlotTest extends \PHPTAL_TestCase
 {
-    function testSimple()
+    public function tearDown()
+    {
+        TalesInternal::setFunctionWhitelist([]);
+        parent::tearDown();
+    }
+
+    public function testSimple()
     {
         $tpl = $this->newPHPTAL('input/metal-slot.01.html');
         $res = normalize_html($tpl->execute());
@@ -24,7 +35,7 @@ class MetalSlotTest extends PHPTAL_TestCase
         $this->assertEquals($exp, $res);
     }
 
-    function testVariableSlotName()
+    public function testVariableSlotName()
     {
         $tpl = $this->newPHPTAL()->setSource('<div>
           <div metal:define-macro="test">
@@ -52,7 +63,7 @@ class MetalSlotTest extends PHPTAL_TestCase
         $this->assertEquals($exp, $res);
     }
 
-    function testPreservesContext()
+    public function testPreservesContext()
     {
         $tpl = $this->newPHPTAL('input/metal-slot.05.html');
         $tpl->var = "top";
@@ -60,7 +71,7 @@ class MetalSlotTest extends PHPTAL_TestCase
                             normalize_html($tpl->execute()), $tpl->getCodePath());
     }
 
-    function testPreservesTopmostContext()
+    public function testPreservesTopmostContext()
     {
         $tpl = $this->newPHPTAL();
         $tpl->var = "topmost";
@@ -78,7 +89,7 @@ class MetalSlotTest extends PHPTAL_TestCase
         $this->assertEquals(normalize_html('<div><div><div>var = topmost</div></div></div>'), normalize_html($tpl->execute()), $tpl->getCodePath());
     }
 
-    function testRecursiveFillSimple()
+    public function testRecursiveFillSimple()
     {
         $tpl = $this->newPHPTAL();
         $tpl->setSource('
@@ -106,7 +117,7 @@ class MetalSlotTest extends PHPTAL_TestCase
                             normalize_html($tpl->execute()), $tpl->getCodePath());
     }
 
-    function testRecursiveFill()
+    public function testRecursiveFill()
     {
         $tpl = $this->newPHPTAL('input/metal-slot.02.html');
         $res = normalize_html($tpl->execute());
@@ -114,7 +125,7 @@ class MetalSlotTest extends PHPTAL_TestCase
         $this->assertEquals($exp, $res, $tpl->getCodePath());
     }
 
-    function testRecursiveUnFill()
+    public function testRecursiveUnFill()
     {
         $this->markTestSkipped("known bug"); // FIXME
 
@@ -144,7 +155,7 @@ class MetalSlotTest extends PHPTAL_TestCase
 
 
 
-    function testBlock()
+    public function testBlock()
     {
         $tpl = $this->newPHPTAL('input/metal-slot.03.html');
         $res = normalize_html($tpl->execute());
@@ -152,7 +163,7 @@ class MetalSlotTest extends PHPTAL_TestCase
         $this->assertEquals($exp, $res);
     }
 
-    function testFillAndCondition()
+    public function testFillAndCondition()
     {
         $tpl = $this->newPHPTAL('input/metal-slot.04.html');
         $tpl->fillit = true;
@@ -161,7 +172,7 @@ class MetalSlotTest extends PHPTAL_TestCase
         $this->assertEquals($exp, $res);
     }
 
-    function testFillWithi18n()
+    public function testFillWithi18n()
     {
         $tpl = $this->newPHPTAL();
         $tpl->setSource('
@@ -182,7 +193,7 @@ class MetalSlotTest extends PHPTAL_TestCase
     /**
      * this is violation of TAL specification, but needs to work for backwards compatibility
      */
-    function testFillPreservedAcrossCalls()
+    public function testFillPreservedAcrossCalls()
     {
         $tpl = $this->newPHPTAL();
         $tpl->setSource('<tal:block metal:fill-slot="foo">foocontent</tal:block>');
@@ -192,8 +203,10 @@ class MetalSlotTest extends PHPTAL_TestCase
         $this->assertEquals('foocontent', $tpl->execute());
     }
 
-    function testUsesCallbackForLargeSlots()
+    public function testUsesCallbackForLargeSlots()
     {
+        TalesInternal::setFunctionWhitelist(['range']);
+
         $tpl = $this->newPHPTAL();
         $tpl->setSource('
         <x metal:define-macro="foo"><y metal:define-slot="s"/></x>
@@ -210,7 +223,7 @@ class MetalSlotTest extends PHPTAL_TestCase
         ');
 
         $res = $tpl->execute();
-        $this->assertGreaterThan(\PhpTal\Php\Attribute\METAL\FillSlot::CALLBACK_THRESHOLD, strlen($res));
+        $this->assertGreaterThan(FillSlot::CALLBACK_THRESHOLD, strlen($res));
 
         $tpl_php_source = file_get_contents($tpl->getCodePath());
 
@@ -218,7 +231,7 @@ class MetalSlotTest extends PHPTAL_TestCase
         $this->assertContains("fillSlotCallback(", $tpl_php_source);
     }
 
-    function testUsesBufferForSmallSlots()
+    public function testUsesBufferForSmallSlots()
     {
         $tpl = $this->newPHPTAL();
         $tpl->setSource('
@@ -237,7 +250,7 @@ class MetalSlotTest extends PHPTAL_TestCase
         $this->assertContains("fillSlot(", $tpl_php_source);
     }
 
-    function testSlotBug()
+    public function testSlotBug()
     {
         $tpl = $this->newPHPTAL()->setSource(<<<HTML
         <div>
@@ -269,7 +282,7 @@ HTML
             normalize_html($tpl->execute()), $tpl->getCodePath());
     }
 
-    function testNestedSlots()
+    public function testNestedSlots()
     {
         $tpl = $this->newPHPTAL()->setSource('
         <tal:block metal:define-macro="fieldset">
@@ -309,7 +322,7 @@ HTML
         normalize_html($tpl->execute()));
     }
 
-    function testResetDefault()
+    public function testResetDefault()
     {
         $tpl = $this->newPHPTAL()->setSource('
         <!--! definition of macro with a slot -->
@@ -342,7 +355,7 @@ HTML
         '),normalize_html($res));
     }
 
-    function testTrickyName()
+    public function testTrickyName()
     {
         $tricky = "\\x&apos;\\\\&apos;&quot;\t\r\n\\";
         $res = $this->newPHPTAL()->setSource("

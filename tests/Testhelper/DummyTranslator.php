@@ -1,4 +1,9 @@
 <?php
+
+namespace Tests\Testhelper;
+
+use PhpTal\TranslationServiceInterface;
+
 /**
  * PHPTAL templating engine
  *
@@ -13,7 +18,7 @@
  */
 
 
-class DummyTranslator implements \PhpTal\TranslationServiceInterface
+class DummyTranslator implements TranslationServiceInterface
 {
     public $vars = array();
     public $translations = array();
