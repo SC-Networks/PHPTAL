@@ -99,7 +99,7 @@ abstract class Node
      */
     public function getValueEscaped()
     {
-        return $this->value_escaped;
+        return preg_replace('/<\?(php|=)/mi', '<_', $this->value_escaped);
     }
 
     /**

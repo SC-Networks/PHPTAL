@@ -23,14 +23,4 @@ class HTMLGeneratorTest extends PHPTAL_TestCase {
         $this->assertEquals('I\'m on a line
 I\'m on a line', $res);
     }
-
-    function testPHPConsumesNewline()
-    {
-        $res = $this->newPHPTAL()->setSource('<p><?php echo ""; ?>
-No new line<?php echo ""; ?>
-No new line</p>')->execute();
-
-        $this->assertEquals("<p>No new lineNo new line</p>", $res);
-    }
-
 }

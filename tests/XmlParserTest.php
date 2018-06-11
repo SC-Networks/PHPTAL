@@ -41,14 +41,6 @@ class XmlParserTest extends PHPTAL_TestCase
         <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="pl"></html>', $tpl->execute());
     }
 
-    public function testPHPBlocksNotInterpolated()
-    {
-        $tpl = $this->newPHPTAL();
-        $tpl->setSource('<?php echo \'${baz}\' ?><html></html>');
-
-        $this->assertEquals('${baz}<html></html>', $tpl->execute());
-    }
-
     public function testCharactersBeforeBegining()
     {
         $parser = new \PhpTal\Dom\SaxXmlParser('UTF-8');

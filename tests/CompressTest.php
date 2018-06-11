@@ -218,7 +218,7 @@ class CompressTest extends PHPTAL_TestCase
 
     function testPreservesSpaceBeforePI()
     {
-        $this->assertStrips("<p>foo bar</p>","<p>foo <?php echo 'bar'; ?></p>");
+        $this->assertStrips("<p>foo <_ echo 'bar'; ?></p>","<p>foo <?php echo 'bar'; ?></p>");
     }
 
     function testTalContent()
