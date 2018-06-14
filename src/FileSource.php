@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * PHPTAL templating engine
  *
@@ -31,7 +33,7 @@ class FileSource implements SourceInterface
      * @param string $path
      * @throws Exception\IOException
      */
-    public function __construct($path)
+    public function __construct(string $path)
     {
         $this->path = realpath($path);
         if ($this->path === false) {
@@ -42,7 +44,7 @@ class FileSource implements SourceInterface
     /**
      * @return string
      */
-    public function getRealPath()
+    public function getRealPath(): string
     {
         return $this->path;
     }
@@ -50,7 +52,7 @@ class FileSource implements SourceInterface
     /**
      * @return bool|int
      */
-    public function getLastModifiedTime()
+    public function getLastModifiedTime(): int
     {
         return filemtime($this->path);
     }
@@ -59,7 +61,7 @@ class FileSource implements SourceInterface
      * @return string
      * @throws Exception\IOException
      */
-    public function getData()
+    public function getData(): string
     {
         $content = file_get_contents($this->path);
 

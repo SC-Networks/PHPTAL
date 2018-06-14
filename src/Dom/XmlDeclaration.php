@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * PHPTAL templating engine
  *
@@ -28,7 +30,7 @@ class XmlDeclaration extends Node
      *
      * @param CodeWriter $codewriter
      */
-    public function generateCode(CodeWriter $codewriter)
+    public function generateCode(CodeWriter $codewriter): void
     {
         $codewriter->setXmlDeclaration($this->getValueEscaped());
         $codewriter->doXmlDeclaration();

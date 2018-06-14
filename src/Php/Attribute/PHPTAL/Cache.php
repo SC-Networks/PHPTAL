@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * PHPTAL templating engine
  *
@@ -51,8 +53,11 @@ class Cache extends Attribute
      *
      * @return void
      * @throws ParserException
+     * @throws \PhpTal\Exception\PhpNotAllowedException
+     * @throws \PhpTal\Exception\UnknownModifierException
+     * @throws \ReflectionException
      */
-    public function before(CodeWriter $codewriter)
+    public function before(CodeWriter $codewriter): void
     {
         // number or variable name followed by time unit
         // optional per expression
@@ -130,7 +135,7 @@ class Cache extends Attribute
      * @return void
      * @throws \PhpTal\Exception\PhpTalException
      */
-    public function after(CodeWriter $codewriter)
+    public function after(CodeWriter $codewriter): void
     {
         $codewriter->doEval('file_put_contents(' . $this->cache_filename_var . ', ob_get_flush())');
         $codewriter->doElse();

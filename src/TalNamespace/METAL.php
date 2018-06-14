@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * PHPTAL templating engine
  *
@@ -14,6 +16,9 @@
 
 namespace PhpTal\TalNamespace;
 
+use PhpTal\TalNamespaceAttributeReplace;
+use PhpTal\TalNamespaceAttributeSurround;
+
 /**
  * @package PHPTAL
  */
@@ -22,9 +27,9 @@ class METAL extends Builtin
     public function __construct()
     {
         parent::__construct('metal', Builtin::NS_METAL);
-        $this->addAttribute(new \PhpTal\TalNamespaceAttributeSurround('define-macro', 1));
-        $this->addAttribute(new \PhpTal\TalNamespaceAttributeReplace('use-macro', 9));
-        $this->addAttribute(new \PhpTal\TalNamespaceAttributeSurround('define-slot', 9));
-        $this->addAttribute(new \PhpTal\TalNamespaceAttributeSurround('fill-slot', 9));
+        $this->addAttribute(new TalNamespaceAttributeSurround('define-macro', 1));
+        $this->addAttribute(new TalNamespaceAttributeReplace('use-macro', 9));
+        $this->addAttribute(new TalNamespaceAttributeSurround('define-slot', 9));
+        $this->addAttribute(new TalNamespaceAttributeSurround('fill-slot', 9));
     }
 }

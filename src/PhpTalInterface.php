@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace PhpTal;
 
@@ -16,7 +17,7 @@ interface PhpTalInterface
      *
      * @return $this
      */
-    public function setTemplate($path);
+    public function setTemplate(string $path): self;
 
     /**
      * Set template from source.
@@ -29,7 +30,7 @@ interface PhpTalInterface
      *
      * @return $this
      */
-    public function setSource($src, $path = null);
+    public function setSource(string $src, string $path = null): self;
 
     /**
      * Specify where to look for templates.
@@ -38,21 +39,21 @@ interface PhpTalInterface
      *
      * @return $this
      */
-    public function setTemplateRepository($rep);
+    public function setTemplateRepository($rep): self;
 
     /**
      * Get template repositories.
      *
      * @return array
      */
-    public function getTemplateRepositories();
+    public function getTemplateRepositories() :array;
 
     /**
      * Clears the template repositories.
      *
      * @return $this
      */
-    public function clearTemplateRepositories();
+    public function clearTemplateRepositories(): self;
 
     /**
      * Specify how to look for templates.
@@ -61,7 +62,7 @@ interface PhpTalInterface
      *
      * @return $this
      */
-    public function addSourceResolver(SourceResolverInterface $resolver);
+    public function addSourceResolver(SourceResolverInterface $resolver): self;
 
     /**
      * Ignore XML/XHTML comments on parsing.
@@ -71,7 +72,7 @@ interface PhpTalInterface
      *
      * @return $this
      */
-    public function stripComments($bool);
+    public function stripComments(bool $bool): self;
 
     /**
      * Set output mode
@@ -86,7 +87,7 @@ interface PhpTalInterface
      *
      * @return $this
      */
-    public function setOutputMode($mode);
+    public function setOutputMode(int $mode): self;
 
     /**
      * Get output mode
@@ -94,7 +95,7 @@ interface PhpTalInterface
      *
      * @return int output mode constant
      */
-    public function getOutputMode();
+    public function getOutputMode(): int;
 
     /**
      * Set input and ouput encoding. Encoding is case-insensitive.
@@ -103,14 +104,14 @@ interface PhpTalInterface
      *
      * @return $this
      */
-    public function setEncoding($enc);
+    public function setEncoding(string $enc): self;
 
     /**
      * Get input and ouput encoding.
      *
      * @return string
      */
-    public function getEncoding();
+    public function getEncoding(): string;
 
     /**
      * Set the storage location for intermediate PHP files.
@@ -120,14 +121,14 @@ interface PhpTalInterface
      *
      * @return $this
      */
-    public function setPhpCodeDestination($path);
+    public function setPhpCodeDestination(string $path): self;
 
     /**
      * Get the storage location for intermediate PHP files.
      *
      * @return string
      */
-    public function getPhpCodeDestination();
+    public function getPhpCodeDestination(): string;
 
     /**
      * Set the file extension for intermediate PHP files.
@@ -136,14 +137,14 @@ interface PhpTalInterface
      *
      * @return $this
      */
-    public function setPhpCodeExtension($extension);
+    public function setPhpCodeExtension(string $extension): self;
 
     /**
      * Get the file extension for intermediate PHP files.
      *
      * @return string
      */
-    public function getPhpCodeExtension();
+    public function getPhpCodeExtension(): string;
 
     /**
      * Flags whether to ignore intermediate php files and to
@@ -155,14 +156,14 @@ interface PhpTalInterface
      *
      * @return $this
      */
-    public function setForceReparse($bool);
+    public function setForceReparse(bool $bool): self;
 
     /**
      * Get the value of the force reparse state.
      *
      * @return bool
      */
-    public function getForceReparse();
+    public function getForceReparse(): bool;
 
     /**
      * Set I18N translator.
@@ -174,7 +175,7 @@ interface PhpTalInterface
      *
      * @return $this
      */
-    public function setTranslator(TranslationServiceInterface $t);
+    public function setTranslator(TranslationServiceInterface $t): self;
 
     /**
      * Add new prefilter to filter chain.
@@ -183,11 +184,11 @@ interface PhpTalInterface
      * PreFilters must inherit PreFilter class.
      * (in future this method will allow string with filter name instead of object)
      *
-     * @param PreFilter $filter PreFilter object or name of prefilter to add
+     * @param FilterInterface $filter PreFilter object or name of prefilter to add
      *
      * @return $this
      */
-    public function addPreFilter(PreFilter $filter);
+    public function addPreFilter(FilterInterface $filter): self;
 
     /**
      * Sets the level of recursion for template cache directories
@@ -196,7 +197,7 @@ interface PhpTalInterface
      *
      * @return $this
      */
-    public function setSubpathRecursionLevel($recursion_level);
+    public function setSubpathRecursionLevel(int $recursion_level): self;
 
     /**
      * Set template post filter.
@@ -205,8 +206,10 @@ interface PhpTalInterface
      * See PHPTAL_PostFilter class.
      *
      * @param FilterInterface $filter filter instance
+     *
+     * @return PhpTalInterface
      */
-    public function setPostFilter(FilterInterface $filter);
+    public function setPostFilter(FilterInterface $filter): self;
 
     /**
      * Register a trigger for specified phptal:id.
@@ -216,7 +219,8 @@ interface PhpTalInterface
      *
      * @return $this
      */
-    public function addTrigger($id, TriggerInterface $trigger);
+    public function addTrigger(string $id, TriggerInterface $trigger): self;
+
 
     /**
      * Returns trigger for specified phptal:id.
@@ -224,8 +228,7 @@ interface PhpTalInterface
      * @param string $id phptal:id
      *
      * @return TriggerInterface|null
-     */
-    public function getTrigger($id);
+     */    public function getTrigger(string $id): ?TriggerInterface;
 
     /**
      * Set a context variable.
@@ -236,14 +239,14 @@ interface PhpTalInterface
      *
      * @return $this
      */
-    public function set($varname, $value);
+    public function set(string $varname, $value): self;
 
     /**
      * Execute the template code and return generated markup.
      *
      * @return string
      */
-    public function execute();
+    public function execute(): string;
 
     /**
      * Execute and echo template without buffering of the output.
@@ -251,7 +254,7 @@ interface PhpTalInterface
      *
      * @return void
      */
-    public function echoExecute();
+    public function echoExecute(): void;
 
     /**
      * This is PHPTAL's internal function that handles
@@ -264,22 +267,24 @@ interface PhpTalInterface
      *                          (it will be different from $this if it's external macro call)
      * @return void
      */
-    public function executeMacroOfTemplate($path, PhpTalInterface $local_tpl);
+    public function executeMacroOfTemplate(string $path, PhpTalInterface $local_tpl): void;
 
 
     /**
      * Prepare template without executing it.
      *
-     * @return void
+     * @return PhpTalInterface
      */
-    public function prepare();
+    public function prepare(): self;
 
     /**
      * set how long compiled templates and phptal:cache files are kept
      *
      * @param float $days number of days
+     *
+     * @return PhpTalInterface
      */
-    public function setCacheLifetime($days);
+    public function setCacheLifetime(float $days): self;
 
     /**
      * PHPTAL will scan cache and remove old files on every nth compile
@@ -289,7 +294,7 @@ interface PhpTalInterface
      *
      * @return $this
      */
-    public function setCachePurgeFrequency($n);
+    public function setCachePurgeFrequency(int $n): self;
 
     /**
      * Removes all compiled templates from cache that
@@ -297,7 +302,7 @@ interface PhpTalInterface
      *
      * @return void
      */
-    public function cleanUpGarbage();
+    public function cleanUpGarbage(): void;
 
     /**
      * Removes content cached with phptal:cache for currently set template
@@ -305,7 +310,7 @@ interface PhpTalInterface
      *
      * @return void
      */
-    public function cleanUpCache();
+    public function cleanUpCache(): void;
 
     /**
      * Returns the path of the intermediate PHP code file.
@@ -315,28 +320,28 @@ interface PhpTalInterface
      *
      * @return string
      */
-    public function getCodePath();
+    public function getCodePath(): string;
 
     /**
      * Returns the generated template function name.
      *
      * @return string
      */
-    public function getFunctionName();
+    public function getFunctionName(): string;
 
     /**
      * Returns template translator.
      *
-     * @return TranslationServiceInterface
+     * @return TranslationServiceInterface|null
      */
-    public function getTranslator();
+    public function getTranslator(): ?TranslationServiceInterface;
 
     /**
      * Returns array of exceptions caught by tal:on-error attribute.
      *
-     * @return \Exception[]]
+     * @return \Exception[]
      */
-    public function getErrors();
+    public function getErrors(): array;
 
     /**
      * Public for phptal templates, private for user.
@@ -345,7 +350,7 @@ interface PhpTalInterface
      *
      * @return void
      */
-    public function addError(\Exception $error);
+    public function addError(\Exception $error): void;
 
     /**
      * Returns current context object.
@@ -353,41 +358,41 @@ interface PhpTalInterface
      *
      * @return Context
      */
-    public function getContext();
+    public function getContext(): Context;
 
     /**
      * only for use in generated template code
      *
      * @return \stdClass
      */
-    public function getGlobalContext();
+    public function getGlobalContext(): \stdClass;
 
     /**
      * only for use in generated template code
      *
      * @return Context
      */
-    public function pushContext();
+    public function pushContext(): Context;
 
     /**
      * only for use in generated template code
      *
      * @return Context
      */
-    public function popContext();
+    public function popContext(): Context;
 
     /**
-     * @return StringSource
+     * @return SourceInterface
      */
-    public function getSource();
-
-    /**
-     * @return PHPTAL
-     */
-    public function allowPhpModifier();
+    public function getSource(): SourceInterface;
 
     /**
      * @return PHPTAL
      */
-    public function disallowPhpModifier();
+    public function allowPhpModifier(): self;
+
+    /**
+     * @return PHPTAL
+     */
+    public function disallowPhpModifier(): self;
 }

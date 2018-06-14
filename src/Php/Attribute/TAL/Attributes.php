@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * PHPTAL templating engine
  *
@@ -19,6 +21,8 @@ use PhpTal\Php\Attribute;
 use PhpTal\Php\CodeWriter;
 use PhpTal\Php\TalesChainExecutor;
 use PhpTal\Php\TalesChainReaderInterface;
+use PhpTal\Php\TalesInternal;
+use PhpTal\PHPTAL;
 use PhpTal\TalNamespace\Builtin;
 
 /**
@@ -74,12 +78,13 @@ class Attributes extends Attribute implements TalesChainReaderInterface
      *
      * @return void
      * @throws \PhpTal\Exception\PhpTalException
+     * @throws \ReflectionException
      */
-    public function before(CodeWriter $codewriter)
+    public function before(CodeWriter $codewriter): void
     {
         // split attributes using ; delimiter
         foreach ($codewriter->splitExpression($this->expression) as $exp) {
-            list($qname, $expression) = $this->parseSetExpression($exp);
+            [$qname, $expression] = $this->parseSetExpression($exp);
             if ($expression) {
                 $this->prepareAttribute($codewriter, $qname, $expression);
             }
@@ -93,8 +98,9 @@ class Attributes extends Attribute implements TalesChainReaderInterface
      *
      * @return void
      * @throws \PhpTal\Exception\PhpTalException
+     * @throws \ReflectionException
      */
-    private function prepareAttribute(CodeWriter $codewriter, $qname, $expression)
+    private function prepareAttribute(CodeWriter $codewriter, string $qname, string $expression): void
     {
         $tales_code = $this->extractEchoType($expression);
         $code = $codewriter->evaluateExpression($tales_code);
@@ -104,7 +110,7 @@ class Attributes extends Attribute implements TalesChainReaderInterface
             // I don't want to mix code for boolean with chained executor
             // so compile it again to simple expression
             if (is_array($code)) {
-                $code = \PhpTal\Php\TalesInternal::compileToPHPExpression($tales_code);
+                $code = TalesInternal::compileToPHPExpression($tales_code);
             }
             $this->prepareBooleanAttribute($codewriter, $qname, $code);
             return;
@@ -133,7 +139,7 @@ class Attributes extends Attribute implements TalesChainReaderInterface
      * @param string $qname
      * @param string $code
      */
-    private function prepareAttributeUnconditional(CodeWriter $codewriter, $qname, $code)
+    private function prepareAttributeUnconditional(CodeWriter $codewriter, string $qname, string $code): void
     {
         // regular attribute which value is the evaluation of $code
         $attkey = $this->getVarName($codewriter);
@@ -155,7 +161,7 @@ class Attributes extends Attribute implements TalesChainReaderInterface
      *
      * @throws \PhpTal\Exception\PhpTalException
      */
-    private function prepareAttributeConditional(CodeWriter $codewriter, $qname, $code)
+    private function prepareAttributeConditional(CodeWriter $codewriter, string $qname, string $code): void
     {
         // regular attribute which value is the evaluation of $code
         $attkey = $this->getVarName($codewriter);
@@ -183,8 +189,9 @@ class Attributes extends Attribute implements TalesChainReaderInterface
      * @param array $chain
      *
      * @return void
+     * @throws \PhpTal\Exception\PhpTalException
      */
-    private function prepareChainedAttribute(CodeWriter $codewriter, $qname, $chain)
+    private function prepareChainedAttribute(CodeWriter $codewriter, string $qname, array $chain): void
     {
         $this->default_escaped = false;
         $this->attribute = $qname;
@@ -206,11 +213,11 @@ class Attributes extends Attribute implements TalesChainReaderInterface
      * @return void
      * @throws \PhpTal\Exception\PhpTalException
      */
-    private function prepareBooleanAttribute(CodeWriter $codewriter, $qname, $code)
+    private function prepareBooleanAttribute(CodeWriter $codewriter, string $qname, string $code): void
     {
         $attkey = $this->getVarName($codewriter);
 
-        if ($codewriter->getOutputMode() === \PhpTal\PHPTAL::HTML5) {
+        if ($codewriter->getOutputMode() === PHPTAL::HTML5) {
             $value = "' $qname'";
         } else {
             $value = "' $qname=\"$qname\"'";
@@ -228,7 +235,7 @@ class Attributes extends Attribute implements TalesChainReaderInterface
      *
      * @return string
      */
-    private function getVarName(CodeWriter $codewriter)
+    private function getVarName(CodeWriter $codewriter): string
     {
         $var = $codewriter->createTempVariable();
         $this->vars_to_recycle[] = $var;
@@ -244,7 +251,7 @@ class Attributes extends Attribute implements TalesChainReaderInterface
      * @return void
      * @throws \PhpTal\Exception\PhpTalException
      */
-    public function after(CodeWriter $codewriter)
+    public function after(CodeWriter $codewriter): void
     {
         foreach ($this->vars_to_recycle as $var) {
             $codewriter->recycleTempVariable($var);
@@ -254,8 +261,9 @@ class Attributes extends Attribute implements TalesChainReaderInterface
     /**
      * @param TalesChainExecutor $executor
      * @return void
+     * @throws \PhpTal\Exception\PhpTalException
      */
-    public function talesChainNothingKeyword(TalesChainExecutor $executor)
+    public function talesChainNothingKeyword(TalesChainExecutor $executor): void
     {
         $codewriter = $executor->getCodeWriter();
         $executor->doElse();
@@ -270,8 +278,9 @@ class Attributes extends Attribute implements TalesChainReaderInterface
      * @param TalesChainExecutor $executor
      *
      * @return void
+     * @throws \PhpTal\Exception\PhpTalException
      */
-    public function talesChainDefaultKeyword(TalesChainExecutor $executor)
+    public function talesChainDefaultKeyword(TalesChainExecutor $executor): void
     {
         $codewriter = $executor->getCodeWriter();
         $executor->doElse();
@@ -284,19 +293,20 @@ class Attributes extends Attribute implements TalesChainReaderInterface
 
     /**
      * @param TalesChainExecutor $executor
-     * @param string $exp
+     * @param string $expression
      * @param bool $islast
      *
      * @return void
+     * @throws \PhpTal\Exception\PhpTalException
      */
-    public function talesChainPart(TalesChainExecutor $executor, $exp, $islast)
+    public function talesChainPart(TalesChainExecutor $executor, string $expression, bool $islast): void
     {
         $codewriter = $executor->getCodeWriter();
 
         if (!$islast) {
-            $condition = "!\PhpTal\Helper::phptal_isempty($this->attkey = ($exp))";
+            $condition = "!\PhpTal\Helper::phptal_isempty($this->attkey = ($expression))";
         } else {
-            $condition = "null !== ($this->attkey = ($exp))";
+            $condition = "null !== ($this->attkey = ($expression))";
         }
         $executor->doIf($condition);
 

@@ -1,4 +1,7 @@
 <?php
+declare(strict_types=1);
+
+
 /**
  * PHPTAL templating engine
  *
@@ -54,7 +57,7 @@ abstract class Node
      * @param string $value_escaped
      * @param string $encoding
      */
-    public function __construct($value_escaped, $encoding)
+    public function __construct(string $value_escaped, string $encoding)
     {
         $this->value_escaped = $value_escaped;
         $this->encoding = $encoding;
@@ -66,7 +69,7 @@ abstract class Node
      * @param string $file
      * @param int $line
      */
-    public function setSource($file, $line)
+    public function setSource(string $file, int $line): void
     {
         $this->source_file = $file;
         $this->source_line = $line;
@@ -77,7 +80,7 @@ abstract class Node
      *
      * @return string
      */
-    public function getSourceFile()
+    public function getSourceFile(): string
     {
         return $this->source_file;
     }
@@ -87,7 +90,7 @@ abstract class Node
      *
      * @return int
      */
-    public function getSourceLine()
+    public function getSourceLine(): int
     {
         return $this->source_line;
     }
@@ -97,7 +100,7 @@ abstract class Node
      *
      * @return string
      */
-    public function getValueEscaped()
+    public function getValueEscaped(): string
     {
         return preg_replace('/<\?(php|=)/mi', '<_', $this->value_escaped);
     }
@@ -108,7 +111,7 @@ abstract class Node
      *
      * @param string $value_escaped new content
      */
-    public function setValueEscaped($value_escaped)
+    public function setValueEscaped(string $value_escaped): void
     {
         $this->value_escaped = $value_escaped;
     }
@@ -119,7 +122,7 @@ abstract class Node
      *
      * @return string
      */
-    public function getValue()
+    public function getValue(): string
     {
         return html_entity_decode($this->getValueEscaped(), ENT_QUOTES, $this->encoding);
     }
@@ -129,7 +132,7 @@ abstract class Node
      *
      * @return string
      */
-    public function getEncoding()
+    public function getEncoding(): string
     {
         return $this->encoding;
     }
@@ -139,12 +142,12 @@ abstract class Node
      *
      * @param CodeWriter $codewriter
      */
-    abstract public function generateCode(CodeWriter $codewriter);
+    abstract public function generateCode(CodeWriter $codewriter): void;
 
     /**
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return ' “' . $this->getValue() . '” ';
     }

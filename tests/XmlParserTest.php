@@ -1,4 +1,7 @@
 <?php
+
+use Tests\Testhelper\MyDocumentBuilder;
+
 /**
  * PHPTAL templating engine
  *
@@ -11,8 +14,6 @@
  * @license  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
  * @link     http://phptal.org/
  */
-
-
 
 class XmlParserTest extends PHPTAL_TestCase
 {
@@ -286,86 +287,4 @@ xxxx/>
         <html xmlns="http://www.w3.org/1999/xhtml" xmlns:spry="http://ns.adobe.com/spry"><body><form>
         <input type="text" value="ok" spry:if="i == 1"/></form></body></html>', $tpl->execute());
     }
-
 }
-
-class MyDocumentBuilder extends \PhpTal\Dom\DocumentBuilder
-{
-    public $result;
-    public $elementStarts = 0;
-    public $elementCloses = 0;
-    public $specifics = 0;
-    public $datas = 0;
-    public $allow_xmldec = true;
-
-    public function __construct()
-    {
-        $this->result = '';
-        parent::__construct();
-    }
-
-    public function onDoctype($dt)
-    {
-        $this->specifics++;
-        $this->allow_xmldec = false;
-        $this->result .= $dt;
-    }
-
-    public function onXmlDecl($decl)
-    {
-        if (!$this->allow_xmldec) throw new Exception("more than one xml decl");
-        $this->specifics++;
-        $this->allow_xmldec = false;
-        $this->result .= $decl;
-    }
-
-    public function onCDATASection($data)
-    {
-        $this->onProcessingInstruction('<![CDATA['.$data.']]>');
-    }
-
-    public function onProcessingInstruction($data)
-    {
-        $this->specifics++;
-        $this->allow_xmldec = false;
-        $this->result .= $data;
-    }
-
-    public function onComment($data)
-    {
-        $this->onProcessingInstruction('<!--'.$data.'-->');
-    }
-
-    public function onElementStart($name, array $attributes)
-    {
-        $this->allow_xmldec = false;
-        $this->elementStarts++;
-        $this->result .= "<$name";
-        $pairs = array();
-        foreach ($attributes as $key=>$value) $pairs[] =  "$key=\"$value\"";
-        if (count($pairs) > 0) {
-            $this->result .= ' ' . join(' ', $pairs);
-        }
-        $this->result .= '>';
-    }
-
-    public function onElementClose($name)
-    {
-        $this->allow_xmldec = false;
-        $this->elementCloses++;
-        $this->result .= "</$name>";
-    }
-
-    public function onElementData($data)
-    {
-        $this->datas++;
-        $this->result .= $data;
-    }
-
-    public function onDocumentStart(){}
-    public function onDocumentEnd(){}
-    public function getResult(){return $this->result;}
-    public function setEncoding($e) {}
-}
-
-

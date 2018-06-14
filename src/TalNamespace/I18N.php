@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * PHPTAL templating engine
  *
@@ -14,6 +16,9 @@
 
 namespace PhpTal\TalNamespace;
 
+use PhpTal\TalNamespaceAttributeContent;
+use PhpTal\TalNamespaceAttributeSurround;
+
 /**
  * @package PHPTAL
  */
@@ -22,9 +27,9 @@ class I18N extends Builtin
     public function __construct()
     {
         parent::__construct('i18n', Builtin::NS_I18N);
-        $this->addAttribute(new \PhpTal\TalNamespaceAttributeContent('translate', 5));
-        $this->addAttribute(new \PhpTal\TalNamespaceAttributeSurround('name', 5));
-        $this->addAttribute(new \PhpTal\TalNamespaceAttributeSurround('attributes', 10));
-        $this->addAttribute(new \PhpTal\TalNamespaceAttributeSurround('domain', 3));
+        $this->addAttribute(new TalNamespaceAttributeContent('translate', 5));
+        $this->addAttribute(new TalNamespaceAttributeSurround('name', 5));
+        $this->addAttribute(new TalNamespaceAttributeSurround('attributes', 10));
+        $this->addAttribute(new TalNamespaceAttributeSurround('domain', 3));
     }
 }

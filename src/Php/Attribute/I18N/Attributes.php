@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * PHPTAL templating engine
  *
@@ -16,6 +18,7 @@ namespace PhpTal\Php\Attribute\I18N;
 
 use PhpTal\Dom\Attr;
 use PhpTal\Exception\TemplateException;
+use PhpTal\Php\Attribute;
 use PhpTal\Php\CodeWriter;
 use PhpTal\Php\TalesInternal;
 
@@ -64,22 +67,22 @@ use PhpTal\Php\TalesInternal;
  *
  * @package PHPTAL
  */
-class Attributes extends \PhpTal\Php\Attribute
+class Attributes extends Attribute
 {
     /**
      * Called before element printing.
      * @param CodeWriter $codewriter
-     * @throws \PhpTal\Exception\ConfigurationException
      * @throws TemplateException
+     * @throws \PhpTal\Exception\ConfigurationException
      */
-    public function before(CodeWriter $codewriter)
+    public function before(CodeWriter $codewriter): void
     {
         // split attributes to translate
         foreach ($codewriter->splitExpression($this->expression) as $exp) {
-            list($qname, $key) = $this->parseSetExpression($exp);
+            [$qname, $key] = $this->parseSetExpression($exp);
 
             // if the translation key is specified and not empty (but may be '0')
-            if (strlen($key)) {
+            if (strlen($key ?? '')) {
                 // we use it and replace the tag attribute with the result of the translation
                 $code = $this->getTranslationCode($codewriter, $key);
             } else {
@@ -113,17 +116,21 @@ class Attributes extends \PhpTal\Php\Attribute
      * Called after element printing.
      * @param CodeWriter $codewriter
      */
-    public function after(CodeWriter $codewriter)
+    public function after(CodeWriter $codewriter): void
     {
     }
 
     /**
      * @param CodeWriter $codewriter
      * @param string $key - unescaped string (not PHP code) for the key
+     *
      * @return string
      * @throws \PhpTal\Exception\ConfigurationException
+     * @throws \PhpTal\Exception\ParserException
+     * @throws \PhpTal\Exception\UnknownModifierException
+     * @throws \ReflectionException
      */
-    private function getTranslationCode(CodeWriter $codewriter, $key)
+    private function getTranslationCode(CodeWriter $codewriter, string $key): string
     {
         $code = '';
         if (preg_match_all('/\$\{(.*?)\}/', $key, $m)) {

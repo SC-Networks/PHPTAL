@@ -15,7 +15,7 @@
 class PHPTAL_TestCodeCache extends PhpTal\PHPTAL
 {
     public $testHasParsed = false;
-    function parse()
+    function parse(): string
     {
         $this->testHasParsed = true;
         return parent::parse();

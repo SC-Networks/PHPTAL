@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * PHPTAL templating engine
  *
@@ -15,8 +17,10 @@
 namespace PhpTal\Php\Attribute\TAL;
 
 use PhpTal\Exception\ParserException;
+use PhpTal\Php\Attribute;
 use PhpTal\Php\CodeWriter;
 use PhpTal\Php\TalesChainExecutor;
+use PhpTal\Php\TalesChainReaderInterface;
 use PhpTal\Php\TalesInternal;
 
 /**
@@ -35,7 +39,7 @@ use PhpTal\Php\TalesInternal;
  * @package PHPTAL
  * @author Laurent Bedubourg <lbedubourg@motion-twin.com>
  */
-class Condition extends \PhpTal\Php\Attribute implements \PhpTal\Php\TalesChainReaderInterface
+class Condition extends Attribute implements TalesChainReaderInterface
 {
     /**
      * @var array
@@ -48,8 +52,13 @@ class Condition extends \PhpTal\Php\Attribute implements \PhpTal\Php\TalesChainR
      * @param CodeWriter $codewriter
      *
      * @return void
+     * @throws ParserException
+     * @throws \PhpTal\Exception\PhpNotAllowedException
+     * @throws \PhpTal\Exception\PhpTalException
+     * @throws \PhpTal\Exception\UnknownModifierException
+     * @throws \ReflectionException
      */
-    public function before(CodeWriter $codewriter)
+    public function before(CodeWriter $codewriter): void
     {
         $code = $codewriter->evaluateExpression($this->expression);
 
@@ -76,7 +85,7 @@ class Condition extends \PhpTal\Php\Attribute implements \PhpTal\Php\TalesChainR
      * @return void
      * @throws \PhpTal\Exception\PhpTalException
      */
-    public function after(CodeWriter $codewriter)
+    public function after(CodeWriter $codewriter): void
     {
         $codewriter->doEnd('if');
     }
@@ -84,16 +93,17 @@ class Condition extends \PhpTal\Php\Attribute implements \PhpTal\Php\TalesChainR
 
     /**
      * @param TalesChainExecutor $executor
-     * @param string $exp
+     * @param string $expression
      * @param bool $islast
      *
      * @return void
+     * @throws \PhpTal\Exception\PhpTalException
      */
-    public function talesChainPart(TalesChainExecutor $executor, $exp, $islast)
+    public function talesChainPart(TalesChainExecutor $executor, string $expression, bool $islast): void
     {
         // check if the expression is empty
-        if ($exp !== 'false') {
-            $this->expressions[] = '!\PhpTal\Helper::phptal_isempty(' . $exp . ')';
+        if ($expression !== 'false') {
+            $this->expressions[] = '!\PhpTal\Helper::phptal_isempty(' . $expression . ')';
         }
 
         if ($islast) {
@@ -108,8 +118,9 @@ class Condition extends \PhpTal\Php\Attribute implements \PhpTal\Php\TalesChainR
      * @param TalesChainExecutor $executor
      *
      * @return void
+     * @throws \PhpTal\Exception\PhpTalException
      */
-    public function talesChainNothingKeyword(TalesChainExecutor $executor)
+    public function talesChainNothingKeyword(TalesChainExecutor $executor): void
     {
         // end the chain
         $this->talesChainPart($executor, 'false', true);
@@ -122,7 +133,7 @@ class Condition extends \PhpTal\Php\Attribute implements \PhpTal\Php\TalesChainR
      * @return void
      * @throws ParserException
      */
-    public function talesChainDefaultKeyword(TalesChainExecutor $executor)
+    public function talesChainDefaultKeyword(TalesChainExecutor $executor): void
     {
         throw new ParserException(
             '\'default\' keyword not allowed on conditional expressions',

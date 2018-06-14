@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * PHPTAL templating engine
  *
@@ -35,26 +37,26 @@ class XmlnsState
     private $prefix_to_uri;
 
     /**
-     * @var mixed
+     * @var string
      */
     private $current_default;
 
     /** Create a new XMLNS state inheriting provided aliases.
      * @param array $prefix_to_uri
-     * @param $current_default
+     * @param string $current_default
      */
-    public function __construct(array $prefix_to_uri, $current_default)
+    public function __construct(array $prefix_to_uri, string $current_default)
     {
         $this->prefix_to_uri = $prefix_to_uri;
         $this->current_default = $current_default;
     }
 
     /**
-     * @param $prefix
+     * @param string $prefix
      *
-     * @return bool|mixed|string
+     * @return string
      */
-    public function prefixToNamespaceURI($prefix)
+    public function prefixToNamespaceURI(string $prefix): ?string
     {
         if ($prefix === 'xmlns') {
             return Builtin::NS_XMLNS;
@@ -79,7 +81,7 @@ class XmlnsState
      *
      * @return bool
      */
-    public function isValidAttributeNS($namespace_uri, $local_name)
+    public function isValidAttributeNS(string $namespace_uri, string $local_name): bool
     {
         return Defs::getInstance()->isValidAttributeNS($namespace_uri, $local_name);
     }
@@ -89,7 +91,7 @@ class XmlnsState
      *
      * @return bool
      */
-    public function isHandledNamespace($namespace_uri)
+    public function isHandledNamespace(string $namespace_uri): bool
     {
         return Defs::getInstance()->isHandledNamespace($namespace_uri);
     }
@@ -105,7 +107,7 @@ class XmlnsState
      *
      * @return XmlnsState
      */
-    public function newElement(array $nodeAttributes)
+    public function newElement(array $nodeAttributes): XmlnsState
     {
         $prefix_to_uri = $this->prefix_to_uri;
         $current_default = $this->current_default;
@@ -114,7 +116,7 @@ class XmlnsState
         foreach ($nodeAttributes as $qname => $value) {
             if (preg_match('/^xmlns:(.+)$/', $qname, $m)) {
                 $changed = true;
-                list(, $prefix) = $m;
+                [, $prefix] = $m;
                 $prefix_to_uri[$prefix] = $value;
             }
 
@@ -131,9 +133,9 @@ class XmlnsState
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getCurrentDefaultNamespaceURI()
+    public function getCurrentDefaultNamespaceURI(): string
     {
         return $this->current_default;
     }

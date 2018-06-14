@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * PHPTAL templating engine
  *
@@ -14,12 +16,13 @@
 
 namespace PhpTal\Php\Attribute\TAL;
 
+use PhpTal\Php\Attribute;
 use PhpTal\Php\CodeWriter;
 
 /**
  * @package PHPTAL
  */
-class Comment extends \PhpTal\Php\Attribute
+class Comment extends Attribute
 {
     /**
      * Called before element printing.
@@ -28,7 +31,7 @@ class Comment extends \PhpTal\Php\Attribute
      *
      * @return void
      */
-    public function before(CodeWriter $codewriter)
+    public function before(CodeWriter $codewriter): void
     {
         $codewriter->doComment($this->expression);
     }
@@ -40,7 +43,7 @@ class Comment extends \PhpTal\Php\Attribute
      *
      * @return void
      */
-    public function after(CodeWriter $codewriter)
+    public function after(CodeWriter $codewriter): void
     {
     }
 }

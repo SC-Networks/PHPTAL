@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * PHPTAL templating engine
  *
@@ -23,5 +25,5 @@ interface KeywordsInterface extends \Countable
     /**
      * @return string
      */
-    public function __toString();
+    public function __toString(): string;
 }

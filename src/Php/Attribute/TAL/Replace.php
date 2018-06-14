@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * PHPTAL templating engine
  *
@@ -17,6 +19,8 @@ namespace PhpTal\Php\Attribute\TAL;
 use PhpTal\Php\Attribute;
 use PhpTal\Php\CodeWriter;
 use PhpTal\Php\TalesChainExecutor;
+use PhpTal\Php\TalesChainReaderInterface;
+use PhpTal\Php\TalesInternal;
 
 /**
  * TAL Specifications 1.4
@@ -35,7 +39,7 @@ use PhpTal\Php\TalesChainExecutor;
  * @package PHPTAL
  * @author Laurent Bedubourg <lbedubourg@motion-twin.com>
  */
-class Replace extends Attribute implements \PhpTal\Php\TalesChainReaderInterface
+class Replace extends Attribute implements TalesChainReaderInterface
 {
     /**
      * Called before element printing.
@@ -43,10 +47,13 @@ class Replace extends Attribute implements \PhpTal\Php\TalesChainReaderInterface
      * @param CodeWriter $codewriter
      *
      * @return void
+     * @throws \PhpTal\Exception\ParserException
+     * @throws \PhpTal\Exception\PhpNotAllowedException
      * @throws \PhpTal\Exception\PhpTalException
+     * @throws \PhpTal\Exception\UnknownModifierException
      * @throws \ReflectionException
      */
-    public function before(CodeWriter $codewriter)
+    public function before(CodeWriter $codewriter): void
     {
         // tal:replace="" => do nothing and ignore node
         if (trim($this->expression) === '') {
@@ -63,12 +70,12 @@ class Replace extends Attribute implements \PhpTal\Php\TalesChainReaderInterface
         }
 
         // nothing do nothing
-        if ($code === \PhpTal\Php\TalesInternal::NOTHING_KEYWORD) {
+        if ($code === TalesInternal::NOTHING_KEYWORD) {
             return;
         }
 
         // default generate default tag content
-        if ($code === \PhpTal\Php\TalesInternal::DEFAULT_KEYWORD) {
+        if ($code === TalesInternal::DEFAULT_KEYWORD) {
             $this->generateDefault($codewriter);
             return;
         }
@@ -84,7 +91,7 @@ class Replace extends Attribute implements \PhpTal\Php\TalesChainReaderInterface
      *
      * @return void
      */
-    public function after(CodeWriter $codewriter)
+    public function after(CodeWriter $codewriter): void
     {
     }
 
@@ -106,7 +113,7 @@ class Replace extends Attribute implements \PhpTal\Php\TalesChainReaderInterface
      *
      * @return void
      */
-    public function talesChainNothingKeyword(TalesChainExecutor $executor)
+    public function talesChainNothingKeyword(TalesChainExecutor $executor): void
     {
         $executor->continueChain();
     }
@@ -117,7 +124,7 @@ class Replace extends Attribute implements \PhpTal\Php\TalesChainReaderInterface
      * @return void
      * @throws \PhpTal\Exception\PhpTalException
      */
-    public function talesChainDefaultKeyword(TalesChainExecutor $executor)
+    public function talesChainDefaultKeyword(TalesChainExecutor $executor): void
     {
         $executor->doElse();
         $this->generateDefault($executor->getCodeWriter());
@@ -126,22 +133,22 @@ class Replace extends Attribute implements \PhpTal\Php\TalesChainReaderInterface
 
     /**
      * @param TalesChainExecutor $executor
-     * @param string $exp
+     * @param string $expression
      * @param bool $islast
      *
      * @return void
      * @throws \PhpTal\Exception\PhpTalException
      */
-    public function talesChainPart(TalesChainExecutor $executor, $exp, $islast)
+    public function talesChainPart(TalesChainExecutor $executor, string $expression, bool $islast): void
     {
         if (!$islast) {
             $var = $executor->getCodeWriter()->createTempVariable();
-            $executor->doIf('!\PhpTal\Helper::phptal_isempty('.$var.' = '.$exp.')');
+            $executor->doIf('!\PhpTal\Helper::phptal_isempty('.$var.' = '.$expression.')');
             $this->doEchoAttribute($executor->getCodeWriter(), $var);
             $executor->getCodeWriter()->recycleTempVariable($var);
         } else {
             $executor->doElse();
-            $this->doEchoAttribute($executor->getCodeWriter(), $exp);
+            $this->doEchoAttribute($executor->getCodeWriter(), $expression);
         }
     }
 
@@ -151,7 +158,7 @@ class Replace extends Attribute implements \PhpTal\Php\TalesChainReaderInterface
      *
      * @throws \PhpTal\Exception\PhpTalException
      */
-    private function generateDefault(CodeWriter $codewriter)
+    private function generateDefault(CodeWriter $codewriter): void
     {
         $this->phpelement->generateSurroundHead($codewriter);
         $this->phpelement->generateHead($codewriter);

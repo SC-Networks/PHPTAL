@@ -1,4 +1,11 @@
 <?php
+
+namespace Tests;
+
+use Tests\Testhelper\CantFindAThing;
+use Tests\Testhelper\MyCustomSourceResolver;
+use Tests\Testhelper\MyTestResolver;
+
 /**
  * PHPTAL templating engine
  *
@@ -11,66 +18,15 @@
  * @link     http://phptal.org/
  */
 
-class MyTestResolver implements \PhpTal\SourceResolverInterface
+class SourceTest extends \PHPTAL_TestCase
 {
-    public $called=0;
-
-    function resolve($path)
-    {
-        $this->called++;
-        return new \PhpTal\StringSource("<p>found $path</p>");
-    }
-}
-
-class MyCustomSourceResolver implements \PhpTal\SourceResolverInterface
-{
-    function resolve($path)
-    {
-        return new MyCustomSource($path);
-    }
-}
-
-class MyCustomSource implements \PhpTal\SourceInterface
-{
-    function __construct($path)
-    {
-        $this->path = $path;
-    }
-
-    function getRealPath()
-    {
-        return NULL;
-    }
-
-    function getLastModifiedTime()
-    {
-        if ($this->path === 'nocache') return mt_rand();
-        return NULL;
-    }
-
-    function getData()
-    {
-        return '<p class="custom">'.$this->path.' '.mt_rand().'</p>';
-    }
-}
-
-class CantFindAThing implements \PhpTal\SourceResolverInterface
-{
-    function resolve($path)
-    {
-        return false;
-    }
-}
-
-class SourceTest extends PHPTAL_TestCase
-{
-    function testResolver()
+    public function testResolver()
     {
         $tpl = $this->newPHPTAL()->addSourceResolver(new MyTestResolver())->setTemplate("testing123");
         $this->assertEquals('<p>found testing123</p>', $tpl->execute());
     }
 
-    function testResolverCalledEachTime()
+    public function testResolverCalledEachTime()
     {
         $tpl = $this->newPHPTAL()->addSourceResolver($r = new MyTestResolver());
         $this->assertEquals(0,$r->called);
@@ -83,7 +39,7 @@ class SourceTest extends PHPTAL_TestCase
         $this->assertEquals(2,$r->called);
     }
 
-    function testCustomSource()
+    public function testCustomSource()
     {
         $tpl = $this->newPHPTAL()->addSourceResolver($r = new MyCustomSourceResolver());
         $tpl->setTemplate("xyz");
@@ -98,7 +54,7 @@ class SourceTest extends PHPTAL_TestCase
     }
 
 
-    function testCustomSourceCacheClear()
+    public function testCustomSourceCacheClear()
     {
         $tpl = $this->newPHPTAL()->addSourceResolver($r = new MyCustomSourceResolver());
         $tpl->setTemplate("nocache");
@@ -115,40 +71,40 @@ class SourceTest extends PHPTAL_TestCase
     /**
      * @expectedException \PhpTal\Exception\IOException
      */
-    function testFailsIfNotFound()
+    public function testFailsIfNotFound()
     {
         $tpl = $this->newPHPTAL()->addSourceResolver(new CantFindAThing())->setTemplate("something")->execute();
     }
 
-    function testFallsBack()
+    public function testFallsBack()
     {
         $this->newPHPTAL()->addSourceResolver(new CantFindAThing())->setTemplate('input/phptal.01.html')->execute();
     }
 
-    function testFallsBack2()
+    public function testFallsBack2()
     {
         $this->newPHPTAL()->addSourceResolver(new CantFindAThing())->addSourceResolver(new CantFindAThing())->setTemplate('input/phptal.01.html')->execute();
     }
 
-    function testFallsBack3()
+    public function testFallsBack3()
     {
         $res = $this->newPHPTAL()->addSourceResolver(new CantFindAThing())->addSourceResolver(new MyTestResolver())->setTemplate('test')->execute();
         $this->assertEquals('<p>found test</p>', $res);
     }
 
-    function testFallsBackToResolversFirst()
+    public function testFallsBackToResolversFirst()
     {
         $res = $this->newPHPTAL()->addSourceResolver(new CantFindAThing())->addSourceResolver(new MyTestResolver())->setTemplate('input/phptal.01.html')->execute();
         $this->assertEquals('<p>found input/phptal.01.html</p>', normalize_html($res));
     }
 
-    function testFallsBackToResolversFirst2()
+    public function testFallsBackToResolversFirst2()
     {
         $res = $this->newPHPTAL()->addSourceResolver(new MyTestResolver())->addSourceResolver(new CantFindAThing())->setTemplate('input/phptal.01.html')->execute();
         $this->assertEquals('<p>found input/phptal.01.html</p>', normalize_html($res));
     }
 
-    function testOrder()
+    public function testOrder()
     {
         $res = $this->newPHPTAL()->addSourceResolver(new MyTestResolver())->addSourceResolver(new MyCustomSourceResolver())->setTemplate('test1')->execute();
         $this->assertEquals('<p>found test1</p>', normalize_html($res));

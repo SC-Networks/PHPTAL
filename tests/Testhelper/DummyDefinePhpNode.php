@@ -21,7 +21,7 @@ class DummyDefinePhpNode extends Element
         // noop
     }
 
-    public function generateCode(CodeWriter $codewriter)
+    public function generateCode(CodeWriter $codewriter): void
     {
         // noop
     }

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * PHPTAL templating engine
  *
@@ -46,7 +48,7 @@ class TemplateException extends PhpTalException
      * @param string $srcFile
      * @param int $srcLine
      */
-    public function __construct($msg, $srcFile = '', $srcLine = 0)
+    public function __construct(string $msg, string $srcFile = '', int $srcLine = 0)
     {
         parent::__construct($msg);
 
@@ -67,7 +69,7 @@ class TemplateException extends PhpTalException
     /**
      * @return string the string representation of the exception.
      */
-    public function __toString()
+    public function __toString(): string
     {
         if (!$this->srcFile || $this->is_src_accurate) {
             return parent::__toString();
@@ -80,7 +82,7 @@ class TemplateException extends PhpTalException
      * @param string $srcFile
      * @param int $srcLine
      */
-    public function hintSrcPosition($srcFile, $srcLine)
+    public function hintSrcPosition(string $srcFile, int $srcLine): void
     {
         if ($srcFile && $srcLine) {
             if (!$this->is_src_accurate) {
@@ -103,7 +105,7 @@ class TemplateException extends PhpTalException
      *
      * @return false|int
      */
-    private function isTemplatePath($path)
+    private function isTemplatePath(string $path): int
     {
         return preg_match('/[\\\\\/]tpl_[0-9a-f]{8}_[^\\\\]+$/', $path);
     }
@@ -111,7 +113,7 @@ class TemplateException extends PhpTalException
     /**
      * @return array
      */
-    private function findFileAndLine()
+    private function findFileAndLine(): array
     {
         if ($this->isTemplatePath($this->file)) {
             return [$this->file, $this->line];
@@ -149,13 +151,13 @@ class TemplateException extends PhpTalException
      *
      * @return bool true if found accurate data
      */
-    private function setTemplateSource()
+    private function setTemplateSource(): bool
     {
         // not accurate, but better than null
         $this->srcFile = $this->file;
         $this->srcLine = $this->line;
 
-        list($file, $line) = $this->findFileAndLine();
+        [$file, $line] = $this->findFileAndLine();
 
         if ($file === null) {
             return false;

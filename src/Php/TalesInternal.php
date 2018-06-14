@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * PHPTAL templating engine
  *
@@ -18,6 +20,7 @@ namespace PhpTal\Php;
 use PhpTal\Exception\ParserException;
 use PhpTal\Exception\PhpNotAllowedException;
 use PhpTal\Exception\UnknownModifierException;
+use PhpTal\TalesInterface;
 use PhpTal\TalesRegistry;
 
 /**
@@ -52,10 +55,10 @@ use PhpTal\TalesRegistry;
 /**
  * @package PHPTAL
  */
-class TalesInternal implements \PhpTal\TalesInterface
+class TalesInternal implements TalesInterface
 {
-    const DEFAULT_KEYWORD = 'new \PhpTal\DefaultKeyword';
-    const NOTHING_KEYWORD = 'new \PhpTal\NothingKeyword';
+    public const DEFAULT_KEYWORD = 'new \PhpTal\DefaultKeyword';
+    public const NOTHING_KEYWORD = 'new \PhpTal\NothingKeyword';
 
     /**
      * @var bool
@@ -94,14 +97,13 @@ class TalesInternal implements \PhpTal\TalesInterface
 
     /**
      * @param string $src
-     * @param bool $nothrow
      *
      * @return string
      * @throws ParserException
      * @throws UnknownModifierException
      * @throws \ReflectionException
      */
-    public static function true($src, $nothrow)
+    public static function true(string $src): string
     {
         return '\PhpTal\Helper::phptal_true(' . self::compileToPHPExpression($src, true) . ')';
     }
@@ -138,7 +140,7 @@ class TalesInternal implements \PhpTal\TalesInterface
      * @throws UnknownModifierException
      * @throws \ReflectionException
      */
-    public static function not($expression, $nothrow)
+    public static function not(string $expression, bool $nothrow): string
     {
         return '!\PhpTal\Helper::phptal_true(' . self::compileToPHPExpression($expression, $nothrow) . ')';
     }
@@ -183,7 +185,7 @@ class TalesInternal implements \PhpTal\TalesInterface
      * @throws UnknownModifierException
      * @throws \ReflectionException
      */
-    public static function path($expression, $nothrow = false)
+    public static function path(?string $expression, ?bool $nothrow = null)
     {
         $expression = trim($expression);
         if ($expression === 'default') {
@@ -200,10 +202,10 @@ class TalesInternal implements \PhpTal\TalesInterface
 
         // split OR expressions terminated by a string
         if (preg_match('/^(.*?)\s*\|\s*?(string:.*)$/sm', $expression, $m)) {
-            list(, $expression, $string) = $m;
+            [, $expression, $string] = $m;
         } // split OR expressions terminated by a 'fast' string
         elseif (preg_match('/^(.*?)\s*\|\s*\'((?:[^\'\\\\]|\\\\.)*)\'\s*$/sm', $expression, $m)) {
-            list(, $expression, $string) = $m;
+            [, $expression, $string] = $m;
             $string = 'string:' . stripslashes($string);
         }
 
@@ -239,7 +241,9 @@ class TalesInternal implements \PhpTal\TalesInterface
             $expression = self::string($m[2]);
         } else {
             if (!self::checkExpressionPart($expression)) {
-                throw new ParserException("Invalid TALES path: '$expression', expected variable name. Complex expressions need php: modifier.");
+                throw new ParserException(
+                    "Invalid TALES path: '$expression', expected variable name. Complex expressions need php: modifier."
+                );
             }
 
             $next = self::string($expression);
@@ -275,7 +279,7 @@ class TalesInternal implements \PhpTal\TalesInterface
      *
      * @return false|int
      */
-    private static function checkExpressionPart($expression)
+    private static function checkExpressionPart(string $expression): int
     {
         $expression = preg_replace('/\${[^}]+}/', 'a', $expression); // pretend interpolation is done
         return preg_match('/^[a-z_][a-z0-9_]*$/i', $expression);
@@ -304,9 +308,9 @@ class TalesInternal implements \PhpTal\TalesInterface
      * @throws UnknownModifierException
      * @throws \ReflectionException
      */
-    public static function string($expression, $nothrow = false)
+    public static function string(string $expression, ?bool $nothrow = null): string
     {
-        return self::parseString($expression, $nothrow, '');
+        return self::parseString($expression, $nothrow ?? false, '');
     }
 
     /**
@@ -319,7 +323,7 @@ class TalesInternal implements \PhpTal\TalesInterface
      * @throws UnknownModifierException
      * @throws \ReflectionException
      */
-    public static function parseString($expression, $nothrow, $tales_prefix)
+    public static function parseString(string $expression, bool $nothrow, string $tales_prefix): string
     {
         // This is a simple parser which evaluates ${foo} inside
         // 'string:foo ${foo} bar' expressions, it returns the php code which will
@@ -445,7 +449,7 @@ class TalesInternal implements \PhpTal\TalesInterface
      * @throws ParserException
      * @throws PhpNotAllowedException
      */
-    public static function php($src)
+    public static function php(string $src): string
     {
         if (!static::isPhpModifierAllowed()) {
             throw new PhpNotAllowedException('The php modifier has been disabled, you must not use it.');
@@ -469,7 +473,7 @@ class TalesInternal implements \PhpTal\TalesInterface
      * @throws UnknownModifierException
      * @throws \ReflectionException
      */
-    public static function exists($src, $nothrow)
+    public static function exists(string $src): string
     {
         $src = trim($src);
         if (ctype_alnum($src)) {
@@ -489,7 +493,7 @@ class TalesInternal implements \PhpTal\TalesInterface
      * @return string
      * @throws ParserException
      */
-    public static function number($src, $nothrow)
+    public static function number(string $src): string
     {
         if (!is_numeric(trim($src))) {
             throw new ParserException("'$src' is not a number");
@@ -501,14 +505,14 @@ class TalesInternal implements \PhpTal\TalesInterface
      * json: modifier. Serializes anything as JSON.
      *
      * @param string $src
-     * @param string $nothrow
+     * @param bool $nothrow
      *
      * @return string
      * @throws ParserException
      * @throws UnknownModifierException
      * @throws \ReflectionException
      */
-    public static function json($src, $nothrow)
+    public static function json(string $src, bool $nothrow): string
     {
         return 'json_encode(' . static::compileToPHPExpression($src, $nothrow) . ')';
     }
@@ -524,7 +528,7 @@ class TalesInternal implements \PhpTal\TalesInterface
      * @throws UnknownModifierException
      * @throws \ReflectionException
      */
-    public static function urlencode($src, $nothrow)
+    public static function urlencode(string $src, bool $nothrow): string
     {
         return 'rawurlencode(' . static::compileToPHPExpression($src, $nothrow) . ')';
     }
@@ -543,7 +547,7 @@ class TalesInternal implements \PhpTal\TalesInterface
      * @throws UnknownModifierException
      * @throws \ReflectionException
      */
-    public static function compileToPHPExpression($expression, $nothrow = false)
+    public static function compileToPHPExpression(string $expression, ?bool $nothrow = null): string
     {
         $r = self::compileToPHPExpressions($expression, $nothrow);
         if (!is_array($r)) {
@@ -560,7 +564,7 @@ class TalesInternal implements \PhpTal\TalesInterface
      *
      * @return string
      */
-    private static function convertExpressionsToExpression(array $array, $nothrow)
+    private static function convertExpressionsToExpression(array $array, ?bool $nothrow): string
     {
         if (count($array) === 1) {
             return '($ctx->noThrow(' . ($nothrow ? 'true' : 'false') . ')||1?(' .
@@ -589,14 +593,14 @@ class TalesInternal implements \PhpTal\TalesInterface
      * @throws UnknownModifierException
      * @throws \ReflectionException
      */
-    public static function compileToPHPExpressions($expression, $nothrow = false)
+    public static function compileToPHPExpressions(?string $expression, ?bool $nothrow = null)
     {
-        $expression = trim($expression);
+        $expression = trim($expression ?? '');
         $typePrefix = null;
 
         // Look for tales modifier (string:, exists:, Namespaced\Tale:, etc...)
         if (preg_match('/^([a-z](?:[a-z0-9._\\\\-]*[a-z0-9])?):(.*)$/si', $expression, $m)) {
-            list(, $typePrefix, $expression) = $m;
+            [, $typePrefix, $expression] = $m;
         } // may be a 'string'
         elseif (preg_match('/^\'((?:[^\']|\\\\.)*)\'$/s', $expression, $m)) {
             $expression = stripslashes($m[1]);
@@ -609,7 +613,7 @@ class TalesInternal implements \PhpTal\TalesInterface
         // is a registered TALES expression modifier
         $callback = TalesRegistry::getCallback($typePrefix);
         if ($callback !== null) {
-            $result = $callback($expression, $nothrow);
+            $result = $callback($expression, $nothrow ?? false);
             self::verifyPHPExpressions($typePrefix, $result);
             return $result;
         }
@@ -621,12 +625,12 @@ class TalesInternal implements \PhpTal\TalesInterface
 
     /**
      * @param string $typePrefix
-     * @param array $expressions
+     * @param array|string $expressions
      *
      * @return void
      * @throws ParserException
      */
-    private static function verifyPHPExpressions($typePrefix, $expressions)
+    private static function verifyPHPExpressions(string $typePrefix, $expressions): void
     {
         if (!is_array($expressions)) {
             $expressions = [$expressions];
@@ -634,7 +638,9 @@ class TalesInternal implements \PhpTal\TalesInterface
 
         foreach ($expressions as $expr) {
             if (preg_match('/;\s*$/', $expr)) {
-                throw new ParserException("Modifier $typePrefix generated PHP statement rather than expression (don't add semicolons)");
+                throw new ParserException(
+                    "Modifier $typePrefix generated PHP statement rather than expression (don't add semicolons)"
+                );
             }
         }
     }
@@ -642,7 +648,7 @@ class TalesInternal implements \PhpTal\TalesInterface
     /**
      * @return bool
      */
-    public static function isPhpModifierAllowed()
+    public static function isPhpModifierAllowed(): bool
     {
         return static::$phpModifierAllowed;
     }
@@ -650,9 +656,9 @@ class TalesInternal implements \PhpTal\TalesInterface
     /**
      * @param bool $phpModifierAllowed
      */
-    public static function setPhpModifierAllowed($phpModifierAllowed)
+    public static function setPhpModifierAllowed(bool $phpModifierAllowed): void
     {
-        static::$phpModifierAllowed = (bool) $phpModifierAllowed;
+        static::$phpModifierAllowed = $phpModifierAllowed;
     }
 
 

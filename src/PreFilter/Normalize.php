@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * PHPTAL templating engine
  *
@@ -13,14 +15,16 @@
 
 namespace PhpTal\PreFilter;
 
+use PhpTal\Dom\Attr;
 use PhpTal\Dom\Element;
 use PhpTal\Dom\Text;
+use PhpTal\PreFilter;
 use PhpTal\TalNamespace\Builtin;
 
 /**
  * Collapses conscutive whitespace, trims attributes, merges adjacent text nodes
  */
-class Normalize extends \PhpTal\PreFilter
+class Normalize extends PreFilter
 {
     /**
      * Receives template source code and is expected to return new source.
@@ -32,7 +36,7 @@ class Normalize extends \PhpTal\PreFilter
      *
      * @return string
      */
-    public function filter($src)
+    public function filter(string $src): string
     {
         return str_replace("\r\n", "\n", $src);
     }
@@ -50,7 +54,7 @@ class Normalize extends \PhpTal\PreFilter
      * @return void
      * @throws \PhpTal\Exception\PhpTalException
      */
-    public function filterDOM(Element $root)
+    public function filterDOM(Element $root): void
     {
         // let xml:space=preserve preserve attributes as well
         if ($root->getAttributeNS(Builtin::NS_XML, 'space') === 'preserve') {
@@ -99,7 +103,7 @@ class Normalize extends \PhpTal\PreFilter
      *
      * @return bool
      */
-    protected function isSpaceSensitiveInXHTML(Element $element)
+    protected function isSpaceSensitiveInXHTML(Element $element): bool
     {
         $ln = $element->getLocalName();
         $namespaceURI = $element->getNamespaceURI();
@@ -113,7 +117,7 @@ class Normalize extends \PhpTal\PreFilter
      * @return void
      * @throws \PhpTal\Exception\PhpTalException
      */
-    protected function findElementToFilter(Element $root)
+    protected function findElementToFilter(Element $root): void
     {
         foreach ($root->childNodes as $node) {
             if (!$node instanceof Element) {
@@ -134,7 +138,7 @@ class Normalize extends \PhpTal\PreFilter
      *
      * @return string
      */
-    protected function normalizeSpace($text, $encoding)
+    protected function normalizeSpace(string $text, string $encoding): string
     {
         $utf_regex_mod = $encoding === 'UTF-8' ? 'u' : '';
 
@@ -143,13 +147,14 @@ class Normalize extends \PhpTal\PreFilter
 
     /**
      * @param Element $element
+     *
      * @return void
      */
-    protected function normalizeAttributes(Element $element)
+    protected function normalizeAttributes(Element $element): void
     {
         foreach ($element->getAttributeNodes() as $attrnode) {
             // skip replaced attributes (because getValueEscaped on them is meaningless)
-            if ($attrnode->getReplacedState() !== \PhpTal\Dom\Attr::NOT_REPLACED) {
+            if ($attrnode->getReplacedState() !== Attr::NOT_REPLACED) {
                 continue;
             }
 

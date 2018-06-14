@@ -12,6 +12,7 @@
  * @link     http://phptal.org/
  */
 
+declare(strict_types=1);
 
 class PhptalTest extends PHPTAL_TestCase
 {
@@ -163,7 +164,7 @@ class PhptalTest extends PHPTAL_TestCase
     {
         try {
             $tpl = $this->newPHPTAL();
-            $tpl->setOutputMode('unknown');
+            $tpl->setOutputMode(999);
             $this->assertTrue(false);
         }
         catch (\PhpTal\Exception\PhpTalException $e)
@@ -191,17 +192,9 @@ class PhptalTest extends PHPTAL_TestCase
 
     function testDirAsTemplate()
     {
-        try {
-            $tpl = $this->newPHPTAL(dirname(__FILE__));
+            $tpl = $this->newPHPTAL(__DIR__);
+            $this->expectException(\PhpTal\Exception\IOException::class);
             $tpl->execute();
-            $this->fail("Executed directory as if it was a template file");
-        }
-        catch(\PhpTal\Exception\IOException $e) {
-            // ok
-        }
-        catch(\PhpTal\Exception\PhpTalException $e) {
-            $this->fail("Thrown exception ".get_class($e)." (".$e->getMessage().") rather than \PhpTal\Exception\IOException");
-        }
     }
 
     function testEncodingUppercase()
@@ -224,10 +217,6 @@ class PhptalTest extends PHPTAL_TestCase
             @$tpl->execute(); // if test dies for no apparent reason, the reason is '@'
         }
         catch(\Throwable $e) {
-            ob_end_clean();
-            throw $e;
-        }
-        catch(\Exception $e) {
             ob_end_clean();
             throw $e;
         }

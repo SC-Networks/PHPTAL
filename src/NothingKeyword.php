@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * PHPTAL templating engine
  *
@@ -23,7 +25,7 @@ class NothingKeyword implements KeywordsInterface
     /**
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return 'null';
     }
@@ -31,7 +33,7 @@ class NothingKeyword implements KeywordsInterface
     /**
      * @return int
      */
-    public function count()
+    public function count(): int
     {
         return 0;
     }
@@ -39,7 +41,7 @@ class NothingKeyword implements KeywordsInterface
     /**
      * @return null
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): ?string
     {
         return null;
     }

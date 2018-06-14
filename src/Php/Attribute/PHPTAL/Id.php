@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * PHPTAL templating engine
  *
@@ -14,13 +16,14 @@
 
 namespace PhpTal\Php\Attribute\PHPTAL;
 
+use PhpTal\Php\Attribute;
 use PhpTal\Php\CodeWriter;
 
 /**
  * @package PHPTAL
  * @author Laurent Bedubourg <lbedubourg@motion-twin.com>
  */
-class Id extends \PhpTal\Php\Attribute
+class Id extends Attribute
 {
     /**
      * @var
@@ -34,7 +37,7 @@ class Id extends \PhpTal\Php\Attribute
      *
      * @return void
      */
-    public function before(CodeWriter $codewriter)
+    public function before(CodeWriter $codewriter): void
     {
         // retrieve trigger
         $this->var = $codewriter->createTempVariable();
@@ -58,7 +61,7 @@ class Id extends \PhpTal\Php\Attribute
      * @return void
      * @throws \PhpTal\Exception\PhpTalException
      */
-    public function after(CodeWriter $codewriter)
+    public function after(CodeWriter $codewriter): void
     {
         // end of if PROCEED
         $codewriter->doEnd('if');

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * PHPTAL templating engine
  *
@@ -24,7 +26,7 @@ interface SourceResolverInterface
      *
      * @param string $path
      *
-     * @return FileSource
+     * @return SourceInterface|null
      */
-    public function resolve($path);
+    public function resolve(string $path): ?SourceInterface;
 }

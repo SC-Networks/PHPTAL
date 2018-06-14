@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * PHPTAL templating engine
  *
@@ -88,6 +90,8 @@ class RepeatController implements \Iterator
      * Construct a new RepeatController.
      *
      * @param mixed $source array, string, iterator, iterable.
+     *
+     * @todo welcome to hell, I'll be your guide
      */
     public function __construct($source)
     {
@@ -141,7 +145,7 @@ class RepeatController implements \Iterator
      *
      * @return bool     True if the iteration is not finished yet
      */
-    public function valid()
+    public function valid(): bool
     {
         $valid = $this->valid || $this->validOnNext;
         $this->validOnNext = $this->valid;
@@ -152,7 +156,7 @@ class RepeatController implements \Iterator
     /**
      * @return int
      */
-    public function length()
+    public function length(): ?int
     {
         if ($this->length === null) {
             if ($this->iterator instanceof \Countable) {
@@ -182,7 +186,7 @@ class RepeatController implements \Iterator
      * Restarts the iteration process going back to the first element
      *
      */
-    public function rewind()
+    public function rewind(): void
     {
         $this->index = 0;
         $this->length = null;
@@ -208,7 +212,7 @@ class RepeatController implements \Iterator
      * Fetches the next element in the iteration and advances the pointer
      *
      */
-    public function next()
+    public function next(): void
     {
         $this->index++;
 
@@ -228,7 +232,7 @@ class RepeatController implements \Iterator
      *
      * Groups are rarely-used feature, which is why they're lazily loaded.
      */
-    private function initializeGroups()
+    private function initializeGroups(): void
     {
         if (!$this->uses_groups) {
             $this->groups = new RepeatControllerGroups();
@@ -243,7 +247,7 @@ class RepeatController implements \Iterator
      * @return mixed $var  Mixed  The variable value
      * @throws Exception\VariableNotFoundException
      */
-    public function __get($var)
+    public function __get(string $var)
     {
         switch ($var) {
             case 'number':
@@ -290,7 +294,7 @@ class RepeatController implements \Iterator
      * Fetches the next element from the source data store and
      * updates the end flag if needed.
      */
-    protected function prefetch()
+    protected function prefetch(): void
     {
         $this->valid = true;
         $this->current = $this->iterator->current();
@@ -310,7 +314,7 @@ class RepeatController implements \Iterator
      *
      * @return String   The letters equivalent as a, b, c-z ... aa, ab, ac-zz ...
      */
-    protected function int2letter($int)
+    protected function int2letter(int $int): string
     {
         $lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $size = strlen($lookup);
@@ -331,22 +335,22 @@ class RepeatController implements \Iterator
      *
      * @return string   The roman numeral
      */
-    protected function int2roman($int)
+    protected function int2roman(int $int): string
     {
         $lookup = [
-            '1000' => 'M',
-            '900' => 'CM',
-            '500' => 'D',
-            '400' => 'CD',
-            '100' => 'C',
-            '90' => 'XC',
-            '50' => 'L',
-            '40' => 'XL',
-            '10' => 'X',
-            '9' => 'IX',
-            '5' => 'V',
-            '4' => 'IV',
-            '1' => 'I',
+            1000 => 'M',
+            900 => 'CM',
+            500 => 'D',
+            400 => 'CD',
+            100 => 'C',
+            90 => 'XC',
+            50 => 'L',
+            40 => 'XL',
+            10 => 'X',
+            9 => 'IX',
+            5 => 'V',
+            4 => 'IV',
+            1 => 'I',
         ];
 
         $roman = '';

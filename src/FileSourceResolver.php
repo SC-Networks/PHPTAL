@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * PHPTAL templating engine
  *
@@ -41,7 +42,7 @@ class FileSourceResolver implements SourceResolverInterface
      * @return FileSource
      * @throws Exception\IOException
      */
-    public function resolve($path)
+    public function resolve(string $path): ?SourceInterface
     {
         foreach ($this->repositories as $repository) {
             $file = $repository . DIRECTORY_SEPARATOR . $path;

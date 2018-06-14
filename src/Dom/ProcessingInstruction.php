@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * PHPTAL templating engine
  *
@@ -28,7 +30,7 @@ class ProcessingInstruction extends Node
      *
      * @param CodeWriter $codewriter
      */
-    public function generateCode(CodeWriter $codewriter)
+    public function generateCode(CodeWriter $codewriter): void
     {
         if (preg_match('/^<\?(?:php|[=\s])/i', $this->getValueEscaped())) {
             // block will be executed as PHP

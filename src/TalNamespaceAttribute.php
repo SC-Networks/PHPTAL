@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * PHPTAL templating engine
  *
@@ -80,7 +82,7 @@ abstract class TalNamespaceAttribute
      * @param string $local_name The attribute name
      * @param int $priority Attribute execution priority
      */
-    public function __construct($local_name, $priority)
+    public function __construct(string $local_name, int $priority)
     {
         $this->local_name = $local_name;
         $this->priority = $priority;
@@ -89,7 +91,7 @@ abstract class TalNamespaceAttribute
     /**
      * @return string
      */
-    public function getLocalName()
+    public function getLocalName(): string
     {
         return $this->local_name;
     }
@@ -97,7 +99,7 @@ abstract class TalNamespaceAttribute
     /**
      * @return int
      */
-    public function getPriority()
+    public function getPriority(): int
     {
         return $this->priority;
     }
@@ -105,7 +107,7 @@ abstract class TalNamespaceAttribute
     /**
      * @return TalNamespace
      */
-    public function getNamespace()
+    public function getNamespace(): TalNamespace
     {
         return $this->namespace;
     }
@@ -114,7 +116,7 @@ abstract class TalNamespaceAttribute
      * @param TalNamespace $ns
      * @return void
      */
-    public function setNamespace(TalNamespace $ns)
+    public function setNamespace(TalNamespace $ns): void
     {
         $this->namespace = $ns;
     }

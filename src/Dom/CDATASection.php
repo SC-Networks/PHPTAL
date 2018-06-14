@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * PHPTAL templating engine
  *
@@ -15,6 +17,7 @@
 namespace PhpTal\Dom;
 
 use PhpTal\Php\CodeWriter;
+use PhpTal\PHPTAL;
 
 /**
  * Outputs <![CDATA[ ]]> blocks, sometimes converts them to text
@@ -29,7 +32,7 @@ class CDATASection extends Node
      *
      * @param CodeWriter $codewriter
      */
-    public function generateCode(CodeWriter $codewriter)
+    public function generateCode(CodeWriter $codewriter): void
     {
         $mode = $codewriter->getOutputMode();
         $value = $this->getValueEscaped();
@@ -39,13 +42,14 @@ class CDATASection extends Node
         );
 
         // in HTML5 must limit it to <script> and <style>
-        if ($mode === \PhpTal\PHPTAL::HTML5 && $inCDATAelement) {
+        if ($mode === PHPTAL::HTML5 && $inCDATAelement) {
             $codewriter->pushHTML($codewriter->interpolateCDATA(str_replace('</', '<\/', $value)));
-        } elseif (($mode === \PhpTal\PHPTAL::XHTML && $inCDATAelement)  // safe for text/html
-            || ($mode === \PhpTal\PHPTAL::XML && preg_match('/[<>&]/', $value))  // non-useless in XML
-            || ($mode !== \PhpTal\PHPTAL::HTML5 && preg_match('/<\?|<_|\${structure/', $value))) { // hacks with structure (in X[HT]ML) may need it
+        } elseif (($mode === PHPTAL::XHTML && $inCDATAelement)  // safe for text/html
+            || ($mode === PHPTAL::XML && preg_match('/[<>&]/', $value))  // non-useless in XML
+            || ($mode !== PHPTAL::HTML5 && preg_match('/<\?|<_|\${structure/', $value))) {
+            // hacks with structure (in X[HT]ML) may need it
             // in text/html "</" is dangerous and the only sensible way to escape is ECMAScript string escapes.
-            if ($mode === \PhpTal\PHPTAL::XHTML) {
+            if ($mode === PHPTAL::XHTML) {
                 $value = str_replace('</', '<\/', $value);
             }
 

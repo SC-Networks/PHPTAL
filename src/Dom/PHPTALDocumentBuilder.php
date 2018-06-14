@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * PHPTAL templating engine
  *
@@ -28,7 +30,7 @@ class PHPTALDocumentBuilder extends DocumentBuilder
     /**
      * @var XmlnsState
      */
-    private $xmlns;   /* \PhpTal\Dom\XmlnsState */
+    private $xmlns;
 
     /**
      * @var string
@@ -50,9 +52,9 @@ class PHPTALDocumentBuilder extends DocumentBuilder
     }
 
     /**
-     * @return mixed
+     * @return Element
      */
-    public function getResult()
+    public function getResult(): Element
     {
         return $this->documentElement;
     }
@@ -60,21 +62,21 @@ class PHPTALDocumentBuilder extends DocumentBuilder
     /**
      * @return XmlnsState
      */
-    protected function getXmlnsState()
+    protected function getXmlnsState(): XmlnsState
     {
         return $this->xmlns;
     }
 
     // ~~~~~ XmlParser implementation ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    public function onDocumentStart()
+    public function onDocumentStart(): void
     {
         $this->documentElement = new Element('documentElement', Builtin::NS_TAL, [], $this->getXmlnsState());
         $this->documentElement->setSource($this->file, $this->line);
         $this->current = $this->documentElement;
     }
 
-    public function onDocumentEnd()
+    public function onDocumentEnd(): void
     {
         if (count($this->stack) > 0) {
             $left = '</' . $this->current->getQualifiedName() . '>';
@@ -90,20 +92,23 @@ class PHPTALDocumentBuilder extends DocumentBuilder
     }
 
     /**
-     * @param $doctype
+     * @param string $doctype
+     *
      * @return void
+     * @throws PhpTalException
      */
-    public function onDocType($doctype)
+    public function onDocType(string $doctype): void
     {
         $this->pushNode(new DocumentType($doctype, $this->encoding));
     }
 
     /**
-     * @param $decl
+     * @param string $decl
+     *
      * @return void
      * @throws PhpTalException
      */
-    public function onXmlDecl($decl)
+    public function onXmlDecl(string $decl): void
     {
         if (!$this->encoding) {
             throw new PhpTalException('Encoding not set');
@@ -112,47 +117,54 @@ class PHPTALDocumentBuilder extends DocumentBuilder
     }
 
     /**
-     * @param $data
+     * @param string $data
      * @return void
+     * @throws PhpTalException
      */
-    public function onComment($data)
+    public function onComment(string $data): void
     {
         $this->pushNode(new Comment($data, $this->encoding));
     }
 
     /**
-     * @param $data
+     * @param string $data
+     *
      * @return void
+     * @throws PhpTalException
      */
-    public function onCDATASection($data)
+    public function onCDATASection(string $data): void
     {
         $this->pushNode(new CDATASection($data, $this->encoding));
     }
 
     /**
-     * @param $data
+     * @param string $data
+     *
      * @return void
+     * @throws PhpTalException
      */
-    public function onProcessingInstruction($data)
+    public function onProcessingInstruction(string $data): void
     {
         $this->pushNode(new ProcessingInstruction($data, $this->encoding));
     }
 
     /**
-     * @param $element_qname
+     * @param string $element_qname
      * @param array $attributes
+     *
      * @return void
      * @throws ParserException
+     * @throws PhpTalException
      * @throws \PhpTal\Exception\TemplateException
      */
-    public function onElementStart($element_qname, array $attributes)
+    public function onElementStart(string $element_qname, array $attributes): void
     {
         $this->xmlns = $this->xmlns->newElement($attributes);
 
         if (preg_match('/^([^:]+):/', $element_qname, $m)) {
             $prefix = $m[1];
             $namespace_uri = $this->xmlns->prefixToNamespaceURI($prefix);
-            if ($namespace_uri === false) {
+            if ($namespace_uri === null) {
                 throw new ParserException(
                     "There is no namespace declared for prefix of element < $element_qname >. You must have xmlns:$prefix declaration in the same document.",
                     $this->file,
@@ -166,10 +178,10 @@ class PHPTALDocumentBuilder extends DocumentBuilder
         $attrnodes = [];
         foreach ($attributes as $qname => $value) {
             if (preg_match('/^([^:]+):(.+)$/', $qname, $m)) {
-                list(, $prefix, $local_name) = $m;
+                [, $prefix, $local_name] = $m;
                 $attr_namespace_uri = $this->xmlns->prefixToNamespaceURI($prefix);
 
-                if ($attr_namespace_uri === false) {
+                if ($attr_namespace_uri === null) {
                     throw new ParserException(
                         "There is no namespace declared for prefix of attribute $qname of element < $element_qname >. You must have xmlns:$prefix declaration in the same document.",
                         $this->file,
@@ -200,20 +212,23 @@ class PHPTALDocumentBuilder extends DocumentBuilder
     }
 
     /**
-     * @param $data
+     * @param string $data
+     *
      * @return void
+     * @throws PhpTalException
      */
-    public function onElementData($data)
+    public function onElementData(string $data): void
     {
         $this->pushNode(new Text($data, $this->encoding));
     }
 
     /**
-     * @param $qname
+     * @param string $qname
+     *
      * @return void
      * @throws ParserException
      */
-    public function onElementClose($qname)
+    public function onElementClose(string $qname): void
     {
         if ($this->current === $this->documentElement) {
             throw new ParserException(
@@ -224,7 +239,8 @@ class PHPTALDocumentBuilder extends DocumentBuilder
         }
         if ($this->current->getQualifiedName() !== $qname) {
             throw new ParserException(
-                "Tag closure mismatch, expected < /" . $this->current->getQualifiedName() . " > (opened in line " . $this->current->getSourceLine() . ") but found < /" . $qname . " >",
+                'Tag closure mismatch, expected < /' . $this->current->getQualifiedName() .
+                ' > (opened in line ' . $this->current->getSourceLine() . ') but found < /' . $qname . ' >',
                 $this->file,
                 $this->line
             );
@@ -241,7 +257,7 @@ class PHPTALDocumentBuilder extends DocumentBuilder
      * @return void
      * @throws PhpTalException
      */
-    private function pushNode(Node $node)
+    private function pushNode(Node $node): void
     {
         $node->setSource($this->file, $this->line);
         $this->current->appendChild($node);
@@ -252,7 +268,7 @@ class PHPTALDocumentBuilder extends DocumentBuilder
      *
      * @return void
      */
-    public function setEncoding($encoding)
+    public function setEncoding(string $encoding): void
     {
         $this->encoding = $encoding;
     }

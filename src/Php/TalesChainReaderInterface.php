@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * PHPTAL templating engine
  *
@@ -21,21 +23,22 @@ interface TalesChainReaderInterface
 {
     /**
      * @param TalesChainExecutor $executor
-     * @return mixed
+     *
+     * @return void
      */
-    public function talesChainNothingKeyword(TalesChainExecutor $executor);
+    public function talesChainNothingKeyword(TalesChainExecutor $executor): void;
 
     /**
      * @param TalesChainExecutor $executor
      * @return mixed
      */
-    public function talesChainDefaultKeyword(TalesChainExecutor $executor);
+    public function talesChainDefaultKeyword(TalesChainExecutor $executor): void;
 
     /**
      * @param TalesChainExecutor $executor
-     * @param $expression
-     * @param $islast
+     * @param string $expression
+     * @param bool $islast
      * @return mixed
      */
-    public function talesChainPart(TalesChainExecutor $executor, $expression, $islast);
+    public function talesChainPart(TalesChainExecutor $executor, string $expression, bool $islast): void;
 }

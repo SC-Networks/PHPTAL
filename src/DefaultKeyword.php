@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * PHPTAL templating engine
  *
@@ -23,7 +25,7 @@ class DefaultKeyword implements \Countable
     /**
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return "''";
     }
@@ -31,7 +33,7 @@ class DefaultKeyword implements \Countable
     /**
      * @return int
      */
-    public function count()
+    public function count(): int
     {
         return 1;
     }
@@ -39,7 +41,7 @@ class DefaultKeyword implements \Countable
     /**
      * @return \stdClass
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): \stdClass
     {
         return new \stdClass();
     }

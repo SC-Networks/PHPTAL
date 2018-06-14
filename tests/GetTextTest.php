@@ -120,22 +120,6 @@ class GetTextTest extends PHPTAL_TestCase
         $this->assertEquals($exp, $res);
     }
 
-    function testAccentuateKey()
-    {
-        $gettext = $this->getTextTranslator();
-        $gettext->setLanguage('en_GB', 'en_GB.utf8');
-        $gettext->addDomain('test');
-        $gettext->useDomain('test');
-        $gettext->setCanonicalize(true);
-
-        $tpl = $this->newPHPTAL('input/gettext.06.html');
-        $tpl->setTranslator($gettext);
-        $res = $tpl->execute();
-        $res = normalize_html($res);
-        $exp = normalize_html_file('output/gettext.06.html');
-        $this->assertEquals($exp, $res);
-    }
-
     function testAccentuateKeyNonCanonical()
     {
         $gettext = $this->getTextTranslator();

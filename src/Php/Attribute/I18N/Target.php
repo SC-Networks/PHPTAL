@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * PHPTAL templating engine
  *
@@ -14,6 +16,7 @@
 
 namespace PhpTal\Php\Attribute\I18N;
 
+use PhpTal\Php\Attribute;
 use PhpTal\Php\CodeWriter;
 
 /**
@@ -37,7 +40,7 @@ use PhpTal\Php\CodeWriter;
  *
  * @package PHPTAL
  */
-class Target extends \PhpTal\Php\Attribute
+class Target extends Attribute
 {
     /**
      * Called before element printing.
@@ -46,7 +49,7 @@ class Target extends \PhpTal\Php\Attribute
      *
      * @return void
      */
-    public function before(CodeWriter $codewriter)
+    public function before(CodeWriter $codewriter): void
     {
     }
 
@@ -57,7 +60,7 @@ class Target extends \PhpTal\Php\Attribute
      *
      * @return void
      */
-    public function after(CodeWriter $codewriter)
+    public function after(CodeWriter $codewriter): void
     {
     }
 }

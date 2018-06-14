@@ -1,4 +1,10 @@
 <?php
+
+namespace Tests;
+
+use Tests\Testhelper\MyPostFilter;
+use Tests\Testhelper\MyPostFilter2;
+
 /**
  * PHPTAL templating engine
  *
@@ -12,29 +18,9 @@
  * @link     http://phptal.org/
  */
 
-
-class MyPostFilter implements \PhpTal\FilterInterface
+class PostFilterTest extends \PHPTAL_TestCase
 {
-    public function filter($str)
-    {
-        if (preg_match('|<root>(.*?)</root>|s', $str, $m)) {
-            return $m[1];
-        }
-        return $str;
-    }
-}
-
-class MyPostFilter2 implements \PhpTal\FilterInterface
-{
-    public function filter($str)
-    {
-        return str_replace('test', 'test-filtered', $str);
-    }
-}
-
-class PostFilterTest extends PHPTAL_TestCase
-{
-    function testIt()
+    public function testIt()
     {
         $filter = new MyPostFilter();
         $tpl = $this->newPHPTAL('input/postfilter.01.html');
@@ -45,7 +31,7 @@ class PostFilterTest extends PHPTAL_TestCase
         $this->assertEquals($exp, $res);
     }
 
-    function testMacro()
+    public function testMacro()
     {
         $tpl = $this->newPHPTAL();
         $tpl->setPostFilter(new MyPostFilter2());

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * PHPTAL templating engine
  *
@@ -15,6 +17,7 @@
 namespace PhpTal\Dom;
 
 use PhpTal\Php\CodeWriter;
+use PhpTal\PHPTAL;
 
 /**
  * Document doctype representation.
@@ -28,9 +31,9 @@ class DocumentType extends Node
      *
      * @param CodeWriter $codewriter
      */
-    public function generateCode(CodeWriter $codewriter)
+    public function generateCode(CodeWriter $codewriter): void
     {
-        if ($codewriter->getOutputMode() === \PhpTal\PHPTAL::HTML5) {
+        if ($codewriter->getOutputMode() === PHPTAL::HTML5) {
             $codewriter->setDocType('<!DOCTYPE html>');
         } else {
             $codewriter->setDocType($this->getValueEscaped());

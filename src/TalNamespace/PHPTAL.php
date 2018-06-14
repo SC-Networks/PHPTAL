@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * PHPTAL templating engine
  *
@@ -14,6 +16,8 @@
 
 namespace PhpTal\TalNamespace;
 
+use PhpTal\TalNamespaceAttributeSurround;
+
 /**
  * @package PHPTAL
  */
@@ -22,9 +26,9 @@ class PHPTAL extends Builtin
     public function __construct()
     {
         parent::__construct('phptal', 'http://phptal.org/ns/phptal');
-        $this->addAttribute(new \PhpTal\TalNamespaceAttributeSurround('tales', -1));
-        $this->addAttribute(new \PhpTal\TalNamespaceAttributeSurround('debug', -2));
-        $this->addAttribute(new \PhpTal\TalNamespaceAttributeSurround('id', 7));
-        $this->addAttribute(new \PhpTal\TalNamespaceAttributeSurround('cache', -3));
+        $this->addAttribute(new TalNamespaceAttributeSurround('tales', -1));
+        $this->addAttribute(new TalNamespaceAttributeSurround('debug', -2));
+        $this->addAttribute(new TalNamespaceAttributeSurround('id', 7));
+        $this->addAttribute(new TalNamespaceAttributeSurround('cache', -3));
     }
 }

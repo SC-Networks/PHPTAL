@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * PHPTAL templating engine
  *
@@ -41,7 +43,7 @@ abstract class PreFilter implements FilterInterface
      *
      * @return void
      */
-    public function filterElement(\DOMElement $node)
+    public function filterElement(\DOMElement $node): void
     {
     }
 
@@ -57,7 +59,7 @@ abstract class PreFilter implements FilterInterface
      *
      * @return void
      */
-    public function filterDOM(Dom\Element $root)
+    public function filterDOM(Dom\Element $root): void
     {
     }
 
@@ -72,7 +74,7 @@ abstract class PreFilter implements FilterInterface
      *
      * @return void
      */
-    public function filterDOMFragment(Dom\Element $node)
+    public function filterDOMFragment(Dom\Element $node): void
     {
         $this->filterDOM($node);
     }
@@ -87,7 +89,7 @@ abstract class PreFilter implements FilterInterface
      *
      * @return string
      */
-    public function filter($src)
+    public function filter(string $src): string
     {
         return $src;
     }
@@ -102,7 +104,7 @@ abstract class PreFilter implements FilterInterface
      *
      * @return string
      */
-    public function getCacheId()
+    public function getCacheId(): string
     {
         return get_class($this);
     }
@@ -111,9 +113,9 @@ abstract class PreFilter implements FilterInterface
      * Returns PHPTAL class instance that is currently using this prefilter.
      * May return NULL if PHPTAL didn't start filtering yet.
      *
-     * @return PHPTAL or NULL
+     * @return PhpTalInterface
      */
-    final protected function getPHPTAL()
+    final protected function getPHPTAL(): PhpTalInterface
     {
         return $this->phptal;
     }
@@ -122,9 +124,9 @@ abstract class PreFilter implements FilterInterface
      * Set which instance of PHPTAL is using this filter.
      * Must be done before calling any filter* methods.
      *
-     * @param PHPTAL $phptal instance
+     * @param PhpTalInterface $phptal instance
      */
-    final public function setPHPTAL(PHPTAL $phptal)
+    final public function setPHPTAL(PhpTalInterface $phptal): void
     {
         $this->phptal = $phptal;
     }

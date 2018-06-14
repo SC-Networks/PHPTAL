@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * PHPTAL templating engine
  *
@@ -32,7 +34,7 @@ interface TranslationServiceInterface
      *
      * @return string - chosen language
      */
-    public function setLanguage(...$langs);
+    public function setLanguage(...$langs): string;
 
     /**
      * PHPTAL will inform translation service what encoding page uses.
@@ -40,7 +42,7 @@ interface TranslationServiceInterface
      *
      * @param string $encoding
      */
-    public function setEncoding($encoding);
+    public function setEncoding(string $encoding): void;
 
     /**
      * Set the domain to use for translations (if different parts of application are translated in different files.
@@ -50,7 +52,7 @@ interface TranslationServiceInterface
      *
      * @return string
      */
-    public function useDomain($domain);
+    public function useDomain(string $domain): ?string;
 
     /**
      * Set XHTML-escaped value of a variable used in translation key.
@@ -60,7 +62,7 @@ interface TranslationServiceInterface
      * @param string $key - name of the variable
      * @param string $value_escaped - XHTML markup
      */
-    public function setVar($key, $value_escaped);
+    public function setVar(string $key, $value_escaped): void;
 
     /**
      * Translate a gettext key and interpolate variables.
@@ -68,6 +70,8 @@ interface TranslationServiceInterface
      * @param string $key - translation key, e.g. "hello ${username}!"
      * @param bool $htmlescape - if true, you should HTML-escape translated string.
      *                             You should never HTML-escape interpolated variables.
+     *
+     * @return string
      */
-    public function translate($key, $htmlescape = true);
+    public function translate(string $key, bool $htmlescape): string;
 }
