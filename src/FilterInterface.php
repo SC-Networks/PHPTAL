@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * PHPTAL templating engine
  *
@@ -32,5 +34,5 @@ interface FilterInterface
      *
      * @return string
      */
-    public function filter($str);
+    public function filter(string $str): string;
 }

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * PHPTAL templating engine
  *
@@ -13,9 +15,13 @@
 
 namespace PhpTal\PreFilter;
 
+use PhpTal\Dom\CDATASection;
+use PhpTal\Dom\Comment;
+use PhpTal\Dom\Defs;
 use PhpTal\Dom\Element;
+use PhpTal\PreFilter;
 
-class StripComments extends \PhpTal\PreFilter
+class StripComments extends PreFilter
 {
     /**
      * Receives root PHPTAL DOM node of parsed file and should edit it in place.
@@ -29,14 +35,14 @@ class StripComments extends \PhpTal\PreFilter
      * @return void
      * @throws \PhpTal\Exception\PhpTalException
      */
-    public function filterDOM(Element $element)
+    public function filterDOM(Element $element): void
     {
-        $defs = \PhpTal\Dom\Defs::getInstance();
+        $defs = Defs::getInstance();
 
         foreach ($element->childNodes as $node) {
-            if ($node instanceof \PhpTal\Dom\Comment) {
+            if ($node instanceof Comment) {
                 if ($defs->isCDATAElementInHTML($element->getNamespaceURI(), $element->getLocalName())) {
-                    $textNode = new \PhpTal\Dom\CDATASection($node->getValueEscaped(), $node->getEncoding());
+                    $textNode = new CDATASection($node->getValueEscaped(), $node->getEncoding());
                     $node->parentNode->replaceChild($textNode, $node);
                 } else {
                     $node->parentNode->removeChild($node);

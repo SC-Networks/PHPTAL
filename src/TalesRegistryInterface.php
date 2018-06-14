@@ -1,7 +1,7 @@
 <?php
-namespace PhpTal;
+declare(strict_types=1);
 
-use PhpTal\Php\TalesInternal;
+namespace PhpTal;
 
 /**
  * TalesRegistryInterface
@@ -15,11 +15,11 @@ interface TalesRegistryInterface
     /**
      * get callback for the prefix
      *
-     * @param $prefix
+     * @param string $prefix
      *
      * @return callback or NULL
      */
-    public static function getCallback($prefix);
+    public static function getCallback(string $prefix): ?callable;
 
     /**
      * true if given prefix is taken
@@ -28,7 +28,7 @@ interface TalesRegistryInterface
      *
      * @return bool
      */
-    public static function isRegistered($prefix);
+    public static function isRegistered(string $prefix): bool;
 
     /**
      *
@@ -42,7 +42,7 @@ interface TalesRegistryInterface
      * @throws Exception\ConfigurationException
      * @throws \ReflectionException
      */
-    public static function registerPrefix($prefix, $callback, $is_fallback = false);
+    public static function registerPrefix(string $prefix, $callback, ?bool $is_fallback = null): void;
 
     /**
      * Unregisters a expression modifier
@@ -51,5 +51,5 @@ interface TalesRegistryInterface
      *
      * @throws Exception\ConfigurationException
      */
-    public static function unregisterPrefix($prefix);
+    public static function unregisterPrefix(string $prefix): void;
 }

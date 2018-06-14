@@ -14,6 +14,7 @@
 
 namespace PhpTal\Php\Attribute\I18N;
 
+use PhpTal\Php\Attribute;
 use PhpTal\Php\CodeWriter;
 
 /**
@@ -26,7 +27,7 @@ use PhpTal\Php\CodeWriter;
  *
  * @package PHPTAL
  */
-class Source extends \PhpTal\Php\Attribute
+class Source extends Attribute
 {
     /**
      * Called before element printing.
@@ -37,7 +38,7 @@ class Source extends \PhpTal\Php\Attribute
      * @throws \PhpTal\Exception\ConfigurationException
      * @throws \PhpTal\Exception\PhpTalException
      */
-    public function before(CodeWriter $codewriter)
+    public function before(CodeWriter $codewriter): void
     {
         // ensure that a sources stack exists or create it
         $codewriter->doIf('!isset($_i18n_sources)');
@@ -58,7 +59,7 @@ class Source extends \PhpTal\Php\Attribute
      * @return void
      * @throws \PhpTal\Exception\ConfigurationException
      */
-    public function after(CodeWriter $codewriter)
+    public function after(CodeWriter $codewriter): void
     {
         // restore source
         $code = $codewriter->getTranslatorReference() . '->setSource(array_pop($_i18n_sources))';

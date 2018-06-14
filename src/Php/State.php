@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * PHPTAL templating engine
  *
@@ -15,6 +17,7 @@
 namespace PhpTal\Php;
 
 use PhpTal\PHPTAL;
+use PhpTal\PhpTalInterface;
 
 /**
  * @package PHPTAL
@@ -42,16 +45,16 @@ class State
     private $output_mode;
 
     /**
-     * @var PHPTAL
+     * @var PhpTalInterface
      */
     private $phptal;
 
     /**
      * State constructor.
      *
-     * @param PHPTAL $phptal
+     * @param PhpTalInterface $phptal
      */
-    public function __construct(PHPTAL $phptal)
+    public function __construct(PhpTalInterface $phptal)
     {
         $this->phptal = $phptal;
         $this->encoding = $phptal->getEncoding();
@@ -61,7 +64,7 @@ class State
     /**
      * used by codewriter to get information for phptal:cache
      */
-    public function getCacheFilesBaseName()
+    public function getCacheFilesBaseName(): string
     {
         return $this->phptal->getCodePath();
     }
@@ -69,9 +72,9 @@ class State
     /**
      * true if PHPTAL has translator set
      */
-    public function isTranslationOn()
+    public function isTranslationOn(): bool
     {
-        return (bool)$this->phptal->getTranslator();
+        return (bool) $this->phptal->getTranslator();
     }
 
     /**
@@ -81,7 +84,7 @@ class State
      *
      * @return bool
      */
-    public function setDebug($bool)
+    public function setDebug(bool $bool): bool
     {
         $old = $this->debug;
         $this->debug = $bool;
@@ -91,9 +94,9 @@ class State
     /**
      * if true, add additional diagnostic information to generated code
      *
-     * @return true
+     * @return bool
      */
-    public function isDebugOn()
+    public function isDebugOn(): bool
     {
         return $this->debug;
     }
@@ -106,7 +109,7 @@ class State
      *
      * @return string
      */
-    public function setTalesMode($mode)
+    public function setTalesMode(string $mode): string
     {
         $old = $this->tales_mode;
         $this->tales_mode = $mode;
@@ -116,7 +119,7 @@ class State
     /**
      * @return string
      */
-    public function getTalesMode()
+    public function getTalesMode(): string
     {
         return $this->tales_mode;
     }
@@ -126,7 +129,7 @@ class State
      *
      * @return string
      */
-    public function getEncoding()
+    public function getEncoding(): string
     {
         return $this->encoding;
     }
@@ -136,7 +139,7 @@ class State
      *
      * @return int one of \PhpTal\PHPTAL::XHTML, \PhpTal\PHPTAL::XML, \PhpTal\PHPTAL::HTML5
      */
-    public function getOutputMode()
+    public function getOutputMode(): int
     {
         return $this->output_mode;
     }
@@ -146,12 +149,13 @@ class State
      *
      * @param string $expression
      *
-     * @return string with PHP code or array with expressions for TalesChainExecutor
+     * @return string|array string with PHP code or array with expressions for TalesChainExecutor
      * @throws \PhpTal\Exception\ParserException
      * @throws \PhpTal\Exception\UnknownModifierException
      * @throws \ReflectionException
+     * @throws \PhpTal\Exception\PhpNotAllowedException
      */
-    public function evaluateExpression($expression)
+    public function evaluateExpression(?string $expression)
     {
         if ($this->getTalesMode() === 'php') {
             return TalesInternal::php($expression);
@@ -166,9 +170,11 @@ class State
      *
      * @return string with PHP code
      * @throws \PhpTal\Exception\ParserException
+     * @throws \PhpTal\Exception\PhpNotAllowedException
      * @throws \PhpTal\Exception\UnknownModifierException
+     * @throws \ReflectionException
      */
-    private function compileTalesToPHPExpression($expression)
+    private function compileTalesToPHPExpression($expression): string
     {
         if ($this->getTalesMode() === 'php') {
             return TalesInternal::php($expression);
@@ -184,8 +190,11 @@ class State
      * @param string $string
      *
      * @return string
+     * @throws \PhpTal\Exception\ParserException
+     * @throws \PhpTal\Exception\UnknownModifierException
+     * @throws \ReflectionException
      */
-    public function interpolateTalesVarsInString($string)
+    public function interpolateTalesVarsInString(string $string): string
     {
         return TalesInternal::parseString($string, false, ($this->getTalesMode() === 'tales') ? '' : 'php:');
     }
@@ -197,7 +206,7 @@ class State
      *
      * @return string
      */
-    public function interpolateTalesVarsInHTML($src)
+    public function interpolateTalesVarsInHTML(string $src): string
     {
         return preg_replace_callback(
             '/((?:\$\$)*)\$\{(structure |text )?(.*?)\}|((?:\$\$)+)\{/isS',
@@ -215,7 +224,7 @@ class State
      * @throws \PhpTal\Exception\ParserException
      * @throws \PhpTal\Exception\UnknownModifierException
      */
-    private function interpolateTalesVarsInHTMLCallback($matches)
+    private function interpolateTalesVarsInHTMLCallback(array $matches): string
     {
         return $this->interpolateTalesVarsCallback($matches, 'html');
     }
@@ -229,7 +238,7 @@ class State
      *
      * @return string
      */
-    public function interpolateTalesVarsInCDATA($src)
+    public function interpolateTalesVarsInCDATA(string $src): string
     {
         return preg_replace_callback(
             '/((?:\$\$)*)\$\{(structure |text )?(.*?)\}|((?:\$\$)+)\{/isS',
@@ -247,7 +256,7 @@ class State
      * @throws \PhpTal\Exception\ParserException
      * @throws \PhpTal\Exception\UnknownModifierException
      */
-    private function interpolateTalesVarsInCDATACallback($matches)
+    private function interpolateTalesVarsInCDATACallback(array $matches): string
     {
         return $this->interpolateTalesVarsCallback($matches, 'cdata');
     }
@@ -258,9 +267,11 @@ class State
      *
      * @return string
      * @throws \PhpTal\Exception\ParserException
+     * @throws \PhpTal\Exception\PhpNotAllowedException
      * @throws \PhpTal\Exception\UnknownModifierException
+     * @throws \ReflectionException
      */
-    private function interpolateTalesVarsCallback($matches, $format)
+    private function interpolateTalesVarsCallback(array $matches, string $format): string
     {
         // replaces $${ with literal ${ (or $$$${ with $${ etc)
         if (!empty($matches[4])) {
@@ -298,7 +309,7 @@ class State
 
             return $dollars . "<?php echo str_replace(']]>',']]]]><![CDATA[>', " . $this->stringify($code) . ") ?>\n";
         }
-        assert(0);
+        return '';
     }
 
     /**
@@ -309,7 +320,7 @@ class State
      *
      * @return string php code
      */
-    public function htmlchars($php)
+    public function htmlchars(string $php): string
     {
         // PHP strings can be escaped at compile time
         if (preg_match('/^\'((?:[^\'{]+|\\\\.)*)\'$/s', $php, $m)) {
@@ -326,7 +337,7 @@ class State
      *
      * @return string php code
      */
-    public function stringify($php)
+    public function stringify(string $php): string
     {
         // PHP strings don't need to be changed
         if (preg_match('/^\'(?>[^\'\\\\]+|\\\\.)*\'$|^\s*"(?>[^"\\\\]+|\\\\.)*"\s*$/s', $php)) {

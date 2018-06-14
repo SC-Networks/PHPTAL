@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * PHPTAL templating engine
  *
@@ -43,11 +45,6 @@ class GetTextTranslator implements TranslationServiceInterface
     private $encoding = 'UTF-8';
 
     /**
-     * @var bool
-     */
-    private $canonicalize = false;
-
-    /**
      * GetTextTranslator constructor.
      * @throws Exception\ConfigurationException
      */
@@ -64,23 +61,9 @@ class GetTextTranslator implements TranslationServiceInterface
      *
      * @param string $enc encoding name
      */
-    public function setEncoding($enc)
+    public function setEncoding(string $enc): void
     {
         $this->encoding = $enc;
-    }
-
-    /**
-     * if true, all non-ASCII characters in keys will be converted to C<xxx> form. This impacts performance.
-     * by default keys will be passed to gettext unmodified.
-     *
-     * This function is only for backwards compatibility
-     *
-     * @param bool $bool enable old behavior
-     * @deprecated
-     */
-    public function setCanonicalize($bool)
-    {
-        $this->canonicalize = $bool;
     }
 
     /**
@@ -93,7 +76,7 @@ class GetTextTranslator implements TranslationServiceInterface
      * @return string - chosen language
      * @throws Exception\ConfigurationException
      */
-    public function setLanguage(...$langs)
+    public function setLanguage(...$langs): string
     {
 
         $langCode = $this->trySettingLanguages(LC_ALL, $langs);
@@ -119,7 +102,7 @@ class GetTextTranslator implements TranslationServiceInterface
      *
      * @return string
      */
-    private function trySettingLanguages($category, array $langs)
+    private function trySettingLanguages(int $category, array $langs): ?string
     {
         foreach ($langs as $langCode) {
             putenv("LANG=$langCode");
@@ -140,9 +123,9 @@ class GetTextTranslator implements TranslationServiceInterface
      * @param string $domain
      * @param string $path
      */
-    public function addDomain($domain, $path = './locale/')
+    public function addDomain(string $domain, ?string $path = null): void
     {
-        bindtextdomain($domain, $path);
+        bindtextdomain($domain, $path ?? './locale/');
         if ($this->encoding) {
             bind_textdomain_codeset($domain, $this->encoding);
         }
@@ -156,7 +139,7 @@ class GetTextTranslator implements TranslationServiceInterface
      *
      * @return string - old domain
      */
-    public function useDomain($domain)
+    public function useDomain(string $domain): ?string
     {
         $old = $this->currentDomain;
         $this->currentDomain = $domain;
@@ -170,7 +153,7 @@ class GetTextTranslator implements TranslationServiceInterface
      * @param string $key
      * @param mixed $value
      */
-    public function setVar($key, $value)
+    public function setVar(string $key, $value): void
     {
         $this->vars[$key] = $value;
     }
@@ -181,14 +164,11 @@ class GetTextTranslator implements TranslationServiceInterface
      * @param string $key
      * @param bool $htmlencode if true, output will be HTML-escaped.
      *
-     * @return mixed|string
+     * @return string
      * @throws Exception\VariableNotFoundException
      */
-    public function translate($key, $htmlencode = true)
+    public function translate(string $key, bool $htmlencode): string
     {
-        if ($this->canonicalize) {
-            $key = self::canonicalizeKey($key);
-        }
 
         $value = gettext($key);
 
@@ -205,28 +185,5 @@ class GetTextTranslator implements TranslationServiceInterface
             $value = str_replace($src, $this->vars[$var], $value);
         }
         return $value;
-    }
-
-    /**
-     * For backwards compatibility only.
-     * @param string $key_
-     * @return string
-     * @deprecated
-     */
-    private static function canonicalizeKey($key_)
-    {
-        $result = '';
-        $key_ = trim($key_);
-        $key_ = str_replace(["\n", "\r"], '', $key_);
-        for ($i = 0, $iMax = strlen($key_); $i < $iMax; $i++) {
-            $c = $key_[$i];
-            $o = ord($c);
-            if ($o < 5 || $o > 127) {
-                $result .= 'C<' . $o . '>';
-            } else {
-                $result .= $c;
-            }
-        }
-        return $result;
     }
 }

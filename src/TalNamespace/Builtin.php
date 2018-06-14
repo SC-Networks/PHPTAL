@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * PHPTAL templating engine
  *
@@ -14,32 +16,37 @@
 
 namespace PhpTal\TalNamespace;
 
+use PhpTal\Dom\Element;
+use PhpTal\Php\Attribute;
+use PhpTal\TalNamespace;
+use PhpTal\TalNamespaceAttribute;
+
 /**
  * @package PHPTAL
  */
-class Builtin extends \PhpTal\TalNamespace
+class Builtin extends TalNamespace
 {
 
-    const NS_METAL = 'http://xml.zope.org/namespaces/metal';
-    const NS_TAL = 'http://xml.zope.org/namespaces/tal';
-    const NS_I18N = 'http://xml.zope.org/namespaces/i18n';
-    const NS_XML = 'http://www.w3.org/XML/1998/namespace';
-    const NS_XMLNS = 'http://www.w3.org/2000/xmlns/';
-    const NS_XHTML = 'http://www.w3.org/1999/xhtml';
+    public const NS_METAL = 'http://xml.zope.org/namespaces/metal';
+    public const NS_TAL = 'http://xml.zope.org/namespaces/tal';
+    public const NS_I18N = 'http://xml.zope.org/namespaces/i18n';
+    public const NS_XML = 'http://www.w3.org/XML/1998/namespace';
+    public const NS_XMLNS = 'http://www.w3.org/2000/xmlns/';
+    public const NS_XHTML = 'http://www.w3.org/1999/xhtml';
 
     /**
-     * @param \PhpTal\TalNamespaceAttribute $att
-     * @param \PhpTal\Dom\Element $tag
+     * @param TalNamespaceAttribute $att
+     * @param Element $tag
      * @param mixed $expression
      *
      * @return \PhpTal\Php\Attribute
      */
-    public function createAttributeHandler(\PhpTal\TalNamespaceAttribute $att, \PhpTal\Dom\Element $tag, $expression)
+    public function createAttributeHandler(TalNamespaceAttribute $att, Element $tag, $expression): Attribute
     {
         $name = $att->getLocalName();
 
         // change define-macro to "define macro" and capitalize words
-        $name = str_replace(' ', '', ucwords(strtr($name, '-', ' ')));
+        $name = str_replace(' ', '', ucwords(str_replace('-', ' ', $name)));
 
         // case is important when using autoload on case-sensitive filesystems
             $class = 'PhpTal\\Php\\Attribute\\'.strtoupper($this->getPrefix()).'\\'.$name;

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * PHPTAL templating engine
  *
@@ -60,8 +62,12 @@ class OmitTag extends Attribute
      * @param CodeWriter $codewriter
      *
      * @return void
+     * @throws \PhpTal\Exception\ParserException
+     * @throws \PhpTal\Exception\PhpNotAllowedException
+     * @throws \PhpTal\Exception\UnknownModifierException
+     * @throws \ReflectionException
      */
-    public function before(CodeWriter $codewriter)
+    public function before(CodeWriter $codewriter): void
     {
         if (trim($this->expression) === '') {
             $this->phpelement->headFootDisabled = true;
@@ -83,7 +89,7 @@ class OmitTag extends Attribute
      * @return void
      * @throws \PhpTal\Exception\PhpTalException
      */
-    public function after(CodeWriter $codewriter)
+    public function after(CodeWriter $codewriter): void
     {
         if ($this->varname) {
             $codewriter->recycleTempVariable($this->varname);

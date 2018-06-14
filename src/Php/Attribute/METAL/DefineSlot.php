@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * PHPTAL templating engine
  *
@@ -62,9 +64,12 @@ class DefineSlot extends Attribute
      * @param CodeWriter $codewriter
      *
      * @return void
+     * @throws \PhpTal\Exception\ParserException
      * @throws \PhpTal\Exception\PhpTalException
+     * @throws \PhpTal\Exception\UnknownModifierException
+     * @throws \ReflectionException
      */
-    public function before(CodeWriter $codewriter)
+    public function before(CodeWriter $codewriter): void
     {
         $this->tmp_var = $codewriter->createTempVariable();
 
@@ -82,7 +87,7 @@ class DefineSlot extends Attribute
      * @return void
      * @throws \PhpTal\Exception\PhpTalException
      */
-    public function after(CodeWriter $codewriter)
+    public function after(CodeWriter $codewriter): void
     {
         $codewriter->doEnd('if');
 

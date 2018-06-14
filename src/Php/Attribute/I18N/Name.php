@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * PHPTAL templating engine
  *
@@ -14,6 +16,7 @@
 
 namespace PhpTal\Php\Attribute\I18N;
 
+use PhpTal\Php\Attribute;
 use PhpTal\Php\CodeWriter;
 
 /** i18n:name
@@ -34,7 +37,7 @@ use PhpTal\Php\CodeWriter;
  *
  * @package PHPTAL
  */
-class Name extends \PhpTal\Php\Attribute
+class Name extends Attribute
 {
     /**
      * Called before element printing.
@@ -43,7 +46,7 @@ class Name extends \PhpTal\Php\Attribute
      *
      * @return void
      */
-    public function before(CodeWriter $codewriter)
+    public function before(CodeWriter $codewriter): void
     {
         $codewriter->pushCode('ob_start()');
     }
@@ -56,7 +59,7 @@ class Name extends \PhpTal\Php\Attribute
      * @return void
      * @throws \PhpTal\Exception\ConfigurationException
      */
-    public function after(CodeWriter $codewriter)
+    public function after(CodeWriter $codewriter): void
     {
         $codewriter->pushCode(
             $codewriter->getTranslatorReference() . '->setVar(' . $codewriter->str($this->expression) . ', ob_get_clean())'

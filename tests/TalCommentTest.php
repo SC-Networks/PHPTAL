@@ -16,7 +16,7 @@
 
 class DummyPhpNode extends \PhpTal\Dom\Element {
     function __construct() {}
-    function generateCode(\PhpTal\Php\CodeWriter $codewriter) {}
+    function generateCode(\PhpTal\Php\CodeWriter $codewriter): void {}
 }
 
 class TalCommentTest extends PHPTAL_TestCase

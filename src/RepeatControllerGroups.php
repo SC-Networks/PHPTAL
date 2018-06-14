@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * PHPTAL templating engine
  *
@@ -58,7 +60,7 @@ class RepeatControllerGroups
      * Resets the result caches. Use it to signal an iteration in the loop
      *
      */
-    public function reset()
+    public function reset(): void
     {
         $this->cache = [];
     }
@@ -70,6 +72,8 @@ class RepeatControllerGroups
      *
      * @return Mixed    True if the first item in the group, false if not and
      *                  this same object if the path is not finished
+     *
+     * @todo cleanup this abomination of type abuse
      */
     public function first($data)
     {
@@ -103,6 +107,8 @@ class RepeatControllerGroups
      *
      * @return Mixed    True if the last item in the group, false if not and
      *                  this same object if the path is not finished
+     *
+     * @todo cleanup this abomination of type abuse
      */
     public function last($data)
     {
@@ -142,7 +148,7 @@ class RepeatControllerGroups
      * @todo    replace the Context::path() with custom code
      * @throws Exception\VariableNotFoundException
      */
-    public function __get($var)
+    public function __get(string $var)
     {
         // When the iterator item is empty we just let the tal
         // expression consume by continuously returning this
@@ -194,7 +200,7 @@ class RepeatControllerGroups
      *
      * @param string $varname The variable name to store as a path part
      */
-    protected function addVarName($varname)
+    protected function addVarName(string $varname): void
     {
         $this->vars[] = $varname;
     }
@@ -204,7 +210,7 @@ class RepeatControllerGroups
      *
      * @return String  The current variable path
      */
-    protected function getVarPath()
+    protected function getVarPath(): string
     {
         return implode('/', $this->vars) . '/';
     }

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * PHPTAL templating engine
  *
@@ -59,7 +61,7 @@ use PhpTal\TalNamespace\Builtin;
  */
 class FillSlot extends Attribute
 {
-    const CALLBACK_THRESHOLD = 10000;
+    public const CALLBACK_THRESHOLD = 10000;
 
     /**
      * @var int
@@ -76,7 +78,7 @@ class FillSlot extends Attribute
      *
      * @param CodeWriter $codewriter
      */
-    public function before(CodeWriter $codewriter)
+    public function before(CodeWriter $codewriter): void
     {
         if ($this->shouldUseCallback()) {
             $function_base_name = 'slot_' . preg_replace('/[^a-z0-9]/', '_', $this->expression) . '_' . (self::$uid++);
@@ -98,7 +100,7 @@ class FillSlot extends Attribute
      *
      * @throws \PhpTal\Exception\PhpTalException
      */
-    public function after(CodeWriter $codewriter)
+    public function after(CodeWriter $codewriter): void
     {
         if ($this->function_name !== null) {
             $codewriter->doEnd();
@@ -114,7 +116,7 @@ class FillSlot extends Attribute
     /**
      * inspects contents of the element to decide whether callback makes sense
      */
-    private function shouldUseCallback()
+    private function shouldUseCallback(): bool
     {
         // since callback is slightly slower than buffering,
         // use callback only for content that is large to offset speed loss by memory savings
@@ -127,7 +129,7 @@ class FillSlot extends Attribute
      *
      * @return int
      */
-    private function estimateNumberOfBytesOutput(Element $element, $is_nested_in_repeat)
+    private function estimateNumberOfBytesOutput(Element $element, bool $is_nested_in_repeat): int
     {
         // macros don't output anything on their own
         if ($element->hasAttributeNS(Builtin::NS_METAL, 'define-macro')) {

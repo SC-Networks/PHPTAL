@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * PHPTAL templating engine
  *
@@ -15,13 +17,14 @@
 namespace PhpTal\Php\Attribute\PHPTAL;
 
 use PhpTal\Exception\TemplateException;
+use PhpTal\Php\Attribute;
 use PhpTal\Php\CodeWriter;
 
 /**
  * @package PHPTAL
  * @author Laurent Bedubourg <lbedubourg@motion-twin.com>
  */
-class Tales extends \PhpTal\Php\Attribute
+class Tales extends Attribute
 {
 
     /**
@@ -37,7 +40,7 @@ class Tales extends \PhpTal\Php\Attribute
      * @return void
      * @throws TemplateException
      */
-    public function before(CodeWriter $codewriter)
+    public function before(CodeWriter $codewriter): void
     {
         $mode = strtolower(trim($this->expression));
 
@@ -63,7 +66,7 @@ class Tales extends \PhpTal\Php\Attribute
      *
      * @return void
      */
-    public function after(CodeWriter $codewriter)
+    public function after(CodeWriter $codewriter): void
     {
         $codewriter->setTalesMode($this->oldMode);
     }

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * PHPTAL templating engine
  *
@@ -27,7 +29,7 @@ class ExceptionHandler
      * ExceptionHandler constructor.
      * @param string $encoding
      */
-    public function __construct($encoding)
+    public function __construct(string $encoding)
     {
         $this->encoding = $encoding;
     }
@@ -45,7 +47,7 @@ class ExceptionHandler
      * @throws TemplateException
      * @throws \Throwable
      */
-    public static function handleException($e, $encoding) // todo php7 -> $e should be \Throwable
+    public static function handleException(\Throwable $e, string $encoding): void
     {
         // PHPTAL's handler is only useful on fresh HTTP response
         if (PHP_SAPI !== 'cli' && !headers_sent()) {
@@ -59,7 +61,7 @@ class ExceptionHandler
             }
         }
 
-        if (PHP_VERSION_ID >= 70000 && get_class($e) === \ParseError::class) {
+        if (get_class($e) === \ParseError::class) {
             $e = new TemplateException($e->getMessage());
         }
         throw $e; // throws instead of outputting immediately to support user's try/catch
@@ -69,9 +71,9 @@ class ExceptionHandler
     /**
      * Generates simple error page. Sets appropriate HTTP status to prevent page being indexed.
      *
-     * @param \Exception $e exception to display
+     * @param \Throwable $e exception to display
      */
-    public function defaultExceptionHandler($e)  // todo php7 -> typehint should be \Throwable
+    public function defaultExceptionHandler(\Throwable $e): void
     {
         if (!headers_sent()) {
             header('HTTP/1.1 500 PHPTAL Exception');

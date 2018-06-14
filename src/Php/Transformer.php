@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * PHPTAL templating engine
  *
@@ -38,16 +40,16 @@ use PhpTal\Exception\ParserException;
  */
 class Transformer
 {
-    const ST_WHITE = -1; // start of string or whitespace
-    const ST_NONE = 0;  // pass through (operators, parens, etc.)
-    const ST_STR = 1;  // 'foo'
-    const ST_ESTR = 2;  // "foo ${x} bar"
-    const ST_VAR = 3;  // abcd
-    const ST_NUM = 4;  // 123.02
-    const ST_EVAL = 5;  // $somevar
-    const ST_MEMBER = 6;  // abcd.x
-    const ST_STATIC = 7;  // class::[$]static|const
-    const ST_DEFINE = 8;  // @MY_DEFINE
+    public const ST_WHITE = -1; // start of string or whitespace
+    public const ST_NONE = 0;  // pass through (operators, parens, etc.)
+    public const ST_STR = 1;  // 'foo'
+    public const ST_ESTR = 2;  // "foo ${x} bar"
+    public const ST_VAR = 3;  // abcd
+    public const ST_NUM = 4;  // 123.02
+    public const ST_EVAL = 5;  // $somevar
+    public const ST_MEMBER = 6;  // abcd.x
+    public const ST_STATIC = 7;  // class::[$]static|const
+    public const ST_DEFINE = 8;  // @MY_DEFINE
 
     /**
      * @var array
@@ -73,8 +75,9 @@ class Transformer
      * @return string
      * @throws ParserException
      */
-    public static function transform($str, $prefix = '$')
+    public static function transform(string $str, ?string $prefix = null): string
     {
+        $prefix = $prefix ?? '$';
         $len = strlen($str);
         $state = self::ST_WHITE;
         $result = '';
@@ -97,7 +100,7 @@ class Transformer
                     if ($c === '$' && $i + 1 < $len && $str[$i + 1] === '{') {
                         $result .= $prefix;
                         $state = self::ST_NONE;
-                        continue;
+                        break;
                     }
                 /* NO BREAK - ST_WHITE is almost the same as ST_NONE */
 
@@ -389,7 +392,7 @@ class Transformer
      *
      * @return bool
      */
-    private static function isAlpha($c)
+    private static function isAlpha(string $c): bool
     {
         $c = strtolower($c);
         return $c >= 'a' && $c <= 'z';
@@ -400,7 +403,7 @@ class Transformer
      *
      * @return bool
      */
-    private static function isDigit($c)
+    private static function isDigit(string $c): bool
     {
         return ($c >= '0' && $c <= '9');
     }
@@ -410,17 +413,18 @@ class Transformer
      *
      * @return bool
      */
-    private static function isDigitCompound($c)
+    private static function isDigitCompound(string $c): bool
     {
-        return (($c >= '0' && $c <= '9') || $c === '.');
+        return (static::isDigit($c) || $c === '.');
     }
 
     /**
      * @param string $c
+     *
      * @return bool
      */
-    private static function isVarNameChar($c)
+    private static function isVarNameChar(string $c): bool
     {
-        return self::isAlpha($c) || ($c >= '0' && $c <= '9') || $c === '_' || $c === '\\';
+        return static::isAlpha($c) || static::isDigit($c) || $c === '_' || $c === '\\';
     }
 }

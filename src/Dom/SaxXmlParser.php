@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * PHPTAL templating engine
  *
@@ -16,6 +18,7 @@ namespace PhpTal\Dom;
 
 use PhpTal\Exception\IOException;
 use PhpTal\Exception\ParserException;
+use PhpTal\Exception\TemplateException;
 
 /**
  * Simple sax like xml parser for PHPTAL
@@ -38,24 +41,24 @@ class SaxXmlParser
 {
 
     // available parser states
-    const ST_ROOT = 0;
-    const ST_TEXT = 1;
-    const ST_LT = 2;
-    const ST_TAG_NAME = 3;
-    const ST_TAG_CLOSE = 4;
-    const ST_TAG_SINGLE = 5;
-    const ST_TAG_ATTRIBUTES = 6;
-    const ST_TAG_BETWEEN_ATTRIBUTE = 7;
-    const ST_CDATA = 8;
-    const ST_COMMENT = 9;
-    const ST_DOCTYPE = 10;
-    const ST_XMLDEC = 11;
-    const ST_PREPROC = 12;
-    const ST_ATTR_KEY = 13;
-    const ST_ATTR_EQ = 14;
-    const ST_ATTR_QUOTE = 15;
-    const ST_ATTR_VALUE = 16;
-    const BOM_STR = "\xef\xbb\xbf";
+    public const ST_ROOT = 0;
+    public const ST_TEXT = 1;
+    public const ST_LT = 2;
+    public const ST_TAG_NAME = 3;
+    public const ST_TAG_CLOSE = 4;
+    public const ST_TAG_SINGLE = 5;
+    public const ST_TAG_ATTRIBUTES = 6;
+    public const ST_TAG_BETWEEN_ATTRIBUTE = 7;
+    public const ST_CDATA = 8;
+    public const ST_COMMENT = 9;
+    public const ST_DOCTYPE = 10;
+    public const ST_XMLDEC = 11;
+    public const ST_PREPROC = 12;
+    public const ST_ATTR_KEY = 13;
+    public const ST_ATTR_EQ = 14;
+    public const ST_ATTR_QUOTE = 15;
+    public const ST_ATTR_VALUE = 16;
+    public const BOM_STR = "\xef\xbb\xbf";
 
     /**
      * @var array
@@ -101,7 +104,7 @@ class SaxXmlParser
      *
      * @param string $input_encoding
      */
-    public function __construct($input_encoding)
+    public function __construct(string $input_encoding)
     {
         $this->input_encoding = $input_encoding;
         $this->file = '<string>';
@@ -114,9 +117,9 @@ class SaxXmlParser
      * @return DocumentBuilder
      * @throws IOException
      * @throws ParserException
-     * @throws \PhpTal\Exception\TemplateException
+     * @throws TemplateException
      */
-    public function parseFile(DocumentBuilder $builder, $src)
+    public function parseFile(DocumentBuilder $builder, string $src): DocumentBuilder
     {
         if (!file_exists($src)) {
             throw new IOException("file $src not found");
@@ -128,15 +131,16 @@ class SaxXmlParser
      * @param DocumentBuilder $builder
      * @param string $src
      * @param string $filename
+     *
      * @return DocumentBuilder
      * @throws ParserException
-     * @throws \PhpTal\Exception\TemplateException
+     * @throws TemplateException
      */
-    public function parseString(DocumentBuilder $builder, $src, $filename = '<string>')
+    public function parseString(DocumentBuilder $builder, string $src, string $filename = null): DocumentBuilder
     {
         try {
             $builder->setEncoding($this->input_encoding);
-            $this->file = $filename;
+            $this->file = $filename ?? '<string>';
 
             $this->line = 1;
             $state = self::ST_ROOT;
@@ -195,16 +199,16 @@ class SaxXmlParser
                         if ($c === '/') {
                             $mark = $i + 1;
                             $state = self::ST_TAG_CLOSE;
-                        } elseif ($c === '?' and strtolower(substr($src, $i, 5)) === '?xml ') {
+                        } elseif ($c === '?' && strtolower(substr($src, $i, 5)) === '?xml ') {
                             $state = self::ST_XMLDEC;
                         } elseif ($c === '?') {
                             $state = self::ST_PREPROC;
-                        } elseif ($c === '!' and substr($src, $i, 3) === '!--') {
+                        } elseif ($c === '!' && substr($src, $i, 3) === '!--') {
                             $state = self::ST_COMMENT;
-                        } elseif ($c === '!' and substr($src, $i, 8) === '![CDATA[') {
+                        } elseif ($c === '!' && substr($src, $i, 8) === '![CDATA[') {
                             $state = self::ST_CDATA;
                             $mark = $i + 8; // past opening tag
-                        } elseif ($c === '!' and strtoupper(substr($src, $i, 8)) === '!DOCTYPE') {
+                        } elseif ($c === '!' && strtoupper(substr($src, $i, 8)) === '!DOCTYPE') {
                             $state = self::ST_DOCTYPE;
                         } elseif (self::isWhiteChar($c)) {
                             $state = self::ST_TEXT;
@@ -405,7 +409,7 @@ class SaxXmlParser
         } catch (ParserException $e) {
             $e->hintSrcPosition($this->file, $this->line);
             throw $e;
-        } catch (\PhpTal\Exception\TemplateException $e) {
+        } catch (TemplateException $e) {
             $e->hintSrcPosition($this->file, $this->line);
             throw $e;
         }
@@ -418,10 +422,13 @@ class SaxXmlParser
      * @return false|int
      * @throws ParserException
      */
-    private function isValidQName($name)
+    private function isValidQName(string $name): bool
     {
         $name = $this->checkEncoding($name);
-        return preg_match('/^([a-z_\x80-\xff]+[a-z0-9._\x80-\xff-]*:)?[a-z_\x80-\xff]+[a-z0-9._\x80-\xff-]*$/i', $name);
+        return (bool) preg_match(
+            '/^([a-z_\x80-\xff]+[a-z0-9._\x80-\xff-]*:)?[a-z_\x80-\xff]+[a-z0-9._\x80-\xff-]*$/i',
+            $name
+        );
     }
 
     /**
@@ -430,7 +437,7 @@ class SaxXmlParser
      * @return string
      * @throws ParserException
      */
-    private function checkEncoding($str)
+    private function checkEncoding(string $str): string
     {
         if ($str === '') {
             return '';
@@ -440,7 +447,7 @@ class SaxXmlParser
             // $match expression below somehow triggers quite deep recurrency and stack overflow in preg
             // to avoid this, check string bit by bit, omitting ASCII fragments.
             if (strlen($str) > 200) {
-                $chunks = preg_split('/(?>[\x09\x0A\x0D\x20-\x7F]+)/', $str, null, PREG_SPLIT_NO_EMPTY);
+                $chunks = preg_split('/(?>[\x09\x0A\x0D\x20-\x7F]+)/', $str, -1, PREG_SPLIT_NO_EMPTY);
                 foreach ($chunks as $chunk) {
                     if (strlen($chunk) < 200) {
                         $this->checkEncoding($chunk);
@@ -462,7 +469,7 @@ class SaxXmlParser
                 . '|\xF4[\x80-\x8F][\x80-\xBF]{2}';    // plane 16
 
             if (!preg_match('/^(?:(?>' . $match . '))+$/s', $str)) {
-                $res = preg_split('/((?>' . $match . ')+)/s', $str, null, PREG_SPLIT_DELIM_CAPTURE);
+                $res = preg_split('/((?>' . $match . ')+)/s', $str, -1, PREG_SPLIT_DELIM_CAPTURE);
                 for ($i = 0, $iMax = count($res); $i < $iMax; $i += 2) {
                     $res[$i] = self::convertBytesToEntities(array(1 => $res[$i]));
                 }
@@ -490,7 +497,7 @@ class SaxXmlParser
      *
      * @return string
      */
-    private static function convertBytesToEntities(array $m)
+    private static function convertBytesToEntities(array $m): string
     {
         $m = $m[1];
         $out = '';
@@ -505,9 +512,9 @@ class SaxXmlParser
      *
      * @param string $str
      *
-     * @return mixed|string
+     * @return string
      */
-    private function sanitizeEscapedText($str)
+    private function sanitizeEscapedText(string $str): string
     {
         $str = str_replace('&apos;', '&#39;', $str); // PHP's html_entity_decode doesn't seem to support that!
 
@@ -527,7 +534,7 @@ class SaxXmlParser
     /**
      * @return string
      */
-    public function getSourceFile()
+    public function getSourceFile(): string
     {
         return $this->file;
     }
@@ -535,27 +542,28 @@ class SaxXmlParser
     /**
      * @return int
      */
-    public function getLineNumber()
+    public function getLineNumber(): int
     {
         return $this->line;
     }
 
     /**
      * @param string $c
+     * 
      * @return bool
      */
-    public static function isWhiteChar($c)
+    public static function isWhiteChar($c): bool
     {
         return strpos(" \t\n\r\0", $c) !== false;
     }
 
     /**
-     * @param $errStr
+     * @param string $errStr
      *
      * @return void
      * @throws ParserException
      */
-    protected function raiseError($errStr)
+    protected function raiseError(string $errStr): void
     {
         throw new ParserException($errStr, $this->file, $this->line);
     }

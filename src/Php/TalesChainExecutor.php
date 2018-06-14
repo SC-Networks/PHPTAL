@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * PHPTAL templating engine
  *
@@ -19,8 +21,8 @@ namespace PhpTal\Php;
  */
 class TalesChainExecutor
 {
-    const CHAIN_BREAK = 1;
-    const CHAIN_CONT = 2;
+    public const CHAIN_BREAK = 1;
+    public const CHAIN_CONT = 2;
 
     /**
      * @var int
@@ -68,17 +70,17 @@ class TalesChainExecutor
     /**
      * @return CodeWriter
      */
-    public function getCodeWriter()
+    public function getCodeWriter(): CodeWriter
     {
         return $this->codewriter;
     }
 
     /**
-     * @param $condition
+     * @param string $condition
      * @return void
      * @throws \PhpTal\Exception\PhpTalException
      */
-    public function doIf($condition)
+    public function doIf(string $condition): void
     {
         if ($this->chainStarted === false) {
             $this->chainStarted = true;
@@ -92,7 +94,7 @@ class TalesChainExecutor
      * @return void
      * @throws \PhpTal\Exception\PhpTalException
      */
-    public function doElse()
+    public function doElse(): void
     {
         $this->codewriter->doElse();
     }
@@ -100,7 +102,7 @@ class TalesChainExecutor
     /**
      * @return void
      */
-    public function breakChain()
+    public function breakChain(): void
     {
         $this->state = self::CHAIN_BREAK;
     }
@@ -108,7 +110,7 @@ class TalesChainExecutor
     /**
      * @return void
      */
-    public function continueChain()
+    public function continueChain(): void
     {
         $this->state = self::CHAIN_CONT;
     }
@@ -117,7 +119,7 @@ class TalesChainExecutor
      * @return void
      * @throws \PhpTal\Exception\PhpTalException
      */
-    private function executeChain()
+    private function executeChain(): void
     {
         $this->codewriter->noThrow(true);
 
@@ -139,7 +141,7 @@ class TalesChainExecutor
                 break;
             }
             if ($this->state === self::CHAIN_CONT) {
-                continue;
+                continue; // basically a noop here
             }
         }
 

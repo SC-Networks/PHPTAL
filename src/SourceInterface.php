@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * PHPTAL templating engine
  *
@@ -29,7 +31,7 @@ interface SourceInterface
      *
      * @return string
      */
-    public function getRealPath();
+    public function getRealPath(): string;
 
     /**
      * template source last modified time (unix timestamp)
@@ -42,12 +44,12 @@ interface SourceInterface
      *
      * @return int
      */
-    public function getLastModifiedTime();
+    public function getLastModifiedTime(): int;
 
     /**
      * the template source
      *
      * @return string
      */
-    public function getData();
+    public function getData(): string;
 }

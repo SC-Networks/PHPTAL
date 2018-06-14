@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * PHPTAL templating engine
  *
@@ -21,7 +23,7 @@ namespace PhpTal;
  */
 class StringSource implements SourceInterface
 {
-    const NO_PATH_PREFIX = '<string ';
+    public const NO_PATH_PREFIX = '<string ';
 
     /**
      * @var string
@@ -40,7 +42,7 @@ class StringSource implements SourceInterface
      * @param string $data
      * @param string $realpath
      */
-    public function __construct($data, $realpath = null)
+    public function __construct($data, ?string $realpath = null)
     {
         $this->data = $data;
         $this->realpath = $realpath ?: self::NO_PATH_PREFIX . md5($data) . '>';
@@ -49,7 +51,7 @@ class StringSource implements SourceInterface
     /**
      * @return int
      */
-    public function getLastModifiedTime()
+    public function getLastModifiedTime(): int
     {
         if (strpos($this->realpath, self::NO_PATH_PREFIX) !== 0 && file_exists($this->realpath)) {
             return @filemtime($this->realpath);
@@ -61,7 +63,7 @@ class StringSource implements SourceInterface
     /**
      * @return string
      */
-    public function getData()
+    public function getData(): string
     {
         return $this->data;
     }
@@ -71,8 +73,11 @@ class StringSource implements SourceInterface
      *
      * @return string
      */
-    public function getRealPath()
+    public function getRealPath(): string
     {
+        if ($this->realpath === null) {
+            return '<string>';
+        }
         return $this->realpath;
     }
 }

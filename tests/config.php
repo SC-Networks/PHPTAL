@@ -15,7 +15,7 @@
 error_reporting( E_ALL | E_STRICT );
 assert_options(ASSERT_ACTIVE, 1);
 
-abstract class PHPTAL_TestCase extends PHPUnit_Framework_TestCase
+abstract class PHPTAL_TestCase extends \PHPUnit\Framework\TestCase
 {
     private $cwd_backup, $buffer_level;
 
@@ -56,7 +56,7 @@ abstract class PHPTAL_TestCase extends PHPUnit_Framework_TestCase
      */
     protected $backupGlobals = false;
 
-    protected function newPHPTAL($tpl = false)
+    protected function newPHPTAL($tpl = null)
     {
         $p = new \PhpTal\PHPTAL($tpl);
         $p->setForceReparse(true);

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * PHPTAL templating engine
  *
@@ -13,7 +15,9 @@
 
 namespace PhpTal\PreFilter;
 
+use PhpTal\Dom\DocumentType;
 use PhpTal\Dom\Element;
+use PhpTal\Dom\ProcessingInstruction;
 use PhpTal\Dom\Text;
 use PhpTal\Dom\XmlDeclaration;
 use PhpTal\TalNamespace\Builtin;
@@ -153,9 +157,10 @@ class Compress extends Normalize
 
     /**
      * @param Element $root
+     *
      * @return void
      */
-    public function filterDOM(Element $root)
+    public function filterDOM(Element $root): void
     {
         // let xml:space=preserve preserve everything
         if ($root->getAttributeNS(Builtin::NS_XML, 'space') === 'preserve') {
@@ -230,9 +235,9 @@ class Compress extends Normalize
                 }
             } elseif ($node instanceof Element) {
                 $this->filterDOM($node);
-            } elseif ($node instanceof \PhpTal\Dom\DocumentType || $node instanceof XmlDeclaration) {
+            } elseif ($node instanceof DocumentType || $node instanceof XmlDeclaration) {
                 $this->had_space = true;
-            } elseif ($node instanceof \PhpTal\Dom\ProcessingInstruction) {
+            } elseif ($node instanceof ProcessingInstruction) {
                 // PI may output something requiring spaces
                 $this->most_recent_text_node = null;
                 $this->had_space = false;
@@ -264,7 +269,7 @@ class Compress extends Normalize
      * @param Element $element
      * @return bool
      */
-    private function hasNoInterelementSpace(Element $element)
+    private function hasNoInterelementSpace(Element $element): bool
     {
         $namespaceURI = $element->getNamespaceURI();
         if ($element->getLocalName() === 'block'
@@ -281,7 +286,7 @@ class Compress extends Normalize
      * @param Element $element
      * @return bool
      */
-    private function breaksLine(Element $element)
+    private function breaksLine(Element $element): bool
     {
         if ($element->getAttributeNS(Builtin::NS_METAL, 'define-macro')) {
             return true;
@@ -303,7 +308,7 @@ class Compress extends Normalize
      * @param Element $element
      * @return bool
      */
-    private function isInlineBlock(Element $element)
+    private function isInlineBlock(Element $element): bool
     {
         $namespaceURI = $element->getNamespaceURI();
         if ($namespaceURI !== Builtin::NS_XHTML && $namespaceURI !== '') {
@@ -317,7 +322,7 @@ class Compress extends Normalize
      * Consistent sorting of attributes might give slightly better gzip performance
      * @param Element $element
      */
-    protected function normalizeAttributes(Element $element)
+    protected function normalizeAttributes(Element $element): void
     {
         parent::normalizeAttributes($element);
 
@@ -343,7 +348,7 @@ class Compress extends Normalize
      *
      * @return int
      */
-    private static function compareQNames($a, $b)
+    private static function compareQNames($a, $b): int
     {
         $a_index = array_search($a, self::$attributes_order);
         $b_index = array_search($b, self::$attributes_order);
@@ -362,7 +367,7 @@ class Compress extends Normalize
      *
      * @param Element $element
      */
-    private function elementSpecificOptimizations(Element $element)
+    private function elementSpecificOptimizations(Element $element): void
     {
         $namespaceURI = $element->getNamespaceURI();
         if ($namespaceURI !== Builtin::NS_XHTML && $namespaceURI !== '') {

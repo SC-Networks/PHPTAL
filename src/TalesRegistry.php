@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * PHPTAL templating engine
  *
@@ -47,7 +49,7 @@ final class TalesRegistry implements TalesRegistryInterface
      *
      * @throws Exception\ConfigurationException
      */
-    public static function unregisterPrefix($prefix)
+    public static function unregisterPrefix(string $prefix): void
     {
         if (!static::isRegistered($prefix)) {
             throw new Exception\ConfigurationException("Expression modifier '$prefix' is not registered");
@@ -68,10 +70,10 @@ final class TalesRegistry implements TalesRegistryInterface
      * @throws Exception\ConfigurationException
      * @throws \ReflectionException
      */
-    public static function registerPrefix($prefix, $callback, $is_fallback = false)
+    public static function registerPrefix(string $prefix, $callback, ?bool $is_fallback = null): void
     {
         if (static::isRegistered($prefix) && !static::$callbacks[$prefix]['is_fallback']) {
-            if ($is_fallback) {
+            if ($is_fallback === true) {
                 return; // simply ignored
             }
             throw new Exception\ConfigurationException("Expression modifier '$prefix' is already registered");
@@ -97,7 +99,7 @@ final class TalesRegistry implements TalesRegistryInterface
             throw new Exception\ConfigurationException('The function you are trying to register does not exist.');
         }
 
-        static::$callbacks[$prefix] = ['callback' => $callback, 'is_fallback' => $is_fallback];
+        static::$callbacks[$prefix] = ['callback' => $callback, 'is_fallback' => $is_fallback ?? false];
     }
 
     /**
@@ -107,7 +109,7 @@ final class TalesRegistry implements TalesRegistryInterface
      *
      * @return bool
      */
-    public static function isRegistered($prefix)
+    public static function isRegistered(string $prefix): bool
     {
         return array_key_exists($prefix, static::$callbacks);
     }
@@ -121,7 +123,7 @@ final class TalesRegistry implements TalesRegistryInterface
      * @throws Exception\UnknownModifierException
      * @throws \ReflectionException
      */
-    public static function getCallback($prefix)
+    public static function getCallback(string $prefix): ?callable
     {
         if (!static::isRegistered($prefix)) {
             return null;

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * PHPTAL templating engine
  *
@@ -80,14 +82,18 @@ class Define extends Attribute implements TalesChainReaderInterface
      * @param CodeWriter $codewriter
      *
      * @return void
+     * @throws \PhpTal\Exception\ParserException
+     * @throws \PhpTal\Exception\PhpNotAllowedException
+     * @throws \PhpTal\Exception\UnknownModifierException
+     * @throws \ReflectionException
      */
-    public function before(CodeWriter $codewriter)
+    public function before(CodeWriter $codewriter): void
     {
         $expressions = $codewriter->splitExpression($this->expression);
         $definesAnyNonGlobalVars = false;
 
         foreach ($expressions as $exp) {
-            list($defineScope, $defineVar, $expression) = $this->parseExpression($exp);
+            [$defineScope, $defineVar, $expression] = $this->parseExpression($exp);
             if (!$defineVar) {
                 continue;
             }
@@ -135,7 +141,7 @@ class Define extends Attribute implements TalesChainReaderInterface
      * @return void
      * @throws \PhpTal\Exception\PhpTalException
      */
-    public function after(CodeWriter $codewriter)
+    public function after(CodeWriter $codewriter): void
     {
         if ($this->tmp_content_var) {
             $codewriter->recycleTempVariable($this->tmp_content_var);
@@ -148,7 +154,9 @@ class Define extends Attribute implements TalesChainReaderInterface
     /**
      * @param CodeWriter $codewriter
      * @param array $parts
+     *
      * @return void
+     * @throws \PhpTal\Exception\PhpTalException
      */
     private function chainedDefine(CodeWriter $codewriter, $parts)
     {
@@ -160,8 +168,9 @@ class Define extends Attribute implements TalesChainReaderInterface
      *
      * @return void
      * @throws TemplateException
+     * @throws \PhpTal\Exception\PhpTalException
      */
-    public function talesChainNothingKeyword(TalesChainExecutor $executor)
+    public function talesChainNothingKeyword(TalesChainExecutor $executor): void
     {
         if (!$this->chainPartGenerated) {
             throw new TemplateException(
@@ -181,8 +190,9 @@ class Define extends Attribute implements TalesChainReaderInterface
      *
      * @return void
      * @throws TemplateException
+     * @throws \PhpTal\Exception\PhpTalException
      */
-    public function talesChainDefaultKeyword(TalesChainExecutor $executor)
+    public function talesChainDefaultKeyword(TalesChainExecutor $executor): void
     {
         if (!$this->chainPartGenerated) {
             throw new TemplateException(
@@ -199,13 +209,13 @@ class Define extends Attribute implements TalesChainReaderInterface
 
     /**
      * @param TalesChainExecutor $executor
-     * @param string $exp
+     * @param string $expression
      * @param bool $islast
      *
      * @return void
      * @throws \PhpTal\Exception\PhpTalException
      */
-    public function talesChainPart(TalesChainExecutor $executor, $exp, $islast)
+    public function talesChainPart(TalesChainExecutor $executor, string $expression, bool $islast): void
     {
         $this->chainPartGenerated = true;
 
@@ -220,11 +230,11 @@ class Define extends Attribute implements TalesChainReaderInterface
         if (!$islast) {
             // must use temp variable, because expression could refer to itself
             $tmp = $cw->createTempVariable();
-            $executor->doIf('(' . $tmp . ' = ' . $exp . ') !== null');
+            $executor->doIf('(' . $tmp . ' = ' . $expression . ') !== null');
             $cw->doSetVar($var, $tmp);
             $cw->recycleTempVariable($tmp);
         } else {
-            $executor->doIf('(' . $var . ' = ' . $exp . ') !== null');
+            $executor->doIf('(' . $var . ' = ' . $expression . ') !== null');
         }
     }
 
@@ -235,19 +245,19 @@ class Define extends Attribute implements TalesChainReaderInterface
      *
      * @return array
      */
-    public function parseExpression($exp)
+    public function parseExpression(string $exp): array
     {
         $defineScope = false; // (local | global)
 
         // extract defineScope from expression
         $exp = trim($exp);
         if (preg_match('/^(local|global)\s+(.*?)$/ism', $exp, $m)) {
-            list(, $defineScope, $exp) = $m;
+            [, $defineScope, $exp] = $m;
             $exp = trim($exp);
         }
 
         // extract varname and expression from remaining of expression
-        list($defineVar, $newExp) = $this->parseSetExpression($exp);
+        [$defineVar, $newExp] = $this->parseSetExpression($exp);
         if ($newExp !== null) {
             $newExp = trim($newExp);
         }
@@ -259,7 +269,7 @@ class Define extends Attribute implements TalesChainReaderInterface
      *
      * @return void
      */
-    private function bufferizeContent(CodeWriter $codewriter)
+    private function bufferizeContent(CodeWriter $codewriter): void
     {
         if (!$this->buffered) {
             $this->tmp_content_var = $codewriter->createTempVariable();
@@ -277,7 +287,7 @@ class Define extends Attribute implements TalesChainReaderInterface
      *
      * @return void
      */
-    private function doDefineVarWith(CodeWriter $codewriter, $code)
+    private function doDefineVarWith(CodeWriter $codewriter, string $code): void
     {
         if ($this->defineScope === 'global') {
             $codewriter->doSetVar('$tpl->getGlobalContext()->' . $this->defineVar, $code);

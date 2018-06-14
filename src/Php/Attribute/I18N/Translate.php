@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * PHPTAL templating engine
  *
@@ -14,10 +16,12 @@
 
 namespace PhpTal\Php\Attribute\I18N;
 
+use PhpTal\Dom\Attr;
 use PhpTal\Dom\Element;
 use PhpTal\Dom\Node;
 use PhpTal\Dom\Text;
 use PhpTal\Exception\TemplateException;
+use PhpTal\Php\Attribute;
 use PhpTal\Php\Attribute\TAL\Content;
 use PhpTal\Php\CodeWriter;
 use PhpTal\Php\TalesChainExecutor;
@@ -43,20 +47,24 @@ class Translate extends Content
      *
      * @return void
      *
-     * @throws \PhpTal\Exception\ConfigurationException
      * @throws TemplateException
+     * @throws \PhpTal\Exception\ConfigurationException
+     * @throws \PhpTal\Exception\ParserException
+     * @throws \PhpTal\Exception\PhpNotAllowedException
      * @throws \PhpTal\Exception\PhpTalException
+     * @throws \PhpTal\Exception\UnknownModifierException
+     * @throws \ReflectionException
      */
-    public function before(CodeWriter $codewriter)
+    public function before(CodeWriter $codewriter): void
     {
         $escape = true;
-        $this->echoType = \PhpTal\Php\Attribute::ECHO_TEXT;
+        $this->echoType = Attribute::ECHO_TEXT;
         if (preg_match('/^(text|structure)(?:\s+(.*)|\s*$)/', $this->expression, $m)) {
             if ($m[1] === 'structure') {
                 $escape = false;
-                $this->echoType = \PhpTal\Php\Attribute::ECHO_STRUCTURE;
+                $this->echoType = Attribute::ECHO_STRUCTURE;
             }
-            $this->expression = isset($m[2]) ? $m[2] : '';
+            $this->expression = $m[2] ?? '';
         }
 
         $this->prepareNames($codewriter, $this->phpelement);
@@ -93,33 +101,33 @@ class Translate extends Content
      * @param CodeWriter $codewriter
      * @return void
      */
-    public function after(CodeWriter $codewriter)
+    public function after(CodeWriter $codewriter): void
     {
     }
 
     /**
      * @param TalesChainExecutor $executor
-     * @param mixed $exp
+     * @param mixed $expression
      * @param bool $islast
      *
      * @return void
      * @throws \PhpTal\Exception\ConfigurationException
      * @throws \PhpTal\Exception\PhpTalException
      */
-    public function talesChainPart(TalesChainExecutor $executor, $exp, $islast)
+    public function talesChainPart(TalesChainExecutor $executor, string $expression, bool $islast): void
     {
         $codewriter = $executor->getCodeWriter();
 
-        $escape = \PhpTal\Php\Attribute::ECHO_STRUCTURE !== $this->echoType;
-        $exp = $codewriter->getTranslatorReference() . "->translate($exp, " . ($escape ? 'true' : 'false') . ')';
+        $escape = Attribute::ECHO_STRUCTURE !== $this->echoType;
+        $expression = $codewriter->getTranslatorReference() . "->translate($expression, " . ($escape ? 'true' : 'false') . ')';
         if (!$islast) {
             $var = $codewriter->createTempVariable();
-            $executor->doIf('!\PhpTal\Helper::phptal_isempty(' . $var . ' = ' . $exp . ')');
+            $executor->doIf('!\PhpTal\Helper::phptal_isempty(' . $var . ' = ' . $expression . ')');
             $codewriter->pushCode("echo $var");
             $codewriter->recycleTempVariable($var);
         } else {
             $executor->doElse();
-            $codewriter->pushCode("echo $exp");
+            $codewriter->pushCode("echo $expression");
         }
     }
 
@@ -130,7 +138,7 @@ class Translate extends Content
      *
      * @return string
      */
-    private function getTranslationKey(Node $tag, $preserve_tags, $encoding)
+    private function getTranslationKey(Node $tag, bool $preserve_tags, string $encoding): string
     {
         $result = '';
         foreach ($tag->childNodes as $child) {
@@ -138,7 +146,7 @@ class Translate extends Content
                 if ($preserve_tags) {
                     $result .= $child->getValueEscaped();
                 } else {
-                    $result .= $child->getValue($encoding);
+                    $result .= $child->getValue();
                 }
             } elseif ($child instanceof Element) {
                 $attr = $child->getAttributeNodeNS(Builtin::NS_I18N, 'name');
@@ -147,7 +155,7 @@ class Translate extends Content
                 } elseif ($preserve_tags) {
                     $result .= '<' . $child->getQualifiedName();
                     foreach ($child->getAttributeNodes() as $attr) {
-                        if ($attr->getReplacedState() === \PhpTal\Dom\Attr::HIDDEN) {
+                        if ($attr->getReplacedState() === Attr::HIDDEN) {
                             continue;
                         }
 
@@ -172,7 +180,7 @@ class Translate extends Content
      * @throws \PhpTal\Exception\PhpTalException
      * @throws TemplateException
      */
-    private function prepareNames(CodeWriter $codewriter, Node $tag)
+    private function prepareNames(CodeWriter $codewriter, Node $tag): void
     {
         foreach ($tag->childNodes as $child) {
             if ($child instanceof Element) {

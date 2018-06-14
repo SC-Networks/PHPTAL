@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Tests\Testhelper;
 
@@ -24,18 +25,20 @@ class DummyTranslator implements TranslationServiceInterface
     public $translations = array();
     public $domain;
 
-    public function setLanguage(...$langs)
+    public function setLanguage(...$langs): string
     {
+        return '';
     }
 
-    public function setEncoding($enc) {}
+    public function setEncoding(string $enc): void {}
 
-    public function useDomain($domain)
+    public function useDomain(?string $domain): ?string
     {
         $this->domain = $domain;
+        return null;
     }
 
-    public function setVar($key, $value)
+    public function setVar(string $key, $value): void
     {
         $this->vars[$key] = $value;
     }
@@ -45,7 +48,7 @@ class DummyTranslator implements TranslationServiceInterface
         $this->translations[$key] = $translation;
     }
 
-    public function translate($key, $escape = true)
+    public function translate(?string $key, bool $escape = true): string
     {
         if (array_key_exists($key, $this->translations)) {
             $v = $this->translations[$key];
@@ -53,7 +56,7 @@ class DummyTranslator implements TranslationServiceInterface
             $v = $key;
         }
 
-        if ($escape) $v = htmlspecialchars($v);
+        if ($escape) $v = htmlspecialchars($v ?? '');
 
         while (preg_match('/\$\{(.*?)\}/sm', $v, $m)) {
             list($src, $var) = $m;

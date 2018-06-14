@@ -1,4 +1,7 @@
 <?php
+declare(strict_types=1);
+
+
 /**
  * PHPTAL templating engine
  *
@@ -26,7 +29,7 @@ class Comment extends Node
      *
      * @param CodeWriter $codewriter
      */
-    public function generateCode(CodeWriter $codewriter)
+    public function generateCode(CodeWriter $codewriter): void
     {
         if (!preg_match('/^\s*!/', $this->getValueEscaped())) {
             $codewriter->pushHTML('<!--'.$this->getValueEscaped().'-->');

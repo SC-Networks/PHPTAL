@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * PHPTAL templating engine
  *
@@ -52,7 +54,7 @@ class DefineMacro extends Attribute
      * @throws ParserException
      * @throws TemplateException
      */
-    public function before(CodeWriter $codewriter)
+    public function before(CodeWriter $codewriter): void
     {
         $macroname = str_replace('-', '_', trim($this->expression));
         if (!preg_match('/^[a-z0-9_]+$/i', $macroname)) {
@@ -87,7 +89,7 @@ class DefineMacro extends Attribute
      * @return void
      * @throws \PhpTal\Exception\PhpTalException
      */
-    public function after(CodeWriter $codewriter)
+    public function after(CodeWriter $codewriter): void
     {
         $codewriter->doEnd('function');
     }

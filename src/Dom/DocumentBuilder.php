@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * PHPTAL templating engine
  *
@@ -50,68 +52,76 @@ abstract class DocumentBuilder
     }
 
     /**
-     * @return mixed
+     * @return Element|string (string in test only...)
      */
     abstract public function getResult();
 
     /**
-     * @return mixed
+     * @return void
      */
-    abstract public function onDocumentStart();
+    abstract public function onDocumentStart(): void;
 
     /**
-     * @return mixed
+     * @return void
      */
-    abstract public function onDocumentEnd();
+    abstract public function onDocumentEnd(): void;
 
     /**
-     * @param $doctype
-     * @return mixed
+     * @param string $doctype
+     *
+     * @return void
      */
-    abstract public function onDocType($doctype);
+    abstract public function onDocType(string $doctype): void;
 
     /**
-     * @param $decl
-     * @return mixed
+     * @param string $decl
+     *
+     * @return void
      */
-    abstract public function onXmlDecl($decl);
+    abstract public function onXmlDecl(string $decl): void;
 
     /**
-     * @param $data
-     * @return mixed
+     * @param string $data
+     *
+     * @return void
      */
-    abstract public function onComment($data);
-
-    /**
-     * @param $data
-     * @return mixed
-     */
-    abstract public function onCDATASection($data);
+    abstract public function onComment(string $data): void;
 
     /**
      * @param $data
-     * @return mixed
+     *
+     * @return void
      */
-    abstract public function onProcessingInstruction($data);
+    abstract public function onCDATASection(string $data): void;
 
     /**
-     * @param $element_qname
+     * @param string $data
+     *
+     * @return void
+     */
+    abstract public function onProcessingInstruction(string $data): void;
+
+    /**
+     * @param string $element_qname
      * @param array $attributes
-     * @return mixed
+     *
+     * @return void
      */
-    abstract public function onElementStart($element_qname, array $attributes);
+    abstract public function onElementStart(string $element_qname, array $attributes): void;
 
     /**
-     * @param $data
-     * @return mixed
+     * @param string $data
+     *
+     * @return void
      */
-    abstract public function onElementData($data);
+    abstract public function onElementData(string $data): void;
 
     /**
-     * @param $qname
-     * @return mixed
+     * @param string $qname
+     *
+     * @return void
      */
-    abstract public function onElementClose($qname);
+    abstract public function onElementClose(string $qname): void;
 
     /**
      * @param string $file
@@ -119,7 +129,7 @@ abstract class DocumentBuilder
      *
      * @return void
      */
-    public function setSource($file, $line)
+    public function setSource(string $file, int $line): void
     {
         $this->file = $file;
         $this->line = $line;
@@ -127,7 +137,8 @@ abstract class DocumentBuilder
 
     /**
      * @param string $encoding
-     * @return mixed
+     *
+     * @return void
      */
-    abstract public function setEncoding($encoding);
+    abstract public function setEncoding(string $encoding): void;
 }

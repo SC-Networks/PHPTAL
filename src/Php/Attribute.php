@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * PHPTAL templating engine
  *
@@ -29,8 +31,8 @@ use PhpTal\Dom\Element;
  */
 abstract class Attribute
 {
-    const ECHO_TEXT = 'text';
-    const ECHO_STRUCTURE = 'structure';
+    public const ECHO_TEXT = 'text';
+    public const ECHO_STRUCTURE = 'structure';
 
     /**
      * @var string
@@ -56,7 +58,7 @@ abstract class Attribute
      *
      * @return void
      */
-    abstract public function before(CodeWriter $codewriter);
+    abstract public function before(CodeWriter $codewriter): void;
 
     /**
      * Called after element printing.
@@ -65,14 +67,14 @@ abstract class Attribute
      *
      * @return void
      */
-    abstract public function after(CodeWriter $codewriter);
+    abstract public function after(CodeWriter $codewriter): void;
 
     /**
      * Attribute constructor.
      * @param Element $phpelement
      * @param string $expression
      */
-    public function __construct(Element $phpelement, $expression)
+    public function __construct(Element $phpelement, string $expression)
     {
         $this->expression = $expression;
         $this->phpelement = $phpelement;
@@ -93,12 +95,12 @@ abstract class Attribute
      *
      * @return string
      */
-    protected function extractEchoType($expression)
+    protected function extractEchoType(string $expression): string
     {
         $echoType = self::ECHO_TEXT;
         $expression = trim($expression);
         if (preg_match('/^(text|structure)\s+(.*?)$/ism', $expression, $m)) {
-            list(, $echoType, $expression) = $m;
+            [, $echoType, $expression] = $m;
         }
         $this->echoType = strtolower($echoType);
         return trim($expression);
@@ -110,7 +112,7 @@ abstract class Attribute
      *
      * @return void
      */
-    protected function doEchoAttribute(CodeWriter $codewriter, $code)
+    protected function doEchoAttribute(CodeWriter $codewriter, string $code): void
     {
         if ($this->echoType === self::ECHO_TEXT) {
             $codewriter->doEcho($code);
@@ -124,7 +126,7 @@ abstract class Attribute
      *
      * @return array
      */
-    protected function parseSetExpression($exp)
+    protected function parseSetExpression(string $exp): array
     {
         $exp = trim($exp);
         // (dest) (value)

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * PHPTAL templating engine
  *
@@ -82,16 +84,20 @@ class Repeat extends Attribute
      * @param CodeWriter $codewriter
      *
      * @return void
+     * @throws \PhpTal\Exception\ParserException
+     * @throws \PhpTal\Exception\PhpNotAllowedException
+     * @throws \PhpTal\Exception\UnknownModifierException
+     * @throws \ReflectionException
      */
-    public function before(CodeWriter $codewriter)
+    public function before(CodeWriter $codewriter): void
     {
         $this->var = $codewriter->createTempVariable();
 
         // alias to repeats handler to avoid calling extra getters on each variable access
         $codewriter->doSetVar($this->var, '$ctx->repeat');
 
-        list($varName, $expression) = $this->parseSetExpression($this->expression);
-        $code = $codewriter->evaluateExpression($expression);
+        [$varName, $expression] = $this->parseSetExpression($this->expression);
+        $code = $codewriter->evaluateExpression($expression ?? '');
 
         // instantiate controller using expression
         $codewriter->doSetVar($this->var.'->'.$varName, 'new \PhpTal\RepeatController('.$code.')'."\n");
@@ -110,7 +116,7 @@ class Repeat extends Attribute
      * @return void
      * @throws \PhpTal\Exception\PhpTalException
      */
-    public function after(CodeWriter $codewriter)
+    public function after(CodeWriter $codewriter): void
     {
         $codewriter->doEnd('foreach');
         $codewriter->popContext();

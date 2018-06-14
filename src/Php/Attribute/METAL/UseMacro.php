@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * PHPTAL templating engine
  *
@@ -17,6 +19,7 @@ namespace PhpTal\Php\Attribute\METAL;
 use PhpTal\Dom\Element;
 use PhpTal\Dom\Node;
 use PhpTal\Exception\TemplateException;
+use PhpTal\Php\Attribute;
 use PhpTal\Php\CodeWriter;
 use PhpTal\TalNamespace\Builtin;
 
@@ -40,7 +43,7 @@ use PhpTal\TalNamespace\Builtin;
  * @package PHPTAL
  * @author Laurent Bedubourg <lbedubourg@motion-twin.com>
  */
-class UseMacro extends \PhpTal\Php\Attribute
+class UseMacro extends Attribute
 {
     /**
      * @var array
@@ -58,9 +61,12 @@ class UseMacro extends \PhpTal\Php\Attribute
      *
      * @return void
      * @throws TemplateException
+     * @throws \PhpTal\Exception\ParserException
      * @throws \PhpTal\Exception\PhpTalException
+     * @throws \PhpTal\Exception\UnknownModifierException
+     * @throws \ReflectionException
      */
-    public function before(CodeWriter $codewriter)
+    public function before(CodeWriter $codewriter): void
     {
         $this->pushSlots($codewriter);
 
@@ -102,7 +108,7 @@ class UseMacro extends \PhpTal\Php\Attribute
      *
      * @return void
      */
-    public function after(CodeWriter $codewriter)
+    public function after(CodeWriter $codewriter): void
     {
     }
 
@@ -121,7 +127,7 @@ class UseMacro extends \PhpTal\Php\Attribute
      *
      * @param CodeWriter $codewriter
      */
-    private function pushSlots(CodeWriter $codewriter)
+    private function pushSlots(CodeWriter $codewriter): void
     {
         if (!$this->phpelement->hasAttributeNS(Builtin::NS_METAL, 'define-macro')) {
             $codewriter->pushCode('$ctx->pushSlots()');
@@ -134,7 +140,7 @@ class UseMacro extends \PhpTal\Php\Attribute
      *
      * @param CodeWriter $codewriter
      */
-    private function popSlots(CodeWriter $codewriter)
+    private function popSlots(CodeWriter $codewriter): void
     {
         if (!$this->phpelement->hasAttributeNS(Builtin::NS_METAL, 'define-macro')) {
             $codewriter->pushCode('$ctx->popSlots()');
@@ -149,7 +155,7 @@ class UseMacro extends \PhpTal\Php\Attribute
      * @throws \PhpTal\Exception\PhpTalException
      * @throws TemplateException
      */
-    private function generateFillSlots(CodeWriter $codewriter, Node $phpelement)
+    private function generateFillSlots(CodeWriter $codewriter, Node $phpelement): void
     {
         if ($phpelement instanceof Element === false) {
             return;

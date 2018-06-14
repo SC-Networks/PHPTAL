@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * PHPTAL templating engine
  *
@@ -28,7 +30,7 @@ class Text extends Node
      *
      * @param CodeWriter $codewriter
      */
-    public function generateCode(CodeWriter $codewriter)
+    public function generateCode(CodeWriter $codewriter): void
     {
         if ($this->getValueEscaped() !== '') {
             $codewriter->pushHTML($codewriter->interpolateHTML($this->getValueEscaped()));

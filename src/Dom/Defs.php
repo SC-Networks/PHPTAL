@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * PHPTAL templating engine
  *
@@ -14,11 +16,13 @@
 
 namespace PhpTal\Dom;
 
+use PhpTal\TalNamespace;
 use PhpTal\TalNamespace\Builtin;
 use PhpTal\TalNamespace\I18N;
 use PhpTal\TalNamespace\METAL;
 use PhpTal\TalNamespace\PHPTAL;
 use PhpTal\TalNamespace\TAL;
+use PhpTal\TalNamespaceAttribute;
 
 /**
  * PHPTAL constants.
@@ -125,7 +129,7 @@ class Defs
     /**
      * this is a singleton
      */
-    public static function getInstance()
+    public static function getInstance(): Defs
     {
         if (!self::$instance) {
             self::$instance = new Defs();
@@ -150,7 +154,7 @@ class Defs
      *
      * @return bool
      */
-    public function isEmptyTagNS($namespace_uri, $local_name)
+    public function isEmptyTagNS(string $namespace_uri, string $local_name): bool
     {
         return ($namespace_uri === Builtin::NS_XHTML || $namespace_uri === '')
             && in_array(strtolower($local_name), self::$XHTML_EMPTY_TAGS);
@@ -161,11 +165,11 @@ class Defs
      *
      * @param string $prefix
      *
-     * @return bool|string
+     * @return string
      */
-    public function prefixToNamespaceURI($prefix)
+    public function prefixToNamespaceURI($prefix): ?string
     {
-        return isset($this->prefix_to_uri[$prefix]) ? $this->prefix_to_uri[$prefix] : false;
+        return $this->prefix_to_uri[$prefix] ?? null;
     }
 
     /**
@@ -175,9 +179,9 @@ class Defs
      *
      * @return bool
      */
-    public function namespaceURIToPrefix($uri)
+    public function namespaceURIToPrefix($uri): bool
     {
-        return array_search($uri, $this->prefix_to_uri, true);
+        return (bool) array_search($uri, $this->prefix_to_uri, true);
     }
 
     /**
@@ -185,7 +189,7 @@ class Defs
      *
      * @return array
      */
-    public function getPredefinedPrefixes()
+    public function getPredefinedPrefixes(): array
     {
         return $this->prefix_to_uri;
     }
@@ -197,7 +201,7 @@ class Defs
      *
      * @return bool
      */
-    public function isBooleanAttribute($att)
+    public function isBooleanAttribute(string $att): bool
     {
         return in_array($att, self::$XHTML_BOOLEAN_ATTRIBUTES);
     }
@@ -211,7 +215,7 @@ class Defs
      *
      * @return bool
      */
-    public function isCDATAElementInHTML($namespace_uri, $local_name)
+    public function isCDATAElementInHTML(string $namespace_uri, string $local_name): bool
     {
         return ($local_name === 'script' || $local_name === 'style')
             && ($namespace_uri === Builtin::NS_XHTML || $namespace_uri === '');
@@ -228,7 +232,7 @@ class Defs
      *
      * @return bool
      */
-    public function isValidAttributeNS($namespace_uri, $local_name)
+    public function isValidAttributeNS(string $namespace_uri, string $local_name): bool
     {
         if (!$this->isHandledNamespace($namespace_uri)) {
             return false;
@@ -245,7 +249,7 @@ class Defs
      *
      * @return bool
      */
-    public function isHandledNamespace($namespace_uri)
+    public function isHandledNamespace(string $namespace_uri): bool
     {
         return isset($this->namespaces_by_uri[$namespace_uri]);
     }
@@ -257,11 +261,11 @@ class Defs
      * Examples of handled xmlns:  xmlns:tal, xmlns:metal
      *
      * @param string $qname
-     * @param mixed $value
+     * @param string $value
      *
      * @return bool
      */
-    public function isHandledXmlNs($qname, $value)
+    public function isHandledXmlNs(string $qname, string $value): bool
     {
         return stripos($qname, 'xmlns:') === 0 && $this->isHandledNamespace($value);
     }
@@ -272,9 +276,9 @@ class Defs
      * @param string $namespace_uri
      * @param string $local_name
      *
-     * @return mixed
+     * @return TalNamespaceAttribute
      */
-    public function getNamespaceAttribute($namespace_uri, $local_name)
+    public function getNamespaceAttribute(string $namespace_uri, string $local_name): TalNamespaceAttribute
     {
         $attrs = $this->namespaces_by_uri[$namespace_uri]->getAttributes();
         return $attrs[$local_name];
@@ -283,9 +287,9 @@ class Defs
     /**
      * Register a \PhpTal\TalNamespace and its attribute into PHPTAL.
      *
-     * @param \PhpTal\TalNamespace $ns
+     * @param TalNamespace $ns
      */
-    public function registerNamespace(\PhpTal\TalNamespace $ns)
+    public function registerNamespace(TalNamespace $ns): void
     {
         $this->namespaces_by_uri[$ns->getNamespaceURI()] = $ns;
         $this->prefix_to_uri[$ns->getPrefix()] = $ns->getNamespaceURI();

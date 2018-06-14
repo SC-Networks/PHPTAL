@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * PHPTAL templating engine
  *
@@ -42,9 +44,9 @@ abstract class TalNamespace
      * @param string $namespace_uri
      * @throws Exception\ConfigurationException
      */
-    public function __construct($prefix, $namespace_uri)
+    public function __construct(string $prefix, string $namespace_uri)
     {
-        if (!$namespace_uri || !$prefix) {
+        if (empty($namespace_uri) || empty($prefix)) {
             throw new Exception\ConfigurationException("Can't create namespace with empty prefix or namespace URI");
         }
 
@@ -56,7 +58,7 @@ abstract class TalNamespace
     /**
      * @return string
      */
-    public function getPrefix()
+    public function getPrefix(): string
     {
         return $this->prefix;
     }
@@ -64,34 +66,37 @@ abstract class TalNamespace
     /**
      * @return string
      */
-    public function getNamespaceURI()
+    public function getNamespaceURI(): string
     {
         return $this->namespace_uri;
     }
 
     /**
-     * @param $attributeName
+     * @param string $attributeName
+     *
      * @return bool
      */
-    public function hasAttribute($attributeName)
+    public function hasAttribute(string $attributeName): bool
     {
         return array_key_exists(strtolower($attributeName), $this->attributes);
     }
 
     /**
-     * @param $attributeName
+     * @param string $attributeName
+     *
      * @return mixed
      */
-    public function getAttribute($attributeName)
+    public function getAttribute(string $attributeName)
     {
         return $this->attributes[strtolower($attributeName)];
     }
 
     /**
      * @param TalNamespaceAttribute $attribute
+     *
      * @return void
      */
-    public function addAttribute(TalNamespaceAttribute $attribute)
+    public function addAttribute(TalNamespaceAttribute $attribute): void
     {
         $attribute->setNamespace($this);
         $this->attributes[strtolower($attribute->getLocalName())] = $attribute;
@@ -100,7 +105,7 @@ abstract class TalNamespace
     /**
      * @return array
      */
-    public function getAttributes()
+    public function getAttributes(): array
     {
         return $this->attributes;
     }
@@ -109,6 +114,7 @@ abstract class TalNamespace
      * @param TalNamespaceAttribute $att
      * @param Dom\Element $tag
      * @param mixed $expression
+     *
      * @return Php\Attribute
      */
     abstract public function createAttributeHandler(TalNamespaceAttribute $att, Dom\Element $tag, $expression);
