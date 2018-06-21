@@ -12,33 +12,38 @@
  * @link     http://phptal.org/
  */
 
+namespace Tests;
 
-
-class TalOmitTagTest extends PHPTAL_TestCase
+class TalOmitTagTest extends \Tests\Testcase\PhpTal
 {
-    function testSimple()
+    /**
+     * @var int
+     */
+    private $call_count = 0;
+
+
+    public function testSimple()
     {
         $tpl = $this->newPHPTAL('input/tal-omit-tag.01.html');
-        $res = normalize_html($tpl->execute());
-        $exp = normalize_html_file('output/tal-omit-tag.01.html');
+        $res = \Tests\Testhelper\Helper::normalizeHtml($tpl->execute());
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/tal-omit-tag.01.html');
         $this->assertEquals($exp, $res);
     }
 
-    function testWithCondition()
+    public function testWithCondition()
     {
         $tpl = $this->newPHPTAL('input/tal-omit-tag.02.html');
-        $res = normalize_html($tpl->execute());
-        $exp = normalize_html_file('output/tal-omit-tag.02.html');
+        $res = \Tests\Testhelper\Helper::normalizeHtml($tpl->execute());
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/tal-omit-tag.02.html');
         $this->assertEquals($exp, $res);
     }
 
-    private $call_count;
-    function callCount()
+    public function callCount()
     {
         $this->call_count++;
     }
 
-    function testCalledOnlyOnce()
+    public function testCalledOnlyOnce()
     {
         $this->call_count=0;
         $tpl = $this->newPHPTAL();
@@ -52,7 +57,7 @@ class TalOmitTagTest extends PHPTAL_TestCase
         $this->assertEquals(2, $this->call_count);
     }
 
-    function testNestedConditions()
+    public function testNestedConditions()
     {
         $this->call_count=0;
         $tpl = $this->newPHPTAL();
@@ -61,4 +66,3 @@ class TalOmitTagTest extends PHPTAL_TestCase
         $this->assertEquals('a<span>bc<span>d<span>efghi</span>j</span>k</span>', $tpl->execute());
     }
 }
-

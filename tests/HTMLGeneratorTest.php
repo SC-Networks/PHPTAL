@@ -1,7 +1,5 @@
 <?php
 
-namespace Tests;
-
 /**
  * PHPTAL templating engine
  *
@@ -15,8 +13,9 @@ namespace Tests;
  * @link     http://phptal.org/
  */
 
+namespace Tests;
 
-class HTMLGeneratorTest extends \PHPTAL_TestCase
+class HTMLGeneratorTest extends \Tests\Testcase\PhpTal
 {
 
     public function testTalDoesntConsumeNewline()

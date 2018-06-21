@@ -1,7 +1,5 @@
 <?php
 
-namespace Tests;
-
 /**
  * PHPTAL templating engine
  *
@@ -15,15 +13,16 @@ namespace Tests;
  * @link     http://phptal.org/
  */
 
+namespace Tests;
 
-class TalAttributesTest extends \PHPTAL_TestCase
+class TalAttributesTest extends \Tests\Testcase\PhpTal
 {
 
     public function testSimple()
     {
         $tpl = $this->newPHPTAL('input/tal-attributes.01.html');
-        $res = normalize_html($tpl->execute());
-        $exp = normalize_html_file('output/tal-attributes.01.html');
+        $res = \Tests\Testhelper\Helper::normalizeHtml($tpl->execute());
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/tal-attributes.01.html');
         $this->assertEquals($exp, $res);
     }
 
@@ -31,8 +30,8 @@ class TalAttributesTest extends \PHPTAL_TestCase
     {
         $tpl = $this->newPHPTAL('input/tal-attributes.02.html');
         $tpl->spanClass = 'dummy';
-        $res = normalize_html($tpl->execute());
-        $exp = normalize_html_file('output/tal-attributes.02.html');
+        $res = \Tests\Testhelper\Helper::normalizeHtml($tpl->execute());
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/tal-attributes.02.html');
         $this->assertEquals($exp, $res);
     }
 
@@ -40,8 +39,8 @@ class TalAttributesTest extends \PHPTAL_TestCase
     {
         $tpl = $this->newPHPTAL('input/tal-attributes.03.html');
         $tpl->spanClass = 'dummy';
-        $res = normalize_html($tpl->execute());
-        $exp = normalize_html_file('output/tal-attributes.03.html');
+        $res = \Tests\Testhelper\Helper::normalizeHtml($tpl->execute());
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/tal-attributes.03.html');
         $this->assertEquals($exp, $res);
     }
 
@@ -49,8 +48,8 @@ class TalAttributesTest extends \PHPTAL_TestCase
     {
         $tpl = $this->newPHPTAL('input/tal-attributes.04.html');
         $tpl->spanClass = 'dummy';
-        $res = normalize_html($tpl->execute());
-        $exp = normalize_html_file('output/tal-attributes.04.html');
+        $res = \Tests\Testhelper\Helper::normalizeHtml($tpl->execute());
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/tal-attributes.04.html');
         $this->assertEquals($exp, $res);
     }
 
@@ -58,8 +57,8 @@ class TalAttributesTest extends \PHPTAL_TestCase
     {
         $tpl = $this->newPHPTAL('input/tal-attributes.05.html');
         $tpl->spanClass = 'dummy';
-        $res = normalize_html($tpl->execute());
-        $exp = normalize_html_file('output/tal-attributes.05.html');
+        $res = \Tests\Testhelper\Helper::normalizeHtml($tpl->execute());
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/tal-attributes.05.html');
         $this->assertEquals($exp, $res);
     }
 
@@ -69,8 +68,8 @@ class TalAttributesTest extends \PHPTAL_TestCase
         $tpl->href = "http://www.test.com/?foo=bar&buz=biz&<thisissomething";
         $tpl->title = 'bla bla <blabla>';
         $res = $tpl->execute();
-        $res = normalize_html($res);
-        $exp = normalize_html_file('output/tal-attributes.06.html');
+        $res = \Tests\Testhelper\Helper::normalizeHtml($res);
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/tal-attributes.06.html');
         $this->assertEquals($exp, $res);
     }
 
@@ -80,8 +79,8 @@ class TalAttributesTest extends \PHPTAL_TestCase
         $tpl->href1 = 0;
         $tpl->href2 = 0;
         $tpl->href3 = 0;
-        $res = normalize_html($tpl->execute());
-        $exp = normalize_html_file('output/tal-attributes.07.html');
+        $res = \Tests\Testhelper\Helper::normalizeHtml($tpl->execute());
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/tal-attributes.07.html');
         $this->assertEquals($exp, $res);
     }
 
@@ -105,7 +104,7 @@ EOT;
 
     public function testSingleQuote()
     {
-        $exp = normalize_html_file('output/tal-attributes.08.html');
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/tal-attributes.08.html');
         $tpl = $this->newPHPTAL('input/tal-attributes.08.html');
         $res = $tpl->execute();
         $this->assertEquals($exp, $res);
@@ -113,7 +112,7 @@ EOT;
 
     public function testStructure()
     {
-        $exp = normalize_html_file('output/tal-attributes.09.html');
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/tal-attributes.09.html');
         $tpl = $this->newPHPTAL('input/tal-attributes.09.html');
         $tpl->value = "return confirm('hel<lo');";
         $res = $tpl->execute();
@@ -122,7 +121,7 @@ EOT;
 
     public function testChainedStructure()
     {
-        $exp = normalize_html_file('output/tal-attributes.10.html');
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/tal-attributes.10.html');
         $tpl = $this->newPHPTAL('input/tal-attributes.10.html');
         $tpl->value1 = false;
         $tpl->value2 = "return confirm('hel<lo');";

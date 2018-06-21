@@ -12,11 +12,11 @@
  * @link     http://phptal.org/
  */
 
+namespace Tests;
 
-
-class PreFilterNormalizeTest extends PHPTAL_TestCase
+class PreFilterNormalizeTest extends \Tests\Testcase\PhpTal
 {
-    function testBasic()
+    public function testBasic()
     {
         $tpl = $this->newPHPTAL()->setSource("<p>\t\n\rhello       world</p>");
         $tpl->addPreFilter(new \PhpTal\PreFilter\Normalize());
@@ -24,7 +24,7 @@ class PreFilterNormalizeTest extends PHPTAL_TestCase
         $this->assertEquals("<p> hello world</p>", $tpl->execute());
     }
 
-    function testPreSkipped()
+    public function testPreSkipped()
     {
         $tpl = $this->newPHPTAL()->setSource("<pre>\r\n foo</pre>");
         $tpl->addPreFilter(new \PhpTal\PreFilter\Normalize());
@@ -32,7 +32,7 @@ class PreFilterNormalizeTest extends PHPTAL_TestCase
         $this->assertEquals("<pre>\n foo</pre>", $tpl->execute());
     }
 
-    function testTextAreaSkipped()
+    public function testTextAreaSkipped()
     {
         $tpl = $this->newPHPTAL()->setSource("<t:textarea xmlns:t='http://www.w3.org/1999/xhtml'>\r\n foo</t:textarea><p>  </p>");
         $tpl->addPreFilter(new \PhpTal\PreFilter\Normalize());
@@ -40,7 +40,7 @@ class PreFilterNormalizeTest extends PHPTAL_TestCase
         $this->assertEquals("<t:textarea xmlns:t=\"http://www.w3.org/1999/xhtml\">\n foo</t:textarea><p> </p>", $tpl->execute());
     }
 
-    function testNormalizesAttrs()
+    public function testNormalizesAttrs()
     {
         $tpl = $this->newPHPTAL()->setSource("<p title='   foo \r\n bar \t\tbaz '>  </p>");
         $tpl->addPreFilter(new \PhpTal\PreFilter\Normalize());
@@ -48,7 +48,7 @@ class PreFilterNormalizeTest extends PHPTAL_TestCase
         $this->assertEquals('<p title="foo bar baz"> </p>', $tpl->execute());
     }
 
-    function testNormalizesPreAttrs()
+    public function testNormalizesPreAttrs()
     {
         $tpl = $this->newPHPTAL()->setSource("<pre title='   foo \r\n bar \t\tbaz '>  </pre>");
         $tpl->addPreFilter(new \PhpTal\PreFilter\Normalize());
@@ -56,7 +56,7 @@ class PreFilterNormalizeTest extends PHPTAL_TestCase
         $this->assertEquals('<pre title="foo bar baz">  </pre>', $tpl->execute());
     }
 
-    function testSkipsXMLSpacePreserve()
+    public function testSkipsXMLSpacePreserve()
     {
         $tpl = $this->newPHPTAL()->setSource("<p title='   foo \r\n bar \t\tbaz '>
         <span xml:space='preserve' title=' spa  ced '> \n </span>   </p>");
@@ -67,7 +67,7 @@ class PreFilterNormalizeTest extends PHPTAL_TestCase
         "\n".' </span> </p>',$tpl->execute());
     }
 
-    function testResumesXMLSpaceDefault()
+    public function testResumesXMLSpaceDefault()
     {
         $tpl = $this->newPHPTAL()->setSource("<p title='   foo \r\n bar \t\tbaz '>
         <span xml:space='preserve' title=' spa  ced '> \n <x xml:space='default' y=' a '>\r\n</x> </span>   </p>");
@@ -79,7 +79,7 @@ class PreFilterNormalizeTest extends PHPTAL_TestCase
     }
 
 
-    function runFilter(\PhpTal\Dom\Element $el)
+    public function runFilter(\PhpTal\Dom\Element $el)
     {
         $f = new \PhpTal\PreFilter\Normalize();
 
@@ -95,7 +95,7 @@ class PreFilterNormalizeTest extends PHPTAL_TestCase
     }
 
 
-    function testNormalizeSpaceRemovesEmpty()
+    public function testNormalizeSpaceRemovesEmpty()
     {
         $el = $this->newElement();
         $el->appendChild(new \PhpTal\Dom\Text('', 'UTF-8'));
@@ -108,7 +108,7 @@ class PreFilterNormalizeTest extends PHPTAL_TestCase
         $this->assertEquals(0, count($el->childNodes));
     }
 
-    function testNormalizeSpaceMerges()
+    public function testNormalizeSpaceMerges()
     {
         $el = $this->newElement();
         $el->appendChild(new \PhpTal\Dom\Text('a', 'UTF-8'));
@@ -121,7 +121,7 @@ class PreFilterNormalizeTest extends PHPTAL_TestCase
         $this->assertEquals(1, count($el->childNodes));
     }
 
-    function testNormalizeSpaceSkipsElement()
+    public function testNormalizeSpaceSkipsElement()
     {
         $el = $this->newElement();
         $el->appendChild(new \PhpTal\Dom\Text('a', 'UTF-8'));
@@ -134,5 +134,4 @@ class PreFilterNormalizeTest extends PHPTAL_TestCase
 
         $this->assertEquals(3, count($el->childNodes));
     }
-
 }

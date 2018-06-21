@@ -12,30 +12,29 @@
  * @link     http://phptal.org/
  */
 
+namespace Tests;
 
-
-class TalesExistTest extends PHPTAL_TestCase
+class TalesExistTest extends \Tests\Testcase\PhpTal
 {
-    function testLevel1()
+    public function testLevel1()
     {
         $tpl = $this->newPHPTAL('input/tales-exist-01.html');
         $tpl->foo = 1;
         $res = $tpl->execute();
-        $res = normalize_html($res);
-        $exp = normalize_html_file('output/tales-exist-01.html');
+        $res = \Tests\Testhelper\Helper::normalizeHtml($res);
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/tales-exist-01.html');
         $this->assertEquals($exp, $res, $tpl->getCodePath());
     }
 
-    function testLevel2()
+    public function testLevel2()
     {
-        $o = new stdClass();
+        $o = new \stdClass();
         $o->foo = 1;
         $tpl = $this->newPHPTAL('input/tales-exist-02.html');
         $tpl->o = $o;
         $res = $tpl->execute();
-        $res = normalize_html($res);
-        $exp = normalize_html_file('output/tales-exist-02.html');
+        $res = \Tests\Testhelper\Helper::normalizeHtml($res);
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/tales-exist-02.html');
         $this->assertEquals($exp, $res);
     }
 }
-

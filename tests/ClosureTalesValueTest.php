@@ -11,13 +11,13 @@
  * @link     http://phptal.org/
  */
 
-class ClosureTalesValueTest extends PHPTAL_TestCase
+namespace Tests;
+
+class ClosureTalesValueTest extends \Tests\Testcase\PhpTal
 {
-    function testClosureVariable()
+    public function testClosureVariable()
     {
-        if (strpos(phpversion(), '5.2') === 0) {
-            $this->markTestSkipped();
-        }
+
         $source = <<<HTML
 <tal:block content="foon"/>
 <tal:if condition="false">do not show</tal:if>
@@ -49,8 +49,6 @@ HTML;
         $tpl = $this->newPHPTAL();
         $tpl->setSource($source);
 
-        //eval is required for PHP 5.2 compatibility
-        //anonymous functions/closures will cause a syntax error
         eval(<<<PHP
             \$tpl->foon = function () { return 'barn'; };
             \$false = function () { return false; };
@@ -91,15 +89,12 @@ PHP
         $this->assertEquals($expected, $tpl->execute());
     }
 
-    function testClosureDeep()
+    public function testClosureDeep()
     {
-        if (strpos(phpversion(), '5.2') === 0) {
-            $this->markTestSkipped();
-        }
-        $obj = new stdClass;
+        $obj = new \stdClass();
         eval("\$obj->foon = function () { return 'hello'; };");
 
-        $objobj = new stdClass;
+        $objobj = new \stdClass();
         $objobj->obj = $obj;
 
         $arr = array('one' => array('two' => array('three' => $obj)));
@@ -124,10 +119,7 @@ HTML;
         $this->assertEquals($expected, $tpl->execute());
     }
 
-    function testNestedClosure() {
-        if (strpos(phpversion(), '5.2') === 0) {
-            $this->markTestSkipped();
-        }
+    public function testNestedClosure() {
 
         eval("
             \$closure = function () {
@@ -152,10 +144,8 @@ HTML;
         $this->assertEquals($expected, $tpl->execute());
     }
 
-    function testClosureFromMethod() {
-        if (strpos(phpversion(), '5.2') === 0) {
-            $this->markTestSkipped();
-        }
+    public function testClosureFromMethod() {
+
         eval(<<<PHP
             class TestClosureFromMethod {
                 function closeur() {
@@ -176,9 +166,8 @@ hello
 HTML;
         $tpl = $this->newPHPTAL();
         $tpl->setSource($source);
-        $tpl->obj = new TestClosureFromMethod;
+        $tpl->obj = new \TestClosureFromMethod();
 
         $this->assertEquals($expected, $tpl->execute());
     }
 }
-?>

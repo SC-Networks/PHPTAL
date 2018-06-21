@@ -1,11 +1,5 @@
 <?php
 
-namespace Tests;
-
-use PhpTal\Exception\ParserException;
-use PhpTal\Exception\UnknownModifierException;
-use PhpTal\Php\TalesInternal;
-
 /**
  * PHPTAL templating engine
  *
@@ -19,7 +13,13 @@ use PhpTal\Php\TalesInternal;
  * @link     http://phptal.org/
  */
 
-class TalesTest extends \PHPTAL_TestCase
+namespace Tests;
+
+use PhpTal\Exception\ParserException;
+use PhpTal\Exception\UnknownModifierException;
+use PhpTal\Php\TalesInternal;
+
+class TalesTest extends \Tests\Testcase\PhpTal
 {
 
     public function tearDown()
@@ -73,7 +73,7 @@ class TalesTest extends \PHPTAL_TestCase
         $tpl->isNotTrue = false;
         $tpl->isTrue = true;
         $res = $tpl->execute();
-        $this->assertEquals(normalize_html_file('output/tales-true.html'), normalize_html($res));
+        $this->assertEquals(\Tests\Testhelper\Helper::normalizeHtmlFile('output/tales-true.html'), \Tests\Testhelper\Helper::normalizeHtml($res));
     }
 
     public function testJSON()

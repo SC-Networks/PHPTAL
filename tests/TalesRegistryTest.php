@@ -1,37 +1,20 @@
 <?php
 
-namespace {
-
-    function registry_test_callback($arg, $nothrow)
-    {
-        return '"ok" . ' . \PhpTal\Php\TalesInternal::compileToPHPExpressions($arg);
-    }
-
-    function registry_test_callback2($arg, $nothrow)
-    {
-        return '"ok2" . ' . \PhpTal\Php\TalesInternal::compileToPHPExpressions($arg);
-    }
-
-    function registry_test_callback3($arg, $nothrow)
-    {
-        return '"ok3" . ' . \PhpTal\Php\TalesInternal::compileToPHPExpressions($arg);
-    }
-}
+/**
+ * PHPTAL templating engine
+ *
+ * PHP Version 5
+ *
+ * @category HTML
+ * @package  PHPTAL
+ * @author   Kornel Lesiński <kornel@aardvarkmedia.co.uk>
+ * @license  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
+ * @link     http://phptal.org/
+ */
 
 namespace Tests {
 
-    /**
-     * PHPTAL templating engine
-     *
-     * PHP Version 5
-     *
-     * @category HTML
-     * @package  PHPTAL
-     * @author   Kornel Lesiński <kornel@aardvarkmedia.co.uk>
-     * @license  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
-     * @link     http://phptal.org/
-     */
-    class TalesRegistryTest extends \PHPTAL_TestCase
+    class TalesRegistryTest extends \Tests\Testcase\PhpTal
     {
 
         public function testRegisterFunction()
@@ -113,5 +96,26 @@ namespace Tests {
                 \PhpTal\TalesRegistry::isRegistered($modifier_key)
             );
         }
+    }
+}
+
+namespace {
+
+    // a hack to get those things into the global namespace
+    // despite registering a different namespace above
+
+    function registry_test_callback($arg, $nothrow)
+    {
+        return '"ok" . ' . \PhpTal\Php\TalesInternal::compileToPHPExpressions($arg);
+    }
+
+    function registry_test_callback2($arg, $nothrow)
+    {
+        return '"ok2" . ' . \PhpTal\Php\TalesInternal::compileToPHPExpressions($arg);
+    }
+
+    function registry_test_callback3($arg, $nothrow)
+    {
+        return '"ok3" . ' . \PhpTal\Php\TalesInternal::compileToPHPExpressions($arg);
     }
 }

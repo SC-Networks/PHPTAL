@@ -12,37 +12,20 @@
  * @link     http://phptal.org/
  */
 
+namespace Tests;
 
+use Tests\Testhelper\PhptalPathTest_DummyClass;
 
-class PhptalPathTest_DummyClass
+class PhptalPathTest extends \Tests\Testcase\PhpTal
 {
-    public $foo;
-
-    protected function protTest()
-    {
-        return 'prot-method';
-    }
-
-    public $protTest = 'prot-property';
-
-    public function pubTest()
-    {
-        return 'pub-method';
-    }
-
-    public $pubTest = 'pub-property';
-}
-
-class PhptalPathTest extends PHPTAL_TestCase
-{
-    function testZeroIndex()
+    public function testZeroIndex()
     {
         $data   = array(1, 0, 3);
         $result = \PhpTal\Context::path($data, '0');
         $this->assertEquals(1, $result);
     }
 
-    function testProtectedMethodIgnored()
+    public function testProtectedMethodIgnored()
     {
         $tpl = $this->newPHPTAL();
         $tpl->obj = new PhptalPathTest_DummyClass();
@@ -51,7 +34,7 @@ class PhptalPathTest extends PHPTAL_TestCase
         $this->assertEquals('<test>prot-property</test>', $tpl->execute());
     }
 
-    function testPublicMethodFirst()
+    public function testPublicMethodFirst()
     {
         $tpl = $this->newPHPTAL();
         $tpl->obj = new PhptalPathTest_DummyClass();
@@ -60,7 +43,7 @@ class PhptalPathTest extends PHPTAL_TestCase
         $this->assertEquals('<test>pub-method</test>', $tpl->execute());
     }
 
-    function testNestedArrays()
+    public function testNestedArrays()
     {
         $tpl = $this->newPHPTAL();
         $tpl->arr = array('items' => array (
@@ -80,7 +63,7 @@ class PhptalPathTest extends PHPTAL_TestCase
         $this->fail('Execute must throw \PhpTal\Exception\VariableNotFoundException');
     }
 
-    function testDefinedButNullProperty()
+    public function testDefinedButNullProperty()
     {
         $src = <<<EOS
 <span tal:content="o/foo"/>
@@ -101,4 +84,3 @@ EOS;
         $this->assertEquals($exp, $res);
     }
 }
-

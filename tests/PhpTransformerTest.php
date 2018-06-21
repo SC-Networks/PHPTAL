@@ -1,10 +1,5 @@
 <?php
 
-namespace Tests;
-
-use PhpTal\Exception\ParserException;
-use PhpTal\Php\Transformer;
-
 /**
  * PHPTAL templating engine
  *
@@ -18,7 +13,11 @@ use PhpTal\Php\Transformer;
  * @link     http://phptal.org/
  */
 
-class PhpTransformerTest extends \PHPTAL_TestCase
+namespace Tests;
+
+use PhpTal\Exception\ParserException;
+
+class PhpTransformerTest extends \Tests\Testcase\PhpTal
 {
     public function testBooleanOperators()
     {

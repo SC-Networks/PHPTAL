@@ -12,69 +12,69 @@
  * @link     http://phptal.org/
  */
 
+namespace Tests;
 
-
-class TalReplaceTest extends PHPTAL_TestCase
+class TalReplaceTest extends \Tests\Testcase\PhpTal
 {
-    function testSimple()
+    public function testSimple()
     {
         $tpl = $this->newPHPTAL('input/tal-replace.01.html');
-        $res = normalize_html($tpl->execute());
-        $exp = normalize_html_file('output/tal-replace.01.html');
+        $res = \Tests\Testhelper\Helper::normalizeHtml($tpl->execute());
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/tal-replace.01.html');
         $this->assertEquals($exp, $res);
     }
 
-    function testVar()
+    public function testVar()
     {
         $tpl = $this->newPHPTAL('input/tal-replace.02.html');
         $tpl->replace = 'my replace';
-        $res = normalize_html($tpl->execute());
-        $exp = normalize_html_file('output/tal-replace.02.html');
+        $res = \Tests\Testhelper\Helper::normalizeHtml($tpl->execute());
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/tal-replace.02.html');
         $this->assertEquals($exp, $res);
     }
 
-    function testStructure()
+    public function testStructure()
     {
         $tpl = $this->newPHPTAL('input/tal-replace.03.html');
         $tpl->replace = '<foo><bar/></foo>';
-        $res = normalize_html($tpl->execute());
-        $exp = normalize_html_file('output/tal-replace.03.html');
+        $res = \Tests\Testhelper\Helper::normalizeHtml($tpl->execute());
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/tal-replace.03.html');
         $this->assertEquals($exp, $res);
     }
 
-    function testNothing()
+    public function testNothing()
     {
         $tpl = $this->newPHPTAL('input/tal-replace.04.html');
-        $res = normalize_html($tpl->execute());
-        $exp = normalize_html_file('output/tal-replace.04.html');
+        $res = \Tests\Testhelper\Helper::normalizeHtml($tpl->execute());
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/tal-replace.04.html');
         $this->assertEquals($exp, $res);
     }
 
-    function testDefault()
+    public function testDefault()
     {
         $tpl = $this->newPHPTAL('input/tal-replace.05.html');
-        $res = normalize_html($tpl->execute());
-        $exp = normalize_html_file('output/tal-replace.05.html');
+        $res = \Tests\Testhelper\Helper::normalizeHtml($tpl->execute());
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/tal-replace.05.html');
         $this->assertEquals($exp, $res);
     }
 
-    function testChain()
+    public function testChain()
     {
         $tpl = $this->newPHPTAL('input/tal-replace.06.html');
-        $res = normalize_html($tpl->execute());
-        $exp = normalize_html_file('output/tal-replace.06.html');
+        $res = \Tests\Testhelper\Helper::normalizeHtml($tpl->execute());
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/tal-replace.06.html');
         $this->assertEquals($exp, $res);
     }
 
-    function testBlock()
+    public function testBlock()
     {
         $tpl = $this->newPHPTAL('input/tal-replace.07.html');
-        $res = normalize_html($tpl->execute());
-        $exp = normalize_html_file('output/tal-replace.07.html');
+        $res = \Tests\Testhelper\Helper::normalizeHtml($tpl->execute());
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/tal-replace.07.html');
         $this->assertEquals($exp, $res);
     }
 
-    function testEmpty()
+    public function testEmpty()
     {
         $src = <<<EOT
 <root>
@@ -95,7 +95,6 @@ EOT;
         $tpl->emptystrv = '';
         $tpl->zerov = 0;
         $res = $tpl->execute();
-        $this->assertEquals(normalize_html($exp), normalize_html($res));
+        $this->assertEquals(\Tests\Testhelper\Helper::normalizeHtml($exp), \Tests\Testhelper\Helper::normalizeHtml($res));
     }
 }
-

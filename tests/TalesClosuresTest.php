@@ -12,37 +12,29 @@
  * @link     http://phptal.org/
  */
 
+namespace Tests;
 
+use Tests\Testhelper\TestInvocable;
 
-class TalesClosuresTest extends PHPTAL_TestCase
+class TalesClosuresTest extends \Tests\Testcase\PhpTal
 {
-    function testInvoke()
+    public function testInvoke()
     {
         $tpl = $this->newPHPTAL();
-        $tpl->invoke = new TestInvocable;
+        $tpl->invoke = new TestInvocable();
 
         $tpl->setSource("<x tal:content='invoke/testif/works'/>");
 
         $this->assertEquals("<x>well</x>", $tpl->execute());
     }
 
-    function testInvokeProperty()
+    public function testInvokeProperty()
     {
         $tpl = $this->newPHPTAL();
-        $tpl->invoke = new TestInvocable;
+        $tpl->invoke = new TestInvocable();
 
         $tpl->setSource("<x tal:content='invoke/prop'/>");
 
         $this->assertEquals("<x>ok</x>", $tpl->execute());
     }
-}
-
-class TestInvocable
-{
-    function __invoke()
-    {
-        return array('testif'=>array('works'=>'well'));
-    }
-
-    public $prop = 'ok';
 }

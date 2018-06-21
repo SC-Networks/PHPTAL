@@ -11,18 +11,11 @@
  * @link     http://phptal.org/
  */
 
+namespace Tests;
 
-class PHPTAL_TestCodeCache extends PhpTal\PHPTAL
-{
-    public $testHasParsed = false;
-    function parse(): string
-    {
-        $this->testHasParsed = true;
-        return parent::parse();
-    }
-}
+use Tests\Testhelper\PHPTAL_TestCodeCache;
 
-class CodeCacheTest extends PHPTAL_TestCase
+class CodeCacheTest extends \Tests\Testcase\PhpTal
 {
     private $phptal;
     private $codeDestination;
@@ -56,20 +49,20 @@ class CodeCacheTest extends PHPTAL_TestCase
         }
     }
 
-    function setUp()
+    public function setUp()
     {
         parent::setUp();
         $this->resetPHPTAL();
         $this->clearCache();
     }
 
-    function tearDown()
+    public function tearDown()
     {
         $this->clearCache();
         parent::tearDown();
     }
 
-    function testNoParseOnReexecution()
+    public function testNoParseOnReexecution()
     {
         $this->phptal->setSource('<p>hello</p>');
         $this->phptal->execute();
@@ -82,7 +75,7 @@ class CodeCacheTest extends PHPTAL_TestCase
         $this->assertFalse($this->phptal->testHasParsed, "No reparse");
     }
 
-    function testNoParseOnReset()
+    public function testNoParseOnReset()
     {
         $this->phptal->setSource('<p>hello2</p>');
         $this->phptal->execute();
@@ -97,7 +90,7 @@ class CodeCacheTest extends PHPTAL_TestCase
         $this->assertFalse($this->phptal->testHasParsed, "No reparse");
     }
 
-    function testReparseAfterTouch()
+    public function testReparseAfterTouch()
     {
         if (!is_writable('input/code-cache-01.html')) $this->markTestSkipped();
 
@@ -124,24 +117,24 @@ class CodeCacheTest extends PHPTAL_TestCase
         $this->assertTrue($this->phptal->testHasParsed, "Reparse");
     }
 
-    function testGarbageRemovalWithSubpathRecursion()
+    public function testGarbageRemovalWithSubpathRecursion()
     {
         $this->executeGarbageRemovalTest(3);
     }
 
-    function testGarbageRemoval()
+    public function testGarbageRemoval()
     {
         $this->executeGarbageRemovalTest(0);
     }
 
-    function testNested()
+    public function testNested()
     {
         $this->phptal->setSource('<div phptal:cache="1m per string: 1"> 1 <div phptal:cache="1h per string: 2"> 2 </div> </div>');
 
-        $this->assertEquals(normalize_html('<div> 1 <div> 2 </div> </div>'), normalize_html($this->phptal->execute()), "1st run");
-        $this->assertEquals(normalize_html('<div> 1 <div> 2 </div> </div>'), normalize_html($this->phptal->execute()), "2nd run");
-        $this->assertEquals(normalize_html('<div> 1 <div> 2 </div> </div>'), normalize_html($this->phptal->execute()), "3rd run");
-        $this->assertEquals(normalize_html('<div> 1 <div> 2 </div> </div>'), normalize_html($this->phptal->execute()), "4th run");
+        $this->assertEquals(\Tests\Testhelper\Helper::normalizeHtml('<div> 1 <div> 2 </div> </div>'), \Tests\Testhelper\Helper::normalizeHtml($this->phptal->execute()), "1st run");
+        $this->assertEquals(\Tests\Testhelper\Helper::normalizeHtml('<div> 1 <div> 2 </div> </div>'), \Tests\Testhelper\Helper::normalizeHtml($this->phptal->execute()), "2nd run");
+        $this->assertEquals(\Tests\Testhelper\Helper::normalizeHtml('<div> 1 <div> 2 </div> </div>'), \Tests\Testhelper\Helper::normalizeHtml($this->phptal->execute()), "3rd run");
+        $this->assertEquals(\Tests\Testhelper\Helper::normalizeHtml('<div> 1 <div> 2 </div> </div>'), \Tests\Testhelper\Helper::normalizeHtml($this->phptal->execute()), "4th run");
     }
 
     private function executeGarbageRemovalTest($subpath_recursion)

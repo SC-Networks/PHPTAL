@@ -1,9 +1,5 @@
 <?php
 
-namespace Tests;
-
-use Tests\Testhelper\DummyTranslator;
-
 /**
  * PHPTAL templating engine
  *
@@ -17,33 +13,37 @@ use Tests\Testhelper\DummyTranslator;
  * @link     http://phptal.org/
  */
 
-class I18NAttributesTest extends \PHPTAL_TestCase
+namespace Tests;
+
+use Tests\Testhelper\DummyTranslator;
+
+class I18NAttributesTest extends \Tests\Testcase\PhpTal
 {
-    function testSingle()
+    public function testSingle()
     {
         $t = new DummyTranslator();
         $t->setTranslation('my-title', 'mon titre');
 
         $tpl = $this->newPHPTAL('input/i18n-attributes-01.html');
         $tpl->setTranslator($t);
-        $res = normalize_html($tpl->execute());
-        $exp = normalize_html_file('output/i18n-attributes-01.html');
+        $res = \Tests\Testhelper\Helper::normalizeHtml($tpl->execute());
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/i18n-attributes-01.html');
         $this->assertEquals($exp, $res);
     }
 
-    function testTranslateDefault()
+    public function testTranslateDefault()
     {
         $t = new DummyTranslator();
         $t->setTranslation('my-title', 'mon titre');
 
         $tpl = $this->newPHPTAL('input/i18n-attributes-02.html');
         $tpl->setTranslator($t);
-        $res = normalize_html($tpl->execute());
-        $exp = normalize_html_file('output/i18n-attributes-02.html');
+        $res = \Tests\Testhelper\Helper::normalizeHtml($tpl->execute());
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/i18n-attributes-02.html');
         $this->assertEquals($exp, $res);
     }
 
-    function testTranslateTalAttribute()
+    public function testTranslateTalAttribute()
     {
         $t = new DummyTranslator();
         $t->setTranslation('my-title', 'mon titre');
@@ -51,12 +51,12 @@ class I18NAttributesTest extends \PHPTAL_TestCase
         $tpl = $this->newPHPTAL('input/i18n-attributes-03.html');
         $tpl->sometitle = 'my-title';
         $tpl->setTranslator($t);
-        $res = normalize_html($tpl->execute());
-        $exp = normalize_html_file('output/i18n-attributes-03.html');
+        $res = \Tests\Testhelper\Helper::normalizeHtml($tpl->execute());
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/i18n-attributes-03.html');
         $this->assertEquals($exp, $res, $tpl->getCodePath());
     }
 
-    function testTranslateDefaultAttributeEscape()
+    public function testTranslateDefaultAttributeEscape()
     {
         $t = new DummyTranslator();
         $t->setTranslation('my\'title', 'mon\'titre');
@@ -68,7 +68,7 @@ class I18NAttributesTest extends \PHPTAL_TestCase
         $this->assertEquals('<div><a title="mon&#039;titre" class="mon&#039;titre">test</a></div>', $tpl->execute(), $tpl->getCodePath());
     }
 
-    function testTranslateTalAttributeEscape()
+    public function testTranslateTalAttributeEscape()
     {
         $this->markTestSkipped("Hard to fix bug");
 
@@ -82,7 +82,7 @@ class I18NAttributesTest extends \PHPTAL_TestCase
         $this->assertEquals('<div><a title="mon&#039;titre" class="mon&#039;titre">test</a></div>', $tpl->execute(), $tpl->getCodePath());
     }
 
-    function testMultiple()
+    public function testMultiple()
     {
         $t = new DummyTranslator();
         $t->setTranslation('my-title', 'mon titre');
@@ -91,12 +91,12 @@ class I18NAttributesTest extends \PHPTAL_TestCase
         $tpl = $this->newPHPTAL('input/i18n-attributes-04.html');
         $tpl->sometitle = 'my-title';
         $tpl->setTranslator($t);
-        $res = normalize_html($tpl->execute());
-        $exp = normalize_html_file('output/i18n-attributes-04.html');
+        $res = \Tests\Testhelper\Helper::normalizeHtml($tpl->execute());
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/i18n-attributes-04.html');
         $this->assertEquals($exp, $res);
     }
 
-    function testInterpolation()
+    public function testInterpolation()
     {
         $t = new DummyTranslator();
         $t->setTranslation('foo ${someObject/method} bar ${otherObject/method} buz', 'ok ${someObject/method} ok ${otherObject/method} ok');
@@ -105,8 +105,8 @@ class I18NAttributesTest extends \PHPTAL_TestCase
         $tpl->setTranslator($t);
         $tpl->someObject = array('method' => 'good');
         $tpl->otherObject = array('method' => 'great');
-        $res = normalize_html($tpl->execute());
-        $exp = normalize_html_file('output/i18n-attributes-05.html');
+        $res = \Tests\Testhelper\Helper::normalizeHtml($tpl->execute());
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/i18n-attributes-05.html');
         $this->assertEquals($exp, $res);
     }
 }

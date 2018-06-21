@@ -12,51 +12,11 @@
  * @link     http://phptal.org/
  */
 
+namespace Tests;
 
+use Tests\Testhelper\StupidCacheTrigger;
 
-class StupidCacheTrigger implements \PhpTal\TriggerInterface
-{
-    public $isCaching = false;
-    public $cachePath = '';
-
-    public function start($phptalId, $tpl)
-    {
-        $this->cachePath = 'trigger.' . $tpl->getContext()->someId;
-
-        // if already cached, read the cache and tell PHPTAL to
-        // ignore the tag content
-        if (file_exists($this->cachePath)) {
-            $this->isCaching = false;
-            readfile($this->cachePath);
-            return self::SKIPTAG;
-        }
-
-        // no cache, we start and output buffer and tell
-        // PHPTAL to proceed (ie: execute the tag content)
-        $this->isCaching = true;
-        ob_start();
-        return self::PROCEED;
-    }
-
-    public function end($phptalId, $tpl)
-    {
-        // end of tag, if cached file used, do nothing
-        if (!$this->isCaching)
-            return;
-
-        // otherwise, get the content of the output buffer
-        // and write it into the cache file for later usage
-        $content = ob_get_contents();
-        ob_end_clean();
-        echo $content;
-
-        $f = fopen($this->cachePath, 'w');
-        fwrite($f, $content);
-        fclose($f);
-    }
-}
-
-class TriggerTest extends PHPTAL_TestCase
+class TriggerTest extends \Tests\Testcase\PhpTal
 {
     public function setUp()
     {
@@ -81,19 +41,18 @@ class TriggerTest extends PHPTAL_TestCase
         $trigger = new StupidCacheTrigger();
         $tpl = $this->newPHPTAL('input/trigger.01.html');
         $tpl->addTrigger('someid', $trigger);
-        $exp = normalize_html_file('output/trigger.01.html');
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/trigger.01.html');
 
         $tpl->someId = 10;
-        $res = normalize_html($tpl->execute());
+        $res = \Tests\Testhelper\Helper::normalizeHtml($tpl->execute());
         $this->assertEquals($exp, $res);
         $this->assertTrue($trigger->isCaching);
         $this->assertEquals('trigger.10', $trigger->cachePath);
 
         $tpl->someId = 10;
-        $res = normalize_html($tpl->execute());
+        $res = \Tests\Testhelper\Helper::normalizeHtml($tpl->execute());
         $this->assertEquals($exp, $res);
         $this->assertFalse($trigger->isCaching);
         $this->assertEquals('trigger.10', $trigger->cachePath);
     }
 }
-

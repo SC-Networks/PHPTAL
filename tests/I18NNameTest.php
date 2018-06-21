@@ -1,7 +1,5 @@
 <?php
 
-use Tests\Testhelper\DummyTranslator;
-
 /**
  * PHPTAL templating engine
  *
@@ -15,9 +13,13 @@ use Tests\Testhelper\DummyTranslator;
  * @link     http://phptal.org/
  */
 
-class I18NNameTest extends PHPTAL_TestCase
+namespace Tests;
+
+use Tests\Testhelper\DummyTranslator;
+
+class I18NNameTest extends \Tests\Testcase\PhpTal
 {
-    function testSet()
+    public function testSet()
     {
         $tpl = $this->newPHPTAL('input/i18n-name-01.html');
         $tpl->setTranslator( new DummyTranslator() );
@@ -26,58 +28,57 @@ class I18NNameTest extends PHPTAL_TestCase
         $this->assertEquals('test value', $tpl->getTranslator()->vars['test']);
     }
 
-    function testInterpolation()
+    public function testInterpolation()
     {
         $tpl = $this->newPHPTAL('input/i18n-name-02.html');
         $tpl->setTranslator( new DummyTranslator() );
         $res = $tpl->execute();
-        $res = normalize_html($res);
-        $exp = normalize_html_file('output/i18n-name-02.html');
+        $res = \Tests\Testhelper\Helper::normalizeHtml($res);
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/i18n-name-02.html');
         $this->assertEquals($exp, $res);
     }
 
-    function testMultipleInterpolation()
+    public function testMultipleInterpolation()
     {
         $tpl = $this->newPHPTAL('input/i18n-name-03.html');
         $tpl->setTranslator( new DummyTranslator() );
         $tpl->mylogin_var = '<mylogin>';
 
         $res = $tpl->execute();
-        $res = normalize_html($res);
-        $exp = normalize_html_file('output/i18n-name-03.html');
+        $res = \Tests\Testhelper\Helper::normalizeHtml($res);
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/i18n-name-03.html');
         $this->assertEquals($exp, $res, $tpl->getCodePath());
     }
 
-    function testBlock()
+    public function testBlock()
     {
         $tpl = $this->newPHPTAL('input/i18n-name-04.html');
         $tpl->setTranslator( new DummyTranslator() );
         $res = $tpl->execute();
-        $res = normalize_html($res);
-        $exp = normalize_html_file('output/i18n-name-04.html');
+        $res = \Tests\Testhelper\Helper::normalizeHtml($res);
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/i18n-name-04.html');
         $this->assertEquals($exp, $res);
     }
 
-    function testI18NBlock()
+    public function testI18NBlock()
     {
         $tpl = $this->newPHPTAL('input/i18n-name-05.html');
         $tpl->setTranslator( new DummyTranslator() );
         $res = $tpl->execute();
-        $res = normalize_html($res);
-        $exp = normalize_html_file('output/i18n-name-05.html');
+        $res = \Tests\Testhelper\Helper::normalizeHtml($res);
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/i18n-name-05.html');
         $this->assertEquals($exp, $res);
     }
 
-    function testNamespace()
+    public function testNamespace()
     {
         $tpl = $this->newPHPTAL('input/i18n-name-06.html');
         $tpl->username = 'john';
         $tpl->mails = 100;
         $tpl->setTranslator( new DummyTranslator() );
         $res = $tpl->execute();
-        $res = normalize_html($res);
-        $exp = normalize_html_file('output/i18n-name-06.html');
+        $res = \Tests\Testhelper\Helper::normalizeHtml($res);
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/i18n-name-06.html');
         $this->assertEquals($exp, $res);
     }
 }
-

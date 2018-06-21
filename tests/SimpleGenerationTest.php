@@ -12,16 +12,16 @@
  * @link     http://phptal.org/
  */
 
+namespace Tests;
 
-
-class SimpleGenerationTest extends PHPTAL_TestCase
+class SimpleGenerationTest extends \Tests\Testcase\PhpTal
 {
-    function testTreeGeneration()
+    public function testTreeGeneration()
     {
         $tpl = $this->newPHPTAL();
 
         $parser = new \PhpTal\Dom\SaxXmlParser($tpl->getEncoding());
-        $treeGen = $parser->parseFile(new \PhpTal\Dom\PHPTALDocumentBuilder(), 'input/parser.01.xml')->getResult();
+        $treeGen = $parser->parseFile(new \PhpTal\Dom\PHPTALDocumentBuilder(), '../input/parser.01.xml')->getResult();
         $state     = new \PhpTal\Php\State($tpl);
         $codewriter = new \PhpTal\Php\CodeWriter($state);
         $codewriter->doFunction('test', '$tpl');
@@ -47,14 +47,14 @@ function test(\$tpl) {
  ?>
 EOS;
 
-        $result = normalize_phpsource($result, true);
-        $expected = normalize_phpsource($expected, true);
+        $result = \Tests\Testhelper\Helper::normalizePhpSource($result, true);
+        $expected = \Tests\Testhelper\Helper::normalizePhpSource($expected, true);
 
 
         $this->assertEquals($expected, $result);
     }
 
-    function testFunctionsGeneration()
+    public function testFunctionsGeneration()
     {
         $state = new \PhpTal\Php\State($this->newPHPTAL());
         $codewriter = new \PhpTal\Php\CodeWriter($state);
@@ -70,10 +70,8 @@ EOS;
 <?php function test2(\$tpl) {?>test2<?php}?>
 <?php function test1(\$tpl) {?>test1test1<?php}?>
 EOS;
-        $res = normalize_phpsource($res, true);
-        $exp = normalize_phpsource($exp, true);
+        $res = \Tests\Testhelper\Helper::normalizePhpSource($res, true);
+        $exp = \Tests\Testhelper\Helper::normalizePhpSource($exp, true);
         $this->assertEquals($exp, $res);
     }
 }
-
-

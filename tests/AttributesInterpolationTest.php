@@ -12,8 +12,9 @@
  * @link     http://phptal.org/
  */
 
+namespace Tests;
 
-class AttributesInterpolationTest extends PHPTAL_TestCase
+class AttributesInterpolationTest extends \Tests\Testcase\PhpTal
 {
     public function testInterpol()
     {

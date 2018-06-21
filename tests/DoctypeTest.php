@@ -1,9 +1,5 @@
 <?php
 
-namespace Tests;
-
-use PhpTal\Php\TalesInternal;
-
 /**
  * PHPTAL templating engine
  *
@@ -17,16 +13,17 @@ use PhpTal\Php\TalesInternal;
  * @link     http://phptal.org/
  */
 
+namespace Tests;
 
-class DoctypeTest extends \PHPTAL_TestCase
+class DoctypeTest extends \Tests\Testcase\PhpTal
 {
 
     public function testSimple()
     {
         $tpl = $this->newPHPTAL('input/doctype.01.html');
         $res = $tpl->execute();
-        $res = normalize_html($res);
-        $exp = normalize_html_file('output/doctype.01.html');
+        $res = \Tests\Testhelper\Helper::normalizeHtml($res);
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/doctype.01.html');
         $this->assertEquals($exp, $res);
     }
 
@@ -45,8 +42,8 @@ class DoctypeTest extends \PHPTAL_TestCase
     {
         $tpl = $this->newPHPTAL('input/doctype.02.user.html');
         $res = $tpl->execute();
-        $res = normalize_html($res);
-        $exp = normalize_html_file('output/doctype.02.html');
+        $res = \Tests\Testhelper\Helper::normalizeHtml($res);
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/doctype.02.html');
         $this->assertEquals($exp, $res);
     }
 
@@ -54,8 +51,8 @@ class DoctypeTest extends \PHPTAL_TestCase
     {
         $tpl = $this->newPHPTAL('input/doctype.03.html');
         $res = $tpl->execute();
-        $res = normalize_html($res);
-        $exp = normalize_html_file('output/doctype.03.html');
+        $res = \Tests\Testhelper\Helper::normalizeHtml($res);
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/doctype.03.html');
         $this->assertEquals($exp, $res);
     }
 
@@ -63,8 +60,8 @@ class DoctypeTest extends \PHPTAL_TestCase
     {
         $tpl = $this->newPHPTAL('input/doctype.04.html');
         $res = $tpl->execute();
-        $res = normalize_html($res);
-        $exp = normalize_html_file('output/doctype.04.html');
+        $res = \Tests\Testhelper\Helper::normalizeHtml($res);
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/doctype.04.html');
         $this->assertEquals($exp, $res);
     }
 

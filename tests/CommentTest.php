@@ -12,10 +12,11 @@
  * @link     http://phptal.org/
  */
 
+namespace Tests;
 
-class CommentTest extends PHPTAL_TestCase
+class CommentTest extends \Tests\Testcase\PhpTal
 {
-    function testSimple()
+    public function testSimple()
     {
         $source = '<html><!-- \${variable} --></html>';
         $tpl = $this->newPHPTAL();
@@ -24,7 +25,7 @@ class CommentTest extends PHPTAL_TestCase
         $this->assertEquals($source, $res);
     }
 
-    function testNoEntities()
+    public function testNoEntities()
     {
         $source = '<html><!-- <foo> --></html>';
         $tpl = $this->newPHPTAL();
@@ -33,7 +34,7 @@ class CommentTest extends PHPTAL_TestCase
         $this->assertEquals($source, $res);
     }
 
-    function testShortComments()
+    public function testShortComments()
     {
         $source = '<html><!--><--></html>';
         $tpl = $this->newPHPTAL();
@@ -45,7 +46,7 @@ class CommentTest extends PHPTAL_TestCase
     /**
      * @expectedException \PhpTal\Exception\ParserException
      */
-    function testNestedComments()
+    public function testNestedComments()
     {
         $source = '<html><!--<!--<!--></html>';
         $tpl = $this->newPHPTAL();
@@ -57,7 +58,7 @@ class CommentTest extends PHPTAL_TestCase
     /**
      * @expectedException \PhpTal\Exception\ParserException
      */
-    function testDashedComment()
+    public function testDashedComment()
     {
         $source = '<html><!--- XML hates you ---></html>';
         $tpl = $this->newPHPTAL();
@@ -67,7 +68,7 @@ class CommentTest extends PHPTAL_TestCase
     }
 
 
-    function testSkippedComments()
+    public function testSkippedComments()
     {
         $source = '<html><!--!
         removed --><!-- left --><!-- !removed --></html>';
@@ -77,7 +78,7 @@ class CommentTest extends PHPTAL_TestCase
         $this->assertEquals('<html><!-- left --></html>', $res);
     }
 
-    function testCStyleComments()
+    public function testCStyleComments()
     {
         $tpl = $this->newPHPTAL();
         $src = '<script><!--
@@ -89,4 +90,3 @@ class CommentTest extends PHPTAL_TestCase
         $this->assertEquals($src, $tpl->execute());
     }
 }
-

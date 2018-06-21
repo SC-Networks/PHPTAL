@@ -1,9 +1,5 @@
 <?php
 
-namespace Tests;
-
-use PhpTal\Php\TalesInternal;
-
 /**
  * PHPTAL templating engine
  *
@@ -16,7 +12,12 @@ use PhpTal\Php\TalesInternal;
  * @license  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
  * @link     http://phptal.org/
  */
-class CompressTest extends \PHPTAL_TestCase
+
+namespace Tests;
+
+use PhpTal\Php\TalesInternal;
+
+class CompressTest extends \Tests\Testcase\PhpTal
 {
     private function assertStrips($expect, $source, $html5 = false)
     {

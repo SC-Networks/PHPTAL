@@ -1,10 +1,5 @@
 <?php
 
-namespace Tests;
-
-use PhpTal\Exception\ConfigurationException;
-use Tests\Testhelper\DummyTranslator;
-
 /**
  * PHPTAL templating engine
  *
@@ -17,7 +12,13 @@ use Tests\Testhelper\DummyTranslator;
  * @license  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
  * @link     http://phptal.org/
  */
-class I18NTranslateTest extends \PHPTAL_TestCase
+
+namespace Tests;
+
+use PhpTal\Exception\ConfigurationException;
+use Tests\Testhelper\DummyTranslator;
+
+class I18NTranslateTest extends \Tests\Testcase\PhpTal
 {
 
     public function testFailsWhenTranslatorNotSet()
@@ -32,8 +33,8 @@ class I18NTranslateTest extends \PHPTAL_TestCase
         $tpl = $this->newPHPTAL('input/i18n-translate-01.html');
         $tpl->setTranslator( new DummyTranslator() );
         $res = $tpl->execute();
-        $res = normalize_html($res);
-        $exp = normalize_html_file('output/i18n-translate-01.html');
+        $res = \Tests\Testhelper\Helper::normalizeHtml($res);
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/i18n-translate-01.html');
         $this->assertEquals($exp, $res);
     }
 
@@ -43,8 +44,8 @@ class I18NTranslateTest extends \PHPTAL_TestCase
         $tpl->setTranslator( new DummyTranslator() );
         $tpl->message = "my translate key &";
         $res = $tpl->execute();
-        $res = normalize_html($res);
-        $exp = normalize_html_file('output/i18n-translate-02.html');
+        $res = \Tests\Testhelper\Helper::normalizeHtml($res);
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/i18n-translate-02.html');
         $this->assertEquals($exp, $res);
     }
 
@@ -79,10 +80,10 @@ class I18NTranslateTest extends \PHPTAL_TestCase
         <p i18n:translate="var"/>
         <p i18n:translate="structure var"/>
         </div>');
-        $this->assertEquals(normalize_html('<div>
+        $this->assertEquals(\Tests\Testhelper\Helper::normalizeHtml('<div>
         <p>&lt;b class=&quot;foo&amp;amp;bar&quot;&gt;translated&amp;nbsp;key&lt;/b&gt;</p>
         <p><b class="foo&amp;bar">translated&nbsp;key</b></p>
-        </div>'), normalize_html($tpl->execute()));
+        </div>'), \Tests\Testhelper\Helper::normalizeHtml($tpl->execute()));
     }
 
 
@@ -96,7 +97,7 @@ class I18NTranslateTest extends \PHPTAL_TestCase
         $tpl->t = $t;
 
         $tpl->setSource('<div i18n:domain="foo${bar}$${quz}">${t/domain}</div>');
-        $this->assertEquals(normalize_html('<div>foobaz${quz}</div>'), normalize_html($tpl->execute()));
+        $this->assertEquals(\Tests\Testhelper\Helper::normalizeHtml('<div>foobaz${quz}</div>'), \Tests\Testhelper\Helper::normalizeHtml($tpl->execute()));
 
     }
 

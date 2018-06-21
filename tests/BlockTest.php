@@ -12,8 +12,9 @@
  * @link     http://phptal.org/
  */
 
+namespace Tests;
 
-class BlockTest extends PHPTAL_TestCase
+class BlockTest extends \Tests\Testcase\PhpTal
 {
     function testTalBlock()
     {
@@ -50,5 +51,3 @@ class BlockTest extends PHPTAL_TestCase
         $res = $t->execute();
     }
 }
-
-
