@@ -1,9 +1,5 @@
 <?php
 
-namespace Tests;
-
-use PhpTal\Php\TalesInternal;
-
 /**
  * PHPTAL templating engine
  *
@@ -16,7 +12,12 @@ use PhpTal\Php\TalesInternal;
  * @license  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
  * @link     http://phptal.org/
  */
-class HTML5ModeTest extends \PHPTAL_TestCase
+
+namespace Tests;
+
+use PhpTal\Php\TalesInternal;
+
+class HTML5ModeTest extends \Tests\Testcase\PhpTal
 {
 
     public function tearDown()
@@ -200,7 +201,7 @@ class HTML5ModeTest extends \PHPTAL_TestCase
     */
    private function decodeNumericEntities($str)
    {
-       return normalize_html(
+       return \Tests\Testhelper\Helper::normalizeHtml(
            preg_replace_callback(
        	'/&#x?[a-f0-9]+;/i',
                function (array $entities) {

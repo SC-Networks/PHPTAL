@@ -12,38 +12,46 @@
  * @link     http://phptal.org/
  */
 
+namespace Tests;
 
-class TalRepeatTest extends PHPTAL_TestCase
+use Testhelper\MyIterableWithSize;
+use Tests\Testhelper\LogIteratorCalls;
+use Tests\Testhelper\MyArrayObj;
+use Tests\Testhelper\MyIterable;
+use Tests\Testhelper\MyIterableThrowsOnSize;
+use Tests\Testhelper\SizeCalledException;
+
+class TalRepeatTest extends \Tests\Testcase\PhpTal
 {
-    function testArrayRepeat()
+    public function testArrayRepeat()
     {
         $tpl = $this->newPHPTAL('input/tal-repeat.01.html');
         $tpl->array = range(0, 4);
-        $res = normalize_html($tpl->execute());
-        $exp = normalize_html_file('output/tal-repeat.01.html');
+        $res = \Tests\Testhelper\Helper::normalizeHtml($tpl->execute());
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/tal-repeat.01.html');
         $this->assertEquals($exp, $res);
     }
 
-    function testOddEventAndFriends()
+    public function testOddEventAndFriends()
     {
         $tpl = $this->newPHPTAL('input/tal-repeat.02.html');
         $tpl->array = range(0, 2);
-        $res = normalize_html($tpl->execute());
-        $exp = normalize_html_file('output/tal-repeat.02.html');
+        $res = \Tests\Testhelper\Helper::normalizeHtml($tpl->execute());
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/tal-repeat.02.html');
         $this->assertEquals($exp, $res);
     }
 
-    function testIterableUsage()
+    public function testIterableUsage()
     {
         $tpl = $this->newPHPTAL('input/tal-repeat.03.html');
         $tpl->result = new MyIterableWithSize(4);
         $res = $tpl->execute();
-        $res = normalize_html($res);
-        $exp = normalize_html_file('output/tal-repeat.03.html');
+        $res = \Tests\Testhelper\Helper::normalizeHtml($res);
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/tal-repeat.03.html');
         $this->assertEquals($exp, $res);
     }
 
-    function testArrayObject()
+    public function testArrayObject()
     {
         $tpl = $this->newPHPTAL();
         $tpl->setSource('<div><p tal:repeat="a aobj" tal:content="a"></p><p tal:repeat="a aobj" tal:content="a"></p></div>');
@@ -52,7 +60,7 @@ class TalRepeatTest extends PHPTAL_TestCase
         $this->assertEquals('<div><p>1</p><p>2</p><p>3</p><p>1</p><p>2</p><p>3</p></div>', $tpl->execute());
     }
 
-    function testArrayObjectOneElement()
+    public function testArrayObjectOneElement()
     {
         $tpl = $this->newPHPTAL();
         $tpl->setSource('<div><p tal:repeat="a aobj" tal:content="a"></p><p tal:repeat="a aobj" tal:content="a"></p></div>');
@@ -61,7 +69,7 @@ class TalRepeatTest extends PHPTAL_TestCase
         $this->assertEquals('<div><p>1</p><p>1</p></div>', $tpl->execute());
     }
 
-    function testArrayObjectZeroElements()
+    public function testArrayObjectZeroElements()
     {
         $tpl = $this->newPHPTAL();
         $tpl->setSource('<div><p tal:repeat="a aobj" tal:content="a"></p><p tal:repeat="a aobj" tal:content="a"/></div>');
@@ -70,7 +78,7 @@ class TalRepeatTest extends PHPTAL_TestCase
         $this->assertEquals('<div></div>', $tpl->execute());
     }
 
-    function testArrayObjectAggregated()
+    public function testArrayObjectAggregated()
     {
         $tpl = $this->newPHPTAL();
         $tpl->setSource('<div><p tal:repeat="a aobj">${a}${repeat/a/length}</p></div>');
@@ -79,7 +87,7 @@ class TalRepeatTest extends PHPTAL_TestCase
         $this->assertEquals('<div><p>14</p><p>24</p><p>34</p><p>4</p></div>', $tpl->execute());
     }
 
-    function testArrayObjectNested()
+    public function testArrayObjectNested()
     {
         $tpl = $this->newPHPTAL();
         $tpl->setSource('<div><p tal:repeat="a aobj">${a}<b tal:repeat="b aobj" tal:content="b"/></p></div>');
@@ -88,49 +96,49 @@ class TalRepeatTest extends PHPTAL_TestCase
         $this->assertEquals('<div><p>1<b>1</b><b>2</b></p><p>2<b>1</b><b>2</b></p></div>', $tpl->execute());
     }
 
-    function testHashKey()
+    public function testHashKey()
     {
         $tpl = $this->newPHPTAL('input/tal-repeat.04.html');
         $tpl->result = array('a'=>0, 'b'=>1, 'c'=>2, 'd'=>3);
         $res = $tpl->execute();
-        $res = normalize_html($res);
-        $exp = normalize_html_file('output/tal-repeat.04.html');
+        $res = \Tests\Testhelper\Helper::normalizeHtml($res);
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/tal-repeat.04.html');
         $this->assertEquals($exp, $res);
     }
 
-    function testRepeatAttributesWithPhp()
+    public function testRepeatAttributesWithPhp()
     {
         $tpl = $this->newPHPTAL('input/tal-repeat.05.html');
         $tpl->data = array(1, 2, 3);
-        $res = normalize_html($tpl->execute());
-        $exp = normalize_html_file('output/tal-repeat.05.html');
+        $res = \Tests\Testhelper\Helper::normalizeHtml($tpl->execute());
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/tal-repeat.05.html');
         $this->assertEquals($exp, $res);
     }
 
 
-    function testRepeatAttributesWithMacroPhp()
+    public function testRepeatAttributesWithMacroPhp()
     {
         $tpl = $this->newPHPTAL('input/tal-repeat.06.html');
         $tpl->data = array(1, 2, 3);
-        $res = normalize_html($tpl->execute());
-        $exp = normalize_html_file('output/tal-repeat.06.html');
+        $res = \Tests\Testhelper\Helper::normalizeHtml($tpl->execute());
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/tal-repeat.06.html');
         $this->assertEquals($exp, $res);
     }
 
 
-    function testPhpMode()
+    public function testPhpMode()
     {
         $tpl = $this->newPHPTAL('input/tal-repeat.07.html');
         $tpl->result = array('a'=>0, 'b'=>1, 'c'=>2, 'd'=>3);
-        $res = normalize_html($tpl->execute());
-        $exp = normalize_html_file('output/tal-repeat.07.html');
+        $res = \Tests\Testhelper\Helper::normalizeHtml($tpl->execute());
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/tal-repeat.07.html');
         $this->assertEquals($exp, $res);
     }
 
-    function testTraversableRepeat()
+    public function testTraversableRepeat()
     {
         static::markTestSkipped('this condition works with php only. maybe add comparism-operators to tal:condition?');
-        $doc = new DOMDocument();
+        $doc = new \DOMDocument();
         $doc->loadXML('<a><b/><c/><d/><e/><f/><g/></a>');
 
         $tpl = $this->newPHPTAL();
@@ -141,27 +149,27 @@ class TalRepeatTest extends PHPTAL_TestCase
 
     }
 
-    function testLetter()
+    public function testLetter()
     {
         $tpl = $this->newPHPTAL();
         $tpl->setSource( '<span tal:omit-tag="" tal:repeat="item items" tal:content="repeat/item/letter"/>' );
         $tpl->items = range( 0, 32 );
-        $res = normalize_html( $tpl->execute() );
+        $res = \Tests\Testhelper\Helper::normalizeHtml( $tpl->execute() );
         $exp = 'abcdefghijklmnopqrstuvwxyzaaabacadaeafag';
         $this->assertEquals( $exp, $res );
     }
 
-    function testRoman()
+    public function testRoman()
     {
         $tpl = $this->newPHPTAL();
         $tpl->setSource( '<span tal:omit-tag="" tal:repeat="item items" tal:content="string:${repeat/item/roman},"/>' );
         $tpl->items = range( 0, 16 );
-        $res = normalize_html( $tpl->execute() );
+        $res = \Tests\Testhelper\Helper::normalizeHtml( $tpl->execute() );
         $exp = 'i,ii,iii,iv,v,vi,vii,viii,ix,x,xi,xii,xiii,xiv,xv,xvi,xvii,';
         $this->assertEquals( $exp, $res );
     }
 
-    function testGrouping()
+    public function testGrouping()
     {
         $tpl = $this->newPHPTAL();
         $tpl->setSource('
@@ -172,8 +180,8 @@ class TalRepeatTest extends PHPTAL_TestCase
             </div>'
         );
         $tpl->items = array( 'apple', 'apple', 'orange', 'orange', 'orange', 'pear', 'kiwi', 'kiwi' );
-        $res = normalize_html( $tpl->execute() );
-        $exp = normalize_html('
+        $res = \Tests\Testhelper\Helper::normalizeHtml( $tpl->execute() );
+        $exp = \Tests\Testhelper\Helper::normalizeHtml('
             <h1>apple</h1>
             <p>apple</p>
             <hr/>
@@ -191,7 +199,7 @@ class TalRepeatTest extends PHPTAL_TestCase
         $this->assertEquals( $exp, $res );
     }
 
-    function testGroupingPath()
+    public function testGroupingPath()
     {
         $tpl = $this->newPHPTAL();
         $tpl->setSource('
@@ -208,8 +216,8 @@ class TalRepeatTest extends PHPTAL_TestCase
                             array( 'type' => 'bike', 'name' => 'suzuki' ),
                             array( 'type' => 'bike', 'name' => 'honda' ),
         );
-        $res = normalize_html( $tpl->execute() );
-        $exp = normalize_html('
+        $res = \Tests\Testhelper\Helper::normalizeHtml( $tpl->execute() );
+        $exp = \Tests\Testhelper\Helper::normalizeHtml('
             <h1>car</h1>
             <p>bmw</p>
             <p>audi</p>
@@ -226,16 +234,16 @@ class TalRepeatTest extends PHPTAL_TestCase
         $this->assertEquals( $exp, $res );
     }
 
-    function testSimpleXML()
+    public function testSimpleXML()
     {
         $tpl = $this->newPHPTAL();
         $tpl->setSource("<tal:block tal:repeat='s sxml'><b tal:content='structure s' />\n</tal:block>");
-        $tpl->sxml = new SimpleXMLElement("<x><y>test</y><y attr=\"test\"><z>test</z></y><y/></x>");
+        $tpl->sxml = new \SimpleXMLElement("<x><y>test</y><y attr=\"test\"><z>test</z></y><y/></x>");
         $this->assertEquals("<b><y>test</y></b>\n<b><y attr=\"test\"><z>test</z></y></b>\n<b><y/></b>\n", $tpl->execute());
     }
 
 
-    function testSameCallsAsForeach()
+    public function testSameCallsAsForeach()
     {
         $foreach = new LogIteratorCalls(array(1, 2, 3));
 
@@ -252,7 +260,7 @@ class TalRepeatTest extends PHPTAL_TestCase
         $this->assertEquals($foreach->log, $controller->log);
     }
 
-    function testCountIsLazy()
+    public function testCountIsLazy()
     {
         $tpl = $this->newPHPTAL();
         $tpl->i = new MyIterableThrowsOnSize(10);
@@ -269,7 +277,7 @@ class TalRepeatTest extends PHPTAL_TestCase
         catch(SizeCalledException $e) {}
     }
 
-    function testReset()
+    public function testReset()
     {
         $tpl = $this->newPHPTAL();
         $tpl->iter = $i = new LogIteratorCalls(new MyIterableThrowsOnSize(10));
@@ -282,7 +290,7 @@ class TalRepeatTest extends PHPTAL_TestCase
         $this->assertEquals("1[0]00[1]00[2]00[3]00[4]00[5]00[6]00[7]00[8]00[9]11[0]00[1]00[2]00[3]00[4]00[5]00[6]00[7]00[8]00[9]1", $tpl->execute());
     }
 
-    function testFakedLength()
+    public function testFakedLength()
     {
         $tpl = $this->newPHPTAL();
         $tpl->iter = new MyIterable(10);
@@ -290,7 +298,7 @@ class TalRepeatTest extends PHPTAL_TestCase
         $this->assertEquals("1[0/]00[1/]00[2/]00[3/]00[4/]00[5/]00[6/]00[7/]00[8/]00[9/10]1", $tpl->execute(), $tpl->getCodePath());
     }
 
-    function testPushesContext()
+    public function testPushesContext()
     {
         $phptal = $this->newPHPTAL();
         $phptal->setSource('
@@ -315,107 +323,7 @@ class TalRepeatTest extends PHPTAL_TestCase
         $phptal->users2 = array('repeat2');
 
         $this->assertEquals(
-            normalize_html('<x> original=original <y> defined=defined <z> repeat=repeat <z> repeat2=repeat2 </z> repeat=repeat </z> defined=defined </y> original=original</x>'),
-            normalize_html($phptal->execute()));
+            \Tests\Testhelper\Helper::normalizeHtml('<x> original=original <y> defined=defined <z> repeat=repeat <z> repeat2=repeat2 </z> repeat=repeat </z> defined=defined </y> original=original</x>'),
+            \Tests\Testhelper\Helper::normalizeHtml($phptal->execute()));
     }
 }
-
-class LogIteratorCalls implements Iterator
-{
-    public $i, $log = '';
-    function __construct($arr)
-    {
-        if ($arr instanceof Iterator) $this->i = $arr; else $this->i = new ArrayIterator($arr);
-    }
-
-    function current()
-    {
-        $this->log .= "current\n";
-        return $this->i->current();
-    }
-    function next()
-    {
-        $this->log .= "next\n";
-        return $this->i->next();
-    }
-    function key()
-    {
-        $this->log .= "key\n";
-        return $this->i->key();
-    }
-    function rewind()
-    {
-        $this->log .= "rewind\n";
-        return $this->i->rewind();
-    }
-    function valid()
-    {
-        $this->log .= "valid\n";
-        return $this->i->valid();
-    }
-}
-
-class MyArrayObj extends ArrayObject
-{
-
-}
-
-class MyIterable implements Iterator
-{
-    public function __construct($size){
-        $this->_index = 0;
-        $this->_size= $size;
-    }
-
-    public function rewind(){
-        $this->_index = 0;
-    }
-
-    public function current(){
-        return $this->_index;
-    }
-
-    public function key(){
-        return $this->_index;
-    }
-
-    public function next(){
-        $this->_index++;
-        return $this->_index;
-    }
-
-    public function valid(){
-        return $this->_index < $this->_size;
-    }
-
-    private $_index;
-    protected $_size;
-}
-
-class MyIterableWithSize extends MyIterable
-{
-    public function size(){
-        return $this->_size;
-    }
-}
-
-class SizeCalledException extends Exception {}
-
-class MyIterableThrowsOnSize extends MyIterable implements Countable
-{
-    public function count()
-    {
-        throw new SizeCalledException("count() called");
-    }
-
-    public function length()
-    {
-        throw new SizeCalledException("length() called");
-    }
-
-    public function size()
-    {
-        throw new SizeCalledException("size() called");
-    }
-}
-

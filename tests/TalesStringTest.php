@@ -12,73 +12,73 @@
  * @link     http://phptal.org/
  */
 
+namespace Tests;
 
+class TalesStringTest extends \Tests\Testcase\PhpTal {
 
-class TalesStringTest extends PHPTAL_TestCase {
-
-    function testSimple()
+    public function testSimple()
     {
         $this->assertEquals('\'this is a string\'', \PhpTal\Php\TalesInternal::string('this is a string'));
     }
 
-    function testDoubleDollar()
+    public function testDoubleDollar()
     {
         $this->assertEquals('\'this is a $string\'', \PhpTal\Php\TalesInternal::string('this is a $$string'));
     }
 
-    function testSubPathSimple()
+    public function testSubPathSimple()
     {
         $res = \PhpTal\Php\TalesInternal::string('hello $name how are you ?');
         $this->assertRegExp('/\'hello \'.*?\$ctx->name.*?\' how are you \?\'$/', $res);
     }
 
-    function testSubPath()
+    public function testSubPath()
     {
         $res = \PhpTal\Php\TalesInternal::string('${name}');
         $this->assertRegExp('/^(\'\'\s*?\.*)?\$ctx->name(.*?\'\')?$/', $res);
     }
 
-    function testSubPathExtended()
+    public function testSubPathExtended()
     {
         $res = \PhpTal\Php\TalesInternal::string('hello ${user/name} how are you ?');
         $this->assertRegExp('/\'hello \'.*?\$ctx->user, \'name\'.*?\' how are you \?\'$/', $res);
     }
 
-    function testQuote()
+    public function testQuote()
     {
         $tpl = $this->newPHPTAL('input/tales-string-01.html');
         $res = $tpl->execute();
-        $res = normalize_html($res);
-        $exp = normalize_html_file('output/tales-string-01.html');
+        $res = \Tests\Testhelper\Helper::normalizeHtml($res);
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/tales-string-01.html');
         $this->assertEquals($exp, $res);
     }
 
-    function testDoubleVar()
+    public function testDoubleVar()
     {
         $res = \PhpTal\Php\TalesInternal::string('hello $foo $bar');
         $this->assertRegExp('/ctx->foo/', $res, '$foo not interpolated');
         $this->assertRegExp('/ctx->bar/', $res, '$bar not interpolated');
     }
 
-    function testDoubleDotComa()
+    public function testDoubleDotComa()
     {
         $tpl = $this->newPHPTAL('input/tales-string-02.html');
         $res = $tpl->execute();
-        $res = normalize_html($res);
-        $exp = normalize_html_file('output/tales-string-02.html');
+        $res = \Tests\Testhelper\Helper::normalizeHtml($res);
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/tales-string-02.html');
         $this->assertEquals($exp, $res);
     }
 
-    function testEscape()
+    public function testEscape()
     {
         $tpl = $this->newPHPTAL('input/tales-string-03.html');
         $res = $tpl->execute();
-        $res = normalize_html($res);
-        $exp = normalize_html_file('output/tales-string-03.html');
+        $res = \Tests\Testhelper\Helper::normalizeHtml($res);
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/tales-string-03.html');
         $this->assertEquals($exp, $res);
     }
 
-    function testStructure()
+    public function testStructure()
     {
         $tpl = $this->newPHPTAL();
         $tpl->setSource('<p>
@@ -87,9 +87,7 @@ class TalesStringTest extends PHPTAL_TestCase {
             <x y="${string:&lt;foo/&gt;}" tal:content="string:&lt;foo/&gt;" />
             <x y="${structure string:&lt;foo/&gt;}" tal:content="structure string:&lt;foo/&gt;" />
         </p>');
-        $this->assertEquals(normalize_html('<p>&lt;foo/&gt;<foo/><x y="&lt;foo/&gt;">&lt;foo/&gt;</x><x y="<foo/>"><foo/></x></p>'),
-                            normalize_html($tpl->execute()));
+        $this->assertEquals(\Tests\Testhelper\Helper::normalizeHtml('<p>&lt;foo/&gt;<foo/><x y="&lt;foo/&gt;">&lt;foo/&gt;</x><x y="<foo/>"><foo/></x></p>'),
+                            \Tests\Testhelper\Helper::normalizeHtml($tpl->execute()));
     }
 }
-
-

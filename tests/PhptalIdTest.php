@@ -12,57 +12,31 @@
  * @link     http://phptal.org/
  */
 
+namespace Tests;
 
+use Tests\Testhelper\MyTrigger;
 
-class MyTrigger implements \PhpTal\TriggerInterface
+class PhptalIdTest extends \Tests\Testcase\PhpTal
 {
-    public $useCache = false;
-    private $_cache  = null;
-
-    public function start($id, $tpl)
-    {
-        if ($this->_cache !== null) {
-            $this->useCache = true;
-            return \PhpTal\TriggerInterface::SKIPTAG;
-        }
-
-        $this->useCache = false;
-        ob_start();
-        return \PhpTal\TriggerInterface::PROCEED;
-    }
-
-    public function end($id, $tpl)
-    {
-        if ($this->_cache === null) {
-            $this->_cache = ob_get_contents();
-            ob_end_clean();
-        }
-        echo $this->_cache;
-    }
-}
-
-class PhptalIdTest extends PHPTAL_TestCase
-{
-    function test01()
+    public function test01()
     {
         $trigger = new MyTrigger();
 
-        $exp = normalize_html_file('output/phptal.id.01.html');
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/phptal.id.01.html');
         $tpl = $this->newPHPTAL('input/phptal.id.01.html');
         $tpl->addTrigger('myTable', $trigger);
         $tpl->result = range(0, 3);
 
         $res = $tpl->execute();
-        $res = normalize_html($res);
+        $res = \Tests\Testhelper\Helper::normalizeHtml($res);
 
         $this->assertEquals($exp, $res);
         $this->assertEquals(false, $trigger->useCache);
 
         $res = $tpl->execute();
-        $res = normalize_html($res);
+        $res = \Tests\Testhelper\Helper::normalizeHtml($res);
 
         $this->assertEquals($exp, $res);
         $this->assertEquals(true, $trigger->useCache);
     }
 }
-

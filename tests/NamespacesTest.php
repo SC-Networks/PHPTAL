@@ -12,66 +12,62 @@
  * @link     http://phptal.org/
  */
 
+namespace Tests;
 
+use Tests\Testhelper\Test_PHPTAL_Namespace;
 
-if (!class_exists('Test_PHPTAL_Namespace', false)) {
-    class Test_PHPTAL_Namespace extends \PhpTal\TalNamespace\Builtin
-    {
-    }
-}
-
-class NamespacesTest extends PHPTAL_TestCase
+class NamespacesTest extends \Tests\Testcase\PhpTal
 {
-    function testTalAlias()
+    public function testTalAlias()
     {
-        $exp = normalize_html_file('output/namespaces.01.html');
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/namespaces.01.html');
         $tpl = $this->newPHPTAL('input/namespaces.01.html');
         $res = $tpl->execute();
-        $res = normalize_html($res);
+        $res = \Tests\Testhelper\Helper::normalizeHtml($res);
         $this->assertEquals($exp, $res);
     }
 
-    function testInherit()
+    public function testInherit()
     {
-        $exp = normalize_html_file('output/namespaces.02.html');
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/namespaces.02.html');
         $tpl = $this->newPHPTAL('input/namespaces.02.html');
         $res = $tpl->execute();
-        $res = normalize_html($res);
+        $res = \Tests\Testhelper\Helper::normalizeHtml($res);
         $this->assertEquals($exp, $res);
     }
 
-    function testOverwrite()
+    public function testOverwrite()
     {
         $res = $this->newPHPTAL('input/namespaces.03.html')->execute();
-        $this->assertEquals(normalize_html_file('output/namespaces.03.html'), normalize_html($res));
+        $this->assertEquals(\Tests\Testhelper\Helper::normalizeHtmlFile('output/namespaces.03.html'), \Tests\Testhelper\Helper::normalizeHtml($res));
     }
 
-    function testOverwriteBuiltinNamespace()
+    public function testOverwriteBuiltinNamespace()
     {
         $tpl = $this->newPHPTAL();
         $tpl->setSource($src='<metal:block xmlns:metal="non-zope" metal:use-macro="just kidding">ok</metal:block>');
-        $this->assertEquals(normalize_html($src), normalize_html($tpl->execute()));
+        $this->assertEquals(\Tests\Testhelper\Helper::normalizeHtml($src), \Tests\Testhelper\Helper::normalizeHtml($tpl->execute()));
     }
 
-    function testNamespaceWithoutPrefix()
+    public function testNamespaceWithoutPrefix()
     {
         $tpl = $this->newPHPTAL();
         $tpl->setSource('<metal:block xmlns:metal="non-zope">
                            <block xmlns="http://xml.zope.org/namespaces/tal" content="string:works" />
                          </metal:block>');
-        $this->assertEquals(normalize_html('<metal:block xmlns:metal="non-zope"> works </metal:block>'),
-                            normalize_html($tpl->execute()));
+        $this->assertEquals(\Tests\Testhelper\Helper::normalizeHtml('<metal:block xmlns:metal="non-zope"> works </metal:block>'),
+                            \Tests\Testhelper\Helper::normalizeHtml($tpl->execute()));
     }
 
-    function testRedefineBuiltinNamespace()
+    public function testRedefineBuiltinNamespace()
     {
         $tpl = $this->newPHPTAL();
         $tpl->setSource('<metal:block xmlns:metal="non-zope">
                            <foo:block xmlns="x" xmlns:foo="http://xml.zope.org/namespaces/tal" content="string:works" />
                            <metal:block xmlns="http://xml.zope.org/namespaces/i18n" xmlns:metal="http://xml.zope.org/namespaces/tal" metal:content="string:properly" />
                          </metal:block>');
-        $this->assertEquals(normalize_html('<metal:block xmlns:metal="non-zope"> works properly </metal:block>'),
-                            normalize_html($tpl->execute()));
+        $this->assertEquals(\Tests\Testhelper\Helper::normalizeHtml('<metal:block xmlns:metal="non-zope"> works properly </metal:block>'),
+                            \Tests\Testhelper\Helper::normalizeHtml($tpl->execute()));
     }
 
     // different kind of namespace
@@ -79,7 +75,7 @@ class NamespacesTest extends PHPTAL_TestCase
     /**
      * @expectedException \PhpTal\Exception\ConfigurationException
      */
-    function testPHPTALNamespaceClassRejectsEmptyNS()
+    public function testPHPTALNamespaceClassRejectsEmptyNS()
     {
         new Test_PHPTAL_Namespace('test', '');
     }
@@ -87,7 +83,7 @@ class NamespacesTest extends PHPTAL_TestCase
     /**
      * @expectedException \PhpTal\Exception\ConfigurationException
      */
-    function testPHPTALNamespaceClassRejectsEmptyPrefix()
+    public function testPHPTALNamespaceClassRejectsEmptyPrefix()
     {
         new Test_PHPTAL_Namespace('', 'urn:test');
     }

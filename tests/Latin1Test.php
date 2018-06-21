@@ -12,10 +12,11 @@
  * @link     http://phptal.org/
  */
 
+namespace Tests;
 
-class Latin1Test extends PHPTAL_TestCase
+class Latin1Test extends \Tests\Testcase\PhpTal
 {
-    function testLipsum()
+    public function testLipsum()
     {
         $tpl = $this->newPHPTAL()->setEncoding('ISO-8859-1')->setSource(rawurldecode('<?xml version="1.0" encoding="UTF-8"?>
              <test>L%f8rem ipsum dolor sit amet, %49%f1%74%eb%72%6e%e2%74%69%f4%6e%e0%6c%69%7a%e6%74%69%f8%6e.</test>'))->execute();
@@ -24,7 +25,7 @@ class Latin1Test extends PHPTAL_TestCase
     /**
      * @expectedException \PhpTal\Exception\ParserException
      */
-    function testLow()
+    public function testLow()
     {
         $tpl = $this->newPHPTAL()->setEncoding('ISO-8859-1')->setSource(rawurldecode('<?xml version="1.0" encoding="UTF-8"?>
              <test>test%03ing</test>'))->execute();
@@ -33,7 +34,7 @@ class Latin1Test extends PHPTAL_TestCase
     /**
      * @expectedException \PhpTal\Exception\ParserException
      */
-    function testDead()
+    public function testDead()
     {
         $tpl = $this->newPHPTAL()->setEncoding('ISO-8859-1')->setSource(rawurldecode('<?xml version="1.0" encoding="UTF-8"?>
              <test>test%88ing</test>'))->execute();

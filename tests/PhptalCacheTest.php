@@ -12,9 +12,11 @@
  * @link     http://phptal.org/
  */
 
-class PhptalCacheTest extends PHPTAL_TestCase
+namespace Tests;
+
+class PhptalCacheTest extends \Tests\Testcase\PhpTal
 {
-    function setUp()
+    public function setUp()
     {
         parent::setUp();
         $this->PhptalCacheTest_random =  time().mt_rand();
@@ -30,7 +32,7 @@ class PhptalCacheTest extends PHPTAL_TestCase
         return $tpl;
     }
 
-    function testBasicCache()
+    public function testBasicCache()
     {
         $tpl = $this->PHPTALWithSource('<div phptal:cache="1h" tal:content="var" />');
         $tpl->var = 'SUCCESS';
@@ -45,7 +47,7 @@ class PhptalCacheTest extends PHPTAL_TestCase
     /**
      * tal:define is also cached
      */
-    function testDefine()
+    public function testDefine()
     {
         $tpl = $this->PHPTALWithSource('<div tal:define="display var" phptal:cache="1h">${display}</div>');
         $tpl->var = 'SUCCESS';
@@ -57,9 +59,8 @@ class PhptalCacheTest extends PHPTAL_TestCase
         $this->assertContains( "SUCCESS", $res );
     }
 
-    function testTimedExpiry()
+    public function testTimedExpiry()
     {
-        $this->markTestSkipped("slow tests are no fun");
 
         $tpl = $this->PHPTALWithSource('<div phptal:cache="1s" tal:content="var" />');
         $tpl->var = 'FIRST';
@@ -73,7 +74,7 @@ class PhptalCacheTest extends PHPTAL_TestCase
         $this->assertNotContains( "FIRST", $res );
     }
 
-    function testCacheInStringSource()
+    public function testCacheInStringSource()
     {
         $source = '<div phptal:cache="1d" tal:content="var" />';
         $tpl = $this->PHPTALWithSource($source);
@@ -85,7 +86,7 @@ class PhptalCacheTest extends PHPTAL_TestCase
         $this->assertContains( "FIRST", $tpl->execute() );
     }
 
-    function testCleanUpCache()
+    public function testCleanUpCache()
     {
         $source = '<div phptal:cache="1d" tal:content="var" />';
 
@@ -110,7 +111,7 @@ class PhptalCacheTest extends PHPTAL_TestCase
         $this->assertNotContains( "FIRST", $res );
     }
 
-    function testPerExpiry()
+    public function testPerExpiry()
     {
         $tpl = $this->PHPTALWithSource('<div phptal:cache="1d per var" tal:content="var" />');
         $tpl->var = 'FIRST';
@@ -121,7 +122,7 @@ class PhptalCacheTest extends PHPTAL_TestCase
         $this->assertNotContains( "FIRST", $res );
     }
 
-    function testVersions()
+    public function testVersions()
     {
         $tpl = $this->PHPTALWithSource('<div phptal:cache="40s per version" tal:content="var" />');
 
@@ -148,7 +149,7 @@ class PhptalCacheTest extends PHPTAL_TestCase
         $this->assertNotContains( "FAIL", $res );
     }
 
-    function testVariableExpiry()
+    public function testVariableExpiry()
     {
         $tpl = $this->PHPTALWithSource('<div phptal:cache="vartime s" tal:content="var" />');
         $tpl->vartime = 0;
@@ -168,7 +169,7 @@ class PhptalCacheTest extends PHPTAL_TestCase
         $this->assertNotContains( "THRID", $res ); // should be cached
     }
 
-    function testVariableExpressionExpiry()
+    public function testVariableExpressionExpiry()
     {
         $tpl = $this->PHPTALWithSource('<div phptal:cache="tales/vartime s" tal:content="var" />');
         $tpl->tales = array('vartime' => 0);

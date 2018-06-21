@@ -1,11 +1,4 @@
 <?php
-
-namespace Tests;
-
-use PhpTal\Exception\MacroMissingException;
-use PhpTal\Exception\ParserException;
-use PhpTal\Exception\PhpTalException;
-
 /**
  * PHPTAL templating engine
  *
@@ -19,38 +12,44 @@ use PhpTal\Exception\PhpTalException;
  * @link     http://phptal.org/
  */
 
-class MetalMacroTest extends \PHPTAL_TestCase
+namespace Tests;
+
+use PhpTal\Exception\MacroMissingException;
+use PhpTal\Exception\ParserException;
+use PhpTal\Exception\PhpTalException;
+
+class MetalMacroTest extends \Tests\Testcase\PhpTal
 {
 
     public function testSimple()
     {
         $tpl = $this->newPHPTAL('input/metal-macro.01.html');
-        $res = normalize_html($tpl->execute());
-        $exp = normalize_html_file('output/metal-macro.01.html');
+        $res = \Tests\Testhelper\Helper::normalizeHtml($tpl->execute());
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/metal-macro.01.html');
         $this->assertEquals($exp, $res);
     }
 
     public function testExternalMacro()
     {
         $tpl = $this->newPHPTAL('input/metal-macro.02.html');
-        $res = normalize_html($tpl->execute());
-        $exp = normalize_html_file('output/metal-macro.02.html');
+        $res = \Tests\Testhelper\Helper::normalizeHtml($tpl->execute());
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/metal-macro.02.html');
         $this->assertEquals($exp, $res);
     }
 
     public function testBlock()
     {
         $tpl = $this->newPHPTAL('input/metal-macro.03.html');
-        $res = normalize_html($tpl->execute());
-        $exp = normalize_html_file('output/metal-macro.03.html');
+        $res = \Tests\Testhelper\Helper::normalizeHtml($tpl->execute());
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/metal-macro.03.html');
         $this->assertEquals($exp, $res);
     }
 
     public function testMacroInsideMacro()
     {
         $tpl = $this->newPHPTAL('input/metal-macro.04.html');
-        $res = normalize_html($tpl->execute());
-        $exp = normalize_html_file('output/metal-macro.04.html');
+        $res = \Tests\Testhelper\Helper::normalizeHtml($tpl->execute());
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/metal-macro.04.html');
         $this->assertEquals($exp, $res);
     }
 
@@ -63,8 +62,8 @@ class MetalMacroTest extends \PHPTAL_TestCase
         $tpl = $this->newPHPTAL('input/metal-macro.05.html');
         $tpl->call = $call;
 
-        $res = normalize_html($tpl->execute());
-        $exp = normalize_html_file('output/metal-macro.05.html');
+        $res = \Tests\Testhelper\Helper::normalizeHtml($tpl->execute());
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/metal-macro.05.html');
         $this->assertEquals($exp, $res);
     }
 
@@ -78,16 +77,16 @@ class MetalMacroTest extends \PHPTAL_TestCase
         $tpl = $this->newPHPTAL('input/metal-macro.06.html');
         $tpl->call = $call;
 
-        $res = normalize_html($tpl->execute());
-        $exp = normalize_html_file('output/metal-macro.06.html');
+        $res = \Tests\Testhelper\Helper::normalizeHtml($tpl->execute());
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/metal-macro.06.html');
         $this->assertEquals($exp, $res);
     }
 
     public function testInheritedMacroSlots()
     {
         $tpl = $this->newPHPTAL('input/metal-macro.07.html');
-        $res = normalize_html($tpl->execute());
-        $exp = normalize_html_file('output/metal-macro.07.html');
+        $res = \Tests\Testhelper\Helper::normalizeHtml($tpl->execute());
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/metal-macro.07.html');
         $this->assertEquals($exp, $res);
     }
 
@@ -101,7 +100,7 @@ class MetalMacroTest extends \PHPTAL_TestCase
     public function testExternalMacroMissingException()
     {
         $tpl = $this->newPHPTAL();
-        $tpl->setSource('<tal:block metal:use-macro="input/metal-macro.07.html/this-macro-doesnt-exist"/>');
+        $tpl->setSource('<tal:block metal:use-macro="../input/metal-macro.07.html/this-macro-doesnt-exist"/>');
         $this->expectException(MacroMissingException::class);
         $tpl->execute();
     }
@@ -119,7 +118,7 @@ class MetalMacroTest extends \PHPTAL_TestCase
         $tpl = $this->newPHPTAL();
         $tpl->defined_later_var = 'defined_later';
         $tpl->ok_var = '??'; // fallback in case test fails
-        $tpl->setSource('<tal:block metal:use-macro="input/metal-macro.09.html/defined_earlier" />');
+        $tpl->setSource('<tal:block metal:use-macro="../input/metal-macro.09.html/defined_earlier" />');
         $res = $tpl->execute();
         $this->assertEquals('Call OK OK', trim(preg_replace('/\s+/', ' ', $res)));
     }
@@ -150,7 +149,7 @@ class MetalMacroTest extends \PHPTAL_TestCase
     public function testExternalTemplateThrowsError()
     {
         $tpl = $this->newPHPTAL();
-        $tpl->setSource('<phptal:block metal:use-macro="input/metal-macro.10.html/throwerr"/>');
+        $tpl->setSource('<phptal:block metal:use-macro="../input/metal-macro.10.html/throwerr"/>');
         $this->expectException(ParserException::class);
         $tpl->execute();
     }
@@ -159,7 +158,7 @@ class MetalMacroTest extends \PHPTAL_TestCase
     {
         $tpl = $this->newPHPTAL();
         $tpl->setSource('<phptal:block tal:on-error="string:ok"
-        metal:use-macro="input/metal-macro.10.html/throwerr"/>');
+        metal:use-macro="../input/metal-macro.10.html/throwerr"/>');
 
         $this->assertEquals('ok', $tpl->execute());
     }
@@ -169,7 +168,7 @@ class MetalMacroTest extends \PHPTAL_TestCase
         $tpl = $this->newPHPTAL();
         $tpl->setSource('<metal:block>
             <phptal:block tal:define="global test string:bad"
-            metal:use-macro="input/metal-macro.11.html/redefine"/>
+            metal:use-macro="../input/metal-macro.11.html/redefine"/>
             ${test}
             </metal:block>');
 

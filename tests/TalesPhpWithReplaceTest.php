@@ -1,9 +1,5 @@
 <?php
 
-namespace Test;
-
-use PhpTal\Exception\PhpNotAllowedException;
-
 /**
  * PHPTAL templating engine
  *
@@ -17,13 +13,17 @@ use PhpTal\Exception\PhpNotAllowedException;
  * @link     http://phptal.org/
  */
 
-class TalesPhpWithReplaceTest extends \PHPTAL_TestCase
+namespace Test;
+
+use PhpTal\Exception\PhpNotAllowedException;
+
+class TalesPhpWithReplaceTest extends \Tests\Testcase\PhpTal
 {
     public function testMix()
     {
         $tpl = $this->newPHPTAL('input/talesphpwithreplace.01.html');
-        $res = normalize_html($tpl->execute());
-        $exp = normalize_html_file('output/talesphpwithreplace.01.html');
+        $res = \Tests\Testhelper\Helper::normalizeHtml($tpl->execute());
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/talesphpwithreplace.01.html');
         $this->assertEquals($exp, $res);
     }
 

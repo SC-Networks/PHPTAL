@@ -12,9 +12,9 @@
  * @link     http://phptal.org/
  */
 
+namespace Tests;
 
-
-class DOMTest extends PHPTAL_TestCase
+class DOMTest extends \Tests\Testcase\PhpTal
 {
     private function newElement($name = 'foo', $ns = '')
     {
@@ -22,7 +22,7 @@ class DOMTest extends PHPTAL_TestCase
         return new \PhpTal\Dom\Element($name, $ns, array(), $xmlns);
     }
 
-    function testAppendChild()
+    public function testAppendChild()
     {
         $el1 = $this->newElement();
         $el2 = $this->newElement();
@@ -38,7 +38,7 @@ class DOMTest extends PHPTAL_TestCase
         $this->assertSame($el2, $el1->childNodes[0]);
     }
 
-    function testAppendChildChangesParent()
+    public function testAppendChildChangesParent()
     {
         $el1 = $this->newElement();
         $el2 = $this->newElement();
@@ -61,7 +61,7 @@ class DOMTest extends PHPTAL_TestCase
         $this->assertEquals(1, count($el2->childNodes));
     }
 
-    function testRemoveChild()
+    public function testRemoveChild()
     {
         $el1 = $this->newElement();
         $el2 = $this->newElement();
@@ -92,10 +92,9 @@ class DOMTest extends PHPTAL_TestCase
         $this->assertEquals(1, count($el1->childNodes));
         $this->assertTrue(isset($el1->childNodes[0]));
         $this->assertFalse(isset($el1->childNodes[1]));
-
     }
 
-    function testReplaceChild()
+    public function testReplaceChild()
     {
         $el1 = $this->newElement();
         $el2 = $this->newElement();
@@ -122,7 +121,7 @@ class DOMTest extends PHPTAL_TestCase
         $this->assertSame($el1, $r->parentNode);
     }
 
-    function testSetAttributeNS()
+    public function testSetAttributeNS()
     {
         $el = $this->newElement();
 
@@ -133,7 +132,7 @@ class DOMTest extends PHPTAL_TestCase
         $this->assertNotNull($el->getAttributeNodeNS('urn:foons', 'bar'));
     }
 
-    function testSetAttributeNSPrefixed()
+    public function testSetAttributeNSPrefixed()
     {
         $el = $this->newElement();
 

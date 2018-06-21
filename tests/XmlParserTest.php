@@ -1,7 +1,5 @@
 <?php
 
-use Tests\Testhelper\MyDocumentBuilder;
-
 /**
  * PHPTAL templating engine
  *
@@ -15,13 +13,17 @@ use Tests\Testhelper\MyDocumentBuilder;
  * @link     http://phptal.org/
  */
 
-class XmlParserTest extends PHPTAL_TestCase
+namespace Tests;
+
+use Tests\Testhelper\MyDocumentBuilder;
+
+class XmlParserTest extends \Tests\Testcase\PhpTal
 {
     public function testSimpleParse()
     {
         $parser = new \PhpTal\Dom\SaxXmlParser('UTF-8');
-        $parser->parseFile($builder = new MyDocumentBuilder(), 'input/xml.01.xml')->getResult();
-        $expected = trim(join('', file('input/xml.01.xml')));
+        $parser->parseFile($builder = new MyDocumentBuilder(), '../input/xml.01.xml')->getResult();
+        $expected = trim(file_get_contents('../input/xml.01.xml'));
         $this->assertEquals($expected, $builder->result);
         $this->assertEquals(7, $builder->elementStarts);
         $this->assertEquals(7, $builder->elementCloses);
@@ -49,7 +51,7 @@ class XmlParserTest extends PHPTAL_TestCase
             $parser->parseFile($builder = new MyDocumentBuilder(), 'input/xml.02.xml')->getResult();
             $this->assertTrue( false );
         }
-        catch (Exception $e)
+        catch (\Exception $e)
         {
             $this->assertTrue( true );
         }
@@ -58,9 +60,9 @@ class XmlParserTest extends PHPTAL_TestCase
     public function testAllowGtAndLtInTextNodes()
     {
         $parser = new \PhpTal\Dom\SaxXmlParser('UTF-8');
-        $parser->parseFile($builder = new MyDocumentBuilder(), 'input/xml.03.xml')->getResult();
+        $parser->parseFile($builder = new MyDocumentBuilder(), '../input/xml.03.xml')->getResult();
 
-        $this->assertEquals(normalize_html_file('output/xml.03.xml'), normalize_html($builder->result));
+        $this->assertEquals(\Tests\Testhelper\Helper::normalizeHtmlFile('output/xml.03.xml'), \Tests\Testhelper\Helper::normalizeHtml($builder->result));
         $this->assertEquals(3, $builder->elementStarts);
         $this->assertEquals(3, $builder->elementCloses);
         // a '<' character withing some text data make the parser call 2 times

@@ -1,9 +1,5 @@
 <?php
 
-namespace Tests;
-
-use PhpTal\Php\TalesInternal;
-
 /**
  * PHPTAL templating engine
  *
@@ -17,8 +13,11 @@ use PhpTal\Php\TalesInternal;
  * @link     http://phptal.org/
  */
 
+namespace Tests;
 
-class EscapeHTMLTest extends \PHPTAL_TestCase
+use PhpTal\Php\TalesInternal;
+
+class EscapeHTMLTest extends \Tests\Testcase\PhpTal
 {
 
     public function tearDown()
@@ -38,8 +37,8 @@ class EscapeHTMLTest extends \PHPTAL_TestCase
     public function testDoesEscapeHTMLContent()
     {
         $tpl = $this->newPHPTAL('input/escape.html');
-        $exp = normalize_html_file('output/escape.html');
-        $res = normalize_html($tpl->execute());
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/escape.html');
+        $res = \Tests\Testhelper\Helper::normalizeHtml($tpl->execute());
         $this->assertEquals($exp, $res);
     }
 

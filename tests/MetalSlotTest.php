@@ -1,11 +1,5 @@
 <?php
 
-namespace Tests;
-
-use PhpTal\Php\Attribute\METAL\FillSlot;
-use PhpTal\Php\TalesInternal;
-use Tests\Testhelper\DummyTranslator;
-
 /**
  * PHPTAL templating engine
  *
@@ -19,7 +13,13 @@ use Tests\Testhelper\DummyTranslator;
  * @link     http://phptal.org/
  */
 
-class MetalSlotTest extends \PHPTAL_TestCase
+namespace Tests;
+
+use PhpTal\Php\Attribute\METAL\FillSlot;
+use PhpTal\Php\TalesInternal;
+use Tests\Testhelper\DummyTranslator;
+
+class MetalSlotTest extends \Tests\Testcase\PhpTal
 {
     public function tearDown()
     {
@@ -30,8 +30,8 @@ class MetalSlotTest extends \PHPTAL_TestCase
     public function testSimple()
     {
         $tpl = $this->newPHPTAL('input/metal-slot.01.html');
-        $res = normalize_html($tpl->execute());
-        $exp = normalize_html_file('output/metal-slot.01.html');
+        $res = \Tests\Testhelper\Helper::normalizeHtml($tpl->execute());
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/metal-slot.01.html');
         $this->assertEquals($exp, $res);
     }
 
@@ -58,8 +58,8 @@ class MetalSlotTest extends \PHPTAL_TestCase
 
         $tpl->varernative = 'ernative';
 
-        $res = normalize_html($tpl->execute());
-        $exp = normalize_html_file('output/metal-slot.01.html');
+        $res = \Tests\Testhelper\Helper::normalizeHtml($tpl->execute());
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/metal-slot.01.html');
         $this->assertEquals($exp, $res);
     }
 
@@ -67,8 +67,8 @@ class MetalSlotTest extends \PHPTAL_TestCase
     {
         $tpl = $this->newPHPTAL('input/metal-slot.05.html');
         $tpl->var = "top";
-        $this->assertEquals(normalize_html('top=top<div>inusemacro=inusemacro<div>inmacro=inmacro<div>infillslot=infillslot</div>/inmacro=inmacro</div>/inusemacro=inusemacro</div>/top=top'),
-                            normalize_html($tpl->execute()), $tpl->getCodePath());
+        $this->assertEquals(\Tests\Testhelper\Helper::normalizeHtml('top=top<div>inusemacro=inusemacro<div>inmacro=inmacro<div>infillslot=infillslot</div>/inmacro=inmacro</div>/inusemacro=inusemacro</div>/top=top'),
+                            \Tests\Testhelper\Helper::normalizeHtml($tpl->execute()), $tpl->getCodePath());
     }
 
     public function testPreservesTopmostContext()
@@ -86,7 +86,7 @@ class MetalSlotTest extends \PHPTAL_TestCase
                 <div metal:fill-slot="s">var = ${var}</div>
             </div>
         ');
-        $this->assertEquals(normalize_html('<div><div><div>var = topmost</div></div></div>'), normalize_html($tpl->execute()), $tpl->getCodePath());
+        $this->assertEquals(\Tests\Testhelper\Helper::normalizeHtml('<div><div><div>var = topmost</div></div></div>'), \Tests\Testhelper\Helper::normalizeHtml($tpl->execute()), $tpl->getCodePath());
     }
 
     public function testRecursiveFillSimple()
@@ -112,16 +112,16 @@ class MetalSlotTest extends \PHPTAL_TestCase
             </div>
             ');
 
-        $this->assertEquals(normalize_html('<div><div>test1 macro value:<div class="filling value for test1">
+        $this->assertEquals(\Tests\Testhelper\Helper::normalizeHtml('<div><div>test1 macro value:<div class="filling value for test1">
         <div>test2 macro value:<span class="filling value for test2">foo bar baz</span></div></div></div></div>'),
-                            normalize_html($tpl->execute()), $tpl->getCodePath());
+                            \Tests\Testhelper\Helper::normalizeHtml($tpl->execute()), $tpl->getCodePath());
     }
 
     public function testRecursiveFill()
     {
         $tpl = $this->newPHPTAL('input/metal-slot.02.html');
-        $res = normalize_html($tpl->execute());
-        $exp = normalize_html_file('output/metal-slot.02.html');
+        $res = \Tests\Testhelper\Helper::normalizeHtml($tpl->execute());
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/metal-slot.02.html');
         $this->assertEquals($exp, $res, $tpl->getCodePath());
     }
 
@@ -149,7 +149,7 @@ class MetalSlotTest extends \PHPTAL_TestCase
         </div>
 
         ');
-        $res = normalize_html($tpl->execute());
+        $res = \Tests\Testhelper\Helper::normalizeHtml($tpl->execute());
         $this->assertEquals('<div><div><div><span>OK</span></div></div></div>', $res, $tpl->getCodePath());
     }
 
@@ -158,8 +158,8 @@ class MetalSlotTest extends \PHPTAL_TestCase
     public function testBlock()
     {
         $tpl = $this->newPHPTAL('input/metal-slot.03.html');
-        $res = normalize_html($tpl->execute());
-        $exp = normalize_html_file('output/metal-slot.03.html');
+        $res = \Tests\Testhelper\Helper::normalizeHtml($tpl->execute());
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/metal-slot.03.html');
         $this->assertEquals($exp, $res);
     }
 
@@ -167,8 +167,8 @@ class MetalSlotTest extends \PHPTAL_TestCase
     {
         $tpl = $this->newPHPTAL('input/metal-slot.04.html');
         $tpl->fillit = true;
-        $res = normalize_html($tpl->execute());
-        $exp = normalize_html_file('output/metal-slot.04.html');
+        $res = \Tests\Testhelper\Helper::normalizeHtml($tpl->execute());
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/metal-slot.04.html');
         $this->assertEquals($exp, $res);
     }
 
@@ -187,7 +187,7 @@ class MetalSlotTest extends \PHPTAL_TestCase
         $tr->setTranslation("translatemetoo", "translatedyouaswell");
         $tpl->setTranslator($tr);
 
-        $this->assertEquals(normalize_html('<div><p><span>translatedyouaswell</span></p></div>'), normalize_html($tpl->execute()), $tpl->getCodePath());
+        $this->assertEquals(\Tests\Testhelper\Helper::normalizeHtml('<div><p><span>translatedyouaswell</span></p></div>'), \Tests\Testhelper\Helper::normalizeHtml($tpl->execute()), $tpl->getCodePath());
     }
 
     /**
@@ -278,8 +278,8 @@ HTML
 );
 
         $this->assertEquals(
-            normalize_html('<div>page/value:<div>OK toplevel-filled page/value</div>page/valuebis:<div>OK subpage filled page/valuebis</div></div>'),
-            normalize_html($tpl->execute()), $tpl->getCodePath());
+            \Tests\Testhelper\Helper::normalizeHtml('<div>page/value:<div>OK toplevel-filled page/value</div>page/valuebis:<div>OK subpage filled page/valuebis</div></div>'),
+            \Tests\Testhelper\Helper::normalizeHtml($tpl->execute()), $tpl->getCodePath());
     }
 
     public function testNestedSlots()
@@ -308,7 +308,7 @@ HTML
         </form>
         ');
 
-        $this->assertEquals(normalize_html('
+        $this->assertEquals(\Tests\Testhelper\Helper::normalizeHtml('
         <form>
 		<fieldset>
 			<legend>First Level</legend>
@@ -319,7 +319,7 @@ HTML
 			<input type="submit" value="Send" />
 		</fieldset>
         </form>'),
-        normalize_html($tpl->execute()));
+        \Tests\Testhelper\Helper::normalizeHtml($tpl->execute()));
     }
 
     public function testResetDefault()
@@ -343,7 +343,7 @@ HTML
 
         $res = $tpl->execute();
 
-        $this->assertEquals(normalize_html('<p>
+        $this->assertEquals(\Tests\Testhelper\Helper::normalizeHtml('<p>
             The macro : <tt>the slot</tt>
           </p>
         <p>
@@ -352,7 +352,7 @@ HTML
         <p>
             The macro : <tt>the slot</tt>
           </p>
-        '),normalize_html($res));
+        '),\Tests\Testhelper\Helper::normalizeHtml($res));
     }
 
     public function testTrickyName()
@@ -366,7 +366,7 @@ HTML
             <tal:block metal:fill-slot='$tricky'>filled</tal:block>
             </y>
         ")->execute();
-        $this->assertEquals(normalize_html('<x>filled</x>'), normalize_html($res));
+        $this->assertEquals(\Tests\Testhelper\Helper::normalizeHtml('<x>filled</x>'), \Tests\Testhelper\Helper::normalizeHtml($res));
     }
 }
 

@@ -12,28 +12,29 @@
  * @link     http://phptal.org/
  */
 
+namespace Tests;
 
-class ContentEncodingTest extends PHPTAL_TestCase
+class ContentEncodingTest extends \Tests\Testcase\PhpTal
 {
-    function testSimpleAnyForm()
+    public function testSimpleAnyForm()
     {
         $tpl = $this->newPHPTAL('input/content-encoding.xml');
         $res = $tpl->execute();
-        $exp = html_entity_decode(normalize_html_file('output/content-encoding.xml'), ENT_QUOTES, 'UTF-8');
-        $res = html_entity_decode(normalize_html($res), ENT_QUOTES, 'UTF-8');
+        $exp = html_entity_decode(\Tests\Testhelper\Helper::normalizeHtmlFile('output/content-encoding.xml'), ENT_QUOTES, 'UTF-8');
+        $res = html_entity_decode(\Tests\Testhelper\Helper::normalizeHtml($res), ENT_QUOTES, 'UTF-8');
         $this->assertEquals($exp, $res);
     }
 
-    function testSimple()
+    public function testSimple()
     {
         $tpl = $this->newPHPTAL('input/content-encoding.xml');
         $res = $tpl->execute();
-        $exp = normalize_html_file('output/content-encoding.xml');
-        $res = normalize_html($res);
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/content-encoding.xml');
+        $res = \Tests\Testhelper\Helper::normalizeHtml($res);
         $this->assertEquals($exp, $res);
     }
 
-    function testEchoArray()
+    public function testEchoArray()
     {
         $p = $this->newPHPTAL();
         $p->setSource('<p tal:content="foo"/>');
@@ -41,7 +42,7 @@ class ContentEncodingTest extends PHPTAL_TestCase
         $this->assertEquals('<p>a&amp;aa, &lt;bbb&gt;, , -1, 0</p>', $p->execute());
     }
 
-    function testNonUTF8()
+    public function testNonUTF8()
     {
         if (!function_exists('mb_convert_encoding')) $this->markTestSkipped();
 
@@ -59,4 +60,3 @@ class ContentEncodingTest extends PHPTAL_TestCase
         $this->assertEquals($expected, $output);
     }
 }
-

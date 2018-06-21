@@ -1,9 +1,5 @@
 <?php
 
-namespace Tests;
-
-use PhpTal\Php\TalesInternal;
-
 /**
  * PHPTAL templating engine
  *
@@ -17,8 +13,11 @@ use PhpTal\Php\TalesInternal;
  * @link     http://phptal.org/
  */
 
+namespace Tests;
 
-class PhpModeTest extends \PHPTAL_TestCase
+use PhpTal\Php\TalesInternal;
+
+class PhpModeTest extends \Tests\Testcase\PhpTal
 {
 
     public function tearDown()
@@ -32,8 +31,8 @@ class PhpModeTest extends \PHPTAL_TestCase
         TalesInternal::setFunctionWhitelist(['strtolower']);
         $tpl = $this->newPHPTAL('input/php-mode.01.xml');
         $res = $tpl->execute();
-        $exp = normalize_html_file('output/php-mode.01.xml');
-        $res = normalize_html($res);
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/php-mode.01.xml');
+        $res = \Tests\Testhelper\Helper::normalizeHtml($res);
         static::assertEquals($exp, $res);
     }
 
@@ -42,8 +41,8 @@ class PhpModeTest extends \PHPTAL_TestCase
         TalesInternal::setFunctionWhitelist(['strtolower']);
         $tpl = $this->newPHPTAL('input/php-mode.02.xml');
         $res = $tpl->execute();
-        $exp = normalize_html_file('output/php-mode.02.xml');
-        $res = normalize_html($res);
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/php-mode.02.xml');
+        $res = \Tests\Testhelper\Helper::normalizeHtml($res);
         static::assertEquals($exp, $res);
     }
 }

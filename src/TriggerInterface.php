@@ -20,20 +20,22 @@ namespace PhpTal;
  */
 interface TriggerInterface
 {
-    const SKIPTAG = 1;
-    const PROCEED = 2;
+    public const SKIPTAG = 1;
+    public const PROCEED = 2;
 
     /**
      * @param $id
-     * @param $tpl
+     * @param PhpTalInterface $tpl
+     *
      * @return mixed
      */
-    public function start($id, $tpl);
+    public function start($id, PhpTalInterface $tpl);
 
     /**
      * @param $id
-     * @param $tpl
+     * @param PhpTalInterface $tpl
+     *
      * @return mixed
      */
-    public function end($id, $tpl);
+    public function end($id, PhpTalInterface $tpl);
 }

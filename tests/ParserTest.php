@@ -12,17 +12,16 @@
  * @link     http://phptal.org/
  */
 
+namespace Tests;
 
-
-
-class ParserTest extends PHPTAL_TestCase
+class ParserTest extends \Tests\Testcase\PhpTal
 {
     public function testParseSimpleDocument()
     {
         $parser = new \PhpTal\Dom\SaxXmlParser('UTF-8');
-        $tree = $parser->parseFile(new \PhpTal\Dom\PHPTALDocumentBuilder(), 'input/parser.01.xml')->getResult();
+        $tree = $parser->parseFile(new \PhpTal\Dom\PHPTALDocumentBuilder(), '../input/parser.01.xml')->getResult();
 
-        if ($tree instanceof DOMNode) $this->markTestSkipped();
+        if ($tree instanceof \DOMNode) $this->markTestSkipped();
 
         $children = $tree->childNodes;
         $this->assertEquals(3, count($children));
@@ -33,10 +32,10 @@ class ParserTest extends PHPTAL_TestCase
     {
         $parser = new \PhpTal\Dom\SaxXmlParser('UTF-8');
         try {
-            $tree = $parser->parseFile(new \PhpTal\Dom\PHPTALDocumentBuilder(), 'input/parser.02.xml')->getResult();
+            $tree = $parser->parseFile(new \PhpTal\Dom\PHPTALDocumentBuilder(), '../input/parser.02.xml')->getResult();
             $this->assertTrue(true);
         }
-        catch (Exception $e)
+        catch (\Exception $e)
         {
             $this->assertTrue(false);
         }
@@ -46,9 +45,9 @@ class ParserTest extends PHPTAL_TestCase
     {
         try {
             $parser = new \PhpTal\Dom\SaxXmlParser('UTF-8');
-            $parser->parseFile(new \PhpTal\Dom\PHPTALDocumentBuilder(), 'input/parser.03.xml')->getResult();
+            $parser->parseFile(new \PhpTal\Dom\PHPTALDocumentBuilder(), '../input/parser.03.xml')->getResult();
         }
-        catch (Exception $e)
+        catch (\Exception $e)
         {
             $this->assertContains( 'href', $e->getMessage() );
             $this->assertContains( 'quote', $e->getMessage() );
@@ -92,5 +91,4 @@ class ParserTest extends PHPTAL_TestCase
         }
         catch(\PhpTal\Exception\PhpTalException $e) {}
     }
-
 }

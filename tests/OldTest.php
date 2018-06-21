@@ -1,7 +1,4 @@
 <?php
-
-namespace Tests;
-
 /**
  * PHPTAL templating engine
  *
@@ -14,15 +11,18 @@ namespace Tests;
  * @license  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
  * @link     http://phptal.org/
  */
-class OldTest extends \PHPTAL_TestCase
+
+namespace Tests;
+
+class OldTest extends \Tests\Testcase\PhpTal
 {
     public function test03()
     {
         $tpl = $this->newPHPTAL('input/old-03.html');
         $tpl->title = 'My dynamic title';
         $tpl->content = '<p>my content</p>';
-        $res = normalize_html($tpl->execute());
-        $exp = normalize_html_file('output/old-03.html');
+        $res = \Tests\Testhelper\Helper::normalizeHtml($tpl->execute());
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/old-03.html');
         $this->assertEquals($exp, $res);
     }
 
@@ -31,32 +31,32 @@ class OldTest extends \PHPTAL_TestCase
         $tpl = $this->newPHPTAL('input/old-06.html');
         $tpl->title = 'my title';
         $res = $tpl->execute();
-        $res = normalize_html($res);
-        $exp = normalize_html_file('output/old-06.html');
+        $res = \Tests\Testhelper\Helper::normalizeHtml($res);
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/old-06.html');
         $this->assertEquals($exp, $res);
     }
 
     public function test08()
     {
         $tpl = $this->newPHPTAL('input/old-08.html');
-        $res = normalize_html($tpl->execute());
-        $exp = normalize_html_file('output/old-08.html');
+        $res = \Tests\Testhelper\Helper::normalizeHtml($tpl->execute());
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/old-08.html');
         $this->assertEquals($exp, $res);
     }
 
     public function test11()
     {
         $tpl = $this->newPHPTAL('input/old-11.html');
-        $res = normalize_html($tpl->execute());
-        $exp = normalize_html_file('output/old-11.html');
+        $res = \Tests\Testhelper\Helper::normalizeHtml($tpl->execute());
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/old-11.html');
         $this->assertEquals($exp, $res);
     }
 
     public function test12()
     {
         $tpl = $this->newPHPTAL('input/old-12.html');
-        $res = normalize_html($tpl->execute());
-        $exp = normalize_html_file('output/old-12.html');
+        $res = \Tests\Testhelper\Helper::normalizeHtml($tpl->execute());
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/old-12.html');
         $this->assertEquals($exp, $res);
     }
 
@@ -70,8 +70,8 @@ class OldTest extends \PHPTAL_TestCase
         $tpl->a2 = "a value";
         $tpl->link2 = $l;
 
-        $res = normalize_html($tpl->execute());
-        $exp = normalize_html_file('output/old-13.html');
+        $res = \Tests\Testhelper\Helper::normalizeHtml($tpl->execute());
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/old-13.html');
         $this->assertEquals($exp, $res);
     }
 
@@ -79,8 +79,8 @@ class OldTest extends \PHPTAL_TestCase
     {
         $tpl = $this->newPHPTAL('input/old-16.html');
         $res = $tpl->execute();
-        $res = normalize_html($res);
-        $exp = normalize_html_file('output/old-16.html');
+        $res = \Tests\Testhelper\Helper::normalizeHtml($res);
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/old-16.html');
         $this->assertEquals($exp, $res);
     }
 
@@ -88,8 +88,8 @@ class OldTest extends \PHPTAL_TestCase
     {
         $tpl = $this->newPHPTAL('input/old-17.html');
         $res = $tpl->execute();
-        $res = normalize_html($res);
-        $exp = normalize_html_file('output/old-17.html');
+        $res = \Tests\Testhelper\Helper::normalizeHtml($res);
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/old-17.html');
         $this->assertEquals($exp, $res);
     }
 
@@ -98,8 +98,8 @@ class OldTest extends \PHPTAL_TestCase
     {
         $tpl = $this->newPHPTAL('input/old-19.html');
         $res = $tpl->execute();
-        $res = normalize_html($res);
-        $exp = normalize_html_file('output/old-19.html');
+        $res = \Tests\Testhelper\Helper::normalizeHtml($res);
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/old-19.html');
         $this->assertEquals($exp, $res);
     }
 
@@ -108,8 +108,8 @@ class OldTest extends \PHPTAL_TestCase
     {
         $tpl = $this->newPHPTAL('input/old-20.html');
         $res = $tpl->execute();
-        $res = normalize_html($res);
-        $exp = normalize_html_file('output/old-20.html');
+        $res = \Tests\Testhelper\Helper::normalizeHtml($res);
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/old-20.html');
         $this->assertEquals($exp, $res);
     }
 
@@ -117,16 +117,16 @@ class OldTest extends \PHPTAL_TestCase
     public function test21() // ensure xhtml reduced tags are reduced
     {
         $tpl = $this->newPHPTAL('input/old-21.html');
-        $res = normalize_html($tpl->execute());
-        $exp = normalize_html_file('output/old-21.html');
+        $res = \Tests\Testhelper\Helper::normalizeHtml($tpl->execute());
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/old-21.html');
         $this->assertEquals($res, $exp);
     }
 
     public function test29() // test doctype inherited from macro
     {
         $tpl = $this->newPHPTAL('input/old-29.html');
-        $res = normalize_html($tpl->execute());
-        $exp = normalize_html_file('output/old-29.html');
+        $res = \Tests\Testhelper\Helper::normalizeHtml($tpl->execute());
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/old-29.html');
         $this->assertEquals($exp, $res);
     }
 
@@ -134,8 +134,8 @@ class OldTest extends \PHPTAL_TestCase
     {
         $tpl = $this->newPHPTAL('input/old-30.html');
         $res = $tpl->execute();
-        $res = normalize_html($res);
-        $exp = normalize_html_file('output/old-30.html');
+        $res = \Tests\Testhelper\Helper::normalizeHtml($res);
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/old-30.html');
         $this->assertEquals($exp, $res);
     }
 
@@ -151,8 +151,8 @@ class OldTest extends \PHPTAL_TestCase
         $tpl->foo = 'fooval';
         $tpl->bar = 'barval';
         $res = $tpl->execute();
-        $res = normalize_html($res);
-        $exp = normalize_html_file('output/old-31.html');
+        $res = \Tests\Testhelper\Helper::normalizeHtml($res);
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/old-31.html');
         $this->assertEquals($exp, $res);
     }
 
@@ -171,8 +171,8 @@ class OldTest extends \PHPTAL_TestCase
 
         $tpl = $this->newPHPTAL('input/old-32.html');
         $tpl->object = $o;
-        $res = normalize_html($tpl->execute());
-        $exp = normalize_html_file('output/old-32.html');
+        $res = \Tests\Testhelper\Helper::normalizeHtml($tpl->execute());
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/old-32.html');
         $this->assertEquals($exp, $res);
     }
 }

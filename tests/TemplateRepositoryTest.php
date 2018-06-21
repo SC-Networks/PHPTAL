@@ -13,23 +13,24 @@
  * @link     http://phptal.org/
  */
 
+namespace Tests;
 
-class TemplateRepositoryTest extends PHPTAL_TestCase
+class TemplateRepositoryTest extends \Tests\Testcase\PhpTal
 {
-    function testLooksInRepo()
+    public function testLooksInRepo()
     {
         $tpl = $this->newPHPTAL();
-        $tpl->setTemplateRepository(dirname(__FILE__).'/input');
+        $tpl->setTemplateRepository(__DIR__ .'/input');
         $tpl->setTemplate('phptal.01.html');
         $tpl->execute();
     }
 
-    function testSkipsNotFound()
+    public function testSkipsNotFound()
     {
         $tpl = $this->newPHPTAL();
-        $tpl->setTemplateRepository(dirname(__FILE__).'/invalid');
-        $tpl->setTemplateRepository(dirname(__FILE__).'/input');
-        $tpl->setTemplateRepository(dirname(__FILE__).'/bogus');
+        $tpl->setTemplateRepository(__DIR__ .'/invalid');
+        $tpl->setTemplateRepository(__DIR__ .'/input');
+        $tpl->setTemplateRepository(__DIR__ .'/bogus');
         $tpl->setTemplate('phptal.02.html');
         $tpl->execute();
     }
@@ -37,17 +38,17 @@ class TemplateRepositoryTest extends PHPTAL_TestCase
     /**
      * @expectedException \PhpTal\Exception\IOException
      */
-    function testFailsIfNoneMatch()
+    public function testFailsIfNoneMatch()
     {
         $tpl = $this->newPHPTAL();
-        $tpl->setTemplateRepository(dirname(__FILE__).'/invalid');
-        $tpl->setTemplateRepository(dirname(__FILE__).'/error');
-        $tpl->setTemplateRepository(dirname(__FILE__).'/bogus');
+        $tpl->setTemplateRepository(__DIR__ .'/invalid');
+        $tpl->setTemplateRepository(__DIR__ .'/error');
+        $tpl->setTemplateRepository(__DIR__ .'/bogus');
         $tpl->setTemplate('phptal.01.html');
         $tpl->execute();
     }
 
-    function testRepositoriesAreStrings()
+    public function testRepositoriesAreStrings()
     {
         $tpl = $this->newPHPTAL();
         $tpl->setTemplateRepository('/footest');
@@ -65,7 +66,7 @@ class TemplateRepositoryTest extends PHPTAL_TestCase
         }
     }
 
-    function testRepositoryClear()
+    public function testRepositoryClear()
     {
         $tpl = $this->newPHPTAL();
         $this->assertEquals(0, count($tpl->getTemplateRepositories()));

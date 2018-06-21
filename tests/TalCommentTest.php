@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PHPTAL templating engine
  *
@@ -12,16 +13,18 @@
  * @link     http://phptal.org/
  */
 
+namespace Tests;
 
+use Tests\Testhelper\DummyPhpNode;
 
-class DummyPhpNode extends \PhpTal\Dom\Element {
-    function __construct() {}
-    function generateCode(\PhpTal\Php\CodeWriter $codewriter): void {}
-}
-
-class TalCommentTest extends PHPTAL_TestCase
+class TalCommentTest extends \Tests\Testcase\PhpTal
 {
-    function setUp()
+
+    private $_tag;
+    private $_gen;
+    private $_att;
+
+    public function setUp()
     {
         parent::setUp();
         $state = new \PhpTal\Php\State($this->newPHPTAL());
@@ -35,26 +38,26 @@ class TalCommentTest extends PHPTAL_TestCase
         return $this->_att = new \PhpTal\Php\Attribute\TAL\Comment($this->_tag, $expr);
     }
 
-    function testComment()
+    public function testComment()
     {
         $this->newComment( 'my dummy comment');
         $this->_att->before($this->_gen);
         $this->_att->after($this->_gen);
         $res = $this->_gen->getResult();
-        $this->assertEquals(normalize_phpsource('<?php /* my dummy comment */; ?>'), normalize_phpsource($res));
+        $this->assertEquals(\Tests\Testhelper\Helper::normalizePhpSource('<?php /* my dummy comment */; ?>'), \Tests\Testhelper\Helper::normalizePhpSource($res));
     }
 
-    function testMultiLineComment()
+    public function testMultiLineComment()
     {
         $comment = "my dummy comment\non more than one\nline";
         $this->newComment($comment);
         $this->_att->before($this->_gen);
         $this->_att->after($this->_gen);
         $res = $this->_gen->getResult();
-        $this->assertEquals(normalize_phpsource("<?php /* $comment */; ?>"), normalize_phpsource($res));
+        $this->assertEquals(\Tests\Testhelper\Helper::normalizePhpSource("<?php /* $comment */; ?>"), \Tests\Testhelper\Helper::normalizePhpSource($res));
     }
 
-    function testTrickyComment()
+    public function testTrickyComment()
     {
         $comment = "my dummy */ comment\non more than one\nline";
         $this->newComment(  $comment);
@@ -62,26 +65,22 @@ class TalCommentTest extends PHPTAL_TestCase
         $this->_att->after($this->_gen);
         $res = $this->_gen->getResult();
         $comment = str_replace('*/', '* /', $comment);
-        $this->assertEquals(normalize_phpsource("<?php /* $comment */; ?>"), normalize_phpsource($res));
+        $this->assertEquals(\Tests\Testhelper\Helper::normalizePhpSource("<?php /* $comment */; ?>"), \Tests\Testhelper\Helper::normalizePhpSource($res));
     }
 
-    function testInTemplate()
+    public function testInTemplate()
     {
         $tpl = $this->newPHPTAL('input/tal-comment.01.html');
-        $res = normalize_html($tpl->execute());
-        $exp = normalize_html_file('output/tal-comment.01.html');
+        $res = \Tests\Testhelper\Helper::normalizeHtml($tpl->execute());
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/tal-comment.01.html');
         $this->assertEquals($exp, $res);
     }
 
-    function testMultilineInTemplate()
+    public function testMultilineInTemplate()
     {
         $tpl = $this->newPHPTAL('input/tal-comment.02.html');
-        $res = normalize_html($tpl->execute());
-        $exp = normalize_html_file('output/tal-comment.02.html');
+        $res = \Tests\Testhelper\Helper::normalizeHtml($tpl->execute());
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/tal-comment.02.html');
         $this->assertEquals($exp, $res);
     }
-
-    private $_tag;
-    private $_gen;
-    private $_att;
 }

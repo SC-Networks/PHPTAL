@@ -12,20 +12,21 @@
  * @link     http://phptal.org/
  */
 
+namespace Tests;
 
-class CommentFilterTest extends PHPTAL_TestCase
+class CommentFilterTest extends \Tests\Testcase\PhpTal
 {
-    function testStripComments()
+    public function testStripComments()
     {
         $t = $this->newPHPTAL('input/comment-filter-01.html');
         $t->addPreFilter(new \PhpTal\PreFilter\StripComments());
         $res = $t->execute();
-        $res = normalize_html($res);
-        $exp = normalize_html_file('output/comment-filter-01.html');
+        $res = \Tests\Testhelper\Helper::normalizeHtml($res);
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/comment-filter-01.html');
         $this->assertEquals($exp, $res);
     }
 
-    function testPreservesScript()
+    public function testPreservesScript()
     {
         $t = $this->newPHPTAL();
         $t->addPreFilter(new \PhpTal\PreFilter\StripComments());
@@ -33,12 +34,12 @@ class CommentFilterTest extends PHPTAL_TestCase
         alert("1990s called"); /* && */
         //--></script>');
 
-        $this->assertEquals(normalize_html('<script>//<![CDATA[
+        $this->assertEquals(\Tests\Testhelper\Helper::normalizeHtml('<script>//<![CDATA[
         alert("1990s called"); /* && */
-        //]]></script>'), normalize_html($t->execute()));
+        //]]></script>'), \Tests\Testhelper\Helper::normalizeHtml($t->execute()));
     }
 
-    function testNamespaceAware()
+    public function testNamespaceAware()
     {
         $t = $this->newPHPTAL();
         $t->addPreFilter(new \PhpTal\PreFilter\StripComments());
@@ -46,6 +47,6 @@ class CommentFilterTest extends PHPTAL_TestCase
         alert("1990s called"); /* && */
         //--></script>');
 
-        $this->assertEquals(normalize_html('<script xmlns="http://example.com/foo">//</script>'), normalize_html($t->execute()));
+        $this->assertEquals(\Tests\Testhelper\Helper::normalizeHtml('<script xmlns="http://example.com/foo">//</script>'), \Tests\Testhelper\Helper::normalizeHtml($t->execute()));
     }
 }

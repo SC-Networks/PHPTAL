@@ -1,12 +1,5 @@
 <?php
 
-namespace Tests;
-
-use PhpTal\Exception\TemplateException;
-use PhpTal\Php\Attribute\TAL\Define;
-use PhpTal\Php\TalesInternal;
-use Tests\Testhelper\DummyDefinePhpNode;
-
 /**
  * PHPTAL templating engine
  *
@@ -20,7 +13,14 @@ use Tests\Testhelper\DummyDefinePhpNode;
  * @link     http://phptal.org/
  */
 
-class TalDefineTest extends \PHPTAL_TestCase
+namespace Tests;
+
+use PhpTal\Exception\TemplateException;
+use PhpTal\Php\Attribute\TAL\Define;
+use PhpTal\Php\TalesInternal;
+use Tests\Testhelper\DummyDefinePhpNode;
+
+class TalDefineTest extends \Tests\Testcase\PhpTal
 {
 
     public function tearDown()
@@ -74,8 +74,8 @@ class TalDefineTest extends \PHPTAL_TestCase
     {
         $tpl = $this->newPHPTAL('input/tal-define.02.html');
         $res = $tpl->execute();
-        $res = normalize_html($res);
-        $exp = normalize_html_file('output/tal-define.02.html');
+        $res = \Tests\Testhelper\Helper::normalizeHtml($res);
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/tal-define.02.html');
         $this->assertEquals($exp, $res);
     }
 
@@ -83,8 +83,8 @@ class TalDefineTest extends \PHPTAL_TestCase
     {
         $tpl = $this->newPHPTAL('input/tal-define.03.html');
         $res = $tpl->execute();
-        $res = normalize_html($res);
-        $exp = normalize_html_file('output/tal-define.03.html');
+        $res = \Tests\Testhelper\Helper::normalizeHtml($res);
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/tal-define.03.html');
         $this->assertEquals($exp, $res);
     }
 
@@ -92,8 +92,8 @@ class TalDefineTest extends \PHPTAL_TestCase
     {
         $tpl = $this->newPHPTAL('input/tal-define.04.html');
         $res = $tpl->execute();
-        $res = normalize_html($res);
-        $exp = normalize_html_file('output/tal-define.04.html');
+        $res = \Tests\Testhelper\Helper::normalizeHtml($res);
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/tal-define.04.html');
         $this->assertEquals($exp, $res);
     }
 
@@ -101,8 +101,8 @@ class TalDefineTest extends \PHPTAL_TestCase
     {
         $tpl = $this->newPHPTAL('input/tal-define.06.html');
         $res = $tpl->execute();
-        $res = normalize_html($res);
-        $exp = normalize_html_file('output/tal-define.06.html');
+        $res = \Tests\Testhelper\Helper::normalizeHtml($res);
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/tal-define.06.html');
         $this->assertEquals($exp, $res);
     }
 
@@ -110,8 +110,8 @@ class TalDefineTest extends \PHPTAL_TestCase
     {
         $tpl = $this->newPHPTAL('input/tal-define.07.html');
         $res = $tpl->execute();
-        $res = normalize_html($res);
-        $exp = normalize_html_file('output/tal-define.07.html');
+        $res = \Tests\Testhelper\Helper::normalizeHtml($res);
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/tal-define.07.html');
         $this->assertEquals($exp, $res);
     }
 
@@ -120,8 +120,8 @@ class TalDefineTest extends \PHPTAL_TestCase
         TalesInternal::setFunctionWhitelist(['range']);
         $tpl = $this->newPHPTAL('input/tal-define.08.html');
         $res = $tpl->execute();
-        $res = normalize_html($res);
-        $exp = normalize_html_file('output/tal-define.08.html');
+        $res = \Tests\Testhelper\Helper::normalizeHtml($res);
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/tal-define.08.html');
         $this->assertEquals($exp, $res);
     }
 
@@ -129,8 +129,8 @@ class TalDefineTest extends \PHPTAL_TestCase
     {
         $tpl = $this->newPHPTAL('input/tal-define.09.html');
         $res = $tpl->execute();
-        $res = normalize_html($res);
-        $exp = normalize_html_file('output/tal-define.09.html');
+        $res = \Tests\Testhelper\Helper::normalizeHtml($res);
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/tal-define.09.html');
         $this->assertEquals($exp, $res);
     }
 
@@ -139,8 +139,8 @@ class TalDefineTest extends \PHPTAL_TestCase
         $tpl = $this->newPHPTAL('input/tal-define.10.html');
         $tpl->fname = 'Roger';
         $res = $tpl->execute();
-        $res = normalize_html($res);
-        $exp = normalize_html_file('output/tal-define.10.html');
+        $res = \Tests\Testhelper\Helper::normalizeHtml($res);
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/tal-define.10.html');
         $this->assertEquals($exp, $res);
     }
 
@@ -149,8 +149,8 @@ class TalDefineTest extends \PHPTAL_TestCase
         $tpl = $this->newPHPTAL('input/tal-define.11.html');
         $tpl->setOutputMode(\PhpTal\PHPTAL::XML);
         $res = $tpl->execute();
-        $res = normalize_html($res);
-        $exp = normalize_html_file('output/tal-define.11.html');
+        $res = \Tests\Testhelper\Helper::normalizeHtml($res);
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/tal-define.11.html');
         $this->assertEquals($exp, $res);
     }
 
@@ -160,24 +160,24 @@ class TalDefineTest extends \PHPTAL_TestCase
         $tpl = $this->newPHPTAL('input/tal-define.12.html');
         $tpl->setOutputMode(\PhpTal\PHPTAL::XML);
         $res = $tpl->execute();
-        $res = normalize_html($res);
-        $exp = normalize_html_file('output/tal-define.12.html');
+        $res = \Tests\Testhelper\Helper::normalizeHtml($res);
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/tal-define.12.html');
         $this->assertEquals($exp, $res);
     }
 
     public function testDefineGlobal()
     {
-        $exp = normalize_html_file('output/tal-define.13.html');
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/tal-define.13.html');
         $tpl = $this->newPHPTAL('input/tal-define.13.html');
-        $res = normalize_html($tpl->execute());
+        $res = \Tests\Testhelper\Helper::normalizeHtml($tpl->execute());
         $this->assertEquals($exp, $res);
     }
 
     public function testDefineAlter()
     {
-        $exp = normalize_html_file('output/tal-define.14.html');
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/tal-define.14.html');
         $tpl = $this->newPHPTAL('input/tal-define.14.html');
-        $res = normalize_html($tpl->execute());
+        $res = \Tests\Testhelper\Helper::normalizeHtml($tpl->execute());
         $this->assertEquals($exp, $res);
     }
 
@@ -206,8 +206,8 @@ class TalDefineTest extends \PHPTAL_TestCase
            ${x}
         </div>
         ');
-        $res = normalize_html($tpl->execute());
-        $this->assertEquals(normalize_html('<div> ok </div>'), $res);
+        $res = \Tests\Testhelper\Helper::normalizeHtml($tpl->execute());
+        $this->assertEquals(\Tests\Testhelper\Helper::normalizeHtml('<div> ok </div>'), $res);
     }
 
     public function testGlobalDefineEmptySpan2()
@@ -218,8 +218,8 @@ class TalDefineTest extends \PHPTAL_TestCase
            ${x}
         </div>
         ');
-        $res = normalize_html($tpl->execute());
-        $this->assertEquals(normalize_html('<div> ok </div>'), $res);
+        $res = \Tests\Testhelper\Helper::normalizeHtml($tpl->execute());
+        $this->assertEquals(\Tests\Testhelper\Helper::normalizeHtml('<div> ok </div>'), $res);
     }
 
 
@@ -233,8 +233,8 @@ class TalDefineTest extends \PHPTAL_TestCase
            ${x}
         </div>
         ');
-        $res = normalize_html($tpl->execute());
-        $this->assertEquals(normalize_html('<div> <span class="foo"/> ok </div>'), $res);
+        $res = \Tests\Testhelper\Helper::normalizeHtml($tpl->execute());
+        $this->assertEquals(\Tests\Testhelper\Helper::normalizeHtml('<div> <span class="foo"/> ok </div>'), $res);
     }
 
     public function testGlobalDefineNonEmptySpan2()
@@ -247,8 +247,8 @@ class TalDefineTest extends \PHPTAL_TestCase
            ${x}
         </div>
         ');
-        $res = normalize_html($tpl->execute());
-        $this->assertEquals(normalize_html('<div> <span class="foo"/> ok </div>'), $res);
+        $res = \Tests\Testhelper\Helper::normalizeHtml($tpl->execute());
+        $this->assertEquals(\Tests\Testhelper\Helper::normalizeHtml('<div> <span class="foo"/> ok </div>'), $res);
     }
 
     public function testDefineTALESInterpolated()

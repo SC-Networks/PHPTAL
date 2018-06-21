@@ -1,11 +1,5 @@
 <?php
 
-namespace Tests;
-
-use Tests\Testhelper\CantFindAThing;
-use Tests\Testhelper\MyCustomSourceResolver;
-use Tests\Testhelper\MyTestResolver;
-
 /**
  * PHPTAL templating engine
  *
@@ -18,7 +12,13 @@ use Tests\Testhelper\MyTestResolver;
  * @link     http://phptal.org/
  */
 
-class SourceTest extends \PHPTAL_TestCase
+namespace Tests;
+
+use Tests\Testhelper\CantFindAThing;
+use Tests\Testhelper\MyCustomSourceResolver;
+use Tests\Testhelper\MyTestResolver;
+
+class SourceTest extends \Tests\Testcase\PhpTal
 {
     public function testResolver()
     {
@@ -78,12 +78,12 @@ class SourceTest extends \PHPTAL_TestCase
 
     public function testFallsBack()
     {
-        $this->newPHPTAL()->addSourceResolver(new CantFindAThing())->setTemplate('input/phptal.01.html')->execute();
+        $this->newPHPTAL()->addSourceResolver(new CantFindAThing())->setTemplate('../input/phptal.01.html')->execute();
     }
 
     public function testFallsBack2()
     {
-        $this->newPHPTAL()->addSourceResolver(new CantFindAThing())->addSourceResolver(new CantFindAThing())->setTemplate('input/phptal.01.html')->execute();
+        $this->newPHPTAL()->addSourceResolver(new CantFindAThing())->addSourceResolver(new CantFindAThing())->setTemplate('../input/phptal.01.html')->execute();
     }
 
     public function testFallsBack3()
@@ -95,18 +95,18 @@ class SourceTest extends \PHPTAL_TestCase
     public function testFallsBackToResolversFirst()
     {
         $res = $this->newPHPTAL()->addSourceResolver(new CantFindAThing())->addSourceResolver(new MyTestResolver())->setTemplate('input/phptal.01.html')->execute();
-        $this->assertEquals('<p>found input/phptal.01.html</p>', normalize_html($res));
+        $this->assertEquals('<p>found input/phptal.01.html</p>', \Tests\Testhelper\Helper::normalizeHtml($res));
     }
 
     public function testFallsBackToResolversFirst2()
     {
         $res = $this->newPHPTAL()->addSourceResolver(new MyTestResolver())->addSourceResolver(new CantFindAThing())->setTemplate('input/phptal.01.html')->execute();
-        $this->assertEquals('<p>found input/phptal.01.html</p>', normalize_html($res));
+        $this->assertEquals('<p>found input/phptal.01.html</p>', \Tests\Testhelper\Helper::normalizeHtml($res));
     }
 
     public function testOrder()
     {
         $res = $this->newPHPTAL()->addSourceResolver(new MyTestResolver())->addSourceResolver(new MyCustomSourceResolver())->setTemplate('test1')->execute();
-        $this->assertEquals('<p>found test1</p>', normalize_html($res));
+        $this->assertEquals('<p>found test1</p>', \Tests\Testhelper\Helper::normalizeHtml($res));
     }
 }

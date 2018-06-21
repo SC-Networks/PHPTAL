@@ -1,11 +1,5 @@
 <?php
 
-namespace Tests;
-
-use PhpTal\Exception\ParserException;
-use PhpTal\Exception\VariableNotFoundException;
-use PhpTal\Php\TalesInternal;
-
 /**
  * PHPTAL templating engine
  *
@@ -19,8 +13,12 @@ use PhpTal\Php\TalesInternal;
  * @link     http://phptal.org/
  */
 
+namespace Tests;
 
-class ContentInterpolationTest extends \PHPTAL_TestCase
+use PhpTal\Exception\VariableNotFoundException;
+use PhpTal\Php\TalesInternal;
+
+class ContentInterpolationTest extends \Tests\Testcase\PhpTal
 {
 
     public function tearDown()
@@ -122,7 +120,7 @@ EOT;
             $$$${var}
         </p>');
 
-        $this->assertEquals(normalize_html('<p>
+        $this->assertEquals(\Tests\Testhelper\Helper::normalizeHtml('<p>
             val&lt;
 
             ${var}
@@ -130,7 +128,7 @@ EOT;
             $val&lt;
 
             $${var}
-        </p>'), normalize_html($tpl->execute()));
+        </p>'), \Tests\Testhelper\Helper::normalizeHtml($tpl->execute()));
     }
 
     public function testUnescapeString()
@@ -149,7 +147,7 @@ EOT;
              $$$${var}
          "/>');
 
-        $this->assertEquals(normalize_html('<p>
+        $this->assertEquals(\Tests\Testhelper\Helper::normalizeHtml('<p>
              val&lt;
 
              ${var}
@@ -157,7 +155,7 @@ EOT;
              $val&lt;
 
              $${var}
-         </p>'), normalize_html($tpl->execute()));
+         </p>'), \Tests\Testhelper\Helper::normalizeHtml($tpl->execute()));
     }
 
     public function testUnescapeStructure()
@@ -176,7 +174,7 @@ EOT;
             $$$${structure var}
         </p>');
 
-        $this->assertEquals(normalize_html('<p>
+        $this->assertEquals(\Tests\Testhelper\Helper::normalizeHtml('<p>
             val<x/>
 
             ${structure var}
@@ -184,7 +182,7 @@ EOT;
             $val<x/>
 
             $${structure var}
-        </p>'), normalize_html($tpl->execute()));
+        </p>'), \Tests\Testhelper\Helper::normalizeHtml($tpl->execute()));
     }
 
     public function testUnescapeCDATA()
@@ -203,7 +201,7 @@ EOT;
             $$$${var}
         ]]></script>');
 
-        $this->assertEquals(normalize_html('<script><![CDATA[<
+        $this->assertEquals(\Tests\Testhelper\Helper::normalizeHtml('<script><![CDATA[<
             val<
 
             ${text var}
@@ -211,7 +209,7 @@ EOT;
             $val<
 
             $${var}
-        ]]></script>'), normalize_html($tpl->execute()));
+        ]]></script>'), \Tests\Testhelper\Helper::normalizeHtml($tpl->execute()));
     }
 
     public function testUnescapeCDATAStructure()
@@ -230,7 +228,7 @@ EOT;
             $$$${structure var}
         ]]></script>');
 
-        $this->assertEquals(normalize_html('<script><![CDATA[<
+        $this->assertEquals(\Tests\Testhelper\Helper::normalizeHtml('<script><![CDATA[<
             val<
 
             ${structure var}
@@ -238,7 +236,7 @@ EOT;
             $val<
 
             $${structure var}
-        ]]></script>'), normalize_html($tpl->execute()));
+        ]]></script>'), \Tests\Testhelper\Helper::normalizeHtml($tpl->execute()));
     }
 
     public function testUnescapePHPTales()
@@ -257,7 +255,7 @@ EOT;
             $$$${var+1}
         </p>');
 
-        $this->assertEquals(normalize_html('<p>
+        $this->assertEquals(\Tests\Testhelper\Helper::normalizeHtml('<p>
             2
 
             ${var+1}
@@ -265,7 +263,7 @@ EOT;
             $2
 
             $${var+1}
-        </p>'), normalize_html($tpl->execute()));
+        </p>'), \Tests\Testhelper\Helper::normalizeHtml($tpl->execute()));
     }
 
     public function testPHPBlock()

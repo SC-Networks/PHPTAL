@@ -1,9 +1,5 @@
 <?php
 
-namespace Tests;
-
-use PhpTal\Php\TalesInternal;
-
 /**
  * PHPTAL templating engine
  *
@@ -17,8 +13,11 @@ use PhpTal\Php\TalesInternal;
  * @link     http://phptal.org/
  */
 
+namespace Tests;
 
-class XHTMLModeTest extends \PHPTAL_TestCase
+use PhpTal\Php\TalesInternal;
+
+class XHTMLModeTest extends \Tests\Testcase\PhpTal
 {
 
     public function tearDown()
@@ -52,8 +51,8 @@ class XHTMLModeTest extends \PHPTAL_TestCase
         </body>
         </html>');
         $res = $tpl->execute();
-        $res = normalize_html($res);
-        $exp = normalize_html('<html xmlns="http://www.w3.org/1999/xhtml">
+        $res = \Tests\Testhelper\Helper::normalizeHtml($res);
+        $exp = \Tests\Testhelper\Helper::normalizeHtml('<html xmlns="http://www.w3.org/1999/xhtml">
                 <head>
                     <title></title>
                     <base href="http://example.com/" />
@@ -125,8 +124,8 @@ class XHTMLModeTest extends \PHPTAL_TestCase
         </body>
         </html>');
         $res = $tpl->execute();
-        $res = normalize_html($res);
-        $exp = normalize_html('<html xmlns="http://www.w3.org/1999/xhtml">
+        $res = \Tests\Testhelper\Helper::normalizeHtml($res);
+        $exp = \Tests\Testhelper\Helper::normalizeHtml('<html xmlns="http://www.w3.org/1999/xhtml">
                 <body>
                     <input type="checkbox" checked="checked" />
                     <input type="text" readonly="readonly" />
@@ -167,10 +166,10 @@ class XHTMLModeTest extends \PHPTAL_TestCase
           )
         );
 
-        $this->assertEquals(normalize_html('<select>
+        $this->assertEquals(\Tests\Testhelper\Helper::normalizeHtml('<select>
           <option value="1">Option1</option>
           <option value="2" selected="selected">Option2</option>
           <option value="3">Option3</option>
-        </select>'), normalize_html($tpl->execute()));
+        </select>'), \Tests\Testhelper\Helper::normalizeHtml($tpl->execute()));
     }
 }

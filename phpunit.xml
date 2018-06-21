@@ -1,5 +1,5 @@
 <phpunit
-    bootstrap="./tests/config.php"
+    bootstrap="./tests/config/bootstrap.php"
     backupGlobals="false"
     backupStaticAttributes="false"
     colors="false"
@@ -10,6 +10,7 @@
     <testsuites>
         <testsuite name="PHPTALtests">
             <directory>tests</directory>
+            <exclude>tests/config</exclude>
         </testsuite>
     </testsuites>
     <filter>

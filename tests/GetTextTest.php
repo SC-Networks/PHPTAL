@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * PHPTAL templating engine
  *
@@ -12,87 +14,89 @@
  * @link     http://phptal.org/
  */
 
+namespace Tests;
 
+use PhpTal\Exception\ConfigurationException;
+use PhpTal\Exception\PhpTalException;
+use PhpTal\GetTextTranslator;
+use Tests\Testcase\PhpTal;
 
-class GetTextTest extends PHPTAL_TestCase
+class GetTextTest extends PhpTal
 {
-    private function getTextTranslator()
+    private function getTextTranslator(): GetTextTranslator
     {
-        try
-        {
-            return new \PhpTal\GetTextTranslator();
-        }
-        catch(\PhpTal\Exception\PhpTalException $e)
-        {
-            $this->markTestSkipped($e->getMessage());
+        try {
+            return new GetTextTranslator();
+        } catch (PhpTalException $e) {
+            static::markTestSkipped($e->getMessage());
         }
     }
 
 
-    function testSimple()
+    public function testSimple(): void
     {
         $gettext = $this->getTextTranslator();
         $gettext->setLanguage('en_GB', 'en_GB.utf8');
-        $gettext->addDomain('test');
+        $gettext->addDomain('test', './../locale/');
         $gettext->useDomain('test');
 
         $tpl = $this->newPHPTAL('input/gettext.01.html');
         $tpl->setTranslator($gettext);
-        $res = normalize_html($tpl->execute());
-        $exp = normalize_html_file('output/gettext.01.html');
-        $this->assertEquals($exp, $res);
+        $res = Testhelper\Helper::normalizeHtml($tpl->execute());
+        $exp = Testhelper\Helper::normalizeHtmlFile('output/gettext.01.html');
+        static::assertEquals($exp, $res);
     }
 
-    function testLang()
+    public function testLang(): void
     {
         $gettext = $this->getTextTranslator();
         try {
             $gettext->setLanguage('fr_FR', 'fr_FR@euro', 'fr_FR.utf8');
-        } catch(\PhpTal\Exception\ConfigurationException $e) {
-            $this->markTestSkipped($e->getMessage());
+        } catch (ConfigurationException $e) {
+            static::markTestSkipped($e->getMessage());
         }
-        $gettext->addDomain('test');
+        $gettext->addDomain('test', './../locale/');
         $gettext->useDomain('test');
 
         $tpl = $this->newPHPTAL('input/gettext.02.html');
         $tpl->setTranslator($gettext);
-        $res = normalize_html($tpl->execute());
-        $exp = normalize_html_file('output/gettext.02.html');
-        $this->assertEquals($exp, $res);
+        $res = Testhelper\Helper::normalizeHtml($tpl->execute());
+        $exp = Testhelper\Helper::normalizeHtmlFile('output/gettext.02.html');
+        static::assertEquals($exp, $res);
     }
 
-    function testInterpol()
+    public function testInterpol(): void
     {
         $gettext = $this->getTextTranslator();
         try {
             $gettext->setLanguage('fr_FR', 'fr_FR@euro', 'fr_FR.utf8');
-        } catch(\PhpTal\Exception\ConfigurationException $e) {
-            $this->markTestSkipped($e->getMessage());
+        } catch (ConfigurationException $e) {
+            static::markTestSkipped($e->getMessage());
         }
         $gettext->setEncoding('UTF-8');
-        $gettext->addDomain('test');
+        $gettext->addDomain('test', './../locale/');
         $gettext->useDomain('test');
 
         $tpl = $this->newPHPTAL('input/gettext.03.html');
         $tpl->setTranslator($gettext);
         $tpl->login = 'john';
         $tpl->lastCxDate = '2004-12-25';
-        $res = normalize_html($tpl->execute());
-        $exp = normalize_html_file('output/gettext.03.html');
-        $this->assertEquals($exp, $res);
+        $res = Testhelper\Helper::normalizeHtml($tpl->execute());
+        $exp = Testhelper\Helper::normalizeHtmlFile('output/gettext.03.html');
+        static::assertEquals($exp, $res);
     }
 
-    function testDomainChange()
+    public function testDomainChange(): void
     {
         $gettext = $this->getTextTranslator();
         $gettext->setEncoding('UTF-8');
         try {
             $gettext->setLanguage('fr_FR', 'fr_FR@euro', 'fr_FR.utf8');
-        } catch(\PhpTal\Exception\ConfigurationException $e) {
-            $this->markTestSkipped($e->getMessage());
+        } catch (ConfigurationException $e) {
+            static::markTestSkipped($e->getMessage());
         }
-        $gettext->addDomain('test');
-        $gettext->addDomain('test2');
+        $gettext->addDomain('test', './../locale/');
+        $gettext->addDomain('test2', './../locale/');
         $gettext->useDomain('test');
 
         $tpl = $this->newPHPTAL('input/gettext.04.html');
@@ -100,59 +104,58 @@ class GetTextTest extends PHPTAL_TestCase
         $tpl->setTranslator($gettext);
         $tpl->login = 'john';
         $tpl->lastCxDate = '2004-12-25';
-        $res = normalize_html($tpl->execute());
-        $exp = normalize_html_file('output/gettext.04.html');
-        $this->assertEquals($exp, $res);
+        $res = Testhelper\Helper::normalizeHtml($tpl->execute());
+        $exp = Testhelper\Helper::normalizeHtmlFile('output/gettext.04.html');
+        static::assertEquals($exp, $res);
     }
 
-    function testSpaces()
+    public function testSpaces(): void
     {
         $gettext = $this->getTextTranslator();
         $gettext->setLanguage('en_GB', 'en_GB.utf8');
-        $gettext->addDomain('test');
+        $gettext->addDomain('test', './../locale/');
         $gettext->useDomain('test');
 
         $tpl = $this->newPHPTAL('input/gettext.05.html');
         $tpl->login = 'john smith';
         $tpl->setTranslator($gettext);
-        $res = normalize_html($tpl->execute());
-        $exp = normalize_html_file('output/gettext.05.html');
-        $this->assertEquals($exp, $res);
+        $res = Testhelper\Helper::normalizeHtml($tpl->execute());
+        $exp = Testhelper\Helper::normalizeHtmlFile('output/gettext.05.html');
+        static::assertEquals($exp, $res);
     }
 
-    function testAccentuateKeyNonCanonical()
+    public function testAccentuateKeyNonCanonical(): void
     {
         $gettext = $this->getTextTranslator();
         $gettext->setLanguage('en_GB', 'en_GB.utf8');
-        $gettext->addDomain('test');
+        $gettext->addDomain('test', './../locale/');
         $gettext->useDomain('test');
 
         $tpl = $this->newPHPTAL('input/gettext.06.html');
         $tpl->setTranslator($gettext);
         $res = $tpl->execute();
-        $res = normalize_html($res);
-        $exp = normalize_html('<root>
+        $res = Testhelper\Helper::normalizeHtml($res);
+        $exp = Testhelper\Helper::normalizeHtml('<root>
   <span>Not accentuated</span>
   <span>Accentuated key without canonicalization</span>
   <span>Accentuated key without canonicalization</span>
 </root>
 ');
-        $this->assertEquals($exp, $res);
+        static::assertEquals($exp, $res);
     }
 
-    function testQuote()
+    public function testQuote(): void
     {
         $gettext = $this->getTextTranslator();
         $gettext->setLanguage('en_GB', 'en_GB.utf8');
-        $gettext->addDomain('test');
+        $gettext->addDomain('test', './../locale/');
         $gettext->useDomain('test');
 
         $tpl = $this->newPHPTAL('input/gettext.07.html');
         $tpl->setTranslator($gettext);
         $res = $tpl->execute();
-        $res = normalize_html($res);
-        $exp = normalize_html_file('output/gettext.07.html');
-        $this->assertEquals($exp, $res);
+        $res = Testhelper\Helper::normalizeHtml($res);
+        $exp = Testhelper\Helper::normalizeHtmlFile('output/gettext.07.html');
+        static::assertEquals($exp, $res);
     }
 }
-

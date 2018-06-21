@@ -12,34 +12,11 @@
  * @link     http://phptal.org/
  */
 
-class DummyObjectX
-{
-    public function __contruct()
-    {
-        $this->_data = array();
-    }
-    public function __isset($var)
-    {
-        return array_key_exists($var, $this->_data);
-    }
-    public function __get($var)
-    {
-        return $this->_data[$var];
-    }
-    public function __set($var, $value)
-    {
-        $this->_data[$var] = $value;
-    }
-    public function __call($method, $params)
-    {
-        return '__call';
-    }
-    private $_data;
-}
+namespace Tests;
 
+use Tests\Testhelper\DummyObjectX;
 
-
-class TalesIssetNullTest extends PHPTAL_TestCase
+class TalesIssetNullTest extends \Tests\Testcase\PhpTal
 {
     function testIt()
     {
@@ -53,4 +30,3 @@ class TalesIssetNullTest extends PHPTAL_TestCase
         $this->assertEquals(null, $res);
     }
 }
-

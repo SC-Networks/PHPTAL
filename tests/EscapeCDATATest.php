@@ -1,9 +1,5 @@
 <?php
 
-namespace Tests;
-
-use PhpTal\Php\TalesInternal;
-
 /**
  * PHPTAL templating engine
  *
@@ -17,8 +13,11 @@ use PhpTal\Php\TalesInternal;
  * @link     http://phptal.org/
  */
 
+namespace Tests;
 
-class EscapeCDATATest extends \PHPTAL_TestCase
+use PhpTal\Php\TalesInternal;
+
+class EscapeCDATATest extends \Tests\Testcase\PhpTal
 {
 
     /**
@@ -47,21 +46,21 @@ class EscapeCDATATest extends \PHPTAL_TestCase
     public function testTrimString()
     {
         $this->assertEquals(
-            normalize_html('<foo><bar>]]&gt; foo ]> bar</bar></foo>'),
-            normalize_html('<foo> <bar>]]&gt; foo ]&gt; bar </bar> </foo>')
+            \Tests\Testhelper\Helper::normalizeHtml('<foo><bar>]]&gt; foo ]> bar</bar></foo>'),
+            \Tests\Testhelper\Helper::normalizeHtml('<foo> <bar>]]&gt; foo ]&gt; bar </bar> </foo>')
         );
 
         $this->assertNotEquals(
-            normalize_html('foo]]>bar'),
-            normalize_html('foo]]&gt;bar')
+            \Tests\Testhelper\Helper::normalizeHtml('foo]]>bar'),
+            \Tests\Testhelper\Helper::normalizeHtml('foo]]&gt;bar')
         );
     }
 
     public function testDoesEscapeHTMLContent()
     {
         $tpl = $this->newPHPTAL('input/escape.html');
-        $exp = normalize_html_file('output/escape.html');
-        $res = normalize_html($tpl->execute());
+        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/escape.html');
+        $res = \Tests\Testhelper\Helper::normalizeHtml($tpl->execute());
         $this->assertEquals($exp, $res);
     }
 
