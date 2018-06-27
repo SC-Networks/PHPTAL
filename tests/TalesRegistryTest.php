@@ -26,6 +26,17 @@ namespace Tests {
             );
         }
 
+        public function testRegisterFunctionAcceptsClosure()
+        {
+            \PhpTal\TalesRegistry::registerPrefix('foobar', function ($arg) {
+                return '"ok' . $arg . '"';
+            });
+            static::assertSame(
+                '<p>ok1</p>',
+                $this->newPHPTAL()->setSource('<p tal:content="foobar:1"/>')->execute()
+            );
+        }
+
         /**
          * @runInSeparateProcess
          * @expectedException \PhpTal\Exception\UnknownModifierException
