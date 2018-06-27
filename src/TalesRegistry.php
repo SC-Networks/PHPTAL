@@ -58,8 +58,8 @@ final class TalesRegistry implements TalesRegistryInterface
 
     /**
      *
-     * Expects an either a function name or an array of class and method as
-     * callback.
+     * Expects either a function name or an array of class and method or a closure as callback.
+     * A closure *must* return a string enclosed in double quotes.
      *
      * @param string $prefix
      * @param mixed $callback
@@ -93,6 +93,8 @@ final class TalesRegistry implements TalesRegistryInterface
             if (!$method->isStatic()) {
                 throw new Exception\ConfigurationException('The method you want to register is not static.');
             }
+        } elseif (is_callable($callback)) {
+            // do nothing
         } elseif (!function_exists($callback)) {
             throw new Exception\ConfigurationException('The function you are trying to register does not exist.');
         }
