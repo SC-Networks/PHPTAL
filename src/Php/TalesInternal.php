@@ -700,13 +700,18 @@ class TalesInternal implements \PhpTal\TalesInterface
     private static function checkTokens($src)
     {
 
+        $checkWhitelist = static::$functionWhitelist !== [];
+
         foreach (static::tokenize($src) as $token) {
             if (in_array($token[0], static::$tokenBlacklist)) {
                 $message = 'User tried to execute disallowed php token ' . token_name($token[0]);
                 throw new ParserException($message);
             }
 
-            if ($token[0] === T_STRING && !in_array(strtolower($token[1]), static::$functionWhitelist)) {
+            if ($checkWhitelist &&
+                $token[0] === T_STRING &&
+                !in_array(strtolower($token[1]), static::$functionWhitelist)
+            ) {
                 $message = "User tried to execute not whitelisted statement '" . $token[1] . "'";
                 throw new ParserException($message);
             }
