@@ -27,45 +27,49 @@ class Context
     public $repeat;
 
     /**
-     * @var string
+     * n.b. The following variables *must* be prefixed with an underscore '_' for reasons...
      */
-    public $xmlDeclaration;
 
     /**
      * @var string
      */
-    public $docType;
+    public $_xmlDeclaration;
+
+    /**
+     * @var string
+     */
+    public $_docType;
 
     /**
      * @var bool
      */
-    private $nothrow;
+    private $_nothrow;
 
 
     /**
      * @var array TODO What type?
      */
-    private $slots = [];
+    private $_slots = [];
 
     /**
      * @var array
      */
-    private $slotsStack = [];
+    private $_slotsStack = [];
 
     /**
      * @var Context
      */
-    private $parentContext;
+    private $_parentContext;
 
     /**
      * @var \stdClass
      */
-    private $globalContext;
+    private $_globalContext;
 
     /**
      * @var bool
      */
-    private $echoDeclarations = false;
+    private $_echoDeclarations = false;
 
     /**
      * Context constructor.
@@ -93,7 +97,7 @@ class Context
      */
     public function setParent(Context $parent)
     {
-        $this->parentContext = $parent;
+        $this->_parentContext = $parent;
     }
 
     /**
@@ -106,7 +110,7 @@ class Context
      */
     public function setGlobal(\stdClass $globalContext)
     {
-        $this->globalContext = $globalContext;
+        $this->_globalContext = $globalContext;
     }
 
     /**
@@ -128,7 +132,7 @@ class Context
      */
     public function popContext()
     {
-        return $this->parentContext;
+        return $this->_parentContext;
     }
 
     /**
@@ -136,7 +140,7 @@ class Context
      */
     public function echoDeclarations($tf)
     {
-        $this->echoDeclarations = $tf;
+        $this->_echoDeclarations = $tf;
     }
 
     /**
@@ -154,13 +158,13 @@ class Context
     {
         // FIXME: this is temporary workaround for problem of DOCTYPE disappearing in cloned
         // FIXME: PHPTAL object (because clone keeps _parentContext)
-        if (!$this->docType) {
-            $this->docType = $doctype;
+        if (!$this->_docType) {
+            $this->_docType = $doctype;
         }
 
-        if ($this->parentContext) {
-            $this->parentContext->setDocType($doctype, $called_from_macro);
-        } elseif ($this->echoDeclarations) {
+        if ($this->_parentContext) {
+            $this->_parentContext->setDocType($doctype, $called_from_macro);
+        } elseif ($this->_echoDeclarations) {
             if (!$called_from_macro) {
                 echo $doctype;
             } else {
@@ -169,8 +173,8 @@ class Context
                     'Remove DOCTYPE or use PHPTAL->execute().'
                 );
             }
-        } elseif (!$this->docType) {
-            $this->docType = $doctype;
+        } elseif (!$this->_docType) {
+            $this->_docType = $doctype;
         }
     }
 
@@ -190,13 +194,13 @@ class Context
     public function setXmlDeclaration($xmldec, $called_from_macro)
     {
         // FIXME
-        if (!$this->xmlDeclaration) {
-            $this->xmlDeclaration = $xmldec;
+        if (!$this->_xmlDeclaration) {
+            $this->_xmlDeclaration = $xmldec;
         }
 
-        if ($this->parentContext) {
-            $this->parentContext->setXmlDeclaration($xmldec, $called_from_macro);
-        } elseif ($this->echoDeclarations) {
+        if ($this->_parentContext) {
+            $this->_parentContext->setXmlDeclaration($xmldec, $called_from_macro);
+        } elseif ($this->_echoDeclarations) {
             if (!$called_from_macro) {
                 echo $xmldec . "\n";
             } else {
@@ -205,8 +209,8 @@ class Context
                     ' Remove XML declaration or use PHPTAL->execute().'
                 );
             }
-        } elseif (!$this->xmlDeclaration) {
-            $this->xmlDeclaration = $xmldec;
+        } elseif (!$this->_xmlDeclaration) {
+            $this->_xmlDeclaration = $xmldec;
         }
     }
 
@@ -220,7 +224,7 @@ class Context
      */
     public function noThrow($bool)
     {
-        $this->nothrow = $bool;
+        $this->_nothrow = $bool;
     }
 
     /**
@@ -232,7 +236,7 @@ class Context
      */
     public function hasSlot($key)
     {
-        return isset($this->slots[$key]) || ($this->parentContext && $this->parentContext->hasSlot($key));
+        return isset($this->_slots[$key]) || ($this->_parentContext && $this->_parentContext->hasSlot($key));
     }
 
     /**
@@ -246,17 +250,17 @@ class Context
      */
     public function getSlot($key)
     {
-        if (isset($this->slots[$key])) {
-            if (is_string($this->slots[$key])) {
-                return $this->slots[$key];
+        if (isset($this->_slots[$key])) {
+            if (is_string($this->_slots[$key])) {
+                return $this->_slots[$key];
             }
             ob_start();
-            call_user_func($this->slots[$key][0], $this->slots[$key][1], $this->slots[$key][2]);
+            call_user_func($this->_slots[$key][0], $this->_slots[$key][1], $this->_slots[$key][2]);
             return ob_get_clean();
         }
 
-        if ($this->parentContext) {
-            return $this->parentContext->getSlot($key);
+        if ($this->_parentContext) {
+            return $this->_parentContext->getSlot($key);
         }
 
         return '';
@@ -273,14 +277,14 @@ class Context
      */
     public function echoSlot($key)
     {
-        if (isset($this->slots[$key])) {
-            if (is_string($this->slots[$key])) {
-                echo $this->slots[$key];
+        if (isset($this->_slots[$key])) {
+            if (is_string($this->_slots[$key])) {
+                echo $this->_slots[$key];
             } else {
-                call_user_func($this->slots[$key][0], $this->slots[$key][1], $this->slots[$key][2]);
+                call_user_func($this->_slots[$key][0], $this->_slots[$key][1], $this->_slots[$key][2]);
             }
-        } elseif ($this->parentContext) {
-            return $this->parentContext->echoSlot($key);
+        } elseif ($this->_parentContext) {
+            return $this->_parentContext->echoSlot($key);
         }
 
         return '';
@@ -295,10 +299,10 @@ class Context
      */
     public function fillSlot($key, $content)
     {
-        $this->slots[$key] = $content;
-        if ($this->parentContext) {
+        $this->_slots[$key] = $content;
+        if ($this->_parentContext) {
             // Works around bug with tal:define popping context after fillslot
-            $this->parentContext->slots[$key] = $content;
+            $this->_parentContext->_slots[$key] = $content;
         }
     }
 
@@ -312,10 +316,10 @@ class Context
      */
     public function fillSlotCallback($key, callable $callback, $_thistpl, $tpl)
     {
-        $this->slots[$key] = [$callback, $_thistpl, $tpl];
-        if ($this->parentContext) {
+        $this->_slots[$key] = [$callback, $_thistpl, $tpl];
+        if ($this->_parentContext) {
             // Works around bug with tal:define popping context after fillslot
-            $this->parentContext->slots[$key] = [$callback, $_thistpl, $tpl];
+            $this->_parentContext->_slots[$key] = [$callback, $_thistpl, $tpl];
         }
     }
 
@@ -326,8 +330,8 @@ class Context
      */
     public function pushSlots()
     {
-        $this->slotsStack[] = $this->slots;
-        $this->slots = [];
+        $this->_slotsStack[] = $this->_slots;
+        $this->_slots = [];
     }
 
     /**
@@ -337,7 +341,7 @@ class Context
      */
     public function popSlots()
     {
-        $this->slots = array_pop($this->slotsStack);
+        $this->_slots = array_pop($this->_slotsStack);
     }
 
     /**
@@ -367,7 +371,7 @@ class Context
     public function __isset($varname)
     {
         // it doesn't need to check isset($this->$varname), because PHP does that _before_ calling __isset()
-        return isset($this->globalContext->$varname) || defined($varname);
+        return isset($this->_globalContext->$varname) || defined($varname);
     }
 
     /**
@@ -384,19 +388,19 @@ class Context
         // PHP checks public properties first, there's no need to support them here
 
         // must use isset() to allow custom global contexts with __isset()/__get()
-        if (isset($this->globalContext->$varname)) {
-            return $this->globalContext->$varname;
+        if (isset($this->_globalContext->$varname)) {
+            return $this->_globalContext->$varname;
         }
 
         if (defined($varname)) {
             return constant($varname);
         }
 
-        if ($this->nothrow) {
+        if ($this->_nothrow) {
             return null;
         }
 
-        throw new Exception\VariableNotFoundException('Unable to find variable \'$varname\' in current scope');
+        throw new Exception\VariableNotFoundException("Unable to find variable '$varname' in current scope");
     }
 
     /**

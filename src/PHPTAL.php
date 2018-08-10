@@ -236,8 +236,8 @@ class PHPTAL implements PhpTalInterface
         $this->codeFile = null;
         $this->path = $path;
         $this->source = null;
-        $this->context->docType = null;
-        $this->context->xmlDeclaration = null;
+        $this->context->_docType = null;
+        $this->context->_xmlDeclaration = null;
         return $this;
     }
 
@@ -259,8 +259,8 @@ class PHPTAL implements PhpTalInterface
         $this->codeFile = null;
         $this->source = new StringSource($src, $path);
         $this->path = $this->source->getRealPath();
-        $this->context->docType = null;
-        $this->context->xmlDeclaration = null;
+        $this->context->_docType = null;
+        $this->context->_xmlDeclaration = null;
         return $this;
     }
 
@@ -686,13 +686,13 @@ class PHPTAL implements PhpTalInterface
             }
 
             // unshift doctype
-            if ($this->context->docType) {
-                $res = $this->context->docType . $res;
+            if ($this->context->_docType) {
+                $res = $this->context->_docType . $res;
             }
 
             // unshift xml declaration
-            if ($this->context->xmlDeclaration) {
-                $res = $this->context->xmlDeclaration . "\n" . $res;
+            if ($this->context->_xmlDeclaration) {
+                $res = $this->context->_xmlDeclaration . "\n" . $res;
             }
 
             if ($this->postfilter !== null) {
