@@ -451,9 +451,11 @@ class TalesInternal implements \PhpTal\TalesInterface
             throw new PhpNotAllowedException('The php modifier has been disabled, you must not use it.');
         }
 
-        static::checkTokens($src);
+        $transformed = Transformer::transform($src, '$ctx->');
 
-        return Transformer::transform($src, '$ctx->');
+        static::checkTokens($transformed);
+
+        return $transformed;
     }
 
     /**
