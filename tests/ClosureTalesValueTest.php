@@ -2,8 +2,6 @@
 /**
  * PHPTAL templating engine
  *
- * PHP Version 5
- *
  * @category HTML
  * @package  PHPTAL
  * @author   Andrew Crites <explosion-pills@aysites.com>
