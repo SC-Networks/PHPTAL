@@ -100,7 +100,7 @@ class Transformer
                     if ($c === '$' && $i + 1 < $len && $str[$i + 1] === '{') {
                         $result .= $prefix;
                         $state = self::ST_NONE;
-                        break;
+                        continue 2;
                     }
                 /* NO BREAK - ST_WHITE is almost the same as ST_NONE */
 
