@@ -3,8 +3,6 @@ declare(strict_types=1);
 /**
  * PHPTAL templating engine
  *
- * PHP Version 5
- *
  * @category HTML
  * @package  PHPTAL
  * @author   Laurent Bedubourg <lbedubourg@motion-twin.com>

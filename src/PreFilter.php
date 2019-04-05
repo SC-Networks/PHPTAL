@@ -4,8 +4,6 @@ declare(strict_types=1);
 /**
  * PHPTAL templating engine
  *
- * PHP Version 5
- *
  * @category HTML
  * @package  PHPTAL
  * @author   Kornel Lesiński <kornel@aardvarkmedia.co.uk>
