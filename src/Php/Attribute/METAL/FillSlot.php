@@ -179,6 +179,6 @@ class FillSlot extends Attribute
             $estimated_bytes *= $is_nested_in_repeat ? 5 : 10;
         }
 
-        return $estimated_bytes;
+        return (int) $estimated_bytes;
     }
 }
