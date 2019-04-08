@@ -352,7 +352,7 @@ class PHPTAL implements PhpTalInterface
     {
         $this->resetPrepared();
 
-        if ($mode !== static::XHTML && $mode !== static::XML && $mode !== static::HTML5) {
+        if (!in_array($mode, [static::XHTML, static::XML, static::HTML5], true)) {
             throw new Exception\ConfigurationException('Unsupported output mode ' . $mode);
         }
         $this->outputMode = $mode;
@@ -813,8 +813,10 @@ class PHPTAL implements PhpTalInterface
         for ($i = 0; $i < $this->subpathRecursionLevel; $i++) {
             $path .= '/' . substr($real_path, $i, 1);
         }
-        if (!file_exists($this->getPhpCodeDestination() . $path)) {
-            mkdir($this->getPhpCodeDestination() . $path, 0777, true);
+        if (!file_exists($this->getPhpCodeDestination() . $path) &&
+            !mkdir($concurrentDirectory = $this->getPhpCodeDestination() . $path, 0777, true) &&
+            !is_dir($concurrentDirectory)) {
+            throw new \RuntimeException(sprintf('Directory "%s" was not created', $concurrentDirectory));
         }
         return $path;
     }

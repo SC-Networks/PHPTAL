@@ -65,10 +65,7 @@ class XmlnsState
         }
 
         // domdefs provides fallback for all known phptal ns
-        if (isset($this->prefix_to_uri[$prefix])) {
-            return $this->prefix_to_uri[$prefix];
-        }
-        return Defs::getInstance()->prefixToNamespaceURI($prefix);
+        return $this->prefix_to_uri[$prefix] ?? Defs::getInstance()->prefixToNamespaceURI($prefix);
     }
 
     /**

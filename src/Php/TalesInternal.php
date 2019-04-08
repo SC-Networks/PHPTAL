@@ -669,7 +669,7 @@ class TalesInternal implements TalesInterface
      *
      * @return array
      */
-    private static function tokenize($src)
+    private static function tokenize($src): array
     {
         $tokens = token_get_all("<?php $src ?>");
         $clear = [];
@@ -703,7 +703,7 @@ class TalesInternal implements TalesInterface
      * @return void
      * @throws ParserException
      */
-    private static function checkTokens($src)
+    private static function checkTokens($src): void
     {
 
         $checkWhitelist = static::$functionWhitelist !== [];
@@ -727,7 +727,7 @@ class TalesInternal implements TalesInterface
     /**
      * @param array $functionWhitelist
      */
-    public static function setFunctionWhitelist(array $functionWhitelist)
+    public static function setFunctionWhitelist(array $functionWhitelist): void
     {
 
         $functionWhitelist = array_map(function ($e) {
