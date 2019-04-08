@@ -28,7 +28,7 @@ use PhpTal\Php\TalesInternal;
 class PHPTAL implements PhpTalInterface
 {
 
-    public const PHPTAL_VERSION = '2_0_0';
+    public const PHPTAL_VERSION = '3_0_2';
 
     /**
      * constants for output mode
