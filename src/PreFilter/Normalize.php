@@ -105,7 +105,7 @@ class Normalize extends PreFilter
     {
         $ln = $element->getLocalName();
         $namespaceURI = $element->getNamespaceURI();
-        return ($ln === 'script' || $ln === 'pre' || $ln === 'textarea')
+        return in_array($ln, ['script', 'pre', 'textarea'], true)
             && ($namespaceURI === Builtin::NS_XHTML || $namespaceURI === '');
     }
 
