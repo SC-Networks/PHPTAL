@@ -469,7 +469,7 @@ class SaxXmlParser
             if (!preg_match('/^(?:(?>' . $match . '))+$/s', $str)) {
                 $res = preg_split('/((?>' . $match . ')+)/s', $str, -1, PREG_SPLIT_DELIM_CAPTURE);
                 for ($i = 0, $iMax = count($res); $i < $iMax; $i += 2) {
-                    $res[$i] = self::convertBytesToEntities(array(1 => $res[$i]));
+                    $res[$i] = self::convertBytesToEntities([1 => $res[$i]]);
                 }
                 $this->raiseError('Invalid UTF-8 bytes: ' . implode('', $res));
             }

@@ -16,9 +16,9 @@ class Helper
      * @return bool
      * @access private
      */
-    public static function phptal_isempty($var)
+    public static function phptal_isempty($var): bool
     {
-        return $var === null || $var === false || $var === ''
+        return in_array($var, [null, false, ''], true)
             || ((is_array($var) || $var instanceof \Countable) && count($var) === 0);
     }
 
@@ -30,7 +30,7 @@ class Helper
      * @return bool
      * @access private
      */
-    public static function phptal_true($var)
+    public static function phptal_true($var): bool
     {
         $var = static::phptal_unravel_closure($var);
         return $var && (!$var instanceof \Countable || count($var));
@@ -42,7 +42,7 @@ class Helper
      *
      * @access private
      */
-    public static function phptal_escape($var, $encoding)
+    public static function phptal_escape($var, $encoding): string
     {
         if (is_string($var)) {
             return htmlspecialchars($var, ENT_QUOTES, $encoding);
@@ -56,17 +56,19 @@ class Helper
      *
      * @access private
      */
-    public static function phptal_tostring($var)
+    public static function phptal_tostring($var): string
     {
         if (is_string($var)) {
             return $var;
         }
 
         if (is_bool($var)) {
-            return (int)$var;
-        } elseif (is_array($var)) {
+            return (string)(int)$var;
+        }
+        if (is_array($var)) {
             return implode(', ', array_map([__CLASS__, 'phptal_tostring'], $var));
-        } elseif ($var instanceof \SimpleXMLElement) {
+        }
+        if ($var instanceof \SimpleXMLElement) {
             /* There is no sane way to tell apart element and attribute nodes
                in SimpleXML, so here's a guess that if something has no attributes
                or children, and doesn't output <, then it's an attribute */
@@ -92,7 +94,7 @@ class Helper
     public static function phptal_unravel_closure($var)
     {
         while (is_object($var) && is_callable($var)) {
-            $var = call_user_func($var);
+            $var = $var();
         }
         return $var;
     }

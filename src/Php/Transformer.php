@@ -124,7 +124,7 @@ class Transformer
                     } elseif ($c === '\'') { // begining of single quoted string
                         $state = self::ST_STR;
                         $mark = $i;
-                    } elseif ($c === ')' || $c === ']' || $c === '}') {
+                    } elseif (in_array($c, [')', ']', '}'], true)) {
                         // closing a method, an array access or an evaluation
                         $result .= $c;
                         // if next char is dot then an object member must
@@ -232,7 +232,7 @@ class Transformer
                         $var = substr($str, $mark, $i - $mark);
                         $low = strtolower($var);
                         // boolean and null
-                        if ($low === 'true' || $low === 'false' || $low === 'null') {
+                        if (in_array($low, ['true', 'false', 'null'], true)) {
                             $result .= $var;
                         } elseif (array_key_exists($low, self::$TranslationTable)) {
                             // lt, gt, ge, eq, ...

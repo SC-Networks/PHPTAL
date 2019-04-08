@@ -24,7 +24,7 @@ class FileSourceResolver implements SourceResolverInterface
     /**
      * @var string[]
      */
-    private $repositories = [];
+    private $repositories;
 
     /**
      * FileSourceResolver constructor.

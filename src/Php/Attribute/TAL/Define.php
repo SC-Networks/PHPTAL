@@ -156,7 +156,7 @@ class Define extends Attribute implements TalesChainReaderInterface
      * @return void
      * @throws \PhpTal\Exception\PhpTalException
      */
-    private function chainedDefine(CodeWriter $codewriter, $parts)
+    private function chainedDefine(CodeWriter $codewriter, $parts): void
     {
         new TalesChainExecutor($codewriter, $parts, $this);
     }
