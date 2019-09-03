@@ -19,7 +19,7 @@ use PhpTal\Php\TalesInternal;
 class ContentInterpolationTest extends \Tests\Testcase\PhpTal
 {
 
-    public function tearDown()
+    public function tearDown(): void
     {
         TalesInternal::setFunctionWhitelist([]);
         parent::tearDown();

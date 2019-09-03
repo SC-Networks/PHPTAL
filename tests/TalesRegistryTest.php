@@ -12,6 +12,9 @@
 
 namespace Tests {
 
+    use PhpTal\Exception\ConfigurationException;
+    use PhpTal\Exception\UnknownModifierException;
+
     class TalesRegistryTest extends \Tests\Testcase\PhpTal
     {
 
@@ -37,37 +40,31 @@ namespace Tests {
 
         /**
          * @runInSeparateProcess
-         * @expectedException \PhpTal\Exception\UnknownModifierException
          */
         public function testUnregisterFunction()
         {
+            $this->expectException(UnknownModifierException::class);
             $test_prefix = 'testprefix';
             \PhpTal\TalesRegistry::registerPrefix($test_prefix, 'registry_test_callback3');
             \PhpTal\TalesRegistry::unregisterPrefix($test_prefix);
             $this->newPHPTAL()->setSource('<p tal:content="' . $test_prefix . ':"/>')->execute();
         }
 
-        /**
-         * @expectedException \PhpTal\Exception\ConfigurationException
-         */
         public function testCantUnregisterNonRegistered()
         {
+            $this->expectException(ConfigurationException::class);
             \PhpTal\TalesRegistry::unregisterPrefix('doesnotexist');
         }
 
-        /**
-         * @expectedException \PhpTal\Exception\ConfigurationException
-         */
         public function testCantRegisterNonExistant()
         {
+            $this->expectException(ConfigurationException::class);
             \PhpTal\TalesRegistry::registerPrefix('registry_test_2', 'doesnotexist');
         }
 
-        /**
-         * @expectedException \PhpTal\Exception\ConfigurationException
-         */
         public function testCantRegisterTwice()
         {
+            $this->expectException(ConfigurationException::class);
             \PhpTal\TalesRegistry::registerPrefix('registry_test_3', 'registry_test_callback');
             \PhpTal\TalesRegistry::registerPrefix('registry_test_3', 'registry_test_callback');
         }

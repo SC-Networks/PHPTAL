@@ -64,7 +64,7 @@ class EchoExecuteTest extends \Tests\Testcase\PhpTal
         catch(\PhpTal\Exception\ConfigurationException $e)
         {
             // this is fine. Combination of macros and echoExecute is not supported yet (if it were, the test above is valid)
-            $this->assertContains("echoExecute", $e->getMessage());
+            $this->assertStringContainsString("echoExecute", $e->getMessage());
         }
     }
 }

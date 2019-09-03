@@ -20,7 +20,7 @@ use PhpTal\Php\TalesInternal;
 class TalesTest extends \Tests\Testcase\PhpTal
 {
 
-    public function tearDown()
+    public function tearDown(): void
     {
         TalesInternal::setFunctionWhitelist([]);
         parent::tearDown();
@@ -87,12 +87,12 @@ class TalesTest extends \Tests\Testcase\PhpTal
 
     public function testTaleNeverReturnsArray()
     {
-        $this->assertInternalType('string', TalesInternal::compileToPHPExpression('foo | bar | baz | nothing'));
+        $this->assertIsString(TalesInternal::compileToPHPExpression('foo | bar | baz | nothing'));
     }
 
     public function testTalesReturnsArray()
     {
-        $this->assertInternalType('array', TalesInternal::compileToPHPExpressions('foo | bar | baz | nothing'));
+        $this->assertIsArray(TalesInternal::compileToPHPExpressions('foo | bar | baz | nothing'));
     }
 
     public function testInterpolate1()

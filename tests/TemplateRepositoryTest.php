@@ -13,6 +13,8 @@
 
 namespace Tests;
 
+use PhpTal\Exception\IOException;
+
 class TemplateRepositoryTest extends \Tests\Testcase\PhpTal
 {
     public function testLooksInRepo()
@@ -33,11 +35,9 @@ class TemplateRepositoryTest extends \Tests\Testcase\PhpTal
         $tpl->execute();
     }
 
-    /**
-     * @expectedException \PhpTal\Exception\IOException
-     */
     public function testFailsIfNoneMatch()
     {
+        $this->expectException(IOException::class);
         $tpl = $this->newPHPTAL();
         $tpl->setTemplateRepository(__DIR__ .'/invalid');
         $tpl->setTemplateRepository(__DIR__ .'/error');
@@ -54,13 +54,13 @@ class TemplateRepositoryTest extends \Tests\Testcase\PhpTal
         $tpl->setTemplateRepository('testbaz/');
 
         $repos = $tpl->getTemplateRepositories();
-        $this->assertInternalType('array', $repos);
-        $this->assertEquals(3, count($repos));
+        $this->assertIsArray($repos);
+        $this->assertCount(3, $repos);
 
         foreach($repos as $repo)
         {
-            $this->assertInternalType('string', $repo);
-            $this->assertContains('test', $repo);
+            $this->assertIsString($repo);
+            $this->assertStringContainsString('test', $repo);
         }
     }
 

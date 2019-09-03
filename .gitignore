@@ -3,3 +3,4 @@ build
 /composer.lock
 bin/
 doc/temp
+.phpunit.result.cache

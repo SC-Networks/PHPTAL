@@ -35,7 +35,7 @@ abstract class PhpTal extends TestCase
      */
     private $buffer_level;
 
-    public function setUp()
+    public function setUp(): void
     {
         static::assertTrue(\PhpTal\PHPTAL::PHPTAL_VERSION >= '3_0_0');
 
@@ -50,7 +50,7 @@ abstract class PhpTal extends TestCase
         parent::setUp();
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         parent::tearDown();
 

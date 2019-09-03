@@ -12,6 +12,8 @@
 
 namespace Tests;
 
+use PhpTal\Exception\ParserException;
+
 class CommentTest extends \Tests\Testcase\PhpTal
 {
     public function testSimple()
@@ -41,11 +43,9 @@ class CommentTest extends \Tests\Testcase\PhpTal
         $this->assertEquals($source, $res);
     }
 
-    /**
-     * @expectedException \PhpTal\Exception\ParserException
-     */
     public function testNestedComments()
     {
+        $this->expectException(ParserException::class);
         $source = '<html><!--<!--<!--></html>';
         $tpl = $this->newPHPTAL();
         $tpl->setSource($source);
@@ -53,11 +53,9 @@ class CommentTest extends \Tests\Testcase\PhpTal
         $this->fail("Ill-formed comment accepted");
     }
 
-    /**
-     * @expectedException \PhpTal\Exception\ParserException
-     */
     public function testDashedComment()
     {
+        $this->expectException(ParserException::class);
         $source = '<html><!--- XML hates you ---></html>';
         $tpl = $this->newPHPTAL();
         $tpl->setSource($source);

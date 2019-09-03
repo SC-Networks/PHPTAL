@@ -16,7 +16,7 @@ use Tests\Testhelper\StupidCacheTrigger;
 
 class TriggerTest extends \Tests\Testcase\PhpTal
 {
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -26,7 +26,7 @@ class TriggerTest extends \Tests\Testcase\PhpTal
         if (file_exists('trigger.11')) unlink('trigger.11');
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         if (file_exists('trigger.10')) unlink('trigger.10');
         if (file_exists('trigger.11')) unlink('trigger.11');

@@ -19,7 +19,7 @@ use Tests\Testhelper\DummyTranslator;
 
 class MetalSlotTest extends \Tests\Testcase\PhpTal
 {
-    public function tearDown()
+    public function tearDown(): void
     {
         TalesInternal::setFunctionWhitelist([]);
         parent::tearDown();
@@ -225,8 +225,8 @@ class MetalSlotTest extends \Tests\Testcase\PhpTal
 
         $tpl_php_source = file_get_contents($tpl->getCodePath());
 
-        $this->assertNotContains("fillSlot(", $tpl_php_source);
-        $this->assertContains("fillSlotCallback(", $tpl_php_source);
+        $this->assertStringNotContainsString("fillSlot(", $tpl_php_source);
+        $this->assertStringContainsString("fillSlotCallback(", $tpl_php_source);
     }
 
     public function testUsesBufferForSmallSlots()
@@ -244,8 +244,8 @@ class MetalSlotTest extends \Tests\Testcase\PhpTal
 
         $tpl_php_source = file_get_contents($tpl->getCodePath());
 
-        $this->assertNotContains("fillSlotCallback(", $tpl_php_source);
-        $this->assertContains("fillSlot(", $tpl_php_source);
+        $this->assertStringNotContainsString("fillSlotCallback(", $tpl_php_source);
+        $this->assertStringContainsString("fillSlot(", $tpl_php_source);
     }
 
     public function testSlotBug()

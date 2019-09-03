@@ -18,7 +18,7 @@ use PhpTal\Php\TalesInternal;
 class EscapeHTMLTest extends \Tests\Testcase\PhpTal
 {
 
-    public function tearDown()
+    public function tearDown(): void
     {
         TalesInternal::setFunctionWhitelist([]);
         parent::tearDown();
@@ -43,7 +43,7 @@ class EscapeHTMLTest extends \Tests\Testcase\PhpTal
     public function testEntityDecodingPath1()
     {
         $res = $this->executeString('<div title="&quot;" class=\'&quot;\' tal:content="\'&quot; quote character\'" />');
-        $this->assertNotContains('&amp;', $res);
+        $this->assertStringNotContainsString('&amp;', $res);
     }
 
     public function testEntityDecodingBeforePHP()
@@ -80,110 +80,110 @@ class EscapeHTMLTest extends \Tests\Testcase\PhpTal
     public function testDecodingBeforeStructure()
     {
         $res = $this->executeString('<div tal:content="structure php:\'&amp; quote character\'" />');
-        $this->assertNotContains('&amp;', $res);
+        $this->assertStringNotContainsString('&amp;', $res);
     }
 
     public function testEntityDecodingPHP1()
     {
         $res = $this->executeString('<div tal:content="php:\'&quot; quote character\'" />');
-        $this->assertNotContains('&amp;', $res);
+        $this->assertStringNotContainsString('&amp;', $res);
     }
 
     public function testEntityDecodingPath2()
     {
         $res = $this->executeString('<div tal:attributes="title \'&quot; quote character\'" />');
-        $this->assertNotContains('&amp;', $res);
+        $this->assertStringNotContainsString('&amp;', $res);
     }
 
     public function testEntityDecodingPHP2()
     {
         $res = $this->executeString('<div tal:attributes="title php:\'&quot; quote character\'" />');
-        $this->assertNotContains('&amp;', $res);
+        $this->assertStringNotContainsString('&amp;', $res);
     }
 
     public function testEntityDecodingPath3()
     {
         $res = $this->executeString('<p>${\'&quot; quote character\'}</p>');
-        $this->assertNotContains('&amp;', $res);
+        $this->assertStringNotContainsString('&amp;', $res);
     }
 
     public function testEntityDecodingPHP3()
     {
         $res = $this->executeString('<p>${php:\'&quot; quote character\'}</p>');
-        $this->assertNotContains('&amp;', $res);
+        $this->assertStringNotContainsString('&amp;', $res);
     }
 
 
     public function testEntityEncodingPath1()
     {
         $res = $this->executeString('<div tal:content="\'&amp; ampersand character\'" />');
-        $this->assertContains('&amp;', $res);
-        $this->assertNotContains('&amp;amp;', $res);
-        $this->assertNotContains('&amp;&amp;', $res);
+        $this->assertStringContainsString('&amp;', $res);
+        $this->assertStringNotContainsString('&amp;amp;', $res);
+        $this->assertStringNotContainsString('&amp;&amp;', $res);
     }
 
     public function testEntityEncodingPHP1()
     {
         $res = $this->executeString('<div tal:content="php:\'&amp; ampersand character\'" />');
-        $this->assertContains('&amp;', $res);
-        $this->assertNotContains('&amp;amp;', $res);
-        $this->assertNotContains('&amp;&amp;', $res);
+        $this->assertStringContainsString('&amp;', $res);
+        $this->assertStringNotContainsString('&amp;amp;', $res);
+        $this->assertStringNotContainsString('&amp;&amp;', $res);
     }
 
     public function testEntityEncodingPath2()
     {
         $res = $this->executeString('<div tal:attributes="title \'&amp; ampersand character\'" />');
-        $this->assertContains('&amp;', $res);
-        $this->assertNotContains('&amp;amp;', $res);
-        $this->assertNotContains('&amp;&amp;', $res);
+        $this->assertStringContainsString('&amp;', $res);
+        $this->assertStringNotContainsString('&amp;amp;', $res);
+        $this->assertStringNotContainsString('&amp;&amp;', $res);
     }
 
     public function testEntityEncodingVariables()
     {
         $res = $this->executeString('<div tal:attributes="title variable; class variable">${variable}${variable}</div>',
                                     array('variable'=>'& = ampersand, " = quote, \' = apostrophe'));
-        $this->assertContains('&amp;',$res);
-        $this->assertNotContains('&amp;amp;',$res);
-        $this->assertNotContains('&amp;&amp;',$res);
+        $this->assertStringContainsString('&amp;',$res);
+        $this->assertStringNotContainsString('&amp;amp;',$res);
+        $this->assertStringNotContainsString('&amp;&amp;',$res);
     }
 
     public function testEntityEncodingAttributesDefault1()
     {
         $res = $this->executeString('<div tal:attributes="title idontexist | default" title=\'&amp; ampersand character\' />');
-        $this->assertContains('&amp;', $res);
-        $this->assertNotContains('&amp;amp;', $res);
-        $this->assertNotContains('&amp;&amp;', $res);
+        $this->assertStringContainsString('&amp;', $res);
+        $this->assertStringNotContainsString('&amp;amp;', $res);
+        $this->assertStringNotContainsString('&amp;&amp;', $res);
     }
 
     public function testEntityEncodingAttributesDefault2()
     {
         $res = $this->executeString('<div tal:attributes="title idontexist | default" title=\'&quot;&apos;\' />');
-        $this->assertNotContains('&amp;', $res);
-        $this->assertContains('&quot;', $res); // or apos...
+        $this->assertStringNotContainsString('&amp;', $res);
+        $this->assertStringContainsString('&quot;', $res); // or apos...
     }
 
     public function testEntityEncodingPHP2()
     {
         $res = $this->executeString('<div tal:attributes="title php:\'&amp; ampersand character\'" />');
-        $this->assertContains('&amp;', $res);
-        $this->assertNotContains('&amp;amp;', $res);
-        $this->assertNotContains('&amp;&amp;', $res);
+        $this->assertStringContainsString('&amp;', $res);
+        $this->assertStringNotContainsString('&amp;amp;', $res);
+        $this->assertStringNotContainsString('&amp;&amp;', $res);
     }
 
     public function testEntityEncodingPath3()
     {
         $res = $this->executeString('<p>${\'&amp; ampersand character\'}</p>');
-        $this->assertContains('&amp;', $res);
-        $this->assertNotContains('&amp;amp;', $res);
-        $this->assertNotContains('&amp;&amp;', $res);
+        $this->assertStringContainsString('&amp;', $res);
+        $this->assertStringNotContainsString('&amp;amp;', $res);
+        $this->assertStringNotContainsString('&amp;&amp;', $res);
     }
 
     public function testEntityEncodingPHP3()
     {
         $res = $this->executeString('<p>&{php:\'&amp; ampersand character\'}</p>');
-        $this->assertContains('&amp;', $res);
-        $this->assertNotContains('&amp;amp;', $res);
-        $this->assertNotContains('&amp;&amp;', $res);
+        $this->assertStringContainsString('&amp;', $res);
+        $this->assertStringNotContainsString('&amp;amp;', $res);
+        $this->assertStringNotContainsString('&amp;&amp;', $res);
     }
 
     public function testSimpleXML()

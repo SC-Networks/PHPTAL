@@ -28,7 +28,7 @@ class CompressTest extends \Tests\Testcase\PhpTal
         $this->assertSame($expect, $tpl->execute());
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         TalesInternal::setFunctionWhitelist([]);
         parent::tearDown();

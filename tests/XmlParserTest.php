@@ -13,6 +13,7 @@
 
 namespace Tests;
 
+use PhpTal\Exception\ParserException;
 use Tests\Testhelper\MyDocumentBuilder;
 
 class XmlParserTest extends \Tests\Testcase\PhpTal
@@ -69,21 +70,17 @@ class XmlParserTest extends \Tests\Testcase\PhpTal
     }
 
 
-    /**
-     * @expectedException \PhpTal\Exception\ParserException
-     */
     public function testRejectsInvalidAttributes1()
     {
+        $this->expectException(ParserException::class);
         $parser = new \PhpTal\Dom\SaxXmlParser('UTF-8');
         $parser->parseString($builder = new MyDocumentBuilder(), '<foo bar="bar"baz="baz"/>')->getResult();
         $this->fail($builder->result);
     }
 
-    /**
-     * @expectedException \PhpTal\Exception\ParserException
-     */
     public function testRejectsInvalidAttributes2()
     {
+        $this->expectException(ParserException::class);
         $parser = new \PhpTal\Dom\SaxXmlParser('UTF-8');
         $parser->parseString($builder = new MyDocumentBuilder(), '<foo bar;="bar"/>')->getResult();
         $this->fail($builder->result);
@@ -134,11 +131,9 @@ class XmlParserTest extends \Tests\Testcase\PhpTal
         { /* ok - rejecting is one way to do it */ }
     }
 
-    /**
-     * @expectedException \PhpTal\Exception\ParserException
-     */
     public function testSelfClosingSyntaxError()
     {
+        $this->expectException(ParserException::class);
         $parser = new \PhpTal\Dom\SaxXmlParser('UTF-8');
         $src = '<a / >';
 
@@ -239,9 +234,9 @@ xxxx/>
         }
         catch(\PhpTal\Exception\ParserException $e)
         {
-            $this->assertContains('ishallnotbeclosed', $e->getMessage());
-            $this->assertNotContains('imrootelement', $e->getMessage());
-            $this->assertNotContains("documentElement", $e->getMessage());
+            $this->assertStringContainsString('ishallnotbeclosed', $e->getMessage());
+            $this->assertStringNotContainsString('imrootelement', $e->getMessage());
+            $this->assertStringNotContainsString("documentElement", $e->getMessage());
         }
     }
 
@@ -255,7 +250,7 @@ xxxx/>
         }
         catch(\PhpTal\Exception\ParserException $e)
         {
-            $this->assertNotContains("documentElement", $e->getMessage());
+            $this->assertStringNotContainsString("documentElement", $e->getMessage());
             $this->assertRegExp("/element_e.*element_d.*element_c.*element_b.*element_a/", $e->getMessage());
         }
     }

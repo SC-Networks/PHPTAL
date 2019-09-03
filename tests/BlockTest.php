@@ -12,6 +12,8 @@
 
 namespace Tests;
 
+use PhpTal\Exception\ParserException;
+
 class BlockTest extends \Tests\Testcase\PhpTal
 {
     function testTalBlock()
@@ -38,11 +40,9 @@ class BlockTest extends \Tests\Testcase\PhpTal
         $this->assertEquals('<foo:block xmlns:foo="http://phptal.example.com">foo</foo:block>', $res);
     }
 
-    /**
-     * @expectedException \PhpTal\Exception\ParserException
-     */
     function testInvalidNamespaceBlock()
     {
+        $this->expectException(ParserException::class);
         $t = $this->newPHPTAL();
 
         $t->setSource('<foo:block>foo</foo:block>');
