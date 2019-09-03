@@ -14,6 +14,9 @@ declare(strict_types=1);
 
 namespace Tests;
 
+use PhpTal\Exception\ConfigurationException;
+use PhpTal\Exception\TemplateException;
+
 class PhptalTest extends \Tests\Testcase\PhpTal
 {
     public function test01()
@@ -103,8 +106,8 @@ class PhptalTest extends \Tests\Testcase\PhpTal
         $this->assertEquals('<span>foo value</span>', $res);
 
         $this->assertRegExp('/^tpl_\d{8}_/', $tpl->getFunctionName());
-        $this->assertContains('string', $tpl->getFunctionName());
-        $this->assertNotContains(\PhpTal\PHPTAL::PHPTAL_VERSION, $tpl->getFunctionName());
+        $this->assertStringContainsString('string', $tpl->getFunctionName());
+        $this->assertStringNotContainsString(\PhpTal\PHPTAL::PHPTAL_VERSION, $tpl->getFunctionName());
     }
 
     public function testSourceWithPath()
@@ -116,8 +119,8 @@ class PhptalTest extends \Tests\Testcase\PhpTal
         $res = $tpl->execute();
         $this->assertEquals('<span>foo value</span>', $res);
         $this->assertRegExp('/^tpl_\d{8}_/', $tpl->getFunctionName());
-        $this->assertContains($fakename, $tpl->getFunctionName());
-        $this->assertNotContains(\PhpTal\PHPTAL::PHPTAL_VERSION, $tpl->getFunctionName());
+        $this->assertStringContainsString($fakename, $tpl->getFunctionName());
+        $this->assertStringNotContainsString(\PhpTal\PHPTAL::PHPTAL_VERSION, $tpl->getFunctionName());
     }
 
     public function testStripComments()
@@ -196,11 +199,9 @@ class PhptalTest extends \Tests\Testcase\PhpTal
         $this->assertEquals('UTF-8', $tpl->getEncoding());
     }
 
-    /**
-     * @expectedException \PhpTal\Exception\TemplateException
-     */
     public function testPHPParseErrorDoesNotStopPHPTAL2()
     {
+        $this->expectException(TemplateException::class);
         $tpl = $this->newPHPTAL()->setSource('<x tal:content="php:\'deliberate parse\' \'error test\'"/>');
 
         ob_start();
@@ -215,11 +216,9 @@ class PhptalTest extends \Tests\Testcase\PhpTal
         ob_end_clean();
     }
 
-    /**
-     * @expectedException \PhpTal\Exception\ConfigurationException
-     */
     public function testThrowsIfNoTemplate()
     {
+        $this->expectException(ConfigurationException::class);
         $this->newPHPTAL()->execute();
     }
 
@@ -234,7 +233,7 @@ class PhptalTest extends \Tests\Testcase\PhpTal
         $tpl2->setTemplate('../input/phptal.09.html');
         $res = $tpl2->execute();
 
-        $this->assertContains('DOCTYPE',$res);
+        $this->assertStringContainsString('DOCTYPE',$res);
     }
 
     public function testDoctypeWithoutClone()
@@ -246,6 +245,6 @@ class PhptalTest extends \Tests\Testcase\PhpTal
         $tpl->setTemplate('../input/phptal.09.html');
         $res = $tpl->execute();
 
-        $this->assertContains('DOCTYPE',$res);
+        $this->assertStringContainsString('DOCTYPE',$res);
     }
 }

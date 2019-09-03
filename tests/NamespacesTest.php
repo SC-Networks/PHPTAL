@@ -12,6 +12,7 @@
 
 namespace Tests;
 
+use PhpTal\Exception\ConfigurationException;
 use Tests\Testhelper\Test_PHPTAL_Namespace;
 
 class NamespacesTest extends \Tests\Testcase\PhpTal
@@ -70,19 +71,15 @@ class NamespacesTest extends \Tests\Testcase\PhpTal
 
     // different kind of namespace
 
-    /**
-     * @expectedException \PhpTal\Exception\ConfigurationException
-     */
     public function testPHPTALNamespaceClassRejectsEmptyNS()
     {
+        $this->expectException(ConfigurationException::class);
         new Test_PHPTAL_Namespace('test', '');
     }
 
-    /**
-     * @expectedException \PhpTal\Exception\ConfigurationException
-     */
     public function testPHPTALNamespaceClassRejectsEmptyPrefix()
     {
+        $this->expectException(ConfigurationException::class);
         new Test_PHPTAL_Namespace('', 'urn:test');
     }
 }

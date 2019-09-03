@@ -13,6 +13,7 @@
 
 namespace Tests;
 
+use PhpTal\Exception\VariableNotFoundException;
 use Testhelper\DummyToStringObject;
 
 class TalContentTest extends \Tests\Testcase\PhpTal
@@ -123,21 +124,17 @@ EOT;
         $this->assertEquals($res, $exp);
     }
 
-    /**
-     * @expectedException \PhpTal\Exception\VariableNotFoundException
-     */
     public function testErrorsThrow()
     {
+        $this->expectException(VariableNotFoundException::class);
         $tpl = $this->newPHPTAL();
         $tpl->setSource('<p tal:content="erroridontexist"/>');
         $tpl->execute();
     }
 
-    /**
-     * @expectedException \PhpTal\Exception\VariableNotFoundException
-     */
     public function testErrorsThrow2()
     {
+        $this->expectException(VariableNotFoundException::class);
         $this->markTestSkipped("tal:define and tal:attributes rely on chains not throwing");//FIXME
 
         $tpl = $this->newPHPTAL();
@@ -145,11 +142,9 @@ EOT;
         $tpl->execute();
     }
 
-    /**
-     * @expectedException \PhpTal\Exception\VariableNotFoundException
-     */
     public function testErrorsThrow3()
     {
+        $this->expectException(VariableNotFoundException::class);
         $this->markTestSkipped("tal:define and tal:attributes rely on chains not throwing");//FIXME
 
         $tpl = $this->newPHPTAL();
@@ -157,11 +152,9 @@ EOT;
         $tpl->execute();
     }
 
-    /**
-     * @expectedException \PhpTal\Exception\VariableNotFoundException
-     */
     public function testErrorsThrow4()
     {
+        $this->expectException(VariableNotFoundException::class);
         $this->markTestSkipped("tal:define and tal:attributes rely on chains not throwing");//FIXME
 
         $tpl = $this->newPHPTAL();

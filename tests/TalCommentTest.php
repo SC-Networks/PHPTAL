@@ -22,7 +22,7 @@ class TalCommentTest extends \Tests\Testcase\PhpTal
     private $_gen;
     private $_att;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $state = new \PhpTal\Php\State($this->newPHPTAL());

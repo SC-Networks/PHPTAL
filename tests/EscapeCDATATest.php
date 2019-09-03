@@ -23,7 +23,7 @@ class EscapeCDATATest extends \Tests\Testcase\PhpTal
      */
     private $last_code_path;
 
-    public function tearDown()
+    public function tearDown(): void
     {
         TalesInternal::setFunctionWhitelist([]);
         parent::tearDown();

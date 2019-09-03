@@ -14,7 +14,7 @@ namespace Tests;
 
 class PhptalCacheTest extends \Tests\Testcase\PhpTal
 {
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->PhptalCacheTest_random =  time().mt_rand();
@@ -34,12 +34,12 @@ class PhptalCacheTest extends \Tests\Testcase\PhpTal
     {
         $tpl = $this->PHPTALWithSource('<div phptal:cache="1h" tal:content="var" />');
         $tpl->var = 'SUCCESS';
-        $this->assertContains( "SUCCESS", $tpl->execute() );
+        $this->assertStringContainsString( "SUCCESS", $tpl->execute() );
 
         $tpl->var = 'FAIL';
         $res = $tpl->execute();
-        $this->assertNotContains( "FAIL", $res );
-        $this->assertContains( "SUCCESS", $res );
+        $this->assertStringNotContainsString( "FAIL", $res );
+        $this->assertStringContainsString( "SUCCESS", $res );
     }
 
     /**
@@ -49,12 +49,12 @@ class PhptalCacheTest extends \Tests\Testcase\PhpTal
     {
         $tpl = $this->PHPTALWithSource('<div tal:define="display var" phptal:cache="1h">${display}</div>');
         $tpl->var = 'SUCCESS';
-        $this->assertContains( "SUCCESS", $tpl->execute() );
+        $this->assertStringContainsString( "SUCCESS", $tpl->execute() );
 
         $tpl->var = 'FAIL';
         $res = $tpl->execute();
-        $this->assertNotContains( "FAIL", $res );
-        $this->assertContains( "SUCCESS", $res );
+        $this->assertStringNotContainsString( "FAIL", $res );
+        $this->assertStringContainsString( "SUCCESS", $res );
     }
 
     public function testTimedExpiry()
@@ -62,14 +62,14 @@ class PhptalCacheTest extends \Tests\Testcase\PhpTal
 
         $tpl = $this->PHPTALWithSource('<div phptal:cache="1s" tal:content="var" />');
         $tpl->var = 'FIRST';
-        $this->assertContains( "FIRST", $tpl->execute() );
+        $this->assertStringContainsString( "FIRST", $tpl->execute() );
 
         sleep(2); // wait for it to expire :)
 
         $tpl->var = 'SECOND';
         $res = $tpl->execute();
-        $this->assertContains( "SECOND", $res );
-        $this->assertNotContains( "FIRST", $res );
+        $this->assertStringContainsString( "SECOND", $res );
+        $this->assertStringNotContainsString( "FIRST", $res );
     }
 
     public function testCacheInStringSource()
@@ -77,11 +77,11 @@ class PhptalCacheTest extends \Tests\Testcase\PhpTal
         $source = '<div phptal:cache="1d" tal:content="var" />';
         $tpl = $this->PHPTALWithSource($source);
         $tpl->var = 'FIRST';
-        $this->assertContains( "FIRST", $tpl->execute() );
+        $this->assertStringContainsString( "FIRST", $tpl->execute() );
 
         $tpl = $this->PHPTALWithSource($source);
         $tpl->var = 'SECOND';
-        $this->assertContains( "FIRST", $tpl->execute() );
+        $this->assertStringContainsString( "FIRST", $tpl->execute() );
     }
 
     public function testCleanUpCache()
@@ -92,32 +92,32 @@ class PhptalCacheTest extends \Tests\Testcase\PhpTal
         $tpl->cleanUpCache();
 
         $tpl->var = 'FIRST';
-        $this->assertContains( "FIRST", $tpl->execute() );
+        $this->assertStringContainsString( "FIRST", $tpl->execute() );
 
         $tpl = $this->PHPTALWithSource($source);
         $tpl->var = 'SECOND';
         $res = $tpl->execute();
-        $this->assertContains( "FIRST", $res );
-        $this->assertNotContains( "SECOND", $res );
+        $this->assertStringContainsString( "FIRST", $res );
+        $this->assertStringNotContainsString( "SECOND", $res );
 
         $tpl->cleanUpCache();
 
         $tpl->var = 'THIRD';
         $res = $tpl->execute();
-        $this->assertContains( "THIRD", $res );
-        $this->assertNotContains( "SECOND", $res );
-        $this->assertNotContains( "FIRST", $res );
+        $this->assertStringContainsString( "THIRD", $res );
+        $this->assertStringNotContainsString( "SECOND", $res );
+        $this->assertStringNotContainsString( "FIRST", $res );
     }
 
     public function testPerExpiry()
     {
         $tpl = $this->PHPTALWithSource('<div phptal:cache="1d per var" tal:content="var" />');
         $tpl->var = 'FIRST';
-        $this->assertContains( "FIRST", $tpl->execute() );
+        $this->assertStringContainsString( "FIRST", $tpl->execute() );
         $tpl->var = 'SECOND';
         $res = $tpl->execute();
-        $this->assertContains( "SECOND", $res );
-        $this->assertNotContains( "FIRST", $res );
+        $this->assertStringContainsString( "SECOND", $res );
+        $this->assertStringNotContainsString( "FIRST", $res );
     }
 
     public function testVersions()
@@ -126,25 +126,25 @@ class PhptalCacheTest extends \Tests\Testcase\PhpTal
 
         $tpl->var = 'FIRST';
         $tpl->version = '1';
-        $this->assertContains( "FIRST", $tpl->execute() );
+        $this->assertStringContainsString( "FIRST", $tpl->execute() );
 
         $tpl->var = 'FAIL';
         $tpl->version = '1';
         $res = $tpl->execute();
-        $this->assertContains( "FIRST", $res );
-        $this->assertNotContains( "FAIL", $res );
+        $this->assertStringContainsString( "FIRST", $res );
+        $this->assertStringNotContainsString( "FAIL", $res );
 
         $tpl->var = 'THRID';
         $tpl->version = '3';
         $res = $tpl->execute();
-        $this->assertContains( "THRID", $res );
-        $this->assertNotContains( "SECOND", $res );
+        $this->assertStringContainsString( "THRID", $res );
+        $this->assertStringNotContainsString( "SECOND", $res );
 
         $tpl->var = 'FAIL';
         $tpl->version = '3';
         $res = $tpl->execute();
-        $this->assertContains( "THRID", $res );
-        $this->assertNotContains( "FAIL", $res );
+        $this->assertStringContainsString( "THRID", $res );
+        $this->assertStringNotContainsString( "FAIL", $res );
     }
 
     public function testVariableExpiry()
@@ -152,19 +152,19 @@ class PhptalCacheTest extends \Tests\Testcase\PhpTal
         $tpl = $this->PHPTALWithSource('<div phptal:cache="vartime s" tal:content="var" />');
         $tpl->vartime = 0;
         $tpl->var = 'FIRST';
-        $this->assertContains( "FIRST", $tpl->execute() );
+        $this->assertStringContainsString( "FIRST", $tpl->execute() );
 
         $tpl->var = 'SECOND'; // time is 0 = no cache
-        $this->assertContains( "SECOND", $tpl->execute() );
+        $this->assertStringContainsString( "SECOND", $tpl->execute() );
 
         $tpl->vartime = 60;   // get it to cache it
         $tpl->var = 'SECOND';
-        $this->assertContains( "SECOND", $tpl->execute() );
+        $this->assertStringContainsString( "SECOND", $tpl->execute() );
 
         $tpl->var = 'THRID';
         $res = $tpl->execute();
-        $this->assertContains( "SECOND", $res );
-        $this->assertNotContains( "THRID", $res ); // should be cached
+        $this->assertStringContainsString( "SECOND", $res );
+        $this->assertStringNotContainsString( "THRID", $res ); // should be cached
     }
 
     public function testVariableExpressionExpiry()
@@ -172,18 +172,18 @@ class PhptalCacheTest extends \Tests\Testcase\PhpTal
         $tpl = $this->PHPTALWithSource('<div phptal:cache="tales/vartime s" tal:content="var" />');
         $tpl->tales = array('vartime' => 0);
         $tpl->var = 'FIRST';
-        $this->assertContains( "FIRST", $tpl->execute() );
+        $this->assertStringContainsString( "FIRST", $tpl->execute() );
 
         $tpl->var = 'SECOND'; // time is 0 = no cache
-        $this->assertContains( "SECOND", $tpl->execute() );
+        $this->assertStringContainsString( "SECOND", $tpl->execute() );
 
         $tpl->tales = array('vartime' => 60);   // get it to cache it
         $tpl->var = 'SECOND';
-        $this->assertContains( "SECOND", $tpl->execute() );
+        $this->assertStringContainsString( "SECOND", $tpl->execute() );
 
         $tpl->var = 'THRID';
         $res = $tpl->execute();
-        $this->assertContains( "SECOND", $res );
-        $this->assertNotContains( "THRID", $res ); // should be cached
+        $this->assertStringContainsString( "SECOND", $res );
+        $this->assertStringNotContainsString( "THRID", $res ); // should be cached
     }
 }

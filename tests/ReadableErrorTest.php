@@ -99,8 +99,8 @@ class ReadableErrorTest extends \Tests\Testcase\PhpTal
             static::fail('Not thrown');
         } catch (\PhpTal\Exception\TemplateException $e) {
             $msg = $e->getMessage();
-            static::assertInternalType('string', $e->srcFile, $msg);
-            static::assertContains($expected_file ?: $file, $e->srcFile, $msg);
+            static::assertIsString($e->srcFile, $msg);
+            static::assertStringContainsString($expected_file ?: $file, $e->srcFile, $msg);
             static::assertEquals($line, $e->srcLine, 'Wrong line number: ' . $msg . "\n". $tpl->getCodePath());
         }
     }

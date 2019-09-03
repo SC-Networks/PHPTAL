@@ -12,6 +12,7 @@
 
 namespace Tests;
 
+use PhpTal\Exception\IOException;
 use Tests\Testhelper\CantFindAThing;
 use Tests\Testhelper\MyCustomSourceResolver;
 use Tests\Testhelper\MyTestResolver;
@@ -43,7 +44,7 @@ class SourceTest extends \Tests\Testcase\PhpTal
         $tpl->setTemplate("xyz");
 
         $res = $tpl->execute();
-        $this->assertContains('<p class="custom">xyz ', $res);
+        $this->assertStringContainsString('<p class="custom">xyz ', $res);
 
         // template should be cached
         $this->assertEquals($res, $tpl->execute());
@@ -58,7 +59,7 @@ class SourceTest extends \Tests\Testcase\PhpTal
         $tpl->setTemplate("nocache");
 
         $res = $tpl->execute();
-        $this->assertContains('<p class="custom">nocache ', $res);
+        $this->assertStringContainsString('<p class="custom">nocache ', $res);
 
         // template should not be cached
         $this->assertEquals($res, $tpl->execute());
@@ -66,11 +67,9 @@ class SourceTest extends \Tests\Testcase\PhpTal
         $this->assertNotEquals($res, $tpl->execute());
     }
 
-    /**
-     * @expectedException \PhpTal\Exception\IOException
-     */
     public function testFailsIfNotFound()
     {
+        $this->expectException(IOException::class);
         $tpl = $this->newPHPTAL()->addSourceResolver(new CantFindAThing())->setTemplate("something")->execute();
     }
 

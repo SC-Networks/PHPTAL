@@ -14,6 +14,7 @@
 namespace Tests;
 
 use PhpTal\Exception\ConfigurationException;
+use PhpTal\Exception\TemplateException;
 use Tests\Testhelper\DummyTranslator;
 
 class I18NTranslateTest extends \Tests\Testcase\PhpTal
@@ -144,19 +145,15 @@ class I18NTranslateTest extends \Tests\Testcase\PhpTal
         $this->assertEquals('<div>&lt;foo&gt; translated</div>', $tpl->execute());
     }
 
-    /**
-     * @expectedException \PhpTal\Exception\TemplateException
-     */
     public function testRejectsEmptyKey()
     {
+        $this->expectException(TemplateException::class);
         $this->newPHPTAL()->setTranslator( $t = new DummyTranslator() )->setSource('<div i18n:translate=""></div>')->execute();
     }
 
-    /**
-     * @expectedException \PhpTal\Exception\TemplateException
-     */
     public function testRejectsEmptyKeyMarkup()
     {
+        $this->expectException(TemplateException::class);
         $this->newPHPTAL()->setTranslator( $t = new DummyTranslator() )->setSource('<div i18n:translate=""> <span tal:content="string:test"> </span> </div>')->execute();
     }
 

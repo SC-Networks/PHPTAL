@@ -41,20 +41,20 @@ class CodeCacheTest extends \Tests\Testcase\PhpTal
     private function clearCache()
     {
         $subpath = str_repeat('*/', $this->subpathRecursionLevel);
-        $this->assertContains(DIRECTORY_SEPARATOR.'temp_output'.DIRECTORY_SEPARATOR, $this->codeDestination);
+        $this->assertStringContainsString(DIRECTORY_SEPARATOR.'temp_output'.DIRECTORY_SEPARATOR, $this->codeDestination);
         foreach (glob($this->codeDestination.$subpath.'tpl_*') as $tpl) {
             $this->assertTrue(unlink($tpl), "Delete $tpl");
         }
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->resetPHPTAL();
         $this->clearCache();
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         $this->clearCache();
         parent::tearDown();

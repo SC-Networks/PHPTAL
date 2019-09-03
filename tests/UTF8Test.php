@@ -12,6 +12,8 @@
 
 namespace Tests;
 
+use PhpTal\Exception\ParserException;
+
 class UTF8Test extends \Tests\Testcase\PhpTal
 {
     public function testOverload()
@@ -31,7 +33,7 @@ class UTF8Test extends \Tests\Testcase\PhpTal
 
     public function testFile()
     {
-        $this->assertContains(
+        $this->assertStringContainsString(
             rawurldecode("%D0%97%D0%B0%D1%80%D0%B5%D0%B3%D0%B8%D1%81%D1%82%D1%80%D0%B8%D1%80%D1%83%D0%B9%D1%82%D0%B5%D1%81%D1%8C"),
             $this->newPHPTAL('input/utf8.xml')->execute()
         );
@@ -99,11 +101,9 @@ class UTF8Test extends \Tests\Testcase\PhpTal
     }
 
 
-    /**
-     * @expectedException \PhpTal\Exception\ParserException
-     */
     public function testUnexpectedContinuationBytes()
     {
+        $this->expectException(ParserException::class);
         $this->newPHPTAL()->setSource(rawurldecode('<p>                                                                            |
         Each unexpected continuation byte should be separately signalled as a         |
         malformed sequence of its own.                                                |
@@ -119,11 +119,9 @@ class UTF8Test extends \Tests\Testcase\PhpTal
         3.1.8  7 continuation bytes: "%80%BF%80%BF%80%BF%80"                                        |</p>'))->execute();
     }
 
-    /**
-     * @expectedException \PhpTal\Exception\ParserException
-     */
     public function testContinuations2()
     {
+        $this->expectException(ParserException::class);
         $this->newPHPTAL()->setSource(rawurldecode('<p>
             3.1.9  Sequence of all 64 possible continuation bytes %280x80-0xbf%29:            |
                                                                                            |
@@ -133,11 +131,9 @@ class UTF8Test extends \Tests\Testcase\PhpTal
                  %B0%B1%B2%B3%B4%B5%B6%B7%B8%B9%BA%BB%BC%BD%BE%BF"                                                         |</p>'))->execute();
     }
 
-    /**
-     * @expectedException \PhpTal\Exception\ParserException
-     */
     public function testSequences2()
     {
+        $this->expectException(ParserException::class);
         $this->newPHPTAL()->setSource(rawurldecode('<p>3.2  Lonely start characters                                                  |
                                                                                        |
          3.2.1  All 32 first bytes of 2-byte sequences %280xc0-0xdf%29%2C                    |
@@ -147,11 +143,9 @@ class UTF8Test extends \Tests\Testcase\PhpTal
              %D0 %D1 %D2 %D3 %D4 %D5 %D6 %D7 %D8 %D9 %DA %DB %DC %DD %DE %DF "                                         |</p>'))->execute();
     }
 
-    /**
-     * @expectedException \PhpTal\Exception\ParserException
-     */
     public function test3ByteSquences()
     {
+        $this->expectException(ParserException::class);
         $this->newPHPTAL()->setSource(rawurldecode('<p>                                                                           |
         3.2.2  All 16 first bytes of 3-byte sequences %280xe0-0xef%29%2C                    |
                each followed by a space character:                                    |
@@ -159,11 +153,9 @@ class UTF8Test extends \Tests\Testcase\PhpTal
            "%E0 %E1 %E2 %E3 %E4 %E5 %E6 %E7 %E8 %E9 %EA %EB %EC %ED %EE %EF "                                         |</p>'))->execute();
     }
 
-    /**
-     * @expectedException \PhpTal\Exception\ParserException
-     */
     public function test4ByteSequences()
     {
+        $this->expectException(ParserException::class);
         $this->newPHPTAL()->setSource(rawurldecode('<p>
                                                                                       |
         3.2.3  All 8 first bytes of 4-byte sequences %280xf0-0xf7%29%2C                     |
@@ -173,11 +165,9 @@ class UTF8Test extends \Tests\Testcase\PhpTal
                                                                                       |</p>'))->execute();
     }
 
-    /**
-     * @expectedException \PhpTal\Exception\ParserException
-     */
     public function test5ByteSequences()
     {
+        $this->expectException(ParserException::class);
         $this->newPHPTAL()->setSource(rawurldecode('<p>
 
         3.2.4  All 4 first bytes of 5-byte sequences %280xf8-0xfb%29%2C                     |
@@ -191,11 +181,9 @@ class UTF8Test extends \Tests\Testcase\PhpTal
            "%FC %FD "                                                                     |</p>'))->execute();
     }
 
-    /**
-     * @expectedException \PhpTal\Exception\ParserException
-     */
     public function testIncompleteSequence()
     {
+        $this->expectException(ParserException::class);
         $this->newPHPTAL()->setSource(rawurldecode('<p>                                                                              |
         3.3  Sequences with last continuation byte missing                            |
                                                                                       |
@@ -208,11 +196,9 @@ class UTF8Test extends \Tests\Testcase\PhpTal
         3.3.3  4-byte sequence with last byte missing %28U%2B0000%29:     "%F0%80%80"               |</p>'))->execute();
     }
 
-    /**
-     * @expectedException \PhpTal\Exception\ParserException
-     */
     public function testLastByteMissing1()
     {
+        $this->expectException(ParserException::class);
         $this->newPHPTAL()->setSource(rawurldecode('<p>
                                                                                       |
 
@@ -223,11 +209,9 @@ class UTF8Test extends \Tests\Testcase\PhpTal
         3.3.7  3-byte sequence with last byte missing %28U-0000FFFF%29: "%EF%BF"               |</p>'))->execute();
     }
 
-    /**
-     * @expectedException \PhpTal\Exception\ParserException
-     */
     public function testLastByteMissing2()
     {
+        $this->expectException(ParserException::class);
         $this->newPHPTAL()->setSource(rawurldecode('<p>
                                                                                       |
 
@@ -237,11 +221,9 @@ class UTF8Test extends \Tests\Testcase\PhpTal
                                                                                       |</p>'))->execute();
     }
 
-    /**
-     * @expectedException \PhpTal\Exception\ParserException
-     */
     public function testConcatenation()
     {
+        $this->expectException(ParserException::class);
         $this->newPHPTAL()->setSource(rawurldecode('<p>                                |
 
         3.4  Concatenation of incomplete sequences                                    |
@@ -253,11 +235,9 @@ class UTF8Test extends \Tests\Testcase\PhpTal
                                                                                       |</p>'))->execute();
     }
 
-    /**
-     * @expectedException \PhpTal\Exception\ParserException
-     */
     public function testImpossibleBytes()
     {
+        $this->expectException(ParserException::class);
         $this->newPHPTAL()->setSource(rawurldecode('<p><!--                                                       |
 
         3.5  Impossible bytes                                                         |
@@ -269,33 +249,27 @@ class UTF8Test extends \Tests\Testcase\PhpTal
         3.5.3  fe fe ff ff %3D "%FE%FE%FF%FF"                                                   |--></p>'))->execute();
     }
 
-    /**
-     * @expectedException \PhpTal\Exception\ParserException
-     */
     public function testOverlong()
     {
+        $this->expectException(ParserException::class);
         $this->newPHPTAL()->setSource(rawurldecode('<p>    <![CDATA[                                                                        |
         4.1.1 U%2B002F %3D c0 af             %3D "%C0%AF"                                        |
         4.1.2 U%2B002F %3D e0 80 af          %3D "%E0%80%AF"                                        |
         4.1.3 U%2B002F %3D f0 80 80 af       %3D "%F0%80%80%AF"                                        |]]></p>'))->execute();
     }
 
-    /**
-     * @expectedException \PhpTal\Exception\ParserException
-     */
     public function testOverlong1()
     {
+        $this->expectException(ParserException::class);
         $this->newPHPTAL()->setSource(rawurldecode('<p>
 
         4.1.4 U%2B002F %3D f8 80 80 80 af    %3D "%F8%80%80%80%AF"                                        |
         4.1.5 U%2B002F %3D fc 80 80 80 80 af %3D "%FC%80%80%80%80%AF"                                        |</p>'))->execute();
     }
 
-    /**
-     * @expectedException \PhpTal\Exception\ParserException
-     */
     public function testOverlong2()
     {
+        $this->expectException(ParserException::class);
         $this->newPHPTAL()->setSource(rawurldecode('<p>
 
 
@@ -303,41 +277,33 @@ class UTF8Test extends \Tests\Testcase\PhpTal
         4.2.2  U-000007FF %3D e0 9f bf          %3D "%E0%9F%BF"                                   |</p>'))->execute();
     }
 
-    /**
-     * @expectedException \PhpTal\Exception\ParserException
-     */
     public function testOverlong3()
     {
+        $this->expectException(ParserException::class);
         $this->newPHPTAL()->setSource(rawurldecode('<p><![CDATA[
         4.2.3  U-0000FFFF %3D f0 8f bf bf       %3D "%F0%8F%BF%BF"                                   |
         4.2.4  U-001FFFFF %3D f8 87 bf bf bf    %3D "%F8%87%BF%BF%BF"                                   |
         4.2.5  U-03FFFFFF %3D fc 83 bf bf bf bf %3D "%FC%83%BF%BF%BF%BF"                                   |]]></p>'))->execute();
     }
 
-    /**
-     * @expectedException \PhpTal\Exception\ParserException
-     */
     public function testNUL()
     {
+        $this->expectException(ParserException::class);
         $this->newPHPTAL()->setSource(rawurldecode('<p>4.3.1  U%2B0000 %3D c0 80             %3D "%C0%80"                                       |
          4.3.2  U%2B0000 %3D e0 80 80          %3D "%E0%80%80"                                       |
          4.3.3  U%2B0000 %3D f0 80 80 80       %3D "%F0%80%80%80"                                       |</p>'))->execute();
     }
 
-    /**
-     * @expectedException \PhpTal\Exception\ParserException
-     */
     public function testNUL2()
     {
+        $this->expectException(ParserException::class);
         $this->newPHPTAL()->setSource(rawurldecode('<p title="4.3.4  U%2B0000 %3D f8 80 80 80 80    %3D "%F8%80%80%80%80"                                       |
          4.3.5  U%2B0000 %3D fc 80 80 80 80 80 %3D %FC%80%80%80%80%80   "/>'))->execute();
     }
 
-    /**
-     * @expectedException \PhpTal\Exception\ParserException
-     */
     public function testUTF16()
     {
+        $this->expectException(ParserException::class);
         $this->newPHPTAL()->setSource(rawurldecode('<p>5.1.1  U%2BD800 %3D ed a0 80 %3D "%ED%A0%80"                                                |
         5.1.2  U%2BDB7F %3D ed ad bf %3D "%ED%AD%BF"                                                |
         5.1.3  U%2BDB80 %3D ed ae 80 %3D "%ED%AE%80"                                                |
@@ -347,11 +313,9 @@ class UTF8Test extends \Tests\Testcase\PhpTal
         5.1.7  U%2BDFFF %3D ed bf bf %3D "%ED%BF%BF"                                                |</p>'))->execute();
     }
 
-    /**
-     * @expectedException \PhpTal\Exception\ParserException
-     */
     public function testUTF16Paired()
     {
+        $this->expectException(ParserException::class);
         $this->newPHPTAL()->setSource(rawurldecode('<p>5.2.1  U%2BD800 U%2BDC00 %3D ed a0 80 ed b0 80 %3D "%ED%A0%80%ED%B0%80"                               |
         5.2.2  U%2BD800 U%2BDFFF %3D ed a0 80 ed bf bf %3D "%ED%A0%80%ED%BF%BF"                               |
         5.2.3  U%2BDB7F U%2BDC00 %3D ed ad bf ed b0 80 %3D "%ED%AD%BF%ED%B0%80"                               |
@@ -362,11 +326,9 @@ class UTF8Test extends \Tests\Testcase\PhpTal
         5.2.8  U%2BDBFF U%2BDFFF %3D ed af bf ed bf bf %3D "%ED%AF%BF%ED%BF%BF"                               |</p>'))->execute();
     }
 
-    /**
-     * @expectedException \PhpTal\Exception\ParserException
-     */
     public function testIllegalCodePositions()
     {
+        $this->expectException(ParserException::class);
         $this->newPHPTAL()->setSource(rawurldecode('<p>5.3.1  U%2BFFFE %3D ef bf be %3D "%EF%BF%BE"                                                |
          5.3.2  U%2BFFFF %3D ef bf bf %3D "%EF%BF%BF"                                                |</p>'))->execute();
     }
