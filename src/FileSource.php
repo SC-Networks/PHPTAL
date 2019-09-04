@@ -48,7 +48,7 @@ class FileSource implements SourceInterface
     }
 
     /**
-     * @return bool|int
+     * @return int
      */
     public function getLastModifiedTime(): int
     {

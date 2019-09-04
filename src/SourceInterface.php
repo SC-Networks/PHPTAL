@@ -39,8 +39,6 @@ interface SourceInterface
      *  • PHPTAL won't know when to reparse the template,
      *    unless you change realPath whenever template changes.
      *  • clearing of cache will be marginally slower.
-     *
-     * @return int
      */
     public function getLastModifiedTime(): int;
 

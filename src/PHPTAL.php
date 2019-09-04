@@ -407,13 +407,12 @@ class PHPTAL implements PhpTalInterface
      *
      * @param string $path Intermediate file path.
      *
-     * @return $this
+     * @return void
      */
-    public function setPhpCodeDestination(string $path): PhpTalInterface
+    public function setPhpCodeDestination(string $path): void
     {
         $this->phpCodeDestination = rtrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
         $this->resetPrepared();
-        return $this;
     }
 
     /**
@@ -498,11 +497,11 @@ class PHPTAL implements PhpTalInterface
      * PreFilters must inherit PreFilter class.
      * (in future this method will allow string with filter name instead of object)
      *
-     * @param FilterInterface $filter PreFilter object or name of prefilter to add
+     * @param PreFilter $filter PreFilter object or name of prefilter to add
      *
      * @return $this
      */
-    final public function addPreFilter(FilterInterface $filter): PhpTalInterface
+    final public function addPreFilter(PreFilter $filter): PhpTalInterface
     {
         $this->resetPrepared();
         $this->prefilters[] = $filter;
@@ -612,10 +611,7 @@ class PHPTAL implements PhpTalInterface
      */
     public function getTrigger(string $id): ?TriggerInterface
     {
-        if (array_key_exists($id, $this->triggers)) {
-            return $this->triggers[$id];
-        }
-        return null;
+        return $this->triggers[$id] ?? null;
     }
 
     /**
@@ -748,7 +744,7 @@ class PHPTAL implements PhpTalInterface
         // contain filename, then the macro is assumed to be local
 
         if (preg_match('/^(.*?)\/([a-z0-9_-]*)$/i', $path, $m)) {
-            list(, $file, $macroName) = $m;
+            [, $file, $macroName] = $m;
 
             if (isset($this->externalMacroTemplatesCache[$file])) {
                 $tpl = $this->externalMacroTemplatesCache[$file];
@@ -811,7 +807,7 @@ class PHPTAL implements PhpTalInterface
         $real_path = md5($this->getFunctionName());
         $path = '';
         for ($i = 0; $i < $this->subpathRecursionLevel; $i++) {
-            $path .= '/' . substr($real_path, $i, 1);
+            $path .= '/' . $real_path[$i];
         }
         if (!file_exists($this->getPhpCodeDestination() . $path) &&
             !mkdir($concurrentDirectory = $this->getPhpCodeDestination() . $path, 0777, true) &&
@@ -951,21 +947,19 @@ class PHPTAL implements PhpTalInterface
      */
     public function cleanUpGarbage(): void
     {
-        $cacheFilesExpire = time() - $this->getCacheLifetime() * 3600 * 24;
+        $cacheFilesExpire = (int) (time() - $this->getCacheLifetime() * 3600 * 24);
 
         // relies on templates sorting order being related to their modification dates
         $upperLimit = $this->getPhpCodeDestination() . $this->getFunctionNamePrefix($cacheFilesExpire) . '_';
-        $lowerLimit = $this->getPhpCodeDestination() . $this->getFunctionNamePrefix(0);
+        $lowerLimit = $this->getPhpCodeDestination() . $this->getFunctionNamePrefix();
 
         // last * gets phptal:cache
-        $cacheFiles = glob(
-            sprintf(
-                '%s%stpl_????????_*.%s*',
-                $this->getPhpCodeDestination(),
-                str_repeat('*/', $this->subpathRecursionLevel),
-                $this->getPhpCodeExtension()
-            )
-        );
+        $cacheFiles = glob(sprintf(
+            '%s%stpl_????????_*.%s*',
+            $this->getPhpCodeDestination(),
+            str_repeat('*/', $this->subpathRecursionLevel),
+            $this->getPhpCodeExtension()
+        ), GLOB_NOSORT);
 
         if ($cacheFiles) {
             foreach ($cacheFiles as $index => $file) {
@@ -991,7 +985,7 @@ class PHPTAL implements PhpTalInterface
     public function cleanUpCache(): void
     {
         $filename = $this->getCodePath();
-        $cacheFiles = glob($filename . '?*');
+        $cacheFiles = glob($filename . '?*', GLOB_NOSORT);
         if ($cacheFiles) {
             foreach ($cacheFiles as $file) {
                 if (strpos($file, $filename) !== 0) {
@@ -1060,15 +1054,15 @@ class PHPTAL implements PhpTalInterface
      * Returns prefix used for function name.
      * Function name is also base name for the template.
      *
-     * @param float|null $timestamp unix timestamp with template modification date
+     * @param int|null $timestamp unix timestamp with template modification date
      *
      * @return string
      */
-    private function getFunctionNamePrefix(?float $timestamp): string
+    private function getFunctionNamePrefix(?int $timestamp = null): string
     {
         // tpl_ prefix and last modified time must not be changed,
         // because cache cleanup relies on that
-        return 'tpl_' . sprintf('%08x', $timestamp) . '_';
+        return 'tpl_' . sprintf('%08x', $timestamp ?? 0) . '_';
     }
 
     /**
@@ -1171,8 +1165,8 @@ class PHPTAL implements PhpTalInterface
         $tree = $parser->parseString($builder, $data, $realpath)->getResult();
 
         foreach ($prefilters as $prefilter) {
-            if ($prefilter instanceof PreFilter && $prefilter->filterDOM($tree) !== null) {
-                throw new Exception\ConfigurationException("Don't return value from filterDOM()");
+            if ($prefilter instanceof PreFilter) {
+                $prefilter->filterDOM($tree);
             }
         }
 

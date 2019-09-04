@@ -46,16 +46,15 @@ class StringSource implements SourceInterface
         $this->realpath = $realpath ?: self::NO_PATH_PREFIX . md5($data) . '>';
     }
 
-    /**
-     * @return int
-     */
     public function getLastModifiedTime(): int
     {
+        $mTime = 0;
+
         if (strpos($this->realpath, self::NO_PATH_PREFIX) !== 0 && file_exists($this->realpath)) {
-            return @filemtime($this->realpath);
+            $mTime = @filemtime($this->realpath);
         }
 
-        return 0;
+        return $mTime;
     }
 
     /**
@@ -73,9 +72,6 @@ class StringSource implements SourceInterface
      */
     public function getRealPath(): string
     {
-        if ($this->realpath === null) {
-            return '<string>';
-        }
-        return $this->realpath;
+        return $this->realpath ?? '<string>';
     }
 }

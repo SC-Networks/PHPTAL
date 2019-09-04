@@ -14,6 +14,8 @@ declare(strict_types=1);
 
 namespace PhpTal;
 
+use PhpTal\Php\Attribute;
+
 /**
  * @see \PhpTal\TalNamespaceAttribute
  * @package PHPTAL
@@ -115,5 +117,9 @@ abstract class TalNamespace
      *
      * @return Php\Attribute
      */
-    abstract public function createAttributeHandler(TalNamespaceAttribute $att, Dom\Element $tag, $expression);
+    abstract public function createAttributeHandler(
+        TalNamespaceAttribute $att,
+        Dom\Element $tag,
+        $expression
+    ): Attribute;
 }

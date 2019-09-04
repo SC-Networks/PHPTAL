@@ -19,6 +19,4 @@ declare(strict_types=1);
 error_reporting(E_ALL | E_STRICT);
 assert_options(ASSERT_ACTIVE, 1);
 
-if (function_exists('date_default_timezone_set')) {
-    date_default_timezone_set(date_default_timezone_get());
-}
+date_default_timezone_set(date_default_timezone_get());

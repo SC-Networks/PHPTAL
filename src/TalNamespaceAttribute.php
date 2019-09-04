@@ -72,7 +72,7 @@ abstract class TalNamespaceAttribute
     private $priority;
 
     /**
-     * @var \PhpTal\TalNamespace
+     * @var TalNamespace
      */
     private $namespace;
 

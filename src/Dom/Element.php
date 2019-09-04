@@ -388,7 +388,7 @@ class Element extends Node
      *
      * @param $qname
      *
-     * @return \PhpTal\Dom\Attr
+     * @return Attr
      */
     public function getOrCreateAttributeNode(string $qname): Attr
     {
