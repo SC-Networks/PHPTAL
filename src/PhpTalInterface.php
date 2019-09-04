@@ -58,7 +58,7 @@ interface PhpTalInterface
     /**
      * Specify how to look for templates.
      *
-     * @param \PhpTal\SourceResolverInterface $resolver instance of resolver
+     * @param SourceResolverInterface $resolver instance of resolver
      *
      * @return $this
      */
@@ -119,9 +119,9 @@ interface PhpTalInterface
      *
      * @param string $path Intermediate file path.
      *
-     * @return $this
+     * @return void
      */
-    public function setPhpCodeDestination(string $path): self;
+    public function setPhpCodeDestination(string $path): void;
 
     /**
      * Get the storage location for intermediate PHP files.
@@ -184,11 +184,11 @@ interface PhpTalInterface
      * PreFilters must inherit PreFilter class.
      * (in future this method will allow string with filter name instead of object)
      *
-     * @param FilterInterface $filter PreFilter object or name of prefilter to add
+     * @param PreFilter $filter PreFilter object or name of prefilter to add
      *
      * @return $this
      */
-    public function addPreFilter(FilterInterface $filter): self;
+    public function addPreFilter(PreFilter $filter): self;
 
     /**
      * Sets the level of recursion for template cache directories

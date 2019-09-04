@@ -18,6 +18,7 @@ use PhpTal\Dom\Element;
 use PhpTal\Dom\ProcessingInstruction;
 use PhpTal\Dom\Text;
 use PhpTal\Dom\XmlDeclaration;
+use PhpTal\PHPTAL;
 use PhpTal\TalNamespace\Builtin;
 
 /**
@@ -372,7 +373,7 @@ class Compress extends Normalize
             return;
         }
 
-        if ($this->getPHPTAL()->getOutputMode() !== \PhpTal\PHPTAL::HTML5) {
+        if ($this->getPHPTAL()->getOutputMode() !== PHPTAL::HTML5) {
             return;
         }
 

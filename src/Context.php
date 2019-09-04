@@ -476,7 +476,6 @@ class Context
      */
     public static function path($base, string $path, bool $nothrow = null)
     {
-        $nothrow = $nothrow ?? false;
 
         if ($base === null) {
             if ($nothrow) {
@@ -485,11 +484,7 @@ class Context
             static::pathError($base, $path, $path, $path);
         }
 
-        if (is_int($path)) {
-            $chunks = [];
-        } else {
-            $chunks = explode('/', $path);
-        }
+        $chunks = explode('/', $path);
         $current = null;
         $prev = null;
         for ($i = 0, $iMax = count($chunks); $i < $iMax; $i++) {
@@ -519,7 +514,7 @@ class Context
                 }
 
                 if (($current === 'length' || $current === 'size') && $base instanceof \Countable) {
-                    $base = count($base);
+                    $base = $base->count();
                     continue;
                 }
 

@@ -174,7 +174,7 @@ class GetTextTranslator implements TranslationServiceInterface
             $value = htmlspecialchars($value, ENT_QUOTES, $this->encoding);
         }
         while (preg_match('/\${(.*?)\}/sm', $value, $m)) {
-            list($src, $var) = $m;
+            [$src, $var] = $m;
             if (!array_key_exists($var, $this->vars)) {
                 throw new Exception\VariableNotFoundException(
                     'Interpolation error. Translation uses ${' . $var . '}, which is not defined in the template (via i18n:name)'

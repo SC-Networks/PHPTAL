@@ -25,11 +25,8 @@ class CodeCacheTest extends \Tests\Testcase\PhpTal
         $this->phptal->setForceReparse(false);
         $this->assertFalse($this->phptal->getForceReparse());
 
-        if (function_exists('sys_get_temp_dir')) {
-            $tmpdirpath = sys_get_temp_dir().DIRECTORY_SEPARATOR.'temp_output';
-            if (!is_dir($tmpdirpath)) mkdir($tmpdirpath);
-        }
-        else $this->markTestSkipped("Newer PHP needed");
+        $tmpdirpath = sys_get_temp_dir().DIRECTORY_SEPARATOR.'temp_output';
+        if (!is_dir($tmpdirpath)) mkdir($tmpdirpath);
 
         $this->assertTrue(is_dir($tmpdirpath));
         $this->assertTrue(is_writable($tmpdirpath));
@@ -42,7 +39,7 @@ class CodeCacheTest extends \Tests\Testcase\PhpTal
     {
         $subpath = str_repeat('*/', $this->subpathRecursionLevel);
         $this->assertStringContainsString(DIRECTORY_SEPARATOR.'temp_output'.DIRECTORY_SEPARATOR, $this->codeDestination);
-        foreach (glob($this->codeDestination.$subpath.'tpl_*') as $tpl) {
+        foreach (glob($this->codeDestination . $subpath . 'tpl_*', GLOB_NOSORT) as $tpl) {
             $this->assertTrue(unlink($tpl), "Delete $tpl");
         }
     }
@@ -153,7 +150,7 @@ class CodeCacheTest extends \Tests\Testcase\PhpTal
         $this->assertFalse($this->phptal->testHasParsed, "Reparse!?");
 
         $subpath = str_repeat('*/', $this->subpathRecursionLevel);
-        $files = glob($this->codeDestination.$subpath.'tpl_*');
+        $files = glob($this->codeDestination . $subpath . 'tpl_*', GLOB_NOSORT);
 
         $this->assertEquals(2, count($files)); // one for template, one for cache
         foreach ($files as $file) {

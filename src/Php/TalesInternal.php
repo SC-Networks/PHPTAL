@@ -730,7 +730,7 @@ class TalesInternal implements TalesInterface
     public static function setFunctionWhitelist(array $functionWhitelist): void
     {
 
-        $functionWhitelist = array_map(function ($e) {
+        $functionWhitelist = array_map(static function ($e) {
             return strtolower(trim($e));
         }, $functionWhitelist);
 

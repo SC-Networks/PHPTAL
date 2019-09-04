@@ -37,7 +37,7 @@ class Builtin extends TalNamespace
      * @param Element $tag
      * @param mixed $expression
      *
-     * @return \PhpTal\Php\Attribute
+     * @return Attribute
      */
     public function createAttributeHandler(TalNamespaceAttribute $att, Element $tag, $expression): Attribute
     {
