@@ -1,14 +1,19 @@
 <?php
+declare(strict_types=1);
 
 /**
  * PHPTAL templating engine
+ *
+ * Originally developed by Laurent Bedubourg and Kornel Lesiński
  *
  * @category HTML
  * @package  PHPTAL
  * @author   Laurent Bedubourg <lbedubourg@motion-twin.com>
  * @author   Kornel Lesiński <kornel@aardvarkmedia.co.uk>
+ * @author   See contributors list @ github
  * @license  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
  * @link     http://phptal.org/
+ * @link     https://github.com/SC-Networks/PHPTAL
  */
 
 namespace Tests;
@@ -16,9 +21,11 @@ namespace Tests;
 use PhpTal\Exception\TemplateException;
 use PhpTal\Php\Attribute\TAL\Define;
 use PhpTal\Php\TalesInternal;
+use Tests\Testcase\PhpTalTestCase;
 use Tests\Testhelper\DummyDefinePhpNode;
+use Tests\Testhelper\Helper;
 
-class TalDefineTest extends \Tests\Testcase\PhpTal
+class TalTestCaseDefineTest extends PhpTalTestCase
 {
 
     public function tearDown(): void
@@ -27,176 +34,178 @@ class TalDefineTest extends \Tests\Testcase\PhpTal
         parent::tearDown();
     }
 
-    public function testExpressionParser()
+    public function testExpressionParser(): void
     {
         $att = new Define(new DummyDefinePhpNode(), 'a b');
 
         list($defineScope, $defineVar, $expression) = $att->parseExpression('local a_234z b');
-        $this->assertEquals('local', $defineScope);
-        $this->assertEquals('a_234z', $defineVar);
-        $this->assertEquals('b', $expression);
+        static::assertSame('local', $defineScope);
+        static::assertSame('a_234z', $defineVar);
+        static::assertSame('b', $expression);
 
         list($defineScope, $defineVar, $expression) = $att->parseExpression('global a_234z b');
-        $this->assertEquals('global', $defineScope);
-        $this->assertEquals('a_234z', $defineVar);
-        $this->assertEquals('b', $expression);
+        static::assertSame('global', $defineScope);
+        static::assertSame('a_234z', $defineVar);
+        static::assertSame('b', $expression);
 
         list($defineScope, $defineVar, $expression) = $att->parseExpression('a_234Z b');
-        $this->assertEquals(false, $defineScope);
-        $this->assertEquals('a_234Z', $defineVar);
-        $this->assertEquals('b', $expression);
+        static::assertFalse($defineScope);
+        static::assertSame('a_234Z', $defineVar);
+        static::assertSame('b', $expression);
 
         list($defineScope, $defineVar, $expression) = $att->parseExpression('a');
-        $this->assertEquals(false, $defineScope);
-        $this->assertEquals('a', $defineVar);
-        $this->assertEquals(null, $expression);
+        static::assertFalse($defineScope);
+        static::assertSame('a', $defineVar);
+        static::assertNull($expression);
 
         list($defineScope, $defineVar, $expression) = $att->parseExpression('global a string: foo; bar; baz');
-        $this->assertEquals('global', $defineScope);
-        $this->assertEquals('a', $defineVar);
-        $this->assertEquals('string: foo; bar; baz', $expression);
+        static::assertSame('global', $defineScope);
+        static::assertSame('a', $defineVar);
+        static::assertSame('string: foo; bar; baz', $expression);
 
 
         list($defineScope, $defineVar, $expression) = $att->parseExpression('foo this != other');
-        $this->assertEquals(false, $defineScope);
-        $this->assertEquals('foo', $defineVar);
-        $this->assertEquals('this != other', $expression);
+        static::assertFalse($defineScope);
+        static::assertSame('foo', $defineVar);
+        static::assertSame('this != other', $expression);
 
         list($defineScope, $defineVar, $expression) = $att->parseExpression('x exists: a | not: b | path: c | 128');
-        $this->assertEquals(false, $defineScope);
-        $this->assertEquals('x', $defineVar);
-        $this->assertEquals('exists: a | not: b | path: c | 128', $expression);
+        static::assertFalse($defineScope);
+        static::assertSame('x', $defineVar);
+        static::assertSame('exists: a | not: b | path: c | 128', $expression);
     }
 
-    public function testBuffered()
+    public function testBuffered(): void
     {
         $tpl = $this->newPHPTAL('input/tal-define.02.html');
         $res = $tpl->execute();
-        $res = \Tests\Testhelper\Helper::normalizeHtml($res);
-        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/tal-define.02.html');
-        $this->assertEquals($exp, $res);
+        $res = Helper::normalizeHtml($res);
+        $exp = Helper::normalizeHtmlFile('output/tal-define.02.html');
+        static::assertSame($exp, $res);
     }
 
-    public function testMultiChained()
+    public function testMultiChained(): void
     {
         $tpl = $this->newPHPTAL('input/tal-define.03.html');
         $res = $tpl->execute();
-        $res = \Tests\Testhelper\Helper::normalizeHtml($res);
-        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/tal-define.03.html');
-        $this->assertEquals($exp, $res);
+        $res = Helper::normalizeHtml($res);
+        $exp = Helper::normalizeHtmlFile('output/tal-define.03.html');
+        static::assertSame($exp, $res);
     }
 
-    public function testDefineZero()
+    public function testDefineZero(): void
     {
         $tpl = $this->newPHPTAL('input/tal-define.04.html');
         $res = $tpl->execute();
-        $res = \Tests\Testhelper\Helper::normalizeHtml($res);
-        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/tal-define.04.html');
-        $this->assertEquals($exp, $res);
+        $res = Helper::normalizeHtml($res);
+        $exp = Helper::normalizeHtmlFile('output/tal-define.04.html');
+        static::assertSame($exp, $res);
     }
 
-    public function testDefineInMacro()
+    public function testDefineInMacro(): void
     {
         $tpl = $this->newPHPTAL('input/tal-define.06.html');
         $res = $tpl->execute();
-        $res = \Tests\Testhelper\Helper::normalizeHtml($res);
-        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/tal-define.06.html');
-        $this->assertEquals($exp, $res);
+        $res = Helper::normalizeHtml($res);
+        $exp = Helper::normalizeHtmlFile('output/tal-define.06.html');
+        static::assertSame($exp, $res);
     }
 
-    public function testDefineDoNotStealOutput()
+    public function testDefineDoNotStealOutput(): void
     {
         $tpl = $this->newPHPTAL('input/tal-define.07.html');
         $res = $tpl->execute();
-        $res = \Tests\Testhelper\Helper::normalizeHtml($res);
-        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/tal-define.07.html');
-        $this->assertEquals($exp, $res);
+        $res = Helper::normalizeHtml($res);
+        $exp = Helper::normalizeHtmlFile('output/tal-define.07.html');
+        static::assertSame($exp, $res);
     }
 
-    public function testDefineWithRepeatAndContent()
+    public function testDefineWithRepeatAndContent(): void
     {
         TalesInternal::setFunctionWhitelist(['range']);
         $tpl = $this->newPHPTAL('input/tal-define.08.html');
         $res = $tpl->execute();
-        $res = \Tests\Testhelper\Helper::normalizeHtml($res);
-        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/tal-define.08.html');
-        $this->assertEquals($exp, $res);
+        $res = Helper::normalizeHtml($res);
+        $exp = Helper::normalizeHtmlFile('output/tal-define.08.html');
+        static::assertSame($exp, $res);
     }
 
-    public function testDefineWithUseMacro()
+    public function testDefineWithUseMacro(): void
     {
         $tpl = $this->newPHPTAL('input/tal-define.09.html');
         $res = $tpl->execute();
-        $res = \Tests\Testhelper\Helper::normalizeHtml($res);
-        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/tal-define.09.html');
-        $this->assertEquals($exp, $res);
+        $res = Helper::normalizeHtml($res);
+        $exp = Helper::normalizeHtmlFile('output/tal-define.09.html');
+        static::assertSame($exp, $res);
     }
 
-    public function testDefineAndPrint()
+    public function testDefineAndPrint(): void
     {
         $tpl = $this->newPHPTAL('input/tal-define.10.html');
         $tpl->fname = 'Roger';
         $res = $tpl->execute();
-        $res = \Tests\Testhelper\Helper::normalizeHtml($res);
-        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/tal-define.10.html');
-        $this->assertEquals($exp, $res);
+        $res = Helper::normalizeHtml($res);
+        $exp = Helper::normalizeHtmlFile('output/tal-define.10.html');
+        static::assertSame($exp, $res);
     }
 
-    public function testDefineContent()
+    public function testDefineContent(): void
     {
         $tpl = $this->newPHPTAL('input/tal-define.11.html');
         $tpl->setOutputMode(\PhpTal\PHPTAL::XML);
         $res = $tpl->execute();
-        $res = \Tests\Testhelper\Helper::normalizeHtml($res);
-        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/tal-define.11.html');
-        $this->assertEquals($exp, $res);
+        $res = Helper::normalizeHtml($res);
+        $exp = Helper::normalizeHtmlFile('output/tal-define.11.html');
+        static::assertSame($exp, $res);
     }
 
-    public function testDefineAndAttributes()
+    public function testDefineAndAttributes(): void
     {
         TalesInternal::setFunctionWhitelist(['true']);
         $tpl = $this->newPHPTAL('input/tal-define.12.html');
         $tpl->setOutputMode(\PhpTal\PHPTAL::XML);
         $res = $tpl->execute();
-        $res = \Tests\Testhelper\Helper::normalizeHtml($res);
-        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/tal-define.12.html');
-        $this->assertEquals($exp, $res);
+        $res = Helper::normalizeHtml($res);
+        $exp = Helper::normalizeHtmlFile('output/tal-define.12.html');
+        static::assertSame($exp, $res);
     }
 
-    public function testDefineGlobal()
+    public function testDefineGlobal(): void
     {
-        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/tal-define.13.html');
+        $exp = Helper::normalizeHtmlFile('output/tal-define.13.html');
         $tpl = $this->newPHPTAL('input/tal-define.13.html');
-        $res = \Tests\Testhelper\Helper::normalizeHtml($tpl->execute());
-        $this->assertEquals($exp, $res);
+        $res = Helper::normalizeHtml($tpl->execute());
+        static::assertSame($exp, $res);
     }
 
-    public function testDefineAlter()
+    public function testDefineAlter(): void
     {
-        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/tal-define.14.html');
+        $exp = Helper::normalizeHtmlFile('output/tal-define.14.html');
         $tpl = $this->newPHPTAL('input/tal-define.14.html');
-        $res = \Tests\Testhelper\Helper::normalizeHtml($tpl->execute());
-        $this->assertEquals($exp, $res);
+        $res = Helper::normalizeHtml($tpl->execute());
+        static::assertSame($exp, $res);
     }
 
-    public function testDefineSemicolon()
+    public function testDefineSemicolon(): void
     {
         $tpl = $this->newPHPTAL();
         $tpl->setSource('<p tal:define="one \';;\'; two string:;;;;; three php:\';;;;;;\'">${one}-${two}-${three}</p>');
-        $this->assertEquals('<p>;-;;-;;;</p>', $tpl->execute());
+        static::assertSame('<p>;-;;-;;;</p>', $tpl->execute());
     }
 
-    public function testEmpty()
+    public function testEmpty(): void
     {
         TalesInternal::setFunctionWhitelist(['count', 'book']);
         $tal = $this->newPHPTAL();
-        $tal->setSource('<div class="blank_bg" tal:define="book relative/book" tal:condition="php: count(book)>0"></div>');
-        $tal->relative = array('book'=>[1]);
+        $tal->setSource(
+            '<div class="blank_bg" tal:define="book relative/book" tal:condition="php: count(book)>0"></div>'
+        );
+        $tal->relative = ['book' => [1]];
 
-        $this->assertEquals($tal->execute(), '<div class="blank_bg"></div>');
+        static::assertSame($tal->execute(), '<div class="blank_bg"></div>');
     }
 
-    public function testGlobalDefineEmptySpan()
+    public function testGlobalDefineEmptySpan(): void
     {
         $tpl = $this->newPHPTAL();
         $tpl->setSource('<div>
@@ -204,11 +213,11 @@ class TalDefineTest extends \Tests\Testcase\PhpTal
            ${x}
         </div>
         ');
-        $res = \Tests\Testhelper\Helper::normalizeHtml($tpl->execute());
-        $this->assertEquals(\Tests\Testhelper\Helper::normalizeHtml('<div> ok </div>'), $res);
+        $res = Helper::normalizeHtml($tpl->execute());
+        static::assertSame(Helper::normalizeHtml('<div> ok </div>'), $res);
     }
 
-    public function testGlobalDefineEmptySpan2()
+    public function testGlobalDefineEmptySpan2(): void
     {
         $tpl = $this->newPHPTAL();
         $tpl->setSource('<div>
@@ -216,12 +225,12 @@ class TalDefineTest extends \Tests\Testcase\PhpTal
            ${x}
         </div>
         ');
-        $res = \Tests\Testhelper\Helper::normalizeHtml($tpl->execute());
-        $this->assertEquals(\Tests\Testhelper\Helper::normalizeHtml('<div> ok </div>'), $res);
+        $res = Helper::normalizeHtml($tpl->execute());
+        static::assertSame(Helper::normalizeHtml('<div> ok </div>'), $res);
     }
 
 
-    public function testGlobalDefineNonEmptySpan()
+    public function testGlobalDefineNonEmptySpan(): void
     {
         $tpl = $this->newPHPTAL();
         $tpl->setOutputMode(\PhpTal\PHPTAL::XML);
@@ -231,11 +240,11 @@ class TalDefineTest extends \Tests\Testcase\PhpTal
            ${x}
         </div>
         ');
-        $res = \Tests\Testhelper\Helper::normalizeHtml($tpl->execute());
-        $this->assertEquals(\Tests\Testhelper\Helper::normalizeHtml('<div> <span class="foo"/> ok </div>'), $res);
+        $res = Helper::normalizeHtml($tpl->execute());
+        static::assertSame(Helper::normalizeHtml('<div> <span class="foo"/> ok </div>'), $res);
     }
 
-    public function testGlobalDefineNonEmptySpan2()
+    public function testGlobalDefineNonEmptySpan2(): void
     {
         $tpl = $this->newPHPTAL();
         $tpl->setOutputMode(\PhpTal\PHPTAL::XML);
@@ -245,49 +254,49 @@ class TalDefineTest extends \Tests\Testcase\PhpTal
            ${x}
         </div>
         ');
-        $res = \Tests\Testhelper\Helper::normalizeHtml($tpl->execute());
-        $this->assertEquals(\Tests\Testhelper\Helper::normalizeHtml('<div> <span class="foo"/> ok </div>'), $res);
+        $res = Helper::normalizeHtml($tpl->execute());
+        static::assertSame(Helper::normalizeHtml('<div> <span class="foo"/> ok </div>'), $res);
     }
 
-    public function testDefineTALESInterpolated()
+    public function testDefineTALESInterpolated(): void
     {
         $tpl = $this->newPHPTAL();
         $tpl->varvar = 'ok';
         $tpl->varname = 'varvar';
         $tpl->setSource('<div tal:define="test ${varname}">${test}</div>');
-        $this->assertEquals('<div>ok</div>', $tpl->execute());
+        static::assertSame('<div>ok</div>', $tpl->execute());
     }
 
-    public function testDefinePHPInterpolated()
+    public function testDefinePHPInterpolated(): void
     {
         $tpl = $this->newPHPTAL();
         $tpl->varvar = 'ok';
         $tpl->varname = 'varvar';
         $tpl->setSource('<div tal:define="test ${varname}">${test}</div>');
-        $this->assertSame('<div>ok</div>', $tpl->execute());
+        static::assertSame('<div>ok</div>', $tpl->execute());
     }
 
-    public function testRedefineSelf()
+    public function testRedefineSelf(): void
     {
         $tpl = $this->newPHPTAL();
         $tpl->label = 'label var';
         $tpl->fail = 'not an array';
         $tpl->setSource('<tal:block tal:define="label fail/label|label" tal:replace="structure label"/>');
 
-        $this->assertEquals('label var', $tpl->execute());
+        static::assertSame('label var', $tpl->execute());
     }
 
-    public function testRedefineSelf2()
+    public function testRedefineSelf2(): void
     {
         $tpl = $this->newPHPTAL();
         $tpl->label = 'label var';
         $tpl->fail = 'not an array';
         $tpl->setSource('<tal:block tal:define="label fail/label|label|somethingelse" tal:replace="structure label"/>');
 
-        $this->assertEquals('label var', $tpl->execute());
+        static::assertSame('label var', $tpl->execute());
     }
 
-    public function testRejectsInvalidExpression()
+    public function testRejectsInvalidExpression(): void
     {
         $tpl = $this->newPHPTAL();
         $tpl->setSource('<x tal:define="global foo | default"/>');
@@ -295,7 +304,7 @@ class TalDefineTest extends \Tests\Testcase\PhpTal
         $tpl->execute();
     }
 
-    public function testHasRealContent()
+    public function testHasRealContent(): void
     {
         $tpl = $this->newPHPTAL();
         $tpl->setSource('<y
@@ -311,7 +320,7 @@ class TalDefineTest extends \Tests\Testcase\PhpTal
         $tpl->execute();
     }
 
-    public function testHasRealCDATAContent()
+    public function testHasRealCDATAContent(): void
     {
         $tpl = $this->newPHPTAL();
         $tpl->setSource('<script tal:define="global foo bar | default"><![CDATA[ x ]]></script>');
@@ -319,7 +328,7 @@ class TalDefineTest extends \Tests\Testcase\PhpTal
     }
 
 
-    public function testDefineAndAttributesOnSameElement()
+    public function testDefineAndAttributesOnSameElement(): void
     {
         TalesInternal::setFunctionWhitelist(['row']);
         $tpl = $this->newPHPTAL();

@@ -1,21 +1,29 @@
 <?php
+declare(strict_types=1);
 
 /**
  * PHPTAL templating engine
+ *
+ * Originally developed by Laurent Bedubourg and Kornel Lesiński
  *
  * @category HTML
  * @package  PHPTAL
  * @author   Laurent Bedubourg <lbedubourg@motion-twin.com>
  * @author   Kornel Lesiński <kornel@aardvarkmedia.co.uk>
+ * @author   See contributors list @ github
  * @license  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
  * @link     http://phptal.org/
+ * @link     https://github.com/SC-Networks/PHPTAL
  */
 
 namespace Tests;
 
 use PhpTal\Php\TalesInternal;
+use PhpTal\PHPTAL;
+use Tests\Testcase\PhpTalTestCase;
+use Tests\Testhelper\Helper;
 
-class EscapeCDATATest extends \Tests\Testcase\PhpTal
+class EscapeCDATATest extends PhpTalTestCase
 {
 
     /**
@@ -29,10 +37,12 @@ class EscapeCDATATest extends \Tests\Testcase\PhpTal
         parent::tearDown();
     }
 
-    private function executeString($str, $params = array())
+    private function executeString(string $str, array $params = []): string
     {
         $tpl = $this->newPHPTAL();
-        foreach ($params as $k => $v) $tpl->set($k, $v);
+        foreach ($params as $k => $v) {
+            $tpl->set($k, $v);
+        }
         $tpl->setSource($str);
         $this->last_code_path = $tpl->getCodePath();
         return $tpl->execute();
@@ -41,145 +51,182 @@ class EscapeCDATATest extends \Tests\Testcase\PhpTal
     /**
      * @return void
      */
-    public function testTrimString()
+    public function testTrimString(): void
     {
-        $this->assertEquals(
-            \Tests\Testhelper\Helper::normalizeHtml('<foo><bar>]]&gt; foo ]> bar</bar></foo>'),
-            \Tests\Testhelper\Helper::normalizeHtml('<foo> <bar>]]&gt; foo ]&gt; bar </bar> </foo>')
+        static::assertSame(
+            Helper::normalizeHtml('<foo><bar>]]&gt; foo ]> bar</bar></foo>'),
+            Helper::normalizeHtml('<foo> <bar>]]&gt; foo ]&gt; bar </bar> </foo>')
         );
 
         $this->assertNotEquals(
-            \Tests\Testhelper\Helper::normalizeHtml('foo]]>bar'),
-            \Tests\Testhelper\Helper::normalizeHtml('foo]]&gt;bar')
+            Helper::normalizeHtml('foo]]>bar'),
+            Helper::normalizeHtml('foo]]&gt;bar')
         );
     }
 
-    public function testDoesEscapeHTMLContent()
+    public function testDoesEscapeHTMLContent(): void
     {
         $tpl = $this->newPHPTAL('input/escape.html');
-        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/escape.html');
-        $res = \Tests\Testhelper\Helper::normalizeHtml($tpl->execute());
-        $this->assertEquals($exp, $res);
+        $exp = Helper::normalizeHtmlFile('output/escape.html');
+        $res = Helper::normalizeHtml($tpl->execute());
+        static::assertSame($exp, $res);
     }
 
-    public function testEntityTextInPath()
+    public function testEntityTextInPath(): void
     {
-        $res = $this->executeString('<div><![CDATA[${text \'"< & &amp; &quot; &lt;\'},${false | string:"< & &amp; &quot; &lt;}]]></div>');
+        $res = $this->executeString(
+            '<div><![CDATA[${text \'"< & &amp; &quot; &lt;\'},${false | string:"< & &amp; &quot; &lt;}]]></div>'
+        );
 
         // either way is good
         if (false !== strpos($res, '<![CDATA[')) {
-            $this->assertEquals('<div><![CDATA["< & &amp; &quot; &lt;,"< & &amp; &quot; &lt;]]></div>', $res);
+            static::assertSame('<div><![CDATA["< & &amp; &quot; &lt;,"< & &amp; &quot; &lt;]]></div>', $res);
         } else {
-            $this->assertEquals('<div>&quot;&lt; &amp; &amp;amp; &amp;quot; &amp;lt;,&quot;&lt; &amp; &amp;amp; &amp;quot; &amp;lt;</div>', $res);
+            static::assertSame(
+                '<div>&quot;&lt; &amp; &amp;amp; &amp;quot; &amp;lt;,&quot;&lt; &amp; &amp;amp; &amp;quot; &amp;lt;</div>',
+                $res
+            );
         }
     }
 
-    public function testEntityStructureInPath()
+    public function testEntityStructureInPath(): void
     {
-        $res = $this->executeString('<div><![CDATA[${structure \'"< & &amp; &quot; &lt;\'},${structure false | string:"< & &amp; &quot; &lt;}]]></div>');
-        $this->assertEquals('<div><![CDATA["< & &amp; &quot; &lt;,"< & &amp; &quot; &lt;]]></div>', $res);
+        $res = $this->executeString(
+            '<div><![CDATA[${structure \'"< & &amp; &quot; &lt;\'},${structure false | string:"< & &amp; &quot; &lt;}]]></div>'
+        );
+        static::assertSame('<div><![CDATA["< & &amp; &quot; &lt;,"< & &amp; &quot; &lt;]]></div>', $res);
     }
 
-    public function testEntityInContentPHP()
+    public function testEntityInContentPHP(): void
     {
         TalesInternal::setFunctionWhitelist(['strlen']);
         $res = $this->executeString('<div><![CDATA[${php:strlen(\'&quot;&amp;&lt;\')},${php:strlen(\'<"&\')}]]></div>');
-        $this->assertEquals('<div>15,3</div>', $res);
+        static::assertSame('<div>15,3</div>', $res);
     }
 
-    public function testEntityInScriptPHP()
+    public function testEntityInScriptPHP(): void
     {
         TalesInternal::setFunctionWhitelist(['strlen']);
-        $res = $this->executeString('<script><![CDATA[${php:strlen(\'&quot;&amp;&lt;\')},${php:strlen(\'<"&\')}]]></script>');
-        $this->assertEquals('<script><![CDATA[15,3]]></script>', $res);
+        $res = $this->executeString(
+            '<script><![CDATA[${php:strlen(\'&quot;&amp;&lt;\')},${php:strlen(\'<"&\')}]]></script>'
+        );
+        static::assertSame('<script><![CDATA[15,3]]></script>', $res);
     }
 
-    public function testEntityInPHP2()
+    public function testEntityInPHP2(): void
     {
         TalesInternal::setFunctionWhitelist(['strlen']);
-        $res = $this->executeString('<div><![CDATA[${structure php:strlen(\'&quot;&amp;&lt;\')},${structure php:strlen(\'<"&\')}]]></div>');
-        $this->assertEquals('<div><![CDATA[15,3]]></div>', $res);
+        $res = $this->executeString(
+            '<div><![CDATA[${structure php:strlen(\'&quot;&amp;&lt;\')},${structure php:strlen(\'<"&\')}]]></div>'
+        );
+        static::assertSame('<div><![CDATA[15,3]]></div>', $res);
     }
 
-    public function testEntityInPHP3()
+    public function testEntityInPHP3(): void
     {
-        $res = $this->executeString('<div><![CDATA[<?php echo strlen(\'&quot;&amp;&lt;\')?>,<?php echo strlen(\'<"&\') ?>]]></div>');
-        $this->assertEquals('<div><![CDATA[<_ echo strlen(\'&quot;&amp;&lt;\')?>,<_ echo strlen(\'<"&\') ?>]]></div>', $res);
+        $res = $this->executeString(
+            '<div><![CDATA[<?php echo strlen(\'&quot;&amp;&lt;\')?>,<?php echo strlen(\'<"&\') ?>]]></div>'
+        );
+        static::assertSame(
+            '<div><![CDATA[<_ echo strlen(\'&quot;&amp;&lt;\')?>,<_ echo strlen(\'<"&\') ?>]]></div>',
+            $res
+        );
     }
 
-    public function testNoEncodingAfterPHP()
+    public function testNoEncodingAfterPHP(): void
     {
         TalesInternal::setFunctionWhitelist(['urldecode']);
-        $res = $this->executeString('<div><![CDATA[${php:urldecode(\'%26%22%3C\')},${structure php:urldecode(\'%26%22%3C\')},<?php echo urldecode(\'%26%22%3C\') ?>]]></div>');
-        $this->assertEquals('<div><![CDATA[&"<,&"<,<_ echo urldecode(\'%26%22%3C\') ?>]]></div>', $res);
+        $res = $this->executeString(
+            '<div><![CDATA[${php:urldecode(\'%26%22%3C\')},${structure php:urldecode(\'%26%22%3C\')},<?php echo urldecode(\'%26%22%3C\') ?>]]></div>'
+        );
+        static::assertSame('<div><![CDATA[&"<,&"<,<_ echo urldecode(\'%26%22%3C\') ?>]]></div>', $res);
     }
 
     /**
      * normal XML behavior expected
      */
-    public function testEscapeCDATAXML()
+    public function testEscapeCDATAXML(): void
     {
         $tpl = $this->newPHPTAL();
-        $tpl->setOutputMode(\PhpTal\PHPTAL::XML);
+        $tpl->setOutputMode(PHPTAL::XML);
         $tpl->setSource('<y><![CDATA[${cdata}; ${cdata};]]></y>     <y><![CDATA[${structure cdata}]]></y>');
         $tpl->cdata = ']]></x>';
         $res = $tpl->execute();
-        $this->assertEquals('<y>]]&gt;&lt;/x&gt;; ]]&gt;&lt;/x&gt;;</y>     <y><![CDATA[]]></x>]]></y>', $res);
+        static::assertSame('<y>]]&gt;&lt;/x&gt;; ]]&gt;&lt;/x&gt;;</y>     <y><![CDATA[]]></x>]]></y>', $res);
     }
 
     /**
      * ugly hybrid between HTML (XHTML as text/html) and XML
      */
-    public function testEscapeCDATAXHTML()
+    public function testEscapeCDATAXHTML(): void
     {
         $tpl = $this->newPHPTAL();
-        $tpl->setOutputMode(\PhpTal\PHPTAL::XHTML);
+        $tpl->setOutputMode(PHPTAL::XHTML);
         $tpl->setSource('<script><![CDATA[${cdata}; ${cdata};]]></script>     <y><![CDATA[${structure cdata}]]></y>');
         $tpl->cdata = ']]></x>';
         $res = $tpl->execute();
-        $this->assertEquals('<script><![CDATA[]]]]><![CDATA[><\/x>; ]]]]><![CDATA[><\/x>;]]></script>     <y><![CDATA[]]></x>]]></y>', $res);
+        static::assertSame(
+            '<script><![CDATA[]]]]><![CDATA[><\/x>; ]]]]><![CDATA[><\/x>;]]></script>     <y><![CDATA[]]></x>]]></y>',
+            $res
+        );
     }
 
 
-    public function testEscapeCDATAHTML()
+    public function testEscapeCDATAHTML(): void
     {
         $tpl = $this->newPHPTAL();
-        $tpl->setOutputMode(\PhpTal\PHPTAL::HTML5);
+        $tpl->setOutputMode(PHPTAL::HTML5);
         $tpl->setSource('<y><![CDATA[${cdata}; ${cdata};]]></y>     <y><![CDATA[${structure cdata}]]></y>');
         $tpl->cdata = ']]></x>';
         $res = $tpl->execute();
-        $this->assertEquals('<y>]]&gt;&lt;/x&gt;; ]]&gt;&lt;/x&gt;;</y>     <y>]]></x></y>', $res);
+        static::assertSame('<y>]]&gt;&lt;/x&gt;; ]]&gt;&lt;/x&gt;;</y>     <y>]]></x></y>', $res);
     }
 
 
-
-    public function testAutoCDATA()
+    public function testAutoCDATA(): void
     {
         $res = $this->executeString('<script> 1 < 2 </script>');
-        $this->assertEquals('<script>/*<![CDATA[*/ 1 < 2 /*]]>*/</script>', $res, $this->last_code_path);
+        static::assertSame('<script>/*<![CDATA[*/ 1 < 2 /*]]>*/</script>', $res, $this->last_code_path);
     }
 
-    public function testAutoCDATA2()
+    public function testAutoCDATA2(): void
     {
-        $res = $this->executeString('<xhtmlz:script xmlns:xhtmlz="http://www.w3.org/1999/xhtml"> 1 < 2 ${php:\'&\' . \'&amp;\'} </xhtmlz:script>');
-        $this->assertEquals('<xhtmlz:script xmlns:xhtmlz="http://www.w3.org/1999/xhtml">/*<![CDATA[*/ 1 < 2 && /*]]>*/</xhtmlz:script>', $res, $this->last_code_path);
+        $res = $this->executeString(
+            '<xhtmlz:script xmlns:xhtmlz="http://www.w3.org/1999/xhtml"> 1 < 2 ${php:\'&\' . \'&amp;\'} </xhtmlz:script>'
+        );
+        static::assertSame(
+            '<xhtmlz:script xmlns:xhtmlz="http://www.w3.org/1999/xhtml">/*<![CDATA[*/ 1 < 2 && /*]]>*/</xhtmlz:script>',
+            $res,
+            $this->last_code_path
+        );
     }
 
-    public function testNoAutoCDATA()
+    public function testNoAutoCDATA(): void
     {
         $res = $this->executeString('<script> "1 \' 2" </script><script xmlns="foo"> 1 &lt; 2 </script>');
-        $this->assertEquals('<script> "1 \' 2" </script><script xmlns="foo"> 1 &lt; 2 </script>', $res, $this->last_code_path);
+        static::assertSame(
+            '<script> "1 \' 2" </script><script xmlns="foo"> 1 &lt; 2 </script>',
+            $res,
+            $this->last_code_path
+        );
     }
 
-    public function testNoAutoCDATA2()
+    public function testNoAutoCDATA2(): void
     {
-        $res = $this->executeString('<script> a && ${structure foo} </script><script xmlns="foo"> 1 &lt; 2 </script>', array('foo'=>'<foo/>'));
-        $this->assertEquals('<script> a &amp;&amp; <foo/> </script><script xmlns="foo"> 1 &lt; 2 </script>', $res, $this->last_code_path);
+        $res = $this->executeString(
+            '<script> a && ${structure foo} </script><script xmlns="foo"> 1 &lt; 2 </script>',
+            ['foo' => '<foo/>']
+        );
+        static::assertSame(
+            '<script> a &amp;&amp; <foo/> </script><script xmlns="foo"> 1 &lt; 2 </script>',
+            $res,
+            $this->last_code_path
+        );
     }
 
-    public function testNoAutoCDATA3()
+    public function testNoAutoCDATA3(): void
     {
         $res = $this->executeString('<style> html > body </style>');
-        $this->assertEquals('<style> html > body </style>', $res, $this->last_code_path);
+        static::assertSame('<style> html > body </style>', $res, $this->last_code_path);
     }
 }

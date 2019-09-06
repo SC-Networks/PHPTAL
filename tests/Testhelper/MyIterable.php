@@ -31,11 +31,6 @@ class MyIterable implements \Iterator
      */
     protected $size;
 
-    /**
-     * MyIterable constructor.
-     *
-     * @param int $size
-     */
     public function __construct(int $size)
     {
         $this->index = 0;

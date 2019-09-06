@@ -1,20 +1,28 @@
 <?php
+declare(strict_types=1);
+
 /**
  * PHPTAL templating engine
+ *
+ * Originally developed by Laurent Bedubourg and Kornel Lesiński
  *
  * @category HTML
  * @package  PHPTAL
  * @author   Laurent Bedubourg <lbedubourg@motion-twin.com>
  * @author   Kornel Lesiński <kornel@aardvarkmedia.co.uk>
+ * @author   See contributors list @ github
  * @license  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
  * @link     http://phptal.org/
+ * @link     https://github.com/SC-Networks/PHPTAL
  */
 
 namespace Tests;
 
-class AttributesInterpolationTest extends \Tests\Testcase\PhpTal
+use Tests\Testcase\PhpTalTestCase;
+
+class AttributesInterpolationTest extends PhpTalTestCase
 {
-    public function testInterpol()
+    public function testInterpol(): void
     {
         $src = <<<EOT
 <span title="\${foo}"></span>
@@ -26,10 +34,10 @@ EOT;
         $tpl->setSource($src);
         $tpl->foo = 'foo value';
         $res = $tpl->execute();
-        $this->assertEquals($exp, $res);
+        static::assertSame($exp, $res);
     }
 
-    public function testInterpol2()
+    public function testInterpol2(): void
     {
         $src = <<<EOT
 <span title="\${foo2} x \${structure foo} y \${foo}\${structure foo2}"></span><img/>
@@ -42,10 +50,10 @@ EOT;
         $tpl->foo = 'foo value';
         $tpl->foo2 = '{foo2 <img />}';
         $res = $tpl->execute();
-        $this->assertEquals($exp, $res);
+        static::assertSame($exp, $res);
     }
 
-    public function testInterpol3()
+    public function testInterpol3(): void
     {
         $src = <<<EOT
 <span title="\${foo}\${foo}1"></span>
@@ -61,24 +69,24 @@ EOT;
         $tpl->setSource($src);
         $tpl->foo = 'foo value';
         $res = $tpl->execute();
-        $this->assertEquals($exp, $res);
+        static::assertSame($exp, $res);
     }
 
-    public function testInterpol3a()
+    public function testInterpol3a(): void
     {
         $src = <<<EOT
 <span tal:attributes="title php:'\${foo}\${foo}'"></span>
 EOT;
-    $exp = <<<EOT
+        $exp = <<<EOT
 <span title="\${foo}\${foo}"></span>
 EOT;
         $tpl = $this->newPHPTAL()->setSource($src);
         $tpl->foo = 'foo value';
         $res = $tpl->execute();
-        $this->assertEquals($exp, $res);
+        static::assertSame($exp, $res);
     }
 
-    public function testNoInterpol()
+    public function testNoInterpol(): void
     {
         $src = <<<EOT
 <span title="$\${foo}"></span>
@@ -90,10 +98,10 @@ EOT;
         $tpl->setSource($src);
         $tpl->foo = 'foo value';
         $res = $tpl->execute();
-        $this->assertEquals($exp, $res);
+        static::assertSame($exp, $res);
     }
 
-    public function testInterpolAdv()
+    public function testInterpolAdv(): void
     {
         $src = <<<EOT
 <span title="$$\${foo}"></span>
@@ -105,6 +113,6 @@ EOT;
         $tpl->setSource($src);
         $tpl->foo = 'foo value';
         $res = $tpl->execute();
-        $this->assertEquals($exp, $res);
+        static::assertSame($exp, $res);
     }
 }

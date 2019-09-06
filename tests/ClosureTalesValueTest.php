@@ -1,19 +1,28 @@
 <?php
+declare(strict_types=1);
+
 /**
  * PHPTAL templating engine
  *
+ * Originally developed by Laurent Bedubourg and Kornel Lesiński
+ *
  * @category HTML
  * @package  PHPTAL
- * @author   Andrew Crites <explosion-pills@aysites.com>
+ * @author   Laurent Bedubourg <lbedubourg@motion-twin.com>
+ * @author   Kornel Lesiński <kornel@aardvarkmedia.co.uk>
+ * @author   See contributors list @ github
  * @license  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
  * @link     http://phptal.org/
+ * @link     https://github.com/SC-Networks/PHPTAL
  */
 
 namespace Tests;
 
-class ClosureTalesValueTest extends \Tests\Testcase\PhpTal
+use Tests\Testcase\PhpTalTestCase;
+
+class ClosureTalesValueTest extends PhpTalTestCase
 {
-    public function testClosureVariable()
+    public function testClosureVariable(): void
     {
 
         $source = <<<HTML
@@ -68,12 +77,12 @@ HTML;
             };
 PHP
         );
-        $this->assertEquals($expected, $tpl->execute());
+        static::assertSame($expected, $tpl->execute());
 
         $tpl->foon = 'barn';
         $tpl->false = false;
         $tpl->true = true;
-        $tpl->array = array('a' => 1, 'b' => 2, 'c' => 3);
+        $tpl->array = ['a' => 1, 'b' => 2, 'c' => 3];
         $tpl->use = "use";
         $tpl->inputvar = "output";
         $tpl->omitme = true;
@@ -84,10 +93,10 @@ PHP
         $tpl->nonvalue = null;
         $tpl->errorhandler = 'there was an error (but not really)';
 
-        $this->assertEquals($expected, $tpl->execute());
+        static::assertSame($expected, $tpl->execute());
     }
 
-    public function testClosureDeep()
+    public function testClosureDeep(): void
     {
         $obj = new \stdClass();
         eval("\$obj->foon = function () { return 'hello'; };");
@@ -95,7 +104,7 @@ PHP
         $objobj = new \stdClass();
         $objobj->obj = $obj;
 
-        $arr = array('one' => array('two' => array('three' => $obj)));
+        $arr = ['one' => ['two' => ['three' => $obj]]];
 
         $source = <<<HTML
 <tal:block content="obj/foon"/>
@@ -114,10 +123,11 @@ HTML;
         $tpl->objobj = $objobj;
         $tpl->arr = $arr;
 
-        $this->assertEquals($expected, $tpl->execute());
+        static::assertSame($expected, $tpl->execute());
     }
 
-    public function testNestedClosure() {
+    public function testNestedClosure(): void
+    {
 
         eval("
             \$closure = function () {
@@ -139,10 +149,11 @@ HTML;
         $tpl->setSource($source);
 
         $tpl->closure = $closure;
-        $this->assertEquals($expected, $tpl->execute());
+        static::assertSame($expected, $tpl->execute());
     }
 
-    public function testClosureFromMethod() {
+    public function testClosureFromMethod(): void
+    {
 
         eval(<<<PHP
             class TestClosureFromMethod {
@@ -166,6 +177,6 @@ HTML;
         $tpl->setSource($source);
         $tpl->obj = new \TestClosureFromMethod();
 
-        $this->assertEquals($expected, $tpl->execute());
+        static::assertSame($expected, $tpl->execute());
     }
 }

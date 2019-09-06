@@ -1,47 +1,54 @@
 <?php
+declare(strict_types=1);
 
 /**
  * PHPTAL templating engine
+ *
+ * Originally developed by Laurent Bedubourg and Kornel Lesiński
  *
  * @category HTML
  * @package  PHPTAL
  * @author   Laurent Bedubourg <lbedubourg@motion-twin.com>
  * @author   Kornel Lesiński <kornel@aardvarkmedia.co.uk>
+ * @author   See contributors list @ github
  * @license  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
  * @link     http://phptal.org/
+ * @link     https://github.com/SC-Networks/PHPTAL
  */
 
 namespace Tests;
 
+use Tests\Testcase\PhpTalTestCase;
 use Tests\Testhelper\DummyTranslator;
+use Tests\Testhelper\Helper;
 
-class I18NAttributesTest extends \Tests\Testcase\PhpTal
+class I18NAttributesTest extends PhpTalTestCase
 {
-    public function testSingle()
+    public function testSingle(): void
     {
         $t = new DummyTranslator();
         $t->setTranslation('my-title', 'mon titre');
 
         $tpl = $this->newPHPTAL('input/i18n-attributes-01.html');
         $tpl->setTranslator($t);
-        $res = \Tests\Testhelper\Helper::normalizeHtml($tpl->execute());
-        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/i18n-attributes-01.html');
-        $this->assertEquals($exp, $res);
+        $res = Helper::normalizeHtml($tpl->execute());
+        $exp = Helper::normalizeHtmlFile('output/i18n-attributes-01.html');
+        static::assertSame($exp, $res);
     }
 
-    public function testTranslateDefault()
+    public function testTranslateDefault(): void
     {
         $t = new DummyTranslator();
         $t->setTranslation('my-title', 'mon titre');
 
         $tpl = $this->newPHPTAL('input/i18n-attributes-02.html');
         $tpl->setTranslator($t);
-        $res = \Tests\Testhelper\Helper::normalizeHtml($tpl->execute());
-        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/i18n-attributes-02.html');
-        $this->assertEquals($exp, $res);
+        $res = Helper::normalizeHtml($tpl->execute());
+        $exp = Helper::normalizeHtmlFile('output/i18n-attributes-02.html');
+        static::assertSame($exp, $res);
     }
 
-    public function testTranslateTalAttribute()
+    public function testTranslateTalAttribute(): void
     {
         $t = new DummyTranslator();
         $t->setTranslation('my-title', 'mon titre');
@@ -49,12 +56,12 @@ class I18NAttributesTest extends \Tests\Testcase\PhpTal
         $tpl = $this->newPHPTAL('input/i18n-attributes-03.html');
         $tpl->sometitle = 'my-title';
         $tpl->setTranslator($t);
-        $res = \Tests\Testhelper\Helper::normalizeHtml($tpl->execute());
-        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/i18n-attributes-03.html');
-        $this->assertEquals($exp, $res, $tpl->getCodePath());
+        $res = Helper::normalizeHtml($tpl->execute());
+        $exp = Helper::normalizeHtmlFile('output/i18n-attributes-03.html');
+        static::assertSame($exp, $res, $tpl->getCodePath());
     }
 
-    public function testTranslateDefaultAttributeEscape()
+    public function testTranslateDefaultAttributeEscape(): void
     {
         $t = new DummyTranslator();
         $t->setTranslation('my\'title', 'mon\'titre');
@@ -63,10 +70,14 @@ class I18NAttributesTest extends \Tests\Testcase\PhpTal
         $tpl->setSource('<div><a title="my\'title" class="my&#039;title" i18n:attributes="class;title">test</a></div>');
         $tpl->sometitle = 'my-title';
         $tpl->setTranslator($t);
-        $this->assertEquals('<div><a title="mon&#039;titre" class="mon&#039;titre">test</a></div>', $tpl->execute(), $tpl->getCodePath());
+        static::assertSame(
+            '<div><a title="mon&#039;titre" class="mon&#039;titre">test</a></div>',
+            $tpl->execute(),
+            $tpl->getCodePath()
+        );
     }
 
-    public function testTranslateTalAttributeEscape()
+    public function testTranslateTalAttributeEscape(): void
     {
         $this->markTestSkipped("Hard to fix bug");
 
@@ -74,13 +85,19 @@ class I18NAttributesTest extends \Tests\Testcase\PhpTal
         $t->setTranslation('my\'title', 'mon\'titre');
 
         $tpl = $this->newPHPTAL();
-        $tpl->setSource('<div><a title="foo" tal:attributes="title sometitle; class php:sometitle" i18n:attributes="class;title">test</a></div>');
+        $tpl->setSource(
+            '<div><a title="foo" tal:attributes="title sometitle; class php:sometitle" i18n:attributes="class;title">test</a></div>'
+        );
         $tpl->sometitle = 'my\'title';
         $tpl->setTranslator($t);
-        $this->assertEquals('<div><a title="mon&#039;titre" class="mon&#039;titre">test</a></div>', $tpl->execute(), $tpl->getCodePath());
+        static::assertSame(
+            '<div><a title="mon&#039;titre" class="mon&#039;titre">test</a></div>',
+            $tpl->execute(),
+            $tpl->getCodePath()
+        );
     }
 
-    public function testMultiple()
+    public function testMultiple(): void
     {
         $t = new DummyTranslator();
         $t->setTranslation('my-title', 'mon titre');
@@ -89,22 +106,23 @@ class I18NAttributesTest extends \Tests\Testcase\PhpTal
         $tpl = $this->newPHPTAL('input/i18n-attributes-04.html');
         $tpl->sometitle = 'my-title';
         $tpl->setTranslator($t);
-        $res = \Tests\Testhelper\Helper::normalizeHtml($tpl->execute());
-        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/i18n-attributes-04.html');
-        $this->assertEquals($exp, $res);
+        $res = Helper::normalizeHtml($tpl->execute());
+        $exp = Helper::normalizeHtmlFile('output/i18n-attributes-04.html');
+        static::assertSame($exp, $res);
     }
 
-    public function testInterpolation()
+    public function testInterpolation(): void
     {
         $t = new DummyTranslator();
-        $t->setTranslation('foo ${someObject/method} bar ${otherObject/method} buz', 'ok ${someObject/method} ok ${otherObject/method} ok');
+        $t->setTranslation('foo ${someObject/method} bar ${otherObject/method} buz',
+            'ok ${someObject/method} ok ${otherObject/method} ok');
 
         $tpl = $this->newPHPTAL('input/i18n-attributes-05.html');
         $tpl->setTranslator($t);
-        $tpl->someObject = array('method' => 'good');
-        $tpl->otherObject = array('method' => 'great');
-        $res = \Tests\Testhelper\Helper::normalizeHtml($tpl->execute());
-        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/i18n-attributes-05.html');
-        $this->assertEquals($exp, $res);
+        $tpl->someObject = ['method' => 'good'];
+        $tpl->otherObject = ['method' => 'great'];
+        $res = Helper::normalizeHtml($tpl->execute());
+        $exp = Helper::normalizeHtmlFile('output/i18n-attributes-05.html');
+        static::assertSame($exp, $res);
     }
 }

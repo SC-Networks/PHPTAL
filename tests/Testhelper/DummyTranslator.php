@@ -20,22 +20,21 @@ namespace Tests\Testhelper;
 
 use PhpTal\TranslationServiceInterface;
 
-/**
- * PHPTAL templating engine
- *
- * @category HTML
- * @package  PHPTAL
- * @author   Laurent Bedubourg <lbedubourg@motion-twin.com>
- * @author   Kornel Lesiński <kornel@aardvarkmedia.co.uk>
- * @license  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
- * @link     http://phptal.org/
- */
-
-
 class DummyTranslator implements TranslationServiceInterface
 {
-    public $vars = array();
-    public $translations = array();
+    /**
+     * @var array
+     */
+    public $vars = [];
+
+    /**
+     * @var array
+     */
+    public $translations = [];
+
+    /**
+     * @var string|null
+     */
     public $domain;
 
     public function setLanguage(...$langs): string
@@ -43,7 +42,10 @@ class DummyTranslator implements TranslationServiceInterface
         return '';
     }
 
-    public function setEncoding(string $enc): void {}
+    public function setEncoding(string $enc): void
+    {
+        // noop
+    }
 
     public function useDomain(?string $domain): ?string
     {
@@ -51,12 +53,12 @@ class DummyTranslator implements TranslationServiceInterface
         return null;
     }
 
-    public function setVar(string $key, $value): void
+    public function setVar(string $key, string $value): void
     {
         $this->vars[$key] = $value;
     }
 
-    public function setTranslation($key, $translation)
+    public function setTranslation(string $key, string $translation): void
     {
         $this->translations[$key] = $translation;
     }
@@ -69,14 +71,17 @@ class DummyTranslator implements TranslationServiceInterface
             $v = $key;
         }
 
-        if ($escape) $v = htmlspecialchars($v ?? '');
-
-        while (preg_match('/\$\{(.*?)\}/sm', $v, $m)) {
-            list($src, $var) = $m;
-            if (!isset($this->vars[$var])) return "!*$var* is not defined!";
-            $v = str_replace($src, $this->vars[$var], $v);
+        if ($escape) {
+            $v = htmlspecialchars($v ?? '');
         }
 
+        while (preg_match('/\$\{(.*?)\}/sm', $v, $m)) {
+            [$src, $var] = $m;
+            if (!isset($this->vars[$var])) {
+                return "!*$var* is not defined!";
+            }
+            $v = str_replace($src, $this->vars[$var], $v);
+        }
 
         return $v;
     }

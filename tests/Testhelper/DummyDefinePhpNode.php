@@ -21,10 +21,6 @@ namespace Tests\Testhelper;
 use PhpTal\Dom\Element;
 use PhpTal\Php\CodeWriter;
 
-/**
- * Class DummyDefinePhpNode
- * @package Testhelper
- */
 class DummyDefinePhpNode extends Element
 {
     public function __construct()

@@ -1,35 +1,63 @@
 <?php
+declare(strict_types=1);
 
 /**
  * PHPTAL templating engine
  *
+ * Originally developed by Laurent Bedubourg and Kornel Lesiński
+ *
  * @category HTML
  * @package  PHPTAL
+ * @author   Laurent Bedubourg <lbedubourg@motion-twin.com>
  * @author   Kornel Lesiński <kornel@aardvarkmedia.co.uk>
+ * @author   See contributors list @ github
  * @license  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
  * @link     http://phptal.org/
+ * @link     https://github.com/SC-Networks/PHPTAL
  */
+
+namespace {
+
+    use PhpTal\Php\TalesInternal;
+
+    function registry_test_callback(string $arg, bool $nothrow): string
+    {
+        return '"ok" . ' . TalesInternal::compileToPHPExpressions($arg);
+    }
+
+    function registry_test_callback2(string $arg, bool $nothrow): string
+    {
+        return '"ok2" . ' . TalesInternal::compileToPHPExpressions($arg);
+    }
+
+    function registry_test_callback3(string $arg, bool $nothrow): string
+    {
+        return '"ok3" . ' . TalesInternal::compileToPHPExpressions($arg);
+    }
+}
 
 namespace Tests {
 
     use PhpTal\Exception\ConfigurationException;
     use PhpTal\Exception\UnknownModifierException;
+    use PhpTal\TalesRegistry;
+    use Tests\Testcase\PhpTalTestCase;
 
-    class TalesRegistryTest extends \Tests\Testcase\PhpTal
+    class TalesRegistryTest extends PhpTalTestCase
     {
 
-        public function testRegisterFunction()
+        public function testRegisterFunction(): void
         {
-            \PhpTal\TalesRegistry::registerPrefix('registry_test', 'registry_test_callback');
+            TalesRegistry::registerPrefix('registry_test', 'registry_test_callback');
             static::assertSame(
                 '<p>ok1</p>',
                 $this->newPHPTAL()->setSource('<p tal:content="registry_test:number:1"/>')->execute()
             );
         }
 
-        public function testRegisterFunctionAcceptsClosure()
+        public function testRegisterFunctionAcceptsClosure(): void
         {
-            \PhpTal\TalesRegistry::registerPrefix('foobar', function ($arg) {
+            TalesRegistry::registerPrefix('foobar', function (string $arg) {
                 return '"ok' . $arg . '"';
             });
             static::assertSame(
@@ -41,87 +69,62 @@ namespace Tests {
         /**
          * @runInSeparateProcess
          */
-        public function testUnregisterFunction()
+        public function testUnregisterFunction(): void
         {
             $this->expectException(UnknownModifierException::class);
             $test_prefix = 'testprefix';
-            \PhpTal\TalesRegistry::registerPrefix($test_prefix, 'registry_test_callback3');
-            \PhpTal\TalesRegistry::unregisterPrefix($test_prefix);
+            TalesRegistry::registerPrefix($test_prefix, 'registry_test_callback3');
+            TalesRegistry::unregisterPrefix($test_prefix);
             $this->newPHPTAL()->setSource('<p tal:content="' . $test_prefix . ':"/>')->execute();
         }
 
-        public function testCantUnregisterNonRegistered()
+        public function testCantUnregisterNonRegistered(): void
         {
             $this->expectException(ConfigurationException::class);
-            \PhpTal\TalesRegistry::unregisterPrefix('doesnotexist');
+            TalesRegistry::unregisterPrefix('doesnotexist');
         }
 
-        public function testCantRegisterNonExistant()
+        public function testCantRegisterNonExistant(): void
         {
             $this->expectException(ConfigurationException::class);
-            \PhpTal\TalesRegistry::registerPrefix('registry_test_2', 'doesnotexist');
+            TalesRegistry::registerPrefix('registry_test_2', 'doesnotexist');
         }
 
-        public function testCantRegisterTwice()
+        public function testCantRegisterTwice(): void
         {
             $this->expectException(ConfigurationException::class);
-            \PhpTal\TalesRegistry::registerPrefix('registry_test_3', 'registry_test_callback');
-            \PhpTal\TalesRegistry::registerPrefix('registry_test_3', 'registry_test_callback');
+            TalesRegistry::registerPrefix('registry_test_3', 'registry_test_callback');
+            TalesRegistry::registerPrefix('registry_test_3', 'registry_test_callback');
         }
 
-        public function testCanRegisterFallbackTwice()
+        public function testCanRegisterFallbackTwice(): void
         {
-            \PhpTal\TalesRegistry::registerPrefix('registry_test_4', 'registry_test_callback', true);
-            \PhpTal\TalesRegistry::registerPrefix('registry_test_4', 'registry_test_callback', true);
+            TalesRegistry::registerPrefix('registry_test_4', 'registry_test_callback', true);
+            TalesRegistry::registerPrefix('registry_test_4', 'registry_test_callback', true);
         }
 
-        public function testCanRegisterOverFallback()
+        public function testCanRegisterOverFallback(): void
         {
-            \PhpTal\TalesRegistry::registerPrefix('registry_test_5', 'registry_test_callback', true);
-            \PhpTal\TalesRegistry::registerPrefix('registry_test_5', 'registry_test_callback2');
+            TalesRegistry::registerPrefix('registry_test_5', 'registry_test_callback', true);
+            TalesRegistry::registerPrefix('registry_test_5', 'registry_test_callback2');
         }
 
-        public function testCanRegisterFallbackOverRegistered()
+        public function testCanRegisterFallbackOverRegistered(): void
         {
-            \PhpTal\TalesRegistry::registerPrefix('registry_test_6', 'registry_test_callback2');
-            \PhpTal\TalesRegistry::registerPrefix('registry_test_6', 'registry_test_callback', true);
+            TalesRegistry::registerPrefix('registry_test_6', 'registry_test_callback2');
+            TalesRegistry::registerPrefix('registry_test_6', 'registry_test_callback', true);
         }
 
-        public function testIsRegisteredIsAccessible()
+        public function testIsRegisteredIsAccessible(): void
         {
-            static::assertFalse(
-                \PhpTal\TalesRegistry::isRegistered('some-custom-modifier')
-            );
+            static::assertFalse(TalesRegistry::isRegistered('some-custom-modifier'));
         }
 
-        public function testIsRegisteredReturnsTrueIfAlreadyRegistered()
+        public function testIsRegisteredReturnsTrueIfAlreadyRegistered(): void
         {
             $modifier_key = 'registry_test_7';
-            \PhpTal\TalesRegistry::registerPrefix($modifier_key, 'registry_test_callback');
-            static::assertTrue(
-                \PhpTal\TalesRegistry::isRegistered($modifier_key)
-            );
+            TalesRegistry::registerPrefix($modifier_key, 'registry_test_callback');
+            static::assertTrue(TalesRegistry::isRegistered($modifier_key));
         }
-    }
-}
-
-namespace {
-
-    // a hack to get those things into the global namespace
-    // despite registering a different namespace above
-
-    function registry_test_callback($arg, $nothrow)
-    {
-        return '"ok" . ' . \PhpTal\Php\TalesInternal::compileToPHPExpressions($arg);
-    }
-
-    function registry_test_callback2($arg, $nothrow)
-    {
-        return '"ok2" . ' . \PhpTal\Php\TalesInternal::compileToPHPExpressions($arg);
-    }
-
-    function registry_test_callback3($arg, $nothrow)
-    {
-        return '"ok3" . ' . \PhpTal\Php\TalesInternal::compileToPHPExpressions($arg);
     }
 }

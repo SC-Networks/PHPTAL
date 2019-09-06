@@ -20,10 +20,6 @@ namespace Tests\Testhelper;
 
 use PhpTal\FilterInterface;
 
-/**
- * Class MyPostFilter2
- * @package Testhelper
- */
 class MyPostFilter2 implements FilterInterface
 {
     /**

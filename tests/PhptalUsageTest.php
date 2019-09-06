@@ -1,30 +1,38 @@
 <?php
+declare(strict_types=1);
+
 /**
  * PHPTAL templating engine
+ *
+ * Originally developed by Laurent Bedubourg and Kornel Lesiński
  *
  * @category HTML
  * @package  PHPTAL
  * @author   Laurent Bedubourg <lbedubourg@motion-twin.com>
  * @author   Kornel Lesiński <kornel@aardvarkmedia.co.uk>
+ * @author   See contributors list @ github
  * @license  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
  * @link     http://phptal.org/
+ * @link     https://github.com/SC-Networks/PHPTAL
  */
 
 namespace Tests;
 
-class PhptalUsageTest extends \Tests\Testcase\PhpTal
+use Tests\Testcase\PhpTalTestCase;
+
+class PhptalUsageTest extends PhpTalTestCase
 {
     function testMultiUse()
     {
         $t = $this->newPHPTAL();
         $t->title = 'hello';
-        $t->setTemplate('../input/multiuse.01.html');
+        $t->setTemplate(TAL_TEST_FILES_DIR . 'input/multiuse.01.html');
         $a = $t->execute();
-        $t->setTemplate('../input/multiuse.02.html');
+        $t->setTemplate(TAL_TEST_FILES_DIR . 'input/multiuse.02.html');
         $b = $t->execute();
-        $this->assertTrue($a != $b, "$a == $b");
-        $this->assertStringContainsString('hello', $a);
-        $this->assertStringContainsString('hello', $b);
+        static::assertNotSame($a, $b, "$a == $b");
+        static::assertStringContainsString('hello', $a);
+        static::assertStringContainsString('hello', $b);
     }
 
     function testSetSourceReset()
@@ -35,6 +43,6 @@ class PhptalUsageTest extends \Tests\Testcase\PhpTal
         $t->setSource('<p>World</p>');
         $res2 = $t->execute();
 
-        $this->assertNotEquals($res1, $res2);
+        static::assertNotSame($res1, $res2);
     }
 }

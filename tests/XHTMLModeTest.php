@@ -1,21 +1,28 @@
 <?php
+declare(strict_types=1);
 
 /**
  * PHPTAL templating engine
+ *
+ * Originally developed by Laurent Bedubourg and Kornel Lesiński
  *
  * @category HTML
  * @package  PHPTAL
  * @author   Laurent Bedubourg <lbedubourg@motion-twin.com>
  * @author   Kornel Lesiński <kornel@aardvarkmedia.co.uk>
+ * @author   See contributors list @ github
  * @license  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
  * @link     http://phptal.org/
+ * @link     https://github.com/SC-Networks/PHPTAL
  */
 
 namespace Tests;
 
 use PhpTal\Php\TalesInternal;
+use Tests\Testcase\PhpTalTestCase;
+use Tests\Testhelper\Helper;
 
-class XHTMLModeTest extends \Tests\Testcase\PhpTal
+class XHTMLModeTest extends PhpTalTestCase
 {
 
     public function tearDown(): void
@@ -24,7 +31,7 @@ class XHTMLModeTest extends \Tests\Testcase\PhpTal
         parent::tearDown();
     }
 
-    public function testEmpty()
+    public function testEmpty(): void
     {
         $tpl = $this->newPHPTAL();
         $tpl->setSource('<html xmlns="http://www.w3.org/1999/xhtml">
@@ -49,8 +56,8 @@ class XHTMLModeTest extends \Tests\Testcase\PhpTal
         </body>
         </html>');
         $res = $tpl->execute();
-        $res = \Tests\Testhelper\Helper::normalizeHtml($res);
-        $exp = \Tests\Testhelper\Helper::normalizeHtml('<html xmlns="http://www.w3.org/1999/xhtml">
+        $res = Helper::normalizeHtml($res);
+        $exp = Helper::normalizeHtml('<html xmlns="http://www.w3.org/1999/xhtml">
                 <head>
                     <title></title>
                     <base href="http://example.com/" />
@@ -71,26 +78,42 @@ class XHTMLModeTest extends \Tests\Testcase\PhpTal
                     </form>
                 </body>
                 </html>');
-        $this->assertEquals($exp, $res);
+        static::assertSame($exp, $res);
     }
 
-    public function testEmptyAll()
+    public function testEmptyAll(): void
     {
-        $emptyElements = array(
-            'area','base','basefont','br','col',
-            'command','embed','frame','hr','img','input','isindex','keygen','link',
-            'meta','param','wbr','source','track',
-        );
-        foreach($emptyElements as $name) {
+        $emptyElements = [
+            'area',
+            'base',
+            'basefont',
+            'br',
+            'col',
+            'command',
+            'embed',
+            'frame',
+            'hr',
+            'img',
+            'input',
+            'isindex',
+            'keygen',
+            'link',
+            'meta',
+            'param',
+            'wbr',
+            'source',
+            'track',
+        ];
+        foreach ($emptyElements as $name) {
             $tpl = $this->newPHPTAL();
             $tpl->setOutputMode(\PhpTal\PHPTAL::XHTML);
-            $tpl->setSource('<'.$name.'>foo</'.$name.'>');
+            $tpl->setSource('<' . $name . '>foo</' . $name . '>');
             $res = $tpl->execute();
-            $this->assertEquals('<'.$name.'/>', $res);
+            static::assertSame('<' . $name . '/>', $res);
         }
     }
 
-    public function testColgroup()
+    public function testColgroup(): void
     {
         $code = '<colgroup>
 <col class="col1" />
@@ -98,10 +121,10 @@ class XHTMLModeTest extends \Tests\Testcase\PhpTal
 <col class="col3" />
 </colgroup>';
 
-        $this->assertHTMLEquals($this->newPHPTAL()->setSource($code)->execute($code), $code);
+        $this->assertHTMLEquals($this->newPHPTAL()->setSource($code)->execute(), $code);
     }
 
-    public function testBoolean()
+    public function testBoolean(): void
     {
         TalesInternal::setFunctionWhitelist(['range']);
         $tpl = $this->newPHPTAL();
@@ -122,8 +145,8 @@ class XHTMLModeTest extends \Tests\Testcase\PhpTal
         </body>
         </html>');
         $res = $tpl->execute();
-        $res = \Tests\Testhelper\Helper::normalizeHtml($res);
-        $exp = \Tests\Testhelper\Helper::normalizeHtml('<html xmlns="http://www.w3.org/1999/xhtml">
+        $res = Helper::normalizeHtml($res);
+        $exp = Helper::normalizeHtml('<html xmlns="http://www.w3.org/1999/xhtml">
                 <body>
                     <input type="checkbox" checked="checked" />
                     <input type="text" readonly="readonly" />
@@ -137,10 +160,10 @@ class XHTMLModeTest extends \Tests\Testcase\PhpTal
                     <script defer="defer"></script>
                 </body>
                 </html>');
-        $this->assertEquals($exp, $res);
+        static::assertSame($exp, $res);
     }
 
-    public function testBooleanOrNothing()
+    public function testBooleanOrNothing(): void
     {
         $tpl = $this->newPHPTAL()->setSource('
         <select>
@@ -148,26 +171,26 @@ class XHTMLModeTest extends \Tests\Testcase\PhpTal
         selected option/isSelected | nothing" tal:content="option/label"/>
         </select>');
 
-        $tpl->options = array(
-          array(
-             'label' => 'Option1',
-             'value' => 1
-          ),
-          array(
-             'label'      => 'Option2',
-             'value'      => 2,
-             'isSelected' => true
-          ),
-          array(
-             'label' => 'Option3',
-             'value' => 3
-          )
-        );
+        $tpl->options = [
+            [
+                'label' => 'Option1',
+                'value' => 1
+            ],
+            [
+                'label' => 'Option2',
+                'value' => 2,
+                'isSelected' => true
+            ],
+            [
+                'label' => 'Option3',
+                'value' => 3
+            ]
+        ];
 
-        $this->assertEquals(\Tests\Testhelper\Helper::normalizeHtml('<select>
+        static::assertSame(Helper::normalizeHtml('<select>
           <option value="1">Option1</option>
           <option value="2" selected="selected">Option2</option>
           <option value="3">Option3</option>
-        </select>'), \Tests\Testhelper\Helper::normalizeHtml($tpl->execute()));
+        </select>'), Helper::normalizeHtml($tpl->execute()));
     }
 }

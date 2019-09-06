@@ -26,47 +26,27 @@ class DummyObjectX
      */
     private $data;
 
-    public function __contruct()
+    public function __construct()
     {
         $this->data = [];
     }
 
-    /**
-     * @param string $var
-     *
-     * @return bool
-     */
-    public function __isset(string $var)
+    public function __isset(string $var): bool
     {
         return array_key_exists($var, $this->data);
     }
 
-    /**
-     * @param string $var
-     *
-     * @return mixed
-     */
     public function __get(string $var)
     {
         return $this->data[$var];
     }
 
-    /**
-     * @param string $var
-     * @param mixed $value
-     */
     public function __set(string $var, $value)
     {
         $this->data[$var] = $value;
     }
 
-    /**
-     * @param $method
-     * @param $params
-     *
-     * @return string
-     */
-    public function __call($method, $params)
+    public function __call(string $method, $params): string
     {
         return '__call';
     }

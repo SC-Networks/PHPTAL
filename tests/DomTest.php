@@ -1,42 +1,52 @@
 <?php
+declare(strict_types=1);
+
 /**
  * PHPTAL templating engine
+ *
+ * Originally developed by Laurent Bedubourg and Kornel Lesiński
  *
  * @category HTML
  * @package  PHPTAL
  * @author   Laurent Bedubourg <lbedubourg@motion-twin.com>
  * @author   Kornel Lesiński <kornel@aardvarkmedia.co.uk>
+ * @author   See contributors list @ github
  * @license  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
  * @link     http://phptal.org/
+ * @link     https://github.com/SC-Networks/PHPTAL
  */
 
 namespace Tests;
 
-class DOMTest extends \Tests\Testcase\PhpTal
+use PhpTal\Dom\Element;
+use PhpTal\Dom\XmlnsState;
+use Tests\Testcase\PhpTalTestCase;
+
+class DomTest extends PhpTalTestCase
 {
-    private function newElement($name = 'foo', $ns = '')
+    private function newElement(string $name = 'foo', string $ns = ''): Element
     {
-        $xmlns = new \PhpTal\Dom\XmlnsState(array(), '');
-        return new \PhpTal\Dom\Element($name, $ns, array(), $xmlns);
+        $xmlns = new XmlnsState([], '');
+        return new Element($name, $ns, [], $xmlns);
     }
 
-    public function testAppendChild()
+    public function testAppendChild(): void
     {
         $el1 = $this->newElement();
         $el2 = $this->newElement();
 
-        $this->assertIsArray($el1->childNodes);
-        $this->assertNull($el2->parentNode);
+        static::assertIsArray($el1->childNodes);
+        static::assertNull($el2->parentNode);
 
         $el1->appendChild($el2);
-        $this->assertNull($el1->parentNode);
-        $this->assertSame($el1, $el2->parentNode);
-        $this->assertEquals(1, count($el1->childNodes));
-        $this->assertTrue(isset($el1->childNodes[0]));
-        $this->assertSame($el2, $el1->childNodes[0]);
+        static::assertNull($el1->parentNode);
+        static::assertSame($el1, $el2->parentNode);
+        static::assertCount(1, $el1->childNodes);
+        static::assertTrue(isset($el1->childNodes[0]));
+        static::assertSame($el2, $el1->childNodes[0]);
     }
 
-    public function testAppendChildChangesParent()
+    public function testAppendChildChangesParent(): void
     {
         $el1 = $this->newElement();
         $el2 = $this->newElement();
@@ -45,21 +55,21 @@ class DOMTest extends \Tests\Testcase\PhpTal
 
         $el1->appendChild($ch);
 
-        $this->assertTrue(isset($el1->childNodes[0]));
-        $this->assertSame($ch, $el1->childNodes[0]);
+        static::assertTrue(isset($el1->childNodes[0]));
+        static::assertSame($ch, $el1->childNodes[0]);
 
         $el2->appendChild($ch);
 
-        $this->assertTrue(isset($el2->childNodes[0]));
-        $this->assertSame($ch, $el2->childNodes[0]);
+        static::assertTrue(isset($el2->childNodes[0]));
+        static::assertSame($ch, $el2->childNodes[0]);
 
-        $this->assertFalse(isset($el1->childNodes[0]));
+        static::assertFalse(isset($el1->childNodes[0]));
 
-        $this->assertEquals(0, count($el1->childNodes));
-        $this->assertEquals(1, count($el2->childNodes));
+        static::assertCount(0, $el1->childNodes);
+        static::assertCount(1, $el2->childNodes);
     }
 
-    public function testRemoveChild()
+    public function testRemoveChild(): void
     {
         $el1 = $this->newElement();
         $el2 = $this->newElement();
@@ -70,29 +80,29 @@ class DOMTest extends \Tests\Testcase\PhpTal
         $el1->appendChild($el3);
         $el1->appendChild($el4);
 
-        $this->assertEquals(3, count($el1->childNodes));
-        $this->assertTrue(isset($el1->childNodes[2]));
-        $this->assertFalse(isset($el1->childNodes[3]));
+        static::assertCount(3, $el1->childNodes);
+        static::assertTrue(isset($el1->childNodes[2]));
+        static::assertFalse(isset($el1->childNodes[3]));
 
-        $this->assertSame($el1, $el4->parentNode);
+        static::assertSame($el1, $el4->parentNode);
 
         $el1->removeChild($el4);
 
-        $this->assertNull($el4->parentNode);
+        static::assertNull($el4->parentNode);
 
-        $this->assertEquals(2, count($el1->childNodes));
-        $this->assertTrue(isset($el1->childNodes[1]));
-        $this->assertFalse(isset($el1->childNodes[2]));
-        $this->assertSame($el3, end($el1->childNodes));
+        static::assertCount(2, $el1->childNodes);
+        static::assertTrue(isset($el1->childNodes[1]));
+        static::assertFalse(isset($el1->childNodes[2]));
+        static::assertSame($el3, end($el1->childNodes));
 
         $el1->removeChild($el2);
 
-        $this->assertEquals(1, count($el1->childNodes));
-        $this->assertTrue(isset($el1->childNodes[0]));
-        $this->assertFalse(isset($el1->childNodes[1]));
+        static::assertCount(1, $el1->childNodes);
+        static::assertTrue(isset($el1->childNodes[0]));
+        static::assertFalse(isset($el1->childNodes[1]));
     }
 
-    public function testReplaceChild()
+    public function testReplaceChild(): void
     {
         $el1 = $this->newElement();
         $el2 = $this->newElement();
@@ -105,37 +115,37 @@ class DOMTest extends \Tests\Testcase\PhpTal
         $el1->appendChild($el3);
         $el1->appendChild($el4);
 
-        $this->assertEquals(3, count($el1->childNodes));
-        $this->assertSame($el3, $el1->childNodes[1]);
+        static::assertCount(3, $el1->childNodes);
+        static::assertSame($el3, $el1->childNodes[1]);
 
         $el1->replaceChild($r, $el3);
 
-        $this->assertEquals(3, count($el1->childNodes));
-        $this->assertSame($el2, $el1->childNodes[0]);
-        $this->assertSame($r, $el1->childNodes[1]);
-        $this->assertSame($el4, $el1->childNodes[2]);
+        static::assertCount(3, $el1->childNodes);
+        static::assertSame($el2, $el1->childNodes[0]);
+        static::assertSame($r, $el1->childNodes[1]);
+        static::assertSame($el4, $el1->childNodes[2]);
 
-        $this->assertNull($el3->parentNode);
-        $this->assertSame($el1, $r->parentNode);
+        static::assertNull($el3->parentNode);
+        static::assertSame($el1, $r->parentNode);
     }
 
-    public function testSetAttributeNS()
+    public function testSetAttributeNS(): void
     {
         $el = $this->newElement();
 
-        $this->assertEquals("", $el->getAttributeNS('urn:foons', 'bar'));
-        $this->assertNull($el->getAttributeNodeNS('urn:foons', 'bar'));
+        static::assertSame('', $el->getAttributeNS('urn:foons', 'bar'));
+        static::assertNull($el->getAttributeNodeNS('urn:foons', 'bar'));
         $el->setAttributeNS('urn:foons', 'bar', 'b\\az&<x>');
-        $this->assertEquals('b\\az&<x>', $el->getAttributeNS('urn:foons', 'bar'));
-        $this->assertNotNull($el->getAttributeNodeNS('urn:foons', 'bar'));
+        static::assertSame('b\\az&<x>', $el->getAttributeNS('urn:foons', 'bar'));
+        static::assertNotNull($el->getAttributeNodeNS('urn:foons', 'bar'));
     }
 
-    public function testSetAttributeNSPrefixed()
+    public function testSetAttributeNSPrefixed(): void
     {
         $el = $this->newElement();
 
         $el->setAttributeNS('urn:foons', 'xab:bar', 'b\\az&<x>');
-        $this->assertEquals('b\\az&<x>', $el->getAttributeNS('urn:foons', 'bar'));
-        $this->assertNotNull($el->getAttributeNodeNS('urn:foons', 'bar'));
+        static::assertSame('b\\az&<x>', $el->getAttributeNS('urn:foons', 'bar'));
+        static::assertNotNull($el->getAttributeNodeNS('urn:foons', 'bar'));
     }
 }

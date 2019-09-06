@@ -18,10 +18,6 @@ declare(strict_types=1);
 
 namespace Tests\Testhelper;
 
-/**
- * Class MyArray
- * @package Testhelper
- */
 class MyArray implements \ArrayAccess
 {
 

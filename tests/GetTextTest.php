@@ -4,12 +4,16 @@ declare(strict_types=1);
 /**
  * PHPTAL templating engine
  *
+ * Originally developed by Laurent Bedubourg and Kornel Lesiński
+ *
  * @category HTML
  * @package  PHPTAL
  * @author   Laurent Bedubourg <lbedubourg@motion-twin.com>
  * @author   Kornel Lesiński <kornel@aardvarkmedia.co.uk>
+ * @author   See contributors list @ github
  * @license  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
  * @link     http://phptal.org/
+ * @link     https://github.com/SC-Networks/PHPTAL
  */
 
 namespace Tests;
@@ -17,9 +21,9 @@ namespace Tests;
 use PhpTal\Exception\ConfigurationException;
 use PhpTal\Exception\PhpTalException;
 use PhpTal\GetTextTranslator;
-use Tests\Testcase\PhpTal;
+use Tests\Testcase\PhpTalTestCase;
 
-class GetTextTest extends PhpTal
+class GetTextTest extends PhpTalTestCase
 {
     private function getTextTranslator(): GetTextTranslator
     {
@@ -30,12 +34,11 @@ class GetTextTest extends PhpTal
         }
     }
 
-
     public function testSimple(): void
     {
         $gettext = $this->getTextTranslator();
         $gettext->setLanguage('en_GB', 'en_GB.utf8');
-        $gettext->addDomain('test', './../locale/');
+        $gettext->addDomain('test', TAL_TEST_FILES_DIR . 'locale/');
         $gettext->useDomain('test');
 
         $tpl = $this->newPHPTAL('input/gettext.01.html');
@@ -53,7 +56,7 @@ class GetTextTest extends PhpTal
         } catch (ConfigurationException $e) {
             static::markTestSkipped($e->getMessage());
         }
-        $gettext->addDomain('test', './../locale/');
+        $gettext->addDomain('test', TAL_TEST_FILES_DIR . 'locale/');
         $gettext->useDomain('test');
 
         $tpl = $this->newPHPTAL('input/gettext.02.html');
@@ -72,7 +75,7 @@ class GetTextTest extends PhpTal
             static::markTestSkipped($e->getMessage());
         }
         $gettext->setEncoding('UTF-8');
-        $gettext->addDomain('test', './../locale/');
+        $gettext->addDomain('test', TAL_TEST_FILES_DIR . 'locale/');
         $gettext->useDomain('test');
 
         $tpl = $this->newPHPTAL('input/gettext.03.html');
@@ -93,8 +96,8 @@ class GetTextTest extends PhpTal
         } catch (ConfigurationException $e) {
             static::markTestSkipped($e->getMessage());
         }
-        $gettext->addDomain('test', './../locale/');
-        $gettext->addDomain('test2', './../locale/');
+        $gettext->addDomain('test', TAL_TEST_FILES_DIR . 'locale/');
+        $gettext->addDomain('test2', TAL_TEST_FILES_DIR . 'locale/');
         $gettext->useDomain('test');
 
         $tpl = $this->newPHPTAL('input/gettext.04.html');
@@ -111,7 +114,7 @@ class GetTextTest extends PhpTal
     {
         $gettext = $this->getTextTranslator();
         $gettext->setLanguage('en_GB', 'en_GB.utf8');
-        $gettext->addDomain('test', './../locale/');
+        $gettext->addDomain('test', TAL_TEST_FILES_DIR . 'locale/');
         $gettext->useDomain('test');
 
         $tpl = $this->newPHPTAL('input/gettext.05.html');
@@ -126,7 +129,7 @@ class GetTextTest extends PhpTal
     {
         $gettext = $this->getTextTranslator();
         $gettext->setLanguage('en_GB', 'en_GB.utf8');
-        $gettext->addDomain('test', './../locale/');
+        $gettext->addDomain('test', TAL_TEST_FILES_DIR . 'locale/');
         $gettext->useDomain('test');
 
         $tpl = $this->newPHPTAL('input/gettext.06.html');
@@ -146,7 +149,7 @@ class GetTextTest extends PhpTal
     {
         $gettext = $this->getTextTranslator();
         $gettext->setLanguage('en_GB', 'en_GB.utf8');
-        $gettext->addDomain('test', './../locale/');
+        $gettext->addDomain('test', TAL_TEST_FILES_DIR . 'locale/');
         $gettext->useDomain('test');
 
         $tpl = $this->newPHPTAL('input/gettext.07.html');

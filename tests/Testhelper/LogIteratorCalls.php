@@ -30,11 +30,6 @@ class LogIteratorCalls implements \Iterator
      */
     public $log = '';
 
-    /**
-     * LogIteratorCalls constructor.
-     *
-     * @param $arr
-     */
     public function __construct($arr)
     {
         if ($arr instanceof \Iterator) {

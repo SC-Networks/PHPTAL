@@ -18,25 +18,36 @@ declare(strict_types=1);
 
 namespace Tests\Testhelper;
 
-/**
- * Class PHPTAL_TestCodeCache
- * @package Testhelper
- */
-class PHPTAL_TestCodeCache extends \PhpTal\PHPTAL
+class DummyClass
 {
     /**
-     * @var bool
+     * @var null
      */
-    public $testHasParsed = false;
+    public $foo;
 
     /**
-     * Parse currently set template, prefilter and generate PHP code.
-     *
-     * @return string (compiled PHP code)
+     * @var string
      */
-    public function parse(): string
+    public $pubTest = 'pub-property';
+
+    /**
+     * @var string
+     */
+    public $protTest = 'prot-property';
+
+    /**
+     * @return string
+     */
+    protected function protTest(): string
     {
-        $this->testHasParsed = true;
-        return parent::parse();
+        return 'prot-method';
+    }
+
+    /**
+     * @return string
+     */
+    public function pubTest(): string
+    {
+        return 'pub-method';
     }
 }

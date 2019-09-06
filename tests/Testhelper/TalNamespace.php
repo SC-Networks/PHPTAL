@@ -18,36 +18,9 @@ declare(strict_types=1);
 
 namespace Tests\Testhelper;
 
-class PhptalPathTest_DummyClass
+use PhpTal\TalNamespace\Builtin;
+
+class TalNamespace extends Builtin
 {
-    /**
-     * @var null
-     */
-    public $foo;
-
-    /**
-     * @var string
-     */
-    public $pubTest = 'pub-property';
-
-    /**
-     * @var string
-     */
-    public $protTest = 'prot-property';
-
-    /**
-     * @return string
-     */
-    protected function protTest(): string
-    {
-        return 'prot-method';
-    }
-
-    /**
-     * @return string
-     */
-    public function pubTest(): string
-    {
-        return 'pub-method';
-    }
+    // noop
 }

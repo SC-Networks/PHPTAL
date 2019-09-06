@@ -1,67 +1,73 @@
 <?php
+declare(strict_types=1);
+
 /**
  * PHPTAL templating engine
+ *
+ * Originally developed by Laurent Bedubourg and Kornel Lesiński
  *
  * @category HTML
  * @package  PHPTAL
  * @author   Laurent Bedubourg <lbedubourg@motion-twin.com>
  * @author   Kornel Lesiński <kornel@aardvarkmedia.co.uk>
+ * @author   See contributors list @ github
  * @license  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
  * @link     http://phptal.org/
+ * @link     https://github.com/SC-Networks/PHPTAL
  */
 
 namespace Tests;
 
-use Tests\Testhelper\PhptalPathTest_DummyClass;
+use PhpTal\Context;
+use PhpTal\Exception\VariableNotFoundException;
+use Tests\Testcase\PhpTalTestCase;
+use Tests\Testhelper\DummyClass;
 
-class PhptalPathTest extends \Tests\Testcase\PhpTal
+class PhptalPathTest extends PhpTalTestCase
 {
-    public function testZeroIndex()
+    public function testZeroIndex(): void
     {
-        $data   = array(1, 0, 3);
-        $result = \PhpTal\Context::path($data, '0');
-        $this->assertEquals(1, $result);
+        $data = [1, 0, 3];
+        $result = Context::path($data, '0');
+        static::assertSame(1, $result);
     }
 
-    public function testProtectedMethodIgnored()
+    public function testProtectedMethodIgnored(): void
     {
         $tpl = $this->newPHPTAL();
-        $tpl->obj = new PhptalPathTest_DummyClass();
+        $tpl->obj = new DummyClass();
         $tpl->setSource('<test tal:content="obj/protTest"></test>');
 
-        $this->assertEquals('<test>prot-property</test>', $tpl->execute());
+        static::assertSame('<test>prot-property</test>', $tpl->execute());
     }
 
-    public function testPublicMethodFirst()
+    public function testPublicMethodFirst(): void
     {
         $tpl = $this->newPHPTAL();
-        $tpl->obj = new PhptalPathTest_DummyClass();
+        $tpl->obj = new DummyClass();
         $tpl->setSource('<test tal:content="obj/pubTest"></test>');
 
-        $this->assertEquals('<test>pub-method</test>', $tpl->execute());
+        static::assertSame('<test>pub-method</test>', $tpl->execute());
     }
 
-    public function testNestedArrays()
+    public function testNestedArrays(): void
     {
         $tpl = $this->newPHPTAL();
-        $tpl->arr = array('items' => array (
-                array (
-                    'details' => array()
-                )
-            ) );
+        $tpl->arr = [
+            'items' => [
+                [
+                    'details' => []
+                ]
+            ]
+        ];
         $tpl->setSource('<test tal:content="arr/items/0/details/0/notfound"></test>');
 
-        try {
-            $output = $tpl->execute();
-        } catch (\PhpTal\Exception\VariableNotFoundException $E) {
-            $this->assertRegExp("/Array 'details' doesn/", $E->getMessage());
-            return;
-        }
-
-        $this->fail('Execute must throw \PhpTal\Exception\VariableNotFoundException');
+        $this->expectException(VariableNotFoundException::class);
+        $this->expectExceptionMessage("Array 'details' doesn");
+        $tpl->execute();
     }
 
-    public function testDefinedButNullProperty()
+    public function testDefinedButNullProperty(): void
     {
         $src = <<<EOS
 <span tal:content="o/foo"/>
@@ -76,9 +82,9 @@ EOS;
 
         $tpl = $this->newPHPTAL();
         $tpl->setSource($src, __FILE__);
-        $tpl->o = new PhptalPathTest_DummyClass();
+        $tpl->o = new DummyClass();
         $res = $tpl->execute();
 
-        $this->assertEquals($exp, $res);
+        static::assertSame($exp, $res);
     }
 }

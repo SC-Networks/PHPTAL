@@ -16,9 +16,7 @@ declare(strict_types=1);
  * @link     https://github.com/SC-Networks/PHPTAL
  */
 
-namespace Testhelper;
-
-use Tests\Testhelper\MyIterable;
+namespace Tests\Testhelper;
 
 class MyIterableWithSize extends MyIterable
 {
