@@ -21,10 +21,6 @@ namespace Tests\Testhelper;
 use PhpTal\SourceInterface;
 use PhpTal\SourceResolverInterface;
 
-/**
- * Class CantFindAThing
- * @package Testhelper
- */
 class CantFindAThing implements SourceResolverInterface
 {
     public function resolve(string $path): ?SourceInterface

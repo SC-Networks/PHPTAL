@@ -1,34 +1,43 @@
 <?php
+declare(strict_types=1);
 
 /**
  * PHPTAL templating engine
+ *
+ * Originally developed by Laurent Bedubourg and Kornel Lesiński
  *
  * @category HTML
  * @package  PHPTAL
  * @author   Laurent Bedubourg <lbedubourg@motion-twin.com>
  * @author   Kornel Lesiński <kornel@aardvarkmedia.co.uk>
+ * @author   See contributors list @ github
  * @license  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
  * @link     http://phptal.org/
+ * @link     https://github.com/SC-Networks/PHPTAL
  */
 
 namespace Tests;
 
+use PhpTal\Dom\PHPTALDocumentBuilder;
+use PhpTal\Dom\SaxXmlParser;
 use PhpTal\Exception\ParserException;
+use Tests\Testcase\PhpTalTestCase;
+use Tests\Testhelper\Helper;
 use Tests\Testhelper\MyDocumentBuilder;
 
-class XmlParserTest extends \Tests\Testcase\PhpTal
+class XmlParserTest extends PhpTalTestCase
 {
-    public function testSimpleParse()
+    public function testSimpleParse(): void
     {
-        $parser = new \PhpTal\Dom\SaxXmlParser('UTF-8');
-        $parser->parseFile($builder = new MyDocumentBuilder(), '../input/xml.01.xml')->getResult();
-        $expected = trim(file_get_contents('../input/xml.01.xml'));
-        $this->assertEquals($expected, $builder->result);
-        $this->assertEquals(7, $builder->elementStarts);
-        $this->assertEquals(7, $builder->elementCloses);
+        $parser = new SaxXmlParser('UTF-8');
+        $parser->parseFile($builder = new MyDocumentBuilder(), TAL_TEST_FILES_DIR . 'input/xml.01.xml')->getResult();
+        $expected = trim(file_get_contents(TAL_TEST_FILES_DIR . 'input/xml.01.xml'));
+        static::assertSame($expected, $builder->result);
+        static::assertSame(7, $builder->elementStarts);
+        static::assertSame(7, $builder->elementCloses);
     }
 
-    public function testXMLStylesheet()
+    public function testXMLStylesheet(): void
     {
         $tpl = $this->newPHPTAL();
         $tpl->baz = 'quz';
@@ -43,123 +52,119 @@ class XmlParserTest extends \Tests\Testcase\PhpTal
         <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="pl"></html>', $tpl->execute());
     }
 
-    public function testCharactersBeforeBegining()
+    public function testCharactersBeforeBegining(): void
     {
-        $parser = new \PhpTal\Dom\SaxXmlParser('UTF-8');
+        $parser = new SaxXmlParser('UTF-8');
         try {
             $parser->parseFile($builder = new MyDocumentBuilder(), 'input/xml.02.xml')->getResult();
-            $this->assertTrue( false );
-        }
-        catch (\Exception $e)
-        {
-            $this->assertTrue( true );
+            static::assertTrue(false);
+        } catch (\Exception $e) {
+            static::assertTrue(true);
         }
     }
 
-    public function testAllowGtAndLtInTextNodes()
+    public function testAllowGtAndLtInTextNodes(): void
     {
-        $parser = new \PhpTal\Dom\SaxXmlParser('UTF-8');
-        $parser->parseFile($builder = new MyDocumentBuilder(), '../input/xml.03.xml')->getResult();
+        $parser = new SaxXmlParser('UTF-8');
+        $parser->parseFile($builder = new MyDocumentBuilder(), TAL_TEST_FILES_DIR . 'input/xml.03.xml')->getResult();
 
-        $this->assertEquals(\Tests\Testhelper\Helper::normalizeHtmlFile('output/xml.03.xml'), \Tests\Testhelper\Helper::normalizeHtml($builder->result));
-        $this->assertEquals(3, $builder->elementStarts);
-        $this->assertEquals(3, $builder->elementCloses);
+        static::assertSame(Helper::normalizeHtmlFile('output/xml.03.xml'), Helper::normalizeHtml($builder->result));
+        static::assertSame(3, $builder->elementStarts);
+        static::assertSame(3, $builder->elementCloses);
         // a '<' character withing some text data make the parser call 2 times
         // the onElementData() method
-        $this->assertEquals(7, $builder->datas);
+        static::assertSame(7, $builder->datas);
     }
 
 
-    public function testRejectsInvalidAttributes1()
+    public function testRejectsInvalidAttributes1(): void
     {
         $this->expectException(ParserException::class);
-        $parser = new \PhpTal\Dom\SaxXmlParser('UTF-8');
+        $parser = new SaxXmlParser('UTF-8');
         $parser->parseString($builder = new MyDocumentBuilder(), '<foo bar="bar"baz="baz"/>')->getResult();
         $this->fail($builder->result);
     }
 
-    public function testRejectsInvalidAttributes2()
+    public function testRejectsInvalidAttributes2(): void
     {
         $this->expectException(ParserException::class);
-        $parser = new \PhpTal\Dom\SaxXmlParser('UTF-8');
+        $parser = new SaxXmlParser('UTF-8');
         $parser->parseString($builder = new MyDocumentBuilder(), '<foo bar;="bar"/>')->getResult();
         $this->fail($builder->result);
     }
 
-    public function testSkipsBom()
+    public function testSkipsBom(): void
     {
-        $parser = new \PhpTal\Dom\SaxXmlParser('UTF-8');
+        $parser = new SaxXmlParser('UTF-8');
         $parser->parseString($builder = new MyDocumentBuilder(), "\xef\xbb\xbf<foo/>")->getResult();
-        $this->assertEquals("<foo></foo>", $builder->result);
+        static::assertSame("<foo></foo>", $builder->result);
     }
 
-    public function testAllowsTrickyQnames()
+    public function testAllowsTrickyQnames(): void
     {
-        $parser = new \PhpTal\Dom\SaxXmlParser('UTF-8');
+        $parser = new SaxXmlParser('UTF-8');
         $parser->parseString($builder = new MyDocumentBuilder(), "\xef\xbb\xbf<_.:_ xmlns:_.='tricky'/>")->getResult();
-        $this->assertEquals("<_.:_ xmlns:_.=\"tricky\"></_.:_>", $builder->result);
+        static::assertSame("<_.:_ xmlns:_.=\"tricky\"></_.:_>", $builder->result);
     }
 
-    public function testRootNS()
+    public function testRootNS(): void
     {
-        $parser = new \PhpTal\Dom\SaxXmlParser('UTF-8');
+        $parser = new SaxXmlParser('UTF-8');
         $parser->parseString($builder = new MyDocumentBuilder(), "<f xmlns='foo:bar'/>")->getResult();
-        $this->assertEquals('<f xmlns="foo:bar"></f>', $builder->result);
+        static::assertSame('<f xmlns="foo:bar"></f>', $builder->result);
     }
 
-    public function testAllowsXMLStylesheet()
+    public function testAllowsXMLStylesheet(): void
     {
-        $parser = new \PhpTal\Dom\SaxXmlParser('UTF-8');
+        $parser = new SaxXmlParser('UTF-8');
         $src = "<foo>
         <?xml-stylesheet href='foo1' ?>
         <?xml-stylesheet href='foo2' ?>
         </foo>";
         $parser->parseString($builder = new MyDocumentBuilder(), $src)->getResult();
-        $this->assertEquals($src, $builder->result);
+        static::assertSame($src, $builder->result);
     }
 
-    public function testFixOrRejectCDATAClose()
+    public function testFixOrRejectCDATAClose(): void
     {
-        $parser = new \PhpTal\Dom\SaxXmlParser('UTF-8');
+        $parser = new SaxXmlParser('UTF-8');
         $src = '<a> ]]> </a>';
-        try
-        {
+        try {
             $parser->parseString($builder = new MyDocumentBuilder(), $src)->getResult();
-            $this->assertEquals('<a> ]]&gt; </a>', $builder->result);
+            static::assertSame('<a> ]]&gt; </a>', $builder->result);
+        } catch (ParserException $e) { /* ok - rejecting is one way to do it */
         }
-        catch(\PhpTal\Exception\ParserException $e)
-        { /* ok - rejecting is one way to do it */ }
     }
 
-    public function testSelfClosingSyntaxError()
+    public function testSelfClosingSyntaxError(): void
     {
         $this->expectException(ParserException::class);
-        $parser = new \PhpTal\Dom\SaxXmlParser('UTF-8');
+        $parser = new SaxXmlParser('UTF-8');
         $src = '<a / >';
 
         $parser->parseString($builder = new MyDocumentBuilder(), $src)->getResult();
     }
 
-    public function testFixOrRejectEntities()
+    public function testFixOrRejectEntities(): void
     {
-        $parser = new \PhpTal\Dom\SaxXmlParser('UTF-8');
+        $parser = new SaxXmlParser('UTF-8');
         $src = '<a href="?foo=1&bar=baz&copy=true&reg=x"> & ; &#x100; &nbsp; &#10; &--;</a>';
-        try
-        {
+        try {
             $parser->parseString($builder = new MyDocumentBuilder(), $src)->getResult();
-            $this->assertEquals('<a href="?foo=1&amp;bar=baz&amp;copy=true&amp;reg=x"> &amp; ; &#x100; &nbsp; &#10; &amp;--;</a>', $builder->result);
+            static::assertSame(
+                '<a href="?foo=1&amp;bar=baz&amp;copy=true&amp;reg=x"> &amp; ; &#x100; &nbsp; &#10; &amp;--;</a>',
+                $builder->result
+            );
+        } catch (ParserException $e) { /* ok - rejecting is one way to do it */
         }
-        catch(\PhpTal\Exception\ParserException $e)
-        { /* ok - rejecting is one way to do it */ }
     }
 
-    public function testLineAccuracy()
+    public function testLineAccuracy(): void
     {
-        $parser = new \PhpTal\Dom\SaxXmlParser('UTF-8');
-        try
-        {
-            $parser->parseString(new \PhpTal\Dom\PHPTALDocumentBuilder(),
-"<x>1
+        $parser = new SaxXmlParser('UTF-8');
+        try {
+            $parser->parseString(new PHPTALDocumentBuilder(),
+                "<x>1
 
 3
  4
@@ -168,20 +173,17 @@ class XmlParserTest extends \Tests\Testcase\PhpTal
             </x>
         ");
             $this->fail("Accepted invalid XML");
-        }
-        catch(\PhpTal\Exception\ParserException $e)
-        {
-            $this->assertEquals(6, $e->srcLine);
+        } catch (ParserException $e) {
+            static::assertSame(6, $e->srcLine);
         }
     }
 
-    public function testLineAccuracy2()
+    public function testLineAccuracy2(): void
     {
-        $parser = new \PhpTal\Dom\SaxXmlParser('UTF-8');
-        try
-        {
-            $parser->parseString(new \PhpTal\Dom\PHPTALDocumentBuilder(),
-"<x foo1='
+        $parser = new SaxXmlParser('UTF-8');
+        try {
+            $parser->parseString(new PHPTALDocumentBuilder(),
+                "<x foo1='
 2'
 
 bar4='baz'
@@ -192,19 +194,16 @@ bar4='baz'
 
 ");
             $this->fail("Accepted invalid XML");
-        }
-        catch(\PhpTal\Exception\ParserException $e)
-        {
-            $this->assertEquals(7, $e->srcLine);
+        } catch (ParserException $e) {
+            static::assertSame(7, $e->srcLine);
         }
     }
 
-    public function testLineAccuracy3()
+    public function testLineAccuracy3(): void
     {
-        $parser = new \PhpTal\Dom\SaxXmlParser('UTF-8');
-        try
-        {
-            $parser->parseString(new \PhpTal\Dom\PHPTALDocumentBuilder(),
+        $parser = new SaxXmlParser('UTF-8');
+        try {
+            $parser->parseString(new PHPTALDocumentBuilder(),
                 "
 
 <x foo1='
@@ -217,45 +216,40 @@ xxxx/>
 
 ");
             $this->fail("Accepted invalid XML");
-        }
-        catch(\PhpTal\Exception\ParserException $e)
-        {
-            $this->assertEquals(8, $e->srcLine);
+        } catch (ParserException $e) {
+            static::assertSame(8, $e->srcLine);
         }
     }
 
-    public function testClosingRoot()
+    public function testClosingRoot(): void
     {
-        $parser = new \PhpTal\Dom\SaxXmlParser('UTF-8');
-        try
-        {
-            $parser->parseString(new \PhpTal\Dom\PHPTALDocumentBuilder(), "<imrootelement/></ishallnotbeclosed>");
+        $parser = new SaxXmlParser('UTF-8');
+        try {
+            $parser->parseString(new PHPTALDocumentBuilder(), "<imrootelement/></ishallnotbeclosed>");
             $this->fail("Accepted invalid XML");
-        }
-        catch(\PhpTal\Exception\ParserException $e)
-        {
-            $this->assertStringContainsString('ishallnotbeclosed', $e->getMessage());
-            $this->assertStringNotContainsString('imrootelement', $e->getMessage());
-            $this->assertStringNotContainsString("documentElement", $e->getMessage());
+        } catch (ParserException $e) {
+            static::assertStringContainsString('ishallnotbeclosed', $e->getMessage());
+            static::assertStringNotContainsString('imrootelement', $e->getMessage());
+            static::assertStringNotContainsString("documentElement", $e->getMessage());
         }
     }
 
-    public function testNotClosing()
+    public function testNotClosing(): void
     {
-        $parser = new \PhpTal\Dom\SaxXmlParser('UTF-8');
-        try
-        {
-            $parser->parseString(new \PhpTal\Dom\PHPTALDocumentBuilder(), "<element_a><element_b><element_x/><element_c><element_d><element_e>");
+        $parser = new SaxXmlParser('UTF-8');
+        try {
+            $parser->parseString(
+                new PHPTALDocumentBuilder(),
+                "<element_a><element_b><element_x/><element_c><element_d><element_e>"
+            );
             $this->fail("Accepted invalid XML");
-        }
-        catch(\PhpTal\Exception\ParserException $e)
-        {
-            $this->assertStringNotContainsString("documentElement", $e->getMessage());
-            $this->assertRegExp("/element_e.*element_d.*element_c.*element_b.*element_a/", $e->getMessage());
+        } catch (ParserException $e) {
+            static::assertStringNotContainsString("documentElement", $e->getMessage());
+            static::assertRegExp("/element_e.*element_d.*element_c.*element_b.*element_a/", $e->getMessage());
         }
     }
 
-    public function testSPRY()
+    public function testSPRY(): void
     {
         $tpl = $this->newPHPTAL();
         $tpl->setSource('<html>
@@ -270,7 +264,7 @@ xxxx/>
         $tpl->prepare();
     }
 
-    public function testSPRY2()
+    public function testSPRY2(): void
     {
         $tpl = $this->newPHPTAL();
         $tpl->phptal_var = 'ok';

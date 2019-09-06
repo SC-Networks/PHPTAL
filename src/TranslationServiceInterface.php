@@ -60,7 +60,7 @@ interface TranslationServiceInterface
      * @param string $key - name of the variable
      * @param string $value_escaped - XHTML markup
      */
-    public function setVar(string $key, $value_escaped): void;
+    public function setVar(string $key, string $value_escaped): void;
 
     /**
      * Translate a gettext key and interpolate variables.

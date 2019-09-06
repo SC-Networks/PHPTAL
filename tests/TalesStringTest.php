@@ -1,82 +1,93 @@
 <?php
+declare(strict_types=1);
+
 /**
  * PHPTAL templating engine
+ *
+ * Originally developed by Laurent Bedubourg and Kornel Lesiński
  *
  * @category HTML
  * @package  PHPTAL
  * @author   Laurent Bedubourg <lbedubourg@motion-twin.com>
  * @author   Kornel Lesiński <kornel@aardvarkmedia.co.uk>
+ * @author   See contributors list @ github
  * @license  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
  * @link     http://phptal.org/
+ * @link     https://github.com/SC-Networks/PHPTAL
  */
 
 namespace Tests;
 
-class TalesStringTest extends \Tests\Testcase\PhpTal {
+use PhpTal\Php\TalesInternal;
+use Tests\Testcase\PhpTalTestCase;
+use Tests\Testhelper\Helper;
 
-    public function testSimple()
+class TalesStringTest extends PhpTalTestCase
+{
+
+    public function testSimple(): void
     {
-        $this->assertEquals('\'this is a string\'', \PhpTal\Php\TalesInternal::string('this is a string'));
+        static::assertSame('\'this is a string\'', TalesInternal::string('this is a string'));
     }
 
-    public function testDoubleDollar()
+    public function testDoubleDollar(): void
     {
-        $this->assertEquals('\'this is a $string\'', \PhpTal\Php\TalesInternal::string('this is a $$string'));
+        static::assertSame('\'this is a $string\'', TalesInternal::string('this is a $$string'));
     }
 
-    public function testSubPathSimple()
+    public function testSubPathSimple(): void
     {
-        $res = \PhpTal\Php\TalesInternal::string('hello $name how are you ?');
-        $this->assertRegExp('/\'hello \'.*?\$ctx->name.*?\' how are you \?\'$/', $res);
+        $res = TalesInternal::string('hello $name how are you ?');
+        static::assertRegExp('/\'hello \'.*?\$ctx->name.*?\' how are you \?\'$/', $res);
     }
 
-    public function testSubPath()
+    public function testSubPath(): void
     {
-        $res = \PhpTal\Php\TalesInternal::string('${name}');
-        $this->assertRegExp('/^(\'\'\s*?\.*)?\$ctx->name(.*?\'\')?$/', $res);
+        $res = TalesInternal::string('${name}');
+        static::assertRegExp('/^(\'\'\s*?\.*)?\$ctx->name(.*?\'\')?$/', $res);
     }
 
-    public function testSubPathExtended()
+    public function testSubPathExtended(): void
     {
-        $res = \PhpTal\Php\TalesInternal::string('hello ${user/name} how are you ?');
-        $this->assertRegExp('/\'hello \'.*?\$ctx->user, \'name\'.*?\' how are you \?\'$/', $res);
+        $res = TalesInternal::string('hello ${user/name} how are you ?');
+        static::assertRegExp('/\'hello \'.*?\$ctx->user, \'name\'.*?\' how are you \?\'$/', $res);
     }
 
-    public function testQuote()
+    public function testQuote(): void
     {
         $tpl = $this->newPHPTAL('input/tales-string-01.html');
         $res = $tpl->execute();
-        $res = \Tests\Testhelper\Helper::normalizeHtml($res);
-        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/tales-string-01.html');
-        $this->assertEquals($exp, $res);
+        $res = Helper::normalizeHtml($res);
+        $exp = Helper::normalizeHtmlFile('output/tales-string-01.html');
+        static::assertSame($exp, $res);
     }
 
-    public function testDoubleVar()
+    public function testDoubleVar(): void
     {
-        $res = \PhpTal\Php\TalesInternal::string('hello $foo $bar');
-        $this->assertRegExp('/ctx->foo/', $res, '$foo not interpolated');
-        $this->assertRegExp('/ctx->bar/', $res, '$bar not interpolated');
+        $res = TalesInternal::string('hello $foo $bar');
+        static::assertRegExp('/ctx->foo/', $res, '$foo not interpolated');
+        static::assertRegExp('/ctx->bar/', $res, '$bar not interpolated');
     }
 
-    public function testDoubleDotComa()
+    public function testDoubleDotComa(): void
     {
         $tpl = $this->newPHPTAL('input/tales-string-02.html');
         $res = $tpl->execute();
-        $res = \Tests\Testhelper\Helper::normalizeHtml($res);
-        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/tales-string-02.html');
-        $this->assertEquals($exp, $res);
+        $res = Helper::normalizeHtml($res);
+        $exp = Helper::normalizeHtmlFile('output/tales-string-02.html');
+        static::assertSame($exp, $res);
     }
 
-    public function testEscape()
+    public function testEscape(): void
     {
         $tpl = $this->newPHPTAL('input/tales-string-03.html');
         $res = $tpl->execute();
-        $res = \Tests\Testhelper\Helper::normalizeHtml($res);
-        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/tales-string-03.html');
-        $this->assertEquals($exp, $res);
+        $res = Helper::normalizeHtml($res);
+        $exp = Helper::normalizeHtmlFile('output/tales-string-03.html');
+        static::assertSame($exp, $res);
     }
 
-    public function testStructure()
+    public function testStructure(): void
     {
         $tpl = $this->newPHPTAL();
         $tpl->setSource('<p>
@@ -85,7 +96,9 @@ class TalesStringTest extends \Tests\Testcase\PhpTal {
             <x y="${string:&lt;foo/&gt;}" tal:content="string:&lt;foo/&gt;" />
             <x y="${structure string:&lt;foo/&gt;}" tal:content="structure string:&lt;foo/&gt;" />
         </p>');
-        $this->assertEquals(\Tests\Testhelper\Helper::normalizeHtml('<p>&lt;foo/&gt;<foo/><x y="&lt;foo/&gt;">&lt;foo/&gt;</x><x y="<foo/>"><foo/></x></p>'),
-                            \Tests\Testhelper\Helper::normalizeHtml($tpl->execute()));
+        static::assertSame(
+            Helper::normalizeHtml('<p>&lt;foo/&gt;<foo/><x y="&lt;foo/&gt;">&lt;foo/&gt;</x><x y="<foo/>"><foo/></x></p>'),
+            Helper::normalizeHtml($tpl->execute())
+        );
     }
 }

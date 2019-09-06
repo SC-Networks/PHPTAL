@@ -1,27 +1,34 @@
 <?php
+declare(strict_types=1);
+
 /**
  * PHPTAL templating engine
+ *
+ * Originally developed by Laurent Bedubourg and Kornel Lesiński
  *
  * @category HTML
  * @package  PHPTAL
  * @author   Laurent Bedubourg <lbedubourg@motion-twin.com>
  * @author   Kornel Lesiński <kornel@aardvarkmedia.co.uk>
+ * @author   See contributors list @ github
  * @license  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
  * @link     http://phptal.org/
+ * @link     https://github.com/SC-Networks/PHPTAL
  */
 
 namespace Tests;
 
 use PhpTal\Exception\ParserException;
+use Tests\Testcase\PhpTalTestCase;
 
-class BlockTest extends \Tests\Testcase\PhpTal
+class BlockTest extends PhpTalTestCase
 {
     function testTalBlock()
     {
         $t = $this->newPHPTAL();
         $t->setSource('<tal:block content="string:content"></tal:block>');
         $res = $t->execute();
-        $this->assertEquals('content', $res);
+        static::assertSame('content', $res);
     }
 
     function testMetalBlock()
@@ -29,7 +36,7 @@ class BlockTest extends \Tests\Testcase\PhpTal
         $t = $this->newPHPTAL();
         $t->setSource('<metal:block>foo</metal:block>');
         $res = $t->execute();
-        $this->assertEquals('foo', $res);
+        static::assertSame('foo', $res);
     }
 
     function testSomeNamespaceBlock()
@@ -37,7 +44,7 @@ class BlockTest extends \Tests\Testcase\PhpTal
         $t = $this->newPHPTAL();
         $t->setSource('<foo:block xmlns:foo="http://phptal.example.com">foo</foo:block>');
         $res = $t->execute();
-        $this->assertEquals('<foo:block xmlns:foo="http://phptal.example.com">foo</foo:block>', $res);
+        static::assertSame('<foo:block xmlns:foo="http://phptal.example.com">foo</foo:block>', $res);
     }
 
     function testInvalidNamespaceBlock()

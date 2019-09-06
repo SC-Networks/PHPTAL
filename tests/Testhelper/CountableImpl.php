@@ -25,11 +25,6 @@ class CountableImpl implements \Countable
      */
     private $cnt;
 
-    /**
-     * CountableImpl constructor.
-     *
-     * @param int $cnt
-     */
     public function __construct(int $cnt = null)
     {
         $this->cnt = $cnt ?? 0;

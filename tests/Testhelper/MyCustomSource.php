@@ -20,10 +20,6 @@ namespace Tests\Testhelper;
 
 use PhpTal\SourceInterface;
 
-/**
- * Class MyCustomSource
- * @package Testhelper
- */
 class MyCustomSource implements SourceInterface
 {
     /**
@@ -31,10 +27,6 @@ class MyCustomSource implements SourceInterface
      */
     private $path;
 
-    /**
-     * MyCustomSource constructor.
-     * @param string $path
-     */
     public function __construct(string $path)
     {
         $this->path = $path;

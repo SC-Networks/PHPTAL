@@ -22,10 +22,6 @@ use PhpTal\SourceInterface;
 use PhpTal\SourceResolverInterface;
 use PhpTal\StringSource;
 
-/**
- * Class MyTestResolver
- * @package Testhelper
- */
 class MyTestResolver implements SourceResolverInterface
 {
     /**

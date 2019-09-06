@@ -18,9 +18,23 @@ declare(strict_types=1);
 
 namespace Tests\Testhelper;
 
-use PhpTal\TalNamespace\Builtin;
+use PhpTal\PHPTAL;
 
-class Test_PHPTAL_Namespace extends Builtin
+class TestCodeCache extends PHPTAL
 {
-    // noop
+    /**
+     * @var bool
+     */
+    public $testHasParsed = false;
+
+    /**
+     * Parse currently set template, prefilter and generate PHP code.
+     *
+     * @return string (compiled PHP code)
+     */
+    public function parse(): string
+    {
+        $this->testHasParsed = true;
+        return parent::parse();
+    }
 }

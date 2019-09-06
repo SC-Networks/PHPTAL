@@ -18,11 +18,12 @@ declare(strict_types=1);
 
 namespace Tests\Testcase;
 
+use PhpTal\PHPTAL;
 use PhpTal\PhpTalInterface;
 use PHPUnit\Framework\TestCase;
 use Tests\Testhelper\Helper;
 
-abstract class PhpTal extends TestCase
+abstract class PhpTalTestCase extends TestCase
 {
 
     /**
@@ -37,7 +38,7 @@ abstract class PhpTal extends TestCase
 
     public function setUp(): void
     {
-        static::assertTrue(\PhpTal\PHPTAL::PHPTAL_VERSION >= '3_0_0');
+        static::assertTrue(PHPTAL::PHPTAL_VERSION >= '3_0_0');
 
         $this->buffer_level = ob_get_level();
 
@@ -72,8 +73,8 @@ abstract class PhpTal extends TestCase
 
     protected function newPHPTAL(?string $tpl = null): PhpTalInterface
     {
-        $path = $tpl === null ? null : __DIR__ . '/../' . $tpl;
-        $p = new \PhpTal\PHPTAL($path);
+        $path = $tpl === null ? null : TAL_TEST_FILES_DIR . $tpl;
+        $p = new PHPTAL($path);
         $p->setForceReparse(true);
         $p->allowPhpModifier(); // many existing tests make use of php modifier
         return $p;

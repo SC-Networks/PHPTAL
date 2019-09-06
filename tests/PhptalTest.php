@@ -4,247 +4,251 @@ declare(strict_types=1);
 /**
  * PHPTAL templating engine
  *
+ * Originally developed by Laurent Bedubourg and Kornel Lesiński
+ *
  * @category HTML
  * @package  PHPTAL
  * @author   Laurent Bedubourg <lbedubourg@motion-twin.com>
  * @author   Kornel Lesiński <kornel@aardvarkmedia.co.uk>
+ * @author   See contributors list @ github
  * @license  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
  * @link     http://phptal.org/
+ * @link     https://github.com/SC-Networks/PHPTAL
  */
 
 namespace Tests;
 
 use PhpTal\Exception\ConfigurationException;
+use PhpTal\Exception\IOException;
+use PhpTal\Exception\PhpTalException;
 use PhpTal\Exception\TemplateException;
+use PhpTal\PHPTAL;
+use Tests\Testcase\PhpTalTestCase;
+use Tests\Testhelper\Helper;
 
-class PhptalTest extends \Tests\Testcase\PhpTal
+class PhptalTest extends PhpTalTestCase
 {
-    public function test01()
+    public function test01(): void
     {
         $tpl = $this->newPHPTAL('input/phptal.01.html');
-        $tpl->setOutputMode(\PhpTal\PHPTAL::XML);
+        $tpl->setOutputMode(PHPTAL::XML);
         $res = $tpl->execute();
-        $this->assertEquals('<dummy/>', $res);
+        static::assertSame('<dummy/>', $res);
     }
 
-    public function testXmlHeader()
+    public function testXmlHeader(): void
     {
         $tpl = $this->newPHPTAL('input/phptal.02.html');
-        $res = \Tests\Testhelper\Helper::normalizeHtml($tpl->execute());
-        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/phptal.02.html');
-        $this->assertEquals($exp, $res);
+        $res = Helper::normalizeHtml($tpl->execute());
+        $exp = Helper::normalizeHtmlFile('output/phptal.02.html');
+        static::assertSame($exp, $res);
     }
 
-    public function testExceptionNoEcho()
+    public function testExceptionNoEcho(): void
     {
         $tpl = $this->newPHPTAL('input/phptal.03.html');
         ob_start();
         try {
             $res = $tpl->execute();
-        }
-        catch (\Exception $e)
-        {
+        } catch (\Exception $e) {
         }
         $c = ob_get_contents();
         ob_end_clean();
-        $this->assertEquals('', $c);
+        static::assertSame('', $c);
     }
 
-    public function testRepositorySingle()
+    public function testRepositorySingle(): void
     {
         $tpl = $this->newPHPTAL('input/phptal.01.html');
         $tpl->setTemplateRepository('input');
-        $tpl->setOutputMode(\PhpTal\PHPTAL::XML);
+        $tpl->setOutputMode(PHPTAL::XML);
         $res = $tpl->execute();
-        $this->assertEquals('<dummy/>', $res);
+        static::assertSame('<dummy/>', $res);
     }
 
-    public function testRepositorySingleWithSlash()
+    public function testRepositorySingleWithSlash(): void
     {
         $tpl = $this->newPHPTAL('input/phptal.01.html');
         $tpl->setTemplateRepository('input/');
-        $tpl->setOutputMode(\PhpTal\PHPTAL::XML);
+        $tpl->setOutputMode(PHPTAL::XML);
         $res = $tpl->execute();
-        $this->assertEquals('<dummy/>', $res);
+        static::assertSame('<dummy/>', $res);
     }
 
-    public function testRepositoryMuliple()
+    public function testRepositoryMuliple(): void
     {
         $tpl = $this->newPHPTAL('input/phptal.01.html');
-        $tpl->setTemplateRepository(array('bar', 'input/'));
-        $tpl->setOutputMode(\PhpTal\PHPTAL::XML);
+        $tpl->setTemplateRepository(['bar', 'input/']);
+        $tpl->setOutputMode(PHPTAL::XML);
         $res = $tpl->execute();
-        $this->assertEquals('<dummy/>', $res);
+        static::assertSame('<dummy/>', $res);
     }
 
-    public function testSetTemplate()
+    public function testSetTemplate(): void
     {
         $tpl = $this->newPHPTAL();
-        $tpl->setTemplateRepository(array('bar', '../input/'));
-        $tpl->setOutputMode(\PhpTal\PHPTAL::XML);
+        $tpl->setTemplateRepository(['bar', TAL_TEST_FILES_DIR . 'input/']);
+        $tpl->setOutputMode(PHPTAL::XML);
         $tpl->setTemplate('phptal.01.html');
         $res = $tpl->execute();
-        $this->assertEquals('<dummy/>', $res);
+        static::assertSame('<dummy/>', $res);
     }
 
-    public function testXmlMode()
+    public function testXmlMode(): void
     {
         $tpl = $this->newPHPTAL('input/xml.04.xml');
-        $tpl->setOutputMode(\PhpTal\PHPTAL::XML);
+        $tpl->setOutputMode(PHPTAL::XML);
         $res = $tpl->execute();
-        $exp = file_get_contents('../input/xml.04.xml');
+        $exp = file_get_contents(TAL_TEST_FILES_DIR . 'input/xml.04.xml');
         $this->assertXMLEquals($exp, $res);
     }
 
-    public function testSource()
+    public function testSource(): void
     {
         $source = '<span tal:content="foo"/>';
         $tpl = $this->newPHPTAL();
         $tpl->foo = 'foo value';
         $tpl->setSource($source);
         $res = $tpl->execute();
-        $this->assertEquals('<span>foo value</span>', $res);
+        static::assertSame('<span>foo value</span>', $res);
 
-        $this->assertRegExp('/^tpl_\d{8}_/', $tpl->getFunctionName());
-        $this->assertStringContainsString('string', $tpl->getFunctionName());
-        $this->assertStringNotContainsString(\PhpTal\PHPTAL::PHPTAL_VERSION, $tpl->getFunctionName());
+        static::assertRegExp('/^tpl_\d{8}_/', $tpl->getFunctionName());
+        static::assertStringContainsString('string', $tpl->getFunctionName());
+        static::assertStringNotContainsString(PHPTAL::PHPTAL_VERSION, $tpl->getFunctionName());
     }
 
-    public function testSourceWithPath()
+    public function testSourceWithPath(): void
     {
         $source = '<span tal:content="foo"/>';
         $tpl = $this->newPHPTAL();
         $tpl->foo = 'foo value';
         $tpl->setSource($source, $fakename = 'abc12345');
         $res = $tpl->execute();
-        $this->assertEquals('<span>foo value</span>', $res);
-        $this->assertRegExp('/^tpl_\d{8}_/', $tpl->getFunctionName());
-        $this->assertStringContainsString($fakename, $tpl->getFunctionName());
-        $this->assertStringNotContainsString(\PhpTal\PHPTAL::PHPTAL_VERSION, $tpl->getFunctionName());
+        static::assertSame('<span>foo value</span>', $res);
+        static::assertRegExp('/^tpl_\d{8}_/', $tpl->getFunctionName());
+        static::assertStringContainsString($fakename, $tpl->getFunctionName());
+        static::assertStringNotContainsString(PHPTAL::PHPTAL_VERSION, $tpl->getFunctionName());
     }
 
-    public function testStripComments()
+    public function testStripComments(): void
     {
         $tpl = $this->newPHPTAL('input/phptal.04.html');
-        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/phptal.04.html');
+        $exp = Helper::normalizeHtmlFile('output/phptal.04.html');
         $tpl->stripComments(true);
         $res = $tpl->execute();
-        $res = \Tests\Testhelper\Helper::normalizeHtml($res);
-        $this->assertEquals($exp, $res);
+        $res = Helper::normalizeHtml($res);
+        static::assertSame($exp, $res);
     }
 
-    public function testStripCommentsReset()
+    public function testStripCommentsReset(): void
     {
         $tpl = $this->newPHPTAL('input/phptal.04.html');
-        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/phptal.04.html');
+        $exp = Helper::normalizeHtmlFile('output/phptal.04.html');
         $tpl->stripComments(false);
         $tpl->stripComments(true);
         $res = $tpl->execute();
-        $res = \Tests\Testhelper\Helper::normalizeHtml($res);
-        $this->assertEquals($exp, $res);
+        $res = Helper::normalizeHtml($res);
+        static::assertSame($exp, $res);
     }
 
-    public function testStripCommentsUnset()
+    public function testStripCommentsUnset(): void
     {
         $tpl = $this->newPHPTAL('input/phptal.04.html');
-        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('input/phptal.04.html');
+        $exp = Helper::normalizeHtmlFile('input/phptal.04.html');
         $tpl->stripComments(true);
         $tpl->stripComments(false);
         $res = $tpl->execute();
-        $res = \Tests\Testhelper\Helper::normalizeHtml($res);
-        $this->assertEquals($exp, $res);
+        $res = Helper::normalizeHtml($res);
+        static::assertSame($exp, $res);
     }
 
-    public function testUnknownOutputMode()
+    public function testUnknownOutputMode(): void
     {
         try {
             $tpl = $this->newPHPTAL();
             $tpl->setOutputMode(999);
-            $this->assertTrue(false);
-        }
-        catch (\PhpTal\Exception\PhpTalException $e)
-        {
-            $this->assertTrue(true);
+            static::assertTrue(false);
+        } catch (PhpTalException $e) {
+            static::assertTrue(true);
         }
     }
 
-    public function testZeroedContent()
+    public function testZeroedContent(): void
     {
         $tpl = $this->newPHPTAL('input/phptal.05.html');
         $res = $tpl->execute();
-        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('input/phptal.05.html');
-        $this->assertEquals($exp, $res);
+        $exp = Helper::normalizeHtmlFile('input/phptal.05.html');
+        static::assertSame($exp, $res);
     }
 
-    public function testOnlineExpression()
+    public function testOnlineExpression(): void
     {
         $tpl = $this->newPHPTAL('input/phptal.06.html');
         $tpl->foo = '<p>hello</p>';
         $res = $tpl->execute();
-        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/phptal.06.html');
-        $this->assertEquals($exp, $res);
+        $exp = Helper::normalizeHtmlFile('output/phptal.06.html');
+        static::assertSame($exp, $res);
     }
 
-    public function testDirAsTemplate()
+    public function testDirAsTemplate(): void
     {
-            $tpl = $this->newPHPTAL(__DIR__);
-            $this->expectException(\PhpTal\Exception\IOException::class);
-            $tpl->execute();
+        $tpl = $this->newPHPTAL(__DIR__);
+        $this->expectException(IOException::class);
+        $tpl->execute();
     }
 
-    public function testEncodingUppercase()
+    public function testEncodingUppercase(): void
     {
         $tpl = $this->newPHPTAL();
         $tpl->setEncoding('utf-8');
-        $this->assertEquals('UTF-8', $tpl->getEncoding());
+        static::assertSame('UTF-8', $tpl->getEncoding());
     }
 
-    public function testPHPParseErrorDoesNotStopPHPTAL2()
+    public function testPHPParseErrorDoesNotStopPHPTAL2(): void
     {
         $this->expectException(TemplateException::class);
         $tpl = $this->newPHPTAL()->setSource('<x tal:content="php:\'deliberate parse\' \'error test\'"/>');
 
         ob_start();
-        echo "\n".__CLASS__."::testPHPParseErrorDoesNotStopPHPTAL2 failed\n";
+        echo "\n" . __CLASS__ . "::testPHPParseErrorDoesNotStopPHPTAL2 failed\n";
         try {
             @$tpl->execute(); // if test dies for no apparent reason, the reason is '@'
-        }
-        catch(\Throwable $e) {
+        } catch (\Throwable $e) {
             ob_end_clean();
             throw $e;
         }
         ob_end_clean();
     }
 
-    public function testThrowsIfNoTemplate()
+    public function testThrowsIfNoTemplate(): void
     {
         $this->expectException(ConfigurationException::class);
         $this->newPHPTAL()->execute();
     }
 
-    public function testDoctypeWithClone()
+    public function testDoctypeWithClone(): void
     {
         $tpl = $this->newPHPTAL();
-        $tpl->setTemplate('../input/phptal.07.html');
+        $tpl->setTemplate(TAL_TEST_FILES_DIR . 'input/phptal.07.html');
         $tpl->execute();
 
         $tpl2 = clone $tpl;
 
-        $tpl2->setTemplate('../input/phptal.09.html');
+        $tpl2->setTemplate(TAL_TEST_FILES_DIR . 'input/phptal.09.html');
         $res = $tpl2->execute();
 
-        $this->assertStringContainsString('DOCTYPE',$res);
+        static::assertStringContainsString('DOCTYPE', $res);
     }
 
-    public function testDoctypeWithoutClone()
+    public function testDoctypeWithoutClone(): void
     {
         $tpl = $this->newPHPTAL();
-        $tpl->setTemplate('../input/phptal.07.html');
+        $tpl->setTemplate(TAL_TEST_FILES_DIR . 'input/phptal.07.html');
         $tpl->execute();
 
-        $tpl->setTemplate('../input/phptal.09.html');
+        $tpl->setTemplate(TAL_TEST_FILES_DIR . 'input/phptal.09.html');
         $res = $tpl->execute();
 
-        $this->assertStringContainsString('DOCTYPE',$res);
+        static::assertStringContainsString('DOCTYPE', $res);
     }
 }

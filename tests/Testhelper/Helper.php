@@ -20,23 +20,21 @@ namespace Tests\Testhelper;
 
 class Helper
 {
-    public static function normalizeHtmlFile($src)
+    public static function normalizeHtmlFile(string $src): string
     {
-        return static::normalizeHtml(file_get_contents(__DIR__ . '/../' . $src));
+        return static::normalizeHtml(file_get_contents(TAL_TEST_FILES_DIR . $src));
     }
 
-    public static function normalizeHtml($src)
+    public static function normalizeHtml(string $src): string
     {
         $src = trim($src);
         $src = preg_replace('/\s+/usm', ' ', $src);
         $src = preg_replace('/(?<!]])&gt;/', '>', $src); // > may or may not be escaped, except ]]>
-        $src = str_replace('> ', '>', $src);
-        $src = str_replace(' <', '<', $src);
-        $src = str_replace(' />', '/>', $src);
+        $src = str_replace(['> ', ' <', ' />'], ['>', '<', '/>'], $src);
         return $src;
     }
 
-    public static function normalizePhpSource($code, $ignore_newlines = false)
+    public static function normalizePhpSource(string $code, bool $ignore_newlines = false): string
     {
 
         // ignore debug
@@ -60,6 +58,6 @@ class Helper
         }
 
         // ignore some no-ops
-        return str_replace(array('<?php ?>', '<?php ; ?>', '{;', ' }'), array('', '', '{', '}'), $code);
+        return str_replace(['<?php ?>', '<?php ; ?>', '{;', ' }'], ['', '', '{', '}'], $code);
     }
 }

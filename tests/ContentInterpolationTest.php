@@ -1,22 +1,29 @@
 <?php
+declare(strict_types=1);
 
 /**
  * PHPTAL templating engine
+ *
+ * Originally developed by Laurent Bedubourg and Kornel Lesiński
  *
  * @category HTML
  * @package  PHPTAL
  * @author   Laurent Bedubourg <lbedubourg@motion-twin.com>
  * @author   Kornel Lesiński <kornel@aardvarkmedia.co.uk>
+ * @author   See contributors list @ github
  * @license  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
  * @link     http://phptal.org/
+ * @link     https://github.com/SC-Networks/PHPTAL
  */
 
 namespace Tests;
 
 use PhpTal\Exception\VariableNotFoundException;
 use PhpTal\Php\TalesInternal;
+use Tests\Testcase\PhpTalTestCase;
+use Tests\Testhelper\Helper;
 
-class ContentInterpolationTest extends \Tests\Testcase\PhpTal
+class ContentInterpolationTest extends PhpTalTestCase
 {
 
     public function tearDown(): void
@@ -25,7 +32,7 @@ class ContentInterpolationTest extends \Tests\Testcase\PhpTal
         parent::tearDown();
     }
 
-    public function testInterpol()
+    public function testInterpol(): void
     {
         $src = <<<EOT
 <span>\${foo}</span>
@@ -37,10 +44,10 @@ EOT;
         $tpl->setSource($src);
         $tpl->foo = 'foo value';
         $res = $tpl->execute();
-        $this->assertEquals($exp, $res);
+        static::assertSame($exp, $res);
     }
 
-    public function testInterpol2()
+    public function testInterpol2(): void
     {
         $src = <<<EOT
 <span>\${foo2} x \${structure foo} y \${foo}\${structure foo2}</span><img/>
@@ -53,10 +60,10 @@ EOT;
         $tpl->foo = 'foo value';
         $tpl->foo2 = '{foo2 <img />}';
         $res = $tpl->execute();
-        $this->assertEquals($exp, $res);
+        static::assertSame($exp, $res);
     }
 
-    public function testInterpol3()
+    public function testInterpol3(): void
     {
         $src = <<<EOT
 <span>\${foo}\${foo}</span>
@@ -68,10 +75,10 @@ EOT;
         $tpl->setSource($src);
         $tpl->foo = 'foo value';
         $res = $tpl->execute();
-        $this->assertEquals($exp, $res);
+        static::assertSame($exp, $res);
     }
 
-    public function testNoInterpol()
+    public function testNoInterpol(): void
     {
         $src = <<<EOT
 <span>$\${foo}</span>
@@ -83,10 +90,10 @@ EOT;
         $tpl->setSource($src);
         $tpl->foo = 'foo value';
         $res = $tpl->execute();
-        $this->assertEquals($exp, $res);
+        static::assertSame($exp, $res);
     }
 
-    public function testInterpolAdv()
+    public function testInterpolAdv(): void
     {
         $src = <<<EOT
 <span>$$\${foo}</span>
@@ -98,11 +105,10 @@ EOT;
         $tpl->setSource($src);
         $tpl->foo = 'foo value';
         $res = $tpl->execute();
-        $this->assertEquals($exp, $res);
+        static::assertSame($exp, $res);
     }
 
-
-    public function testUnescape()
+    public function testUnescape(): void
     {
         $tpl = $this->newPHPTAL();
 
@@ -118,7 +124,7 @@ EOT;
             $$$${var}
         </p>');
 
-        $this->assertEquals(\Tests\Testhelper\Helper::normalizeHtml('<p>
+        static::assertSame(Helper::normalizeHtml('<p>
             val&lt;
 
             ${var}
@@ -126,10 +132,10 @@ EOT;
             $val&lt;
 
             $${var}
-        </p>'), \Tests\Testhelper\Helper::normalizeHtml($tpl->execute()));
+        </p>'), Helper::normalizeHtml($tpl->execute()));
     }
 
-    public function testUnescapeString()
+    public function testUnescapeString(): void
     {
         $tpl = $this->newPHPTAL();
 
@@ -145,7 +151,7 @@ EOT;
              $$$${var}
          "/>');
 
-        $this->assertEquals(\Tests\Testhelper\Helper::normalizeHtml('<p>
+        static::assertSame(Helper::normalizeHtml('<p>
              val&lt;
 
              ${var}
@@ -153,10 +159,10 @@ EOT;
              $val&lt;
 
              $${var}
-         </p>'), \Tests\Testhelper\Helper::normalizeHtml($tpl->execute()));
+         </p>'), Helper::normalizeHtml($tpl->execute()));
     }
 
-    public function testUnescapeStructure()
+    public function testUnescapeStructure(): void
     {
         $tpl = $this->newPHPTAL();
 
@@ -172,7 +178,7 @@ EOT;
             $$$${structure var}
         </p>');
 
-        $this->assertEquals(\Tests\Testhelper\Helper::normalizeHtml('<p>
+        static::assertSame(Helper::normalizeHtml('<p>
             val<x/>
 
             ${structure var}
@@ -180,10 +186,10 @@ EOT;
             $val<x/>
 
             $${structure var}
-        </p>'), \Tests\Testhelper\Helper::normalizeHtml($tpl->execute()));
+        </p>'), Helper::normalizeHtml($tpl->execute()));
     }
 
-    public function testUnescapeCDATA()
+    public function testUnescapeCDATA(): void
     {
         $tpl = $this->newPHPTAL();
 
@@ -199,7 +205,7 @@ EOT;
             $$$${var}
         ]]></script>');
 
-        $this->assertEquals(\Tests\Testhelper\Helper::normalizeHtml('<script><![CDATA[<
+        static::assertSame(Helper::normalizeHtml('<script><![CDATA[<
             val<
 
             ${text var}
@@ -207,10 +213,10 @@ EOT;
             $val<
 
             $${var}
-        ]]></script>'), \Tests\Testhelper\Helper::normalizeHtml($tpl->execute()));
+        ]]></script>'), Helper::normalizeHtml($tpl->execute()));
     }
 
-    public function testUnescapeCDATAStructure()
+    public function testUnescapeCDATAStructure(): void
     {
         $tpl = $this->newPHPTAL();
 
@@ -226,7 +232,7 @@ EOT;
             $$$${structure var}
         ]]></script>');
 
-        $this->assertEquals(\Tests\Testhelper\Helper::normalizeHtml('<script><![CDATA[<
+        static::assertSame(Helper::normalizeHtml('<script><![CDATA[<
             val<
 
             ${structure var}
@@ -234,10 +240,10 @@ EOT;
             $val<
 
             $${structure var}
-        ]]></script>'), \Tests\Testhelper\Helper::normalizeHtml($tpl->execute()));
+        ]]></script>'), Helper::normalizeHtml($tpl->execute()));
     }
 
-    public function testUnescapePHPTales()
+    public function testUnescapePHPTales(): void
     {
         $tpl = $this->newPHPTAL();
 
@@ -253,7 +259,7 @@ EOT;
             $$$${var+1}
         </p>');
 
-        $this->assertEquals(\Tests\Testhelper\Helper::normalizeHtml('<p>
+        static::assertSame(Helper::normalizeHtml('<p>
             2
 
             ${var+1}
@@ -261,17 +267,17 @@ EOT;
             $2
 
             $${var+1}
-        </p>'), \Tests\Testhelper\Helper::normalizeHtml($tpl->execute()));
+        </p>'), Helper::normalizeHtml($tpl->execute()));
     }
 
-    public function testPHPBlock()
+    public function testPHPBlock(): void
     {
         $tpl = $this->newPHPTAL();
         $tpl->setSource('<p>test<?php echo "<x>"; ?>test<?php print("&amp;") ?>test</p>');
-        $this->assertEquals('<p>test<_ echo "<x>"; ?>test<_ print("&amp;") ?>test</p>', $tpl->execute());
+        static::assertSame('<p>test<_ echo "<x>"; ?>test<_ print("&amp;") ?>test</p>', $tpl->execute());
     }
 
-    public function testPHPBlock54()
+    public function testPHPBlock54(): void
     {
 
         $tpl = $this->newPHPTAL();
@@ -279,13 +285,13 @@ EOT;
         try
         {
             // PHP 5.4: short tag <?= is always enabled.
-            $this->assertEquals('<p>test<? print("<x>"); ?>test<_ "&amp;" ?>test</p>', $tpl->execute());
+            static::assertSame('<p>test<? print("<x>"); ?>test<_ "&amp;" ?>test</p>', $tpl->execute());
         }
         catch(\PhpTal\Exception\ParserException $e) {/* xml ill-formedness error is ok too */}
         ini_restore('short_open_tag');
     }
 
-    public function testErrorsThrow()
+    public function testErrorsThrow(): void
     {
         $tpl = $this->newPHPTAL();
         $tpl->setSource('<p>${error}</p>');
@@ -293,7 +299,7 @@ EOT;
         $tpl->execute();
     }
 
-    public function testErrorsThrow2()
+    public function testErrorsThrow2(): void
     {
         $tpl = $this->newPHPTAL();
         $tpl->setSource('<p>${error | error}</p>');
@@ -301,7 +307,7 @@ EOT;
         $tpl->execute();
     }
 
-    public function testErrorsThrow3()
+    public function testErrorsThrow3(): void
     {
         $tpl = $this->newPHPTAL();
         $tpl->foo = array();
@@ -310,22 +316,22 @@ EOT;
         $tpl->execute();
     }
 
-    public function testErrorsSilenced()
+    public function testErrorsSilenced(): void
     {
         $tpl = $this->newPHPTAL();
         $tpl->setSource('<p>${error | nothing}</p>');
-        $this->assertEquals('<p></p>', $tpl->execute());
+        static::assertSame('<p></p>', $tpl->execute());
     }
 
-    public function testZeroIsNotEmpty()
+    public function testZeroIsNotEmpty(): void
     {
         $tpl = $this->newPHPTAL();
         $tpl->zero = '0';
         $tpl->setSource('<p>${zero | error}</p>');
-        $this->assertEquals('<p>0</p>', $tpl->execute());
+        static::assertSame('<p>0</p>', $tpl->execute());
     }
 
-    public function testPreservesNewline()
+    public function testPreservesNewline(): void
     {
         $tpl = $this->newPHPTAL()->setSource('<body>
 ${variable1 | string:Line 1}
@@ -333,19 +339,19 @@ ${variable1 | string:Line 1}
 Line 3
 </body>');
 
-        $this->assertEquals('<body>
+        static::assertSame('<body>
 Line 1
 Line 2
 Line 3
 </body>', $tpl->execute(), $tpl->getCodePath());
     }
 
-    public function testMultilineInterpolationPHP()
+    public function testMultilineInterpolationPHP(): void
     {
         $res = $this->newPHPTAL()->setSource('<p>${php:\'foo
         bar\'}</p>')->execute();
 
-        $this->assertEquals('<p>foo
+        static::assertSame('<p>foo
         bar</p>', $res);
 
         TalesInternal::setFunctionWhitelist(['substr']);
@@ -354,36 +360,36 @@ Line 3
         substr(\'barz\' ,
         0,3)}</p>')->execute();
 
-        $this->assertEquals('<p>foobar</p>', $res);
+        static::assertSame('<p>foobar</p>', $res);
     }
 
 
-    public function testMultilineInterpolation()
+    public function testMultilineInterpolation(): void
     {
         $res = $this->newPHPTAL()->setSource('<p>${string:foo
         bar}</p>')->execute();
 
-        $this->assertEquals('<p>foo
+        static::assertSame('<p>foo
         bar</p>', $res);
 
         $res = $this->newPHPTAL()->setSource('<p>${structure string:foo
         bar}</p>')->execute();
 
-        $this->assertEquals('<p>foo
+        static::assertSame('<p>foo
         bar</p>', $res);
     }
 
-    public function testTagsBreakTALES()
+    public function testTagsBreakTALES(): void
     {
         $res = $this->newPHPTAL()->setSource('<p>${foo<br/>bar}</p>')->execute();
 
-        $this->assertEquals('<p>${foo<br/>bar}</p>', $res);
+        static::assertSame('<p>${foo<br/>bar}</p>', $res);
     }
 
-    public function testEscapedTagsDontBreakTALES()
+    public function testEscapedTagsDontBreakTALES(): void
     {
         $res = $this->newPHPTAL()->setSource('<p>${structure string:foo&lt;br  />bar}</p>')->execute();
 
-        $this->assertEquals('<p>foo<br  />bar</p>', $res);
+        static::assertSame('<p>foo<br  />bar</p>', $res);
     }
 }

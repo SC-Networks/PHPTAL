@@ -1,23 +1,30 @@
 <?php
+declare(strict_types=1);
 
 /**
  * PHPTAL templating engine
+ *
+ * Originally developed by Laurent Bedubourg and Kornel Lesiński
  *
  * @category HTML
  * @package  PHPTAL
  * @author   Laurent Bedubourg <lbedubourg@motion-twin.com>
  * @author   Kornel Lesiński <kornel@aardvarkmedia.co.uk>
+ * @author   See contributors list @ github
  * @license  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
  * @link     http://phptal.org/
+ * @link     https://github.com/SC-Networks/PHPTAL
  */
 
 namespace Tests;
 
 use PhpTal\Php\Attribute\METAL\FillSlot;
 use PhpTal\Php\TalesInternal;
+use Tests\Testcase\PhpTalTestCase;
 use Tests\Testhelper\DummyTranslator;
+use Tests\Testhelper\Helper;
 
-class MetalSlotTest extends \Tests\Testcase\PhpTal
+class MetalSlotTest extends PhpTalTestCase
 {
     public function tearDown(): void
     {
@@ -25,15 +32,15 @@ class MetalSlotTest extends \Tests\Testcase\PhpTal
         parent::tearDown();
     }
 
-    public function testSimple()
+    public function testSimple(): void
     {
         $tpl = $this->newPHPTAL('input/metal-slot.01.html');
-        $res = \Tests\Testhelper\Helper::normalizeHtml($tpl->execute());
-        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/metal-slot.01.html');
-        $this->assertEquals($exp, $res);
+        $res = Helper::normalizeHtml($tpl->execute());
+        $exp = Helper::normalizeHtmlFile('output/metal-slot.01.html');
+        static::assertSame($exp, $res);
     }
 
-    public function testVariableSlotName()
+    public function testVariableSlotName(): void
     {
         $tpl = $this->newPHPTAL()->setSource('<div>
           <div metal:define-macro="test">
@@ -56,20 +63,23 @@ class MetalSlotTest extends \Tests\Testcase\PhpTal
 
         $tpl->varernative = 'ernative';
 
-        $res = \Tests\Testhelper\Helper::normalizeHtml($tpl->execute());
-        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/metal-slot.01.html');
-        $this->assertEquals($exp, $res);
+        $res = Helper::normalizeHtml($tpl->execute());
+        $exp = Helper::normalizeHtmlFile('output/metal-slot.01.html');
+        static::assertSame($exp, $res);
     }
 
-    public function testPreservesContext()
+    public function testPreservesContext(): void
     {
         $tpl = $this->newPHPTAL('input/metal-slot.05.html');
         $tpl->var = "top";
-        $this->assertEquals(\Tests\Testhelper\Helper::normalizeHtml('top=top<div>inusemacro=inusemacro<div>inmacro=inmacro<div>infillslot=infillslot</div>/inmacro=inmacro</div>/inusemacro=inusemacro</div>/top=top'),
-                            \Tests\Testhelper\Helper::normalizeHtml($tpl->execute()), $tpl->getCodePath());
+        static::assertSame(
+            Helper::normalizeHtml('top=top<div>inusemacro=inusemacro<div>inmacro=inmacro<div>infillslot=infillslot</div>/inmacro=inmacro</div>/inusemacro=inusemacro</div>/top=top'),
+            Helper::normalizeHtml($tpl->execute()),
+            $tpl->getCodePath()
+        );
     }
 
-    public function testPreservesTopmostContext()
+    public function testPreservesTopmostContext(): void
     {
         $tpl = $this->newPHPTAL();
         $tpl->var = "topmost";
@@ -84,10 +94,14 @@ class MetalSlotTest extends \Tests\Testcase\PhpTal
                 <div metal:fill-slot="s">var = ${var}</div>
             </div>
         ');
-        $this->assertEquals(\Tests\Testhelper\Helper::normalizeHtml('<div><div><div>var = topmost</div></div></div>'), \Tests\Testhelper\Helper::normalizeHtml($tpl->execute()), $tpl->getCodePath());
+        static::assertSame(
+            Helper::normalizeHtml('<div><div><div>var = topmost</div></div></div>'),
+            Helper::normalizeHtml($tpl->execute()),
+            $tpl->getCodePath()
+        );
     }
 
-    public function testRecursiveFillSimple()
+    public function testRecursiveFillSimple(): void
     {
         $tpl = $this->newPHPTAL();
         $tpl->setSource('
@@ -110,20 +124,23 @@ class MetalSlotTest extends \Tests\Testcase\PhpTal
             </div>
             ');
 
-        $this->assertEquals(\Tests\Testhelper\Helper::normalizeHtml('<div><div>test1 macro value:<div class="filling value for test1">
+        static::assertSame(
+            Helper::normalizeHtml('<div><div>test1 macro value:<div class="filling value for test1">
         <div>test2 macro value:<span class="filling value for test2">foo bar baz</span></div></div></div></div>'),
-                            \Tests\Testhelper\Helper::normalizeHtml($tpl->execute()), $tpl->getCodePath());
+            Helper::normalizeHtml($tpl->execute()),
+            $tpl->getCodePath()
+        );
     }
 
-    public function testRecursiveFill()
+    public function testRecursiveFill(): void
     {
         $tpl = $this->newPHPTAL('input/metal-slot.02.html');
-        $res = \Tests\Testhelper\Helper::normalizeHtml($tpl->execute());
-        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/metal-slot.02.html');
-        $this->assertEquals($exp, $res, $tpl->getCodePath());
+        $res = Helper::normalizeHtml($tpl->execute());
+        $exp = Helper::normalizeHtmlFile('output/metal-slot.02.html');
+        static::assertSame($exp, $res, $tpl->getCodePath());
     }
 
-    public function testRecursiveUnFill()
+    public function testRecursiveUnFill(): void
     {
         $this->markTestSkipped("known bug"); // FIXME
 
@@ -147,30 +164,29 @@ class MetalSlotTest extends \Tests\Testcase\PhpTal
         </div>
 
         ');
-        $res = \Tests\Testhelper\Helper::normalizeHtml($tpl->execute());
-        $this->assertEquals('<div><div><div><span>OK</span></div></div></div>', $res, $tpl->getCodePath());
+        $res = Helper::normalizeHtml($tpl->execute());
+        static::assertSame('<div><div><div><span>OK</span></div></div></div>', $res, $tpl->getCodePath());
     }
 
 
-
-    public function testBlock()
+    public function testBlock(): void
     {
         $tpl = $this->newPHPTAL('input/metal-slot.03.html');
-        $res = \Tests\Testhelper\Helper::normalizeHtml($tpl->execute());
-        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/metal-slot.03.html');
-        $this->assertEquals($exp, $res);
+        $res = Helper::normalizeHtml($tpl->execute());
+        $exp = Helper::normalizeHtmlFile('output/metal-slot.03.html');
+        static::assertSame($exp, $res);
     }
 
-    public function testFillAndCondition()
+    public function testFillAndCondition(): void
     {
         $tpl = $this->newPHPTAL('input/metal-slot.04.html');
         $tpl->fillit = true;
-        $res = \Tests\Testhelper\Helper::normalizeHtml($tpl->execute());
-        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/metal-slot.04.html');
-        $this->assertEquals($exp, $res);
+        $res = Helper::normalizeHtml($tpl->execute());
+        $exp = Helper::normalizeHtmlFile('output/metal-slot.04.html');
+        static::assertSame($exp, $res);
     }
 
-    public function testFillWithi18n()
+    public function testFillWithi18n(): void
     {
         $tpl = $this->newPHPTAL();
         $tpl->setSource('
@@ -185,23 +201,27 @@ class MetalSlotTest extends \Tests\Testcase\PhpTal
         $tr->setTranslation("translatemetoo", "translatedyouaswell");
         $tpl->setTranslator($tr);
 
-        $this->assertEquals(\Tests\Testhelper\Helper::normalizeHtml('<div><p><span>translatedyouaswell</span></p></div>'), \Tests\Testhelper\Helper::normalizeHtml($tpl->execute()), $tpl->getCodePath());
+        static::assertSame(
+            Helper::normalizeHtml('<div><p><span>translatedyouaswell</span></p></div>'),
+            Helper::normalizeHtml($tpl->execute()),
+            $tpl->getCodePath()
+        );
     }
 
     /**
      * this is violation of TAL specification, but needs to work for backwards compatibility
      */
-    public function testFillPreservedAcrossCalls()
+    public function testFillPreservedAcrossCalls(): void
     {
         $tpl = $this->newPHPTAL();
         $tpl->setSource('<tal:block metal:fill-slot="foo">foocontent</tal:block>');
         $tpl->execute();
         $tpl->setSource('<tal:block metal:define-slot="foo">FAIL</tal:block>');
 
-        $this->assertEquals('foocontent', $tpl->execute());
+        static::assertSame('foocontent', $tpl->execute());
     }
 
-    public function testUsesCallbackForLargeSlots()
+    public function testUsesCallbackForLargeSlots(): void
     {
         TalesInternal::setFunctionWhitelist(['range']);
 
@@ -225,11 +245,11 @@ class MetalSlotTest extends \Tests\Testcase\PhpTal
 
         $tpl_php_source = file_get_contents($tpl->getCodePath());
 
-        $this->assertStringNotContainsString("fillSlot(", $tpl_php_source);
-        $this->assertStringContainsString("fillSlotCallback(", $tpl_php_source);
+        static::assertStringNotContainsString("fillSlot(", $tpl_php_source);
+        static::assertStringContainsString("fillSlotCallback(", $tpl_php_source);
     }
 
-    public function testUsesBufferForSmallSlots()
+    public function testUsesBufferForSmallSlots(): void
     {
         $tpl = $this->newPHPTAL();
         $tpl->setSource('
@@ -244,11 +264,11 @@ class MetalSlotTest extends \Tests\Testcase\PhpTal
 
         $tpl_php_source = file_get_contents($tpl->getCodePath());
 
-        $this->assertStringNotContainsString("fillSlotCallback(", $tpl_php_source);
-        $this->assertStringContainsString("fillSlot(", $tpl_php_source);
+        static::assertStringNotContainsString("fillSlotCallback(", $tpl_php_source);
+        static::assertStringContainsString("fillSlot(", $tpl_php_source);
     }
 
-    public function testSlotBug()
+    public function testSlotBug(): void
     {
         $tpl = $this->newPHPTAL()->setSource(<<<HTML
         <div>
@@ -273,14 +293,15 @@ class MetalSlotTest extends \Tests\Testcase\PhpTal
          </tal:block>
         </div>
 HTML
-);
+        );
 
-        $this->assertEquals(
-            \Tests\Testhelper\Helper::normalizeHtml('<div>page/value:<div>OK toplevel-filled page/value</div>page/valuebis:<div>OK subpage filled page/valuebis</div></div>'),
-            \Tests\Testhelper\Helper::normalizeHtml($tpl->execute()), $tpl->getCodePath());
+        static::assertSame(
+            Helper::normalizeHtml('<div>page/value:<div>OK toplevel-filled page/value</div>page/valuebis:<div>OK subpage filled page/valuebis</div></div>'),
+            Helper::normalizeHtml($tpl->execute()),
+            $tpl->getCodePath());
     }
 
-    public function testNestedSlots()
+    public function testNestedSlots(): void
     {
         $tpl = $this->newPHPTAL()->setSource('
         <tal:block metal:define-macro="fieldset">
@@ -306,7 +327,8 @@ HTML
         </form>
         ');
 
-        $this->assertEquals(\Tests\Testhelper\Helper::normalizeHtml('
+        static::assertSame(
+            Helper::normalizeHtml('
         <form>
 		<fieldset>
 			<legend>First Level</legend>
@@ -317,10 +339,11 @@ HTML
 			<input type="submit" value="Send" />
 		</fieldset>
         </form>'),
-        \Tests\Testhelper\Helper::normalizeHtml($tpl->execute()));
+            Helper::normalizeHtml($tpl->execute())
+        );
     }
 
-    public function testResetDefault()
+    public function testResetDefault(): void
     {
         $tpl = $this->newPHPTAL()->setSource('
         <!--! definition of macro with a slot -->
@@ -341,7 +364,7 @@ HTML
 
         $res = $tpl->execute();
 
-        $this->assertEquals(\Tests\Testhelper\Helper::normalizeHtml('<p>
+        static::assertSame(Helper::normalizeHtml('<p>
             The macro : <tt>the slot</tt>
           </p>
         <p>
@@ -350,10 +373,10 @@ HTML
         <p>
             The macro : <tt>the slot</tt>
           </p>
-        '),\Tests\Testhelper\Helper::normalizeHtml($res));
+        '), Helper::normalizeHtml($res));
     }
 
-    public function testTrickyName()
+    public function testTrickyName(): void
     {
         $tricky = "\\x&apos;\\\\&apos;&quot;\t\r\n\\";
         $res = $this->newPHPTAL()->setSource("
@@ -364,8 +387,6 @@ HTML
             <tal:block metal:fill-slot='$tricky'>filled</tal:block>
             </y>
         ")->execute();
-        $this->assertEquals(\Tests\Testhelper\Helper::normalizeHtml('<x>filled</x>'), \Tests\Testhelper\Helper::normalizeHtml($res));
+        static::assertSame(Helper::normalizeHtml('<x>filled</x>'), Helper::normalizeHtml($res));
     }
 }
-
-

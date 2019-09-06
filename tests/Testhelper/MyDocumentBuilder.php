@@ -20,10 +20,6 @@ namespace Tests\Testhelper;
 
 use PhpTal\Dom\DocumentBuilder;
 
-/**
- * Class MyDocumentBuilder
- * @package Testhelper
- */
 class MyDocumentBuilder extends DocumentBuilder
 {
 
@@ -122,12 +118,12 @@ class MyDocumentBuilder extends DocumentBuilder
         $this->allow_xmldec = false;
         $this->elementStarts++;
         $this->result .= "<$element_qname";
-        $pairs = array();
+        $pairs = [];
         foreach ($attributes as $key => $value) {
             $pairs[] = "$key=\"$value\"";
         }
         if (count($pairs) > 0) {
-            $this->result .= ' ' . join(' ', $pairs);
+            $this->result .= ' ' . implode(' ', $pairs);
         }
         $this->result .= '>';
     }
@@ -147,10 +143,12 @@ class MyDocumentBuilder extends DocumentBuilder
 
     public function onDocumentStart(): void
     {
+        // noop
     }
 
     public function onDocumentEnd(): void
     {
+        // noop
     }
 
     public function getResult()
@@ -160,6 +158,7 @@ class MyDocumentBuilder extends DocumentBuilder
 
     public function setEncoding(string $encoding): void
     {
+        // noop
     }
 }
 

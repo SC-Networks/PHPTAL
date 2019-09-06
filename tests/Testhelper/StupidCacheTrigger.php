@@ -62,9 +62,9 @@ class StupidCacheTrigger implements TriggerInterface
      * @param $id
      * @param PhpTalInterface $tpl
      *
-     * @return mixed|void
+     * @return void
      */
-    public function end($id, PhpTalInterface $tpl)
+    public function end($id, PhpTalInterface $tpl): void
     {
         // end of tag, if cached file used, do nothing
         if (!$this->isCaching) {

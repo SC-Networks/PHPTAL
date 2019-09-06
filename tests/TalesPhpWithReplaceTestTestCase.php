@@ -1,31 +1,38 @@
 <?php
+declare(strict_types=1);
 
 /**
  * PHPTAL templating engine
+ *
+ * Originally developed by Laurent Bedubourg and Kornel Lesiński
  *
  * @category HTML
  * @package  PHPTAL
  * @author   Laurent Bedubourg <lbedubourg@motion-twin.com>
  * @author   Kornel Lesiński <kornel@aardvarkmedia.co.uk>
+ * @author   See contributors list @ github
  * @license  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
  * @link     http://phptal.org/
+ * @link     https://github.com/SC-Networks/PHPTAL
  */
 
-namespace Test;
+namespace Tests;
 
 use PhpTal\Exception\PhpNotAllowedException;
+use Tests\Testcase\PhpTalTestCase;
+use Tests\Testhelper\Helper;
 
-class TalesPhpWithReplaceTest extends \Tests\Testcase\PhpTal
+class TalesPhpWithReplaceTestTestCase extends PhpTalTestCase
 {
-    public function testMix()
+    public function testMix(): void
     {
         $tpl = $this->newPHPTAL('input/talesphpwithreplace.01.html');
-        $res = \Tests\Testhelper\Helper::normalizeHtml($tpl->execute());
-        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/talesphpwithreplace.01.html');
-        $this->assertEquals($exp, $res);
+        $res = Helper::normalizeHtml($tpl->execute());
+        $exp = Helper::normalizeHtmlFile('output/talesphpwithreplace.01.html');
+        static::assertSame($exp, $res);
     }
 
-    public function testPhpModifierDisabledThrowsException()
+    public function testPhpModifierDisabledThrowsException(): void
     {
         $tpl = $this->newPHPTAL('input/tal-define.12.html');
         $tpl->real = 'real value';

@@ -1,52 +1,58 @@
 <?php
+declare(strict_types=1);
+
 /**
  * PHPTAL templating engine
+ *
+ * Originally developed by Laurent Bedubourg and Kornel Lesiński
  *
  * @category HTML
  * @package  PHPTAL
  * @author   Laurent Bedubourg <lbedubourg@motion-twin.com>
  * @author   Kornel Lesiński <kornel@aardvarkmedia.co.uk>
+ * @author   See contributors list @ github
  * @license  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
- * @version  SVN: $Id: $
  * @link     http://phptal.org/
+ * @link     https://github.com/SC-Networks/PHPTAL
  */
 
 namespace Tests;
 
 use PhpTal\Exception\IOException;
+use Tests\Testcase\PhpTalTestCase;
 
-class TemplateRepositoryTest extends \Tests\Testcase\PhpTal
+class TemplateRepositoryTest extends PhpTalTestCase
 {
-    public function testLooksInRepo()
+    public function testLooksInRepo(): void
     {
         $tpl = $this->newPHPTAL();
-        $tpl->setTemplateRepository(__DIR__ .'/input');
+        $tpl->setTemplateRepository(TAL_TEST_FILES_DIR . '/input');
         $tpl->setTemplate('phptal.01.html');
         $tpl->execute();
     }
 
-    public function testSkipsNotFound()
+    public function testSkipsNotFound(): void
     {
         $tpl = $this->newPHPTAL();
-        $tpl->setTemplateRepository(__DIR__ .'/invalid');
-        $tpl->setTemplateRepository(__DIR__ .'/input');
-        $tpl->setTemplateRepository(__DIR__ .'/bogus');
+        $tpl->setTemplateRepository(__DIR__ . '/invalid');
+        $tpl->setTemplateRepository(TAL_TEST_FILES_DIR . '/input');
+        $tpl->setTemplateRepository(__DIR__ . '/bogus');
         $tpl->setTemplate('phptal.02.html');
         $tpl->execute();
     }
 
-    public function testFailsIfNoneMatch()
+    public function testFailsIfNoneMatch(): void
     {
         $this->expectException(IOException::class);
         $tpl = $this->newPHPTAL();
-        $tpl->setTemplateRepository(__DIR__ .'/invalid');
-        $tpl->setTemplateRepository(__DIR__ .'/error');
-        $tpl->setTemplateRepository(__DIR__ .'/bogus');
+        $tpl->setTemplateRepository(__DIR__ . '/invalid');
+        $tpl->setTemplateRepository(__DIR__ . '/error');
+        $tpl->setTemplateRepository(__DIR__ . '/bogus');
         $tpl->setTemplate('phptal.01.html');
         $tpl->execute();
     }
 
-    public function testRepositoriesAreStrings()
+    public function testRepositoriesAreStrings(): void
     {
         $tpl = $this->newPHPTAL();
         $tpl->setTemplateRepository('/footest');
@@ -54,25 +60,24 @@ class TemplateRepositoryTest extends \Tests\Testcase\PhpTal
         $tpl->setTemplateRepository('testbaz/');
 
         $repos = $tpl->getTemplateRepositories();
-        $this->assertIsArray($repos);
+        static::assertIsArray($repos);
         $this->assertCount(3, $repos);
 
-        foreach($repos as $repo)
-        {
+        foreach ($repos as $repo) {
             $this->assertIsString($repo);
-            $this->assertStringContainsString('test', $repo);
+            static::assertStringContainsString('test', $repo);
         }
     }
 
-    public function testRepositoryClear()
+    public function testRepositoryClear(): void
     {
         $tpl = $this->newPHPTAL();
-        $this->assertEquals(0, count($tpl->getTemplateRepositories()));
+        static::assertCount(0, $tpl->getTemplateRepositories());
 
-        $tpl->setTemplateRepository(array('foo', 'bar'));
-        $this->assertEquals(2, count($tpl->getTemplateRepositories()));
+        $tpl->setTemplateRepository(['foo', 'bar']);
+        static::assertCount(2, $tpl->getTemplateRepositories());
 
         $tpl->clearTemplateRepositories();
-        $this->assertEquals(0, count($tpl->getTemplateRepositories()));
+        static::assertCount(0, $tpl->getTemplateRepositories());
     }
 }

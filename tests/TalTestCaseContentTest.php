@@ -1,74 +1,81 @@
 <?php
+declare(strict_types=1);
 
 /**
  * PHPTAL templating engine
+ *
+ * Originally developed by Laurent Bedubourg and Kornel Lesiński
  *
  * @category HTML
  * @package  PHPTAL
  * @author   Laurent Bedubourg <lbedubourg@motion-twin.com>
  * @author   Kornel Lesiński <kornel@aardvarkmedia.co.uk>
+ * @author   See contributors list @ github
  * @license  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
  * @link     http://phptal.org/
+ * @link     https://github.com/SC-Networks/PHPTAL
  */
 
 namespace Tests;
 
 use PhpTal\Exception\VariableNotFoundException;
-use Testhelper\DummyToStringObject;
+use Tests\Testcase\PhpTalTestCase;
+use Tests\Testhelper\DummyToStringObject;
+use Tests\Testhelper\Helper;
 
-class TalContentTest extends \Tests\Testcase\PhpTal
+class TalTestCaseContentTest extends PhpTalTestCase
 {
-    public function testSimple()
+    public function testSimple(): void
     {
         $tpl = $this->newPHPTAL('input/tal-content.01.html');
-        $res = \Tests\Testhelper\Helper::normalizeHtml($tpl->execute());
-        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/tal-content.01.html');
-        $this->assertEquals($exp, $res);
+        $res = Helper::normalizeHtml($tpl->execute());
+        $exp = Helper::normalizeHtmlFile('output/tal-content.01.html');
+        static::assertSame($exp, $res);
     }
 
-    public function testVar()
+    public function testVar(): void
     {
         $tpl = $this->newPHPTAL('input/tal-content.02.html');
         $tpl->content = 'my content';
-        $res = \Tests\Testhelper\Helper::normalizeHtml($tpl->execute());
-        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/tal-content.02.html');
-        $this->assertEquals($exp, $res);
+        $res = Helper::normalizeHtml($tpl->execute());
+        $exp = Helper::normalizeHtmlFile('output/tal-content.02.html');
+        static::assertSame($exp, $res);
     }
 
-    public function testStructure()
+    public function testStructure(): void
     {
         $tpl = $this->newPHPTAL('input/tal-content.03.html');
         $tpl->content = '<foo><bar/></foo>';
-        $res = \Tests\Testhelper\Helper::normalizeHtml($tpl->execute());
-        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/tal-content.03.html');
-        $this->assertEquals($exp, $res);
+        $res = Helper::normalizeHtml($tpl->execute());
+        $exp = Helper::normalizeHtmlFile('output/tal-content.03.html');
+        static::assertSame($exp, $res);
     }
 
-    public function testNothing()
+    public function testNothing(): void
     {
         $tpl = $this->newPHPTAL('input/tal-content.04.html');
-        $res = \Tests\Testhelper\Helper::normalizeHtml($tpl->execute());
-        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/tal-content.04.html');
-        $this->assertEquals($exp, $res);
+        $res = Helper::normalizeHtml($tpl->execute());
+        $exp = Helper::normalizeHtmlFile('output/tal-content.04.html');
+        static::assertSame($exp, $res);
     }
 
-    public function testDefault()
+    public function testDefault(): void
     {
         $tpl = $this->newPHPTAL('input/tal-content.05.html');
-        $res = \Tests\Testhelper\Helper::normalizeHtml($tpl->execute());
-        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/tal-content.05.html');
-        $this->assertEquals($exp, $res);
+        $res = Helper::normalizeHtml($tpl->execute());
+        $exp = Helper::normalizeHtmlFile('output/tal-content.05.html');
+        static::assertSame($exp, $res);
     }
 
-    public function testChain()
+    public function testChain(): void
     {
         $tpl = $this->newPHPTAL('input/tal-content.06.html');
-        $res = \Tests\Testhelper\Helper::normalizeHtml($tpl->execute());
-        $exp = \Tests\Testhelper\Helper::normalizeHtmlFile('output/tal-content.06.html');
-        $this->assertEquals($exp, $res);
+        $res = Helper::normalizeHtml($tpl->execute());
+        $exp = Helper::normalizeHtmlFile('output/tal-content.06.html');
+        static::assertSame($exp, $res);
     }
 
-    public function testEmpty()
+    public function testEmpty(): void
     {
         $src = '
 <root>
@@ -89,10 +96,10 @@ class TalContentTest extends \Tests\Testcase\PhpTal
         $tpl->emptystrv = '';
         $tpl->zerov = 0;
         $res = $tpl->execute();
-        $this->assertEquals(\Tests\Testhelper\Helper::normalizeHtml($exp), \Tests\Testhelper\Helper::normalizeHtml($res));
+        static::assertSame(Helper::normalizeHtml($exp), Helper::normalizeHtml($res));
     }
 
-    public function testObjectEcho()
+    public function testObjectEcho(): void
     {
         $foo = new DummyToStringObject('foo value');
         $src = <<<EOT
@@ -105,10 +112,10 @@ EOT;
         $tpl->setSource($src);
         $tpl->foo = $foo;
         $res = $tpl->execute();
-        $this->assertEquals($res, $exp);
+        static::assertSame($res, $exp);
     }
 
-    public function testObjectEchoStructure()
+    public function testObjectEchoStructure(): void
     {
         $foo = new DummyToStringObject('foo value');
         $src = <<<EOT
@@ -121,10 +128,10 @@ EOT;
         $tpl->setSource($src);
         $tpl->foo = $foo;
         $res = $tpl->execute();
-        $this->assertEquals($res, $exp);
+        static::assertSame($res, $exp);
     }
 
-    public function testErrorsThrow()
+    public function testErrorsThrow(): void
     {
         $this->expectException(VariableNotFoundException::class);
         $tpl = $this->newPHPTAL();
@@ -132,7 +139,7 @@ EOT;
         $tpl->execute();
     }
 
-    public function testErrorsThrow2()
+    public function testErrorsThrow2(): void
     {
         $this->expectException(VariableNotFoundException::class);
         $this->markTestSkipped("tal:define and tal:attributes rely on chains not throwing");//FIXME
@@ -142,7 +149,7 @@ EOT;
         $tpl->execute();
     }
 
-    public function testErrorsThrow3()
+    public function testErrorsThrow3(): void
     {
         $this->expectException(VariableNotFoundException::class);
         $this->markTestSkipped("tal:define and tal:attributes rely on chains not throwing");//FIXME
@@ -152,7 +159,7 @@ EOT;
         $tpl->execute();
     }
 
-    public function testErrorsThrow4()
+    public function testErrorsThrow4(): void
     {
         $this->expectException(VariableNotFoundException::class);
         $this->markTestSkipped("tal:define and tal:attributes rely on chains not throwing");//FIXME
@@ -162,27 +169,29 @@ EOT;
         $tpl->execute();
     }
 
-    public function testErrorsSilenced()
+    public function testErrorsSilenced(): void
     {
         $tpl = $this->newPHPTAL();
         $tpl->setSource('<p tal:content="erroridontexist | nothing"/>');
-        $this->assertEquals('<p></p>', $tpl->execute());
+        static::assertSame('<p></p>', $tpl->execute());
     }
 
-    public function testZeroIsNotEmpty()
+    public function testZeroIsNotEmpty(): void
     {
         $tpl = $this->newPHPTAL();
         $tpl->zero = '0';
         $tpl->setSource('<p tal:content="zero | erroridontexist"/>');
-        $this->assertEquals('<p>0</p>', $tpl->execute());
+        static::assertSame('<p>0</p>', $tpl->execute());
     }
 
-    public function testFalseLast()
+    public function testFalseLast(): void
     {
         $tpl = $this->newPHPTAL();
-        $tpl->one_row = array('RESPONSIBLE_OFFICE' => 'responsible_office1');
-        $tpl->setSource('<span tal:define="resp_office offices/${one_row/RESPONSIBLE_OFFICE} | false">${resp_office}</span>');
+        $tpl->one_row = ['RESPONSIBLE_OFFICE' => 'responsible_office1'];
+        $tpl->setSource(
+            '<span tal:define="resp_office offices/${one_row/RESPONSIBLE_OFFICE} | false">${resp_office}</span>'
+        );
 
-        $this->assertEquals('<span>0</span>', $tpl->execute());
+        static::assertSame('<span>0</span>', $tpl->execute());
     }
 }

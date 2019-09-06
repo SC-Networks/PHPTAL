@@ -16,7 +16,8 @@ declare(strict_types=1);
  * @link     https://github.com/SC-Networks/PHPTAL
  */
 
-error_reporting(E_ALL | E_STRICT);
-assert_options(ASSERT_ACTIVE, 1);
+error_reporting(E_ALL);
 
 date_default_timezone_set(date_default_timezone_get());
+
+const TAL_TEST_FILES_DIR = __DIR__ . '/../files/';

@@ -30,7 +30,8 @@
         }
     ],
     "require": {
-        "php": "^7.2"
+        "php": "^7.2",
+        "symfony/polyfill-mbstring": "^1.12"
     },
     "require-dev": {
         "php": "^7.2",
@@ -47,10 +48,9 @@
         }
     },
     "autoload-dev": {
-        "classmap": [
-            "src/",
-            "tests/"
-        ]
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
     },
     "config": {
         "platform": {
@@ -67,6 +67,7 @@
     },
     "suggest": {
         "scn/phptal-lint": "Linter for phptal template files",
-        "ext-gettext": "Php gettext extension for i18n support"
+        "ext-gettext": "Php gettext extension for i18n support",
+        "ext-mbstring": "Multibyte support is important for any non-english strings"
     }
 }

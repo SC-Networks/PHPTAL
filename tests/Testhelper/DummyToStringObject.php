@@ -16,7 +16,7 @@ declare(strict_types=1);
  * @link     https://github.com/SC-Networks/PHPTAL
  */
 
-namespace Testhelper;
+namespace Tests\Testhelper;
 
 class DummyToStringObject
 {
