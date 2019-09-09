@@ -1,6 +1,6 @@
 # Changelog
 
-v3.0.2 xxxx-xx-xx
+v3.0.2 2019-09-09
 -------
 chores:
  * issue 70: add changelog and update version tag in source
