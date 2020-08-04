@@ -309,7 +309,7 @@ class TalTestCaseRepeatTest extends PhpTalTestCase
             $res,
             $tpl->getCodePath()
         );
-        static::assertRegExp("/rewind.*rewind/s", $i->log);
+        static::assertMatchesRegularExpression("/rewind.*rewind/s", $i->log);
         static::assertSame(
             "1[0]00[1]00[2]00[3]00[4]00[5]00[6]00[7]00[8]00[9]11[0]00[1]00[2]00[3]00[4]00[5]00[6]00[7]00[8]00[9]1",
             $tpl->execute()

@@ -245,7 +245,7 @@ xxxx/>
             $this->fail("Accepted invalid XML");
         } catch (ParserException $e) {
             static::assertStringNotContainsString("documentElement", $e->getMessage());
-            static::assertRegExp("/element_e.*element_d.*element_c.*element_b.*element_a/", $e->getMessage());
+            static::assertMatchesRegularExpression("/element_e.*element_d.*element_c.*element_b.*element_a/", $e->getMessage());
         }
     }
 

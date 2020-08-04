@@ -205,7 +205,7 @@ class CodeCacheTest extends PhpTalTestCase
 
         // can't check for reparse, because PHPTAL uses function_exists() as a shortcut!
         foreach ($files as $file) {
-            $this->assertFileNotExists($file);
+            $this->assertFileDoesNotExist($file);
         }
     }
 }
