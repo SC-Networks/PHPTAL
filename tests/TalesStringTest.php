@@ -38,19 +38,19 @@ class TalesStringTest extends PhpTalTestCase
     public function testSubPathSimple(): void
     {
         $res = TalesInternal::string('hello $name how are you ?');
-        static::assertRegExp('/\'hello \'.*?\$ctx->name.*?\' how are you \?\'$/', $res);
+        static::assertMatchesRegularExpression('/\'hello \'.*?\$ctx->name.*?\' how are you \?\'$/', $res);
     }
 
     public function testSubPath(): void
     {
         $res = TalesInternal::string('${name}');
-        static::assertRegExp('/^(\'\'\s*?\.*)?\$ctx->name(.*?\'\')?$/', $res);
+        static::assertMatchesRegularExpression('/^(\'\'\s*?\.*)?\$ctx->name(.*?\'\')?$/', $res);
     }
 
     public function testSubPathExtended(): void
     {
         $res = TalesInternal::string('hello ${user/name} how are you ?');
-        static::assertRegExp('/\'hello \'.*?\$ctx->user, \'name\'.*?\' how are you \?\'$/', $res);
+        static::assertMatchesRegularExpression('/\'hello \'.*?\$ctx->user, \'name\'.*?\' how are you \?\'$/', $res);
     }
 
     public function testQuote(): void
@@ -65,8 +65,8 @@ class TalesStringTest extends PhpTalTestCase
     public function testDoubleVar(): void
     {
         $res = TalesInternal::string('hello $foo $bar');
-        static::assertRegExp('/ctx->foo/', $res, '$foo not interpolated');
-        static::assertRegExp('/ctx->bar/', $res, '$bar not interpolated');
+        static::assertMatchesRegularExpression('/ctx->foo/', $res, '$foo not interpolated');
+        static::assertMatchesRegularExpression('/ctx->bar/', $res, '$bar not interpolated');
     }
 
     public function testDoubleDotComa(): void

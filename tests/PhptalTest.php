@@ -112,7 +112,7 @@ class PhptalTest extends PhpTalTestCase
         $res = $tpl->execute();
         static::assertSame('<span>foo value</span>', $res);
 
-        static::assertRegExp('/^tpl_\d{8}_/', $tpl->getFunctionName());
+        static::assertMatchesRegularExpression('/^tpl_\d{8}_/', $tpl->getFunctionName());
         static::assertStringContainsString('string', $tpl->getFunctionName());
         static::assertStringNotContainsString(PHPTAL::PHPTAL_VERSION, $tpl->getFunctionName());
     }
@@ -125,7 +125,7 @@ class PhptalTest extends PhpTalTestCase
         $tpl->setSource($source, $fakename = 'abc12345');
         $res = $tpl->execute();
         static::assertSame('<span>foo value</span>', $res);
-        static::assertRegExp('/^tpl_\d{8}_/', $tpl->getFunctionName());
+        static::assertMatchesRegularExpression('/^tpl_\d{8}_/', $tpl->getFunctionName());
         static::assertStringContainsString($fakename, $tpl->getFunctionName());
         static::assertStringNotContainsString(PHPTAL::PHPTAL_VERSION, $tpl->getFunctionName());
     }
