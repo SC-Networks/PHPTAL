@@ -12,6 +12,8 @@
 
 namespace PhpTal\Php\Attribute\I18N;
 
+use PhpTal\Exception\ConfigurationException;
+use PhpTal\Exception\PhpTalException;
 use PhpTal\Php\Attribute;
 use PhpTal\Php\CodeWriter;
 
@@ -33,8 +35,8 @@ class Source extends Attribute
      * @param CodeWriter $codewriter
      *
      * @return void
-     * @throws \PhpTal\Exception\ConfigurationException
-     * @throws \PhpTal\Exception\PhpTalException
+     * @throws ConfigurationException
+     * @throws PhpTalException
      */
     public function before(CodeWriter $codewriter): void
     {
@@ -55,7 +57,7 @@ class Source extends Attribute
      * @param CodeWriter $codewriter
      *
      * @return void
-     * @throws \PhpTal\Exception\ConfigurationException
+     * @throws ConfigurationException
      */
     public function after(CodeWriter $codewriter): void
     {

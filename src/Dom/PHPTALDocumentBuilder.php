@@ -16,6 +16,7 @@ namespace PhpTal\Dom;
 
 use PhpTal\Exception\ParserException;
 use PhpTal\Exception\PhpTalException;
+use PhpTal\Exception\TemplateException;
 use PhpTal\TalNamespace\Builtin;
 
 /**
@@ -153,7 +154,7 @@ class PHPTALDocumentBuilder extends DocumentBuilder
      * @return void
      * @throws ParserException
      * @throws PhpTalException
-     * @throws \PhpTal\Exception\TemplateException
+     * @throws TemplateException
      */
     public function onElementStart(string $element_qname, array $attributes): void
     {

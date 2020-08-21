@@ -18,7 +18,9 @@ declare(strict_types=1);
 
 namespace Tests\Testhelper;
 
-class MyArrayObj extends \ArrayObject
+use ArrayObject;
+
+class MyArrayObj extends ArrayObject
 {
     // noop
 }

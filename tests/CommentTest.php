@@ -56,7 +56,7 @@ class CommentTest extends PhpTalTestCase
         $source = '<html><!--<!--<!--></html>';
         $tpl = $this->newPHPTAL();
         $tpl->setSource($source);
-        $res = $tpl->execute();
+        $tpl->execute();
         $this->fail("Ill-formed comment accepted");
     }
 
@@ -66,7 +66,7 @@ class CommentTest extends PhpTalTestCase
         $source = '<html><!--- XML hates you ---></html>';
         $tpl = $this->newPHPTAL();
         $tpl->setSource($source);
-        $res = $tpl->execute();
+        $tpl->execute();
         $this->fail("Ill-formed comment accepted");
     }
 

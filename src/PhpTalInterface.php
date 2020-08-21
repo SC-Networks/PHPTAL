@@ -3,6 +3,9 @@ declare(strict_types=1);
 
 namespace PhpTal;
 
+use Exception;
+use stdClass;
+
 /**
  * Interface: PhpTalInterface
  */
@@ -339,18 +342,18 @@ interface PhpTalInterface
     /**
      * Returns array of exceptions caught by tal:on-error attribute.
      *
-     * @return \Exception[]
+     * @return Exception[]
      */
     public function getErrors(): array;
 
     /**
      * Public for phptal templates, private for user.
      *
-     * @param \Exception $error
+     * @param Exception $error
      *
      * @return void
      */
-    public function addError(\Exception $error): void;
+    public function addError(Exception $error): void;
 
     /**
      * Returns current context object.
@@ -363,9 +366,9 @@ interface PhpTalInterface
     /**
      * only for use in generated template code
      *
-     * @return \stdClass
+     * @return stdClass
      */
-    public function getGlobalContext(): \stdClass;
+    public function getGlobalContext(): stdClass;
 
     /**
      * only for use in generated template code

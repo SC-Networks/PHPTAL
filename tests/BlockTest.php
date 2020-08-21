@@ -53,6 +53,6 @@ class BlockTest extends PhpTalTestCase
         $t = $this->newPHPTAL();
 
         $t->setSource('<foo:block>foo</foo:block>');
-        $res = $t->execute();
+        $t->execute();
     }
 }

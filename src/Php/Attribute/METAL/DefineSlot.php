@@ -14,8 +14,12 @@ declare(strict_types=1);
 
 namespace PhpTal\Php\Attribute\METAL;
 
+use PhpTal\Exception\ParserException;
+use PhpTal\Exception\PhpTalException;
+use PhpTal\Exception\UnknownModifierException;
 use PhpTal\Php\Attribute;
 use PhpTal\Php\CodeWriter;
+use ReflectionException;
 
 /**
  * METAL Specification 1.0
@@ -62,10 +66,10 @@ class DefineSlot extends Attribute
      * @param CodeWriter $codewriter
      *
      * @return void
-     * @throws \PhpTal\Exception\ParserException
-     * @throws \PhpTal\Exception\PhpTalException
-     * @throws \PhpTal\Exception\UnknownModifierException
-     * @throws \ReflectionException
+     * @throws ParserException
+     * @throws PhpTalException
+     * @throws UnknownModifierException
+     * @throws ReflectionException
      */
     public function before(CodeWriter $codewriter): void
     {
@@ -83,7 +87,7 @@ class DefineSlot extends Attribute
      * @param CodeWriter $codewriter
      *
      * @return void
-     * @throws \PhpTal\Exception\PhpTalException
+     * @throws PhpTalException
      */
     public function after(CodeWriter $codewriter): void
     {

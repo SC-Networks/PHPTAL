@@ -15,6 +15,7 @@ declare(strict_types=1);
 namespace PhpTal\Php\Attribute\TAL;
 
 use PhpTal\Dom\Defs;
+use PhpTal\Exception\PhpTalException;
 use PhpTal\Php\Attribute;
 use PhpTal\Php\CodeWriter;
 use PhpTal\Php\TalesChainExecutor;
@@ -22,6 +23,7 @@ use PhpTal\Php\TalesChainReaderInterface;
 use PhpTal\Php\TalesInternal;
 use PhpTal\PHPTAL;
 use PhpTal\TalNamespace\Builtin;
+use ReflectionException;
 
 /**
  * TAL Specifications 1.4
@@ -75,8 +77,8 @@ class Attributes extends Attribute implements TalesChainReaderInterface
      * @param CodeWriter $codewriter
      *
      * @return void
-     * @throws \PhpTal\Exception\PhpTalException
-     * @throws \ReflectionException
+     * @throws PhpTalException
+     * @throws ReflectionException
      */
     public function before(CodeWriter $codewriter): void
     {
@@ -95,8 +97,8 @@ class Attributes extends Attribute implements TalesChainReaderInterface
      * @param string $expression
      *
      * @return void
-     * @throws \PhpTal\Exception\PhpTalException
-     * @throws \ReflectionException
+     * @throws PhpTalException
+     * @throws ReflectionException
      */
     private function prepareAttribute(CodeWriter $codewriter, string $qname, string $expression): void
     {
@@ -157,7 +159,7 @@ class Attributes extends Attribute implements TalesChainReaderInterface
      * @param string $qname
      * @param string $code
      *
-     * @throws \PhpTal\Exception\PhpTalException
+     * @throws PhpTalException
      */
     private function prepareAttributeConditional(CodeWriter $codewriter, string $qname, string $code): void
     {
@@ -187,7 +189,7 @@ class Attributes extends Attribute implements TalesChainReaderInterface
      * @param array $chain
      *
      * @return void
-     * @throws \PhpTal\Exception\PhpTalException
+     * @throws PhpTalException
      */
     private function prepareChainedAttribute(CodeWriter $codewriter, string $qname, array $chain): void
     {
@@ -209,7 +211,7 @@ class Attributes extends Attribute implements TalesChainReaderInterface
      * @param string $code
      *
      * @return void
-     * @throws \PhpTal\Exception\PhpTalException
+     * @throws PhpTalException
      */
     private function prepareBooleanAttribute(CodeWriter $codewriter, string $qname, string $code): void
     {
@@ -247,7 +249,7 @@ class Attributes extends Attribute implements TalesChainReaderInterface
      * @param CodeWriter $codewriter
      *
      * @return void
-     * @throws \PhpTal\Exception\PhpTalException
+     * @throws PhpTalException
      */
     public function after(CodeWriter $codewriter): void
     {
@@ -259,7 +261,7 @@ class Attributes extends Attribute implements TalesChainReaderInterface
     /**
      * @param TalesChainExecutor $executor
      * @return void
-     * @throws \PhpTal\Exception\PhpTalException
+     * @throws PhpTalException
      */
     public function talesChainNothingKeyword(TalesChainExecutor $executor): void
     {
@@ -276,7 +278,7 @@ class Attributes extends Attribute implements TalesChainReaderInterface
      * @param TalesChainExecutor $executor
      *
      * @return void
-     * @throws \PhpTal\Exception\PhpTalException
+     * @throws PhpTalException
      */
     public function talesChainDefaultKeyword(TalesChainExecutor $executor): void
     {
@@ -295,7 +297,7 @@ class Attributes extends Attribute implements TalesChainReaderInterface
      * @param bool $islast
      *
      * @return void
-     * @throws \PhpTal\Exception\PhpTalException
+     * @throws PhpTalException
      */
     public function talesChainPart(TalesChainExecutor $executor, string $expression, bool $islast): void
     {

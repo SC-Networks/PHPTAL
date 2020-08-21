@@ -17,6 +17,7 @@ namespace PhpTal\Php\Attribute\METAL;
 use PhpTal\Dom\Attr;
 use PhpTal\Dom\Element;
 use PhpTal\Dom\Node;
+use PhpTal\Exception\PhpTalException;
 use PhpTal\Php\Attribute;
 use PhpTal\Php\CodeWriter;
 use PhpTal\TalNamespace\Builtin;
@@ -96,7 +97,7 @@ class FillSlot extends Attribute
      *
      * @param CodeWriter $codewriter
      *
-     * @throws \PhpTal\Exception\PhpTalException
+     * @throws PhpTalException
      */
     public function after(CodeWriter $codewriter): void
     {

@@ -14,8 +14,12 @@ declare(strict_types=1);
 
 namespace PhpTal\Php;
 
+use PhpTal\Exception\ParserException;
+use PhpTal\Exception\PhpNotAllowedException;
+use PhpTal\Exception\UnknownModifierException;
 use PhpTal\PHPTAL;
 use PhpTal\PhpTalInterface;
+use ReflectionException;
 
 /**
  * @package PHPTAL
@@ -148,10 +152,10 @@ class State
      * @param string $expression
      *
      * @return string|array string with PHP code or array with expressions for TalesChainExecutor
-     * @throws \PhpTal\Exception\ParserException
-     * @throws \PhpTal\Exception\UnknownModifierException
-     * @throws \ReflectionException
-     * @throws \PhpTal\Exception\PhpNotAllowedException
+     * @throws ParserException
+     * @throws UnknownModifierException
+     * @throws ReflectionException
+     * @throws PhpNotAllowedException
      */
     public function evaluateExpression(?string $expression)
     {
@@ -167,10 +171,10 @@ class State
      * @param string $expression
      *
      * @return string with PHP code
-     * @throws \PhpTal\Exception\ParserException
-     * @throws \PhpTal\Exception\PhpNotAllowedException
-     * @throws \PhpTal\Exception\UnknownModifierException
-     * @throws \ReflectionException
+     * @throws ParserException
+     * @throws PhpNotAllowedException
+     * @throws UnknownModifierException
+     * @throws ReflectionException
      */
     private function compileTalesToPHPExpression($expression): string
     {
@@ -188,9 +192,9 @@ class State
      * @param string $string
      *
      * @return string
-     * @throws \PhpTal\Exception\ParserException
-     * @throws \PhpTal\Exception\UnknownModifierException
-     * @throws \ReflectionException
+     * @throws ParserException
+     * @throws UnknownModifierException
+     * @throws ReflectionException
      */
     public function interpolateTalesVarsInString(string $string): string
     {
@@ -219,8 +223,8 @@ class State
      * @param array $matches
      *
      * @return string
-     * @throws \PhpTal\Exception\ParserException
-     * @throws \PhpTal\Exception\UnknownModifierException
+     * @throws ParserException
+     * @throws UnknownModifierException
      */
     private function interpolateTalesVarsInHTMLCallback(array $matches): string
     {
@@ -251,8 +255,8 @@ class State
      * @param array $matches
      *
      * @return string
-     * @throws \PhpTal\Exception\ParserException
-     * @throws \PhpTal\Exception\UnknownModifierException
+     * @throws ParserException
+     * @throws UnknownModifierException
      */
     private function interpolateTalesVarsInCDATACallback(array $matches): string
     {
@@ -264,10 +268,10 @@ class State
      * @param string $format
      *
      * @return string
-     * @throws \PhpTal\Exception\ParserException
-     * @throws \PhpTal\Exception\PhpNotAllowedException
-     * @throws \PhpTal\Exception\UnknownModifierException
-     * @throws \ReflectionException
+     * @throws ParserException
+     * @throws PhpNotAllowedException
+     * @throws UnknownModifierException
+     * @throws ReflectionException
      */
     private function interpolateTalesVarsCallback(array $matches, string $format): string
     {

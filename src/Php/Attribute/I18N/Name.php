@@ -14,6 +14,7 @@ declare(strict_types=1);
 
 namespace PhpTal\Php\Attribute\I18N;
 
+use PhpTal\Exception\ConfigurationException;
 use PhpTal\Php\Attribute;
 use PhpTal\Php\CodeWriter;
 
@@ -55,7 +56,7 @@ class Name extends Attribute
      * @param CodeWriter $codewriter
      *
      * @return void
-     * @throws \PhpTal\Exception\ConfigurationException
+     * @throws ConfigurationException
      */
     public function after(CodeWriter $codewriter): void
     {

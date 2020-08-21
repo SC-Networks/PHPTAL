@@ -18,7 +18,9 @@ declare(strict_types=1);
 
 namespace Tests\Testhelper;
 
-class MyIterableThrowsOnSize extends MyIterable implements \Countable
+use Countable;
+
+class MyIterableThrowsOnSize extends MyIterable implements Countable
 {
     /**
      * @throws SizeCalledException

@@ -14,6 +14,7 @@ declare(strict_types=1);
 
 namespace PhpTal\Php\Attribute\PHPTAL;
 
+use PhpTal\Exception\PhpTalException;
 use PhpTal\Php\Attribute;
 use PhpTal\Php\CodeWriter;
 
@@ -57,7 +58,7 @@ class Id extends Attribute
      * @param CodeWriter $codewriter
      *
      * @return void
-     * @throws \PhpTal\Exception\PhpTalException
+     * @throws PhpTalException
      */
     public function after(CodeWriter $codewriter): void
     {

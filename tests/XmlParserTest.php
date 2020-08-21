@@ -18,6 +18,7 @@ declare(strict_types=1);
 
 namespace Tests;
 
+use Exception;
 use PhpTal\Dom\PHPTALDocumentBuilder;
 use PhpTal\Dom\SaxXmlParser;
 use PhpTal\Exception\ParserException;
@@ -58,7 +59,7 @@ class XmlParserTest extends PhpTalTestCase
         try {
             $parser->parseFile($builder = new MyDocumentBuilder(), 'input/xml.02.xml')->getResult();
             static::assertTrue(false);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             static::assertTrue(true);
         }
     }

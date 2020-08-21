@@ -28,8 +28,8 @@ class I18NNameTest extends PhpTalTestCase
     {
         $tpl = $this->newPHPTAL('input/i18n-name-01.html');
         $tpl->setTranslator(new DummyTranslator());
-        $res = $tpl->execute();
-        static::assertTrue(array_key_exists('test', $tpl->getTranslator()->vars));
+        $tpl->execute();
+        static::assertArrayHasKey('test', $tpl->getTranslator()->vars);
         static::assertSame('test value', $tpl->getTranslator()->vars['test']);
     }
 

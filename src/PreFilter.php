@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace PhpTal;
 
+use DOMElement;
+
 /**
  * Base class for prefilters.
  *
@@ -37,11 +39,11 @@ abstract class PreFilter implements FilterInterface
      *
      * Default implementation does nothing. Override it.
      *
-     * @param \DOMElement $node PHP5 DOM node to modify in place
+     * @param DOMElement $node PHP5 DOM node to modify in place
      *
      * @return void
      */
-    public function filterElement(\DOMElement $node): void
+    public function filterElement(DOMElement $node): void
     {
     }
 

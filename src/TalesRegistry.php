@@ -15,6 +15,9 @@ declare(strict_types=1);
 namespace PhpTal;
 
 use PhpTal\Php\TalesInternal;
+use ReflectionClass;
+use ReflectionException;
+use ReflectionMethod;
 
 /**
  * Global registry of TALES expression modifiers
@@ -66,7 +69,7 @@ final class TalesRegistry implements TalesRegistryInterface
      * @param bool $is_fallback if true, method will be used as last resort (if there's no phptal_tales_foo)
      *
      * @throws Exception\ConfigurationException
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public static function registerPrefix(string $prefix, $callback, ?bool $is_fallback = null): void
     {
@@ -80,7 +83,7 @@ final class TalesRegistry implements TalesRegistryInterface
         // Check if valid callback
 
         if (is_array($callback)) {
-            $class = new \ReflectionClass($callback[0]);
+            $class = new ReflectionClass($callback[0]);
 
             if (!$class->isSubclassOf(TalesInterface::class)) {
                 throw new Exception\ConfigurationException(
@@ -88,7 +91,7 @@ final class TalesRegistry implements TalesRegistryInterface
                 );
             }
 
-            $method = new \ReflectionMethod($callback[0], $callback[1]);
+            $method = new ReflectionMethod($callback[0], $callback[1]);
 
             if (!$method->isStatic()) {
                 throw new Exception\ConfigurationException('The method you want to register is not static.');
@@ -121,7 +124,7 @@ final class TalesRegistry implements TalesRegistryInterface
      *
      * @return callback or NULL
      * @throws Exception\UnknownModifierException
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public static function getCallback(string $prefix): ?callable
     {

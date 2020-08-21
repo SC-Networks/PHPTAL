@@ -14,11 +14,16 @@ declare(strict_types=1);
 
 namespace PhpTal\Php\Attribute\TAL;
 
+use PhpTal\Exception\ParserException;
+use PhpTal\Exception\PhpNotAllowedException;
+use PhpTal\Exception\PhpTalException;
+use PhpTal\Exception\UnknownModifierException;
 use PhpTal\Php\Attribute;
 use PhpTal\Php\CodeWriter;
 use PhpTal\Php\TalesChainExecutor;
 use PhpTal\Php\TalesChainReaderInterface;
 use PhpTal\Php\TalesInternal;
+use ReflectionException;
 
 /**
  * TAL Specifications 1.4
@@ -45,11 +50,11 @@ class Replace extends Attribute implements TalesChainReaderInterface
      * @param CodeWriter $codewriter
      *
      * @return void
-     * @throws \PhpTal\Exception\ParserException
-     * @throws \PhpTal\Exception\PhpNotAllowedException
-     * @throws \PhpTal\Exception\PhpTalException
-     * @throws \PhpTal\Exception\UnknownModifierException
-     * @throws \ReflectionException
+     * @throws ParserException
+     * @throws PhpNotAllowedException
+     * @throws PhpTalException
+     * @throws UnknownModifierException
+     * @throws ReflectionException
      */
     public function before(CodeWriter $codewriter): void
     {
@@ -99,7 +104,7 @@ class Replace extends Attribute implements TalesChainReaderInterface
      * @param CodeWriter $codewriter
      * @param array $expArray
      *
-     * @throws \PhpTal\Exception\PhpTalException
+     * @throws PhpTalException
      */
     private function replaceByChainedExpression(CodeWriter $codewriter, $expArray)
     {
@@ -120,7 +125,7 @@ class Replace extends Attribute implements TalesChainReaderInterface
      * @param TalesChainExecutor $executor
      *
      * @return void
-     * @throws \PhpTal\Exception\PhpTalException
+     * @throws PhpTalException
      */
     public function talesChainDefaultKeyword(TalesChainExecutor $executor): void
     {
@@ -135,7 +140,7 @@ class Replace extends Attribute implements TalesChainReaderInterface
      * @param bool $islast
      *
      * @return void
-     * @throws \PhpTal\Exception\PhpTalException
+     * @throws PhpTalException
      */
     public function talesChainPart(TalesChainExecutor $executor, string $expression, bool $islast): void
     {
@@ -154,7 +159,7 @@ class Replace extends Attribute implements TalesChainReaderInterface
      * don't replace - re-generate default content
      * @param CodeWriter $codewriter
      *
-     * @throws \PhpTal\Exception\PhpTalException
+     * @throws PhpTalException
      */
     private function generateDefault(CodeWriter $codewriter): void
     {

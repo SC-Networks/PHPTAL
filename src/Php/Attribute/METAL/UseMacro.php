@@ -16,10 +16,14 @@ namespace PhpTal\Php\Attribute\METAL;
 
 use PhpTal\Dom\Element;
 use PhpTal\Dom\Node;
+use PhpTal\Exception\ParserException;
+use PhpTal\Exception\PhpTalException;
 use PhpTal\Exception\TemplateException;
+use PhpTal\Exception\UnknownModifierException;
 use PhpTal\Php\Attribute;
 use PhpTal\Php\CodeWriter;
 use PhpTal\TalNamespace\Builtin;
+use ReflectionException;
 
 /**
  * METAL Specification 1.0
@@ -59,10 +63,10 @@ class UseMacro extends Attribute
      *
      * @return void
      * @throws TemplateException
-     * @throws \PhpTal\Exception\ParserException
-     * @throws \PhpTal\Exception\PhpTalException
-     * @throws \PhpTal\Exception\UnknownModifierException
-     * @throws \ReflectionException
+     * @throws ParserException
+     * @throws PhpTalException
+     * @throws UnknownModifierException
+     * @throws ReflectionException
      */
     public function before(CodeWriter $codewriter): void
     {
@@ -150,7 +154,7 @@ class UseMacro extends Attribute
      * @param CodeWriter $codewriter
      * @param Node|Element $phpelement
      *
-     * @throws \PhpTal\Exception\PhpTalException
+     * @throws PhpTalException
      * @throws TemplateException
      */
     private function generateFillSlots(CodeWriter $codewriter, Node $phpelement): void

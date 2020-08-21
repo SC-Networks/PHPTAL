@@ -18,10 +18,12 @@ declare(strict_types=1);
 
 namespace Tests\Testhelper;
 
+use Exception;
+
 class OnErrorDummyObject
 {
     public function throwException(): void
     {
-        throw new \Exception('error thrown');
+        throw new Exception('error thrown');
     }
 }

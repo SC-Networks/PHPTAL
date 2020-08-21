@@ -18,10 +18,13 @@ declare(strict_types=1);
 
 namespace Tests\Testhelper;
 
-class LogIteratorCalls implements \Iterator
+use ArrayIterator;
+use Iterator;
+
+class LogIteratorCalls implements Iterator
 {
     /**
-     * @var \Iterator
+     * @var Iterator
      */
     public $i;
 
@@ -32,10 +35,10 @@ class LogIteratorCalls implements \Iterator
 
     public function __construct($arr)
     {
-        if ($arr instanceof \Iterator) {
+        if ($arr instanceof Iterator) {
             $this->i = $arr;
         } else {
-            $this->i = new \ArrayIterator($arr);
+            $this->i = new ArrayIterator($arr);
         }
     }
 

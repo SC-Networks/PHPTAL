@@ -18,7 +18,9 @@ declare(strict_types=1);
 
 namespace Tests\Testhelper;
 
-class SizeCalledException extends \Exception
+use Exception;
+
+class SizeCalledException extends Exception
 {
 
 }

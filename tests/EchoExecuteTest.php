@@ -18,8 +18,8 @@ declare(strict_types=1);
 
 namespace Tests;
 
+use Exception;
 use PhpTal\Exception\ConfigurationException;
-use PhpTal\PHPTAL;
 use PhpTal\PhpTalInterface;
 use Tests\Testcase\PhpTalTestCase;
 use Tests\Testhelper\Helper;
@@ -32,7 +32,7 @@ class EchoExecuteTest extends PhpTalTestCase
             ob_start();
             $tpl->echoExecute();
             $res = ob_get_clean();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             ob_end_clean();
             throw $e;
         }

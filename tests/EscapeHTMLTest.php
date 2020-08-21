@@ -19,6 +19,7 @@ declare(strict_types=1);
 namespace Tests;
 
 use PhpTal\Php\TalesInternal;
+use SimpleXMLElement;
 use Tests\Testcase\PhpTalTestCase;
 use Tests\Testhelper\Helper;
 
@@ -205,7 +206,7 @@ class EscapeHTMLTest extends PhpTalTestCase
     {
         $tpl = $this->newPHPTAL();
         $tpl->setSource('<p>${x} ${y}</p>');
-        $simplexml = new \SimpleXMLElement('<foo title="bar&amp;&lt;" empty="">foo&amp;&lt;</foo>');
+        $simplexml = new SimpleXMLElement('<foo title="bar&amp;&lt;" empty="">foo&amp;&lt;</foo>');
 
         $tpl->x = $simplexml['title'];
         $tpl->y = $simplexml['empty'];
@@ -216,7 +217,7 @@ class EscapeHTMLTest extends PhpTalTestCase
     {
         $tpl = $this->newPHPTAL();
         $tpl->setSource('<p>${structure x} ${structure y}</p>');
-        $simplexml = new  \SimpleXMLElement('<foo title="bar&amp;&lt;" empty="">foo&amp;&lt;</foo>');
+        $simplexml = new  SimpleXMLElement('<foo title="bar&amp;&lt;" empty="">foo&amp;&lt;</foo>');
 
         $tpl->x = $simplexml['title'];
         $tpl->y = $simplexml['empty'];

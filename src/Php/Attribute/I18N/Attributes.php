@@ -15,10 +15,14 @@ declare(strict_types=1);
 namespace PhpTal\Php\Attribute\I18N;
 
 use PhpTal\Dom\Attr;
+use PhpTal\Exception\ConfigurationException;
+use PhpTal\Exception\ParserException;
 use PhpTal\Exception\TemplateException;
+use PhpTal\Exception\UnknownModifierException;
 use PhpTal\Php\Attribute;
 use PhpTal\Php\CodeWriter;
 use PhpTal\Php\TalesInternal;
+use ReflectionException;
 
 /**
  *  i18n:attributes
@@ -71,7 +75,7 @@ class Attributes extends Attribute
      * Called before element printing.
      * @param CodeWriter $codewriter
      * @throws TemplateException
-     * @throws \PhpTal\Exception\ConfigurationException
+     * @throws ConfigurationException
      */
     public function before(CodeWriter $codewriter): void
     {
@@ -123,10 +127,10 @@ class Attributes extends Attribute
      * @param string $key - unescaped string (not PHP code) for the key
      *
      * @return string
-     * @throws \PhpTal\Exception\ConfigurationException
-     * @throws \PhpTal\Exception\ParserException
-     * @throws \PhpTal\Exception\UnknownModifierException
-     * @throws \ReflectionException
+     * @throws ConfigurationException
+     * @throws ParserException
+     * @throws UnknownModifierException
+     * @throws ReflectionException
      */
     private function getTranslationCode(CodeWriter $codewriter, string $key): string
     {

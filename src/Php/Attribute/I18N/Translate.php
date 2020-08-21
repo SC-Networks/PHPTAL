@@ -18,12 +18,18 @@ use PhpTal\Dom\Attr;
 use PhpTal\Dom\Element;
 use PhpTal\Dom\Node;
 use PhpTal\Dom\Text;
+use PhpTal\Exception\ConfigurationException;
+use PhpTal\Exception\ParserException;
+use PhpTal\Exception\PhpNotAllowedException;
+use PhpTal\Exception\PhpTalException;
 use PhpTal\Exception\TemplateException;
+use PhpTal\Exception\UnknownModifierException;
 use PhpTal\Php\Attribute;
 use PhpTal\Php\Attribute\TAL\Content;
 use PhpTal\Php\CodeWriter;
 use PhpTal\Php\TalesChainExecutor;
 use PhpTal\TalNamespace\Builtin;
+use ReflectionException;
 
 /**
  * ZPTInternationalizationSupport
@@ -46,12 +52,12 @@ class Translate extends Content
      * @return void
      *
      * @throws TemplateException
-     * @throws \PhpTal\Exception\ConfigurationException
-     * @throws \PhpTal\Exception\ParserException
-     * @throws \PhpTal\Exception\PhpNotAllowedException
-     * @throws \PhpTal\Exception\PhpTalException
-     * @throws \PhpTal\Exception\UnknownModifierException
-     * @throws \ReflectionException
+     * @throws ConfigurationException
+     * @throws ParserException
+     * @throws PhpNotAllowedException
+     * @throws PhpTalException
+     * @throws UnknownModifierException
+     * @throws ReflectionException
      */
     public function before(CodeWriter $codewriter): void
     {
@@ -109,8 +115,8 @@ class Translate extends Content
      * @param bool $islast
      *
      * @return void
-     * @throws \PhpTal\Exception\ConfigurationException
-     * @throws \PhpTal\Exception\PhpTalException
+     * @throws ConfigurationException
+     * @throws PhpTalException
      */
     public function talesChainPart(TalesChainExecutor $executor, string $expression, bool $islast): void
     {
@@ -175,7 +181,7 @@ class Translate extends Content
      *
      * @return void
      *
-     * @throws \PhpTal\Exception\PhpTalException
+     * @throws PhpTalException
      * @throws TemplateException
      */
     private function prepareNames(CodeWriter $codewriter, Node $tag): void

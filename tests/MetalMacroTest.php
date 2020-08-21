@@ -21,6 +21,7 @@ namespace Tests;
 use PhpTal\Exception\MacroMissingException;
 use PhpTal\Exception\ParserException;
 use PhpTal\Exception\PhpTalException;
+use stdClass;
 use Tests\Testcase\PhpTalTestCase;
 use Tests\Testhelper\Helper;
 
@@ -61,7 +62,7 @@ class MetalMacroTest extends PhpTalTestCase
 
     public function testEvaluatedMacroName(): void
     {
-        $call = new \stdClass();
+        $call = new stdClass();
         $call->first = 1;
         $call->second = 2;
 
@@ -76,7 +77,7 @@ class MetalMacroTest extends PhpTalTestCase
     public function testEvaluatedMacroNameTalesPHP(): void
     {
         static::markTestSkipped('chaining does not work anymore at the moment.');
-        $call = new \stdClass();
+        $call = new stdClass();
         $call->first = 1;
         $call->second = 2;
 

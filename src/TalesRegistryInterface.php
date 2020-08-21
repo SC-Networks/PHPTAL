@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace PhpTal;
 
+use ReflectionException;
+
 /**
  * TalesRegistryInterface
  *
@@ -40,7 +42,7 @@ interface TalesRegistryInterface
      * @param bool $is_fallback if true, method will be used as last resort (if there's no phptal_tales_foo)
      *
      * @throws Exception\ConfigurationException
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public static function registerPrefix(string $prefix, $callback, ?bool $is_fallback = null): void;
 

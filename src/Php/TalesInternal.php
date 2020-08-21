@@ -20,6 +20,7 @@ use PhpTal\Exception\PhpNotAllowedException;
 use PhpTal\Exception\UnknownModifierException;
 use PhpTal\TalesInterface;
 use PhpTal\TalesRegistry;
+use ReflectionException;
 
 /**
  * TALES Specification 1.3
@@ -99,7 +100,7 @@ class TalesInternal implements TalesInterface
      * @return string
      * @throws ParserException
      * @throws UnknownModifierException
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public static function true(string $src): string
     {
@@ -136,7 +137,7 @@ class TalesInternal implements TalesInterface
      * @return string
      * @throws ParserException
      * @throws UnknownModifierException
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public static function not(string $expression, bool $nothrow): string
     {
@@ -181,7 +182,7 @@ class TalesInternal implements TalesInterface
      * @return array|string
      * @throws ParserException
      * @throws UnknownModifierException
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public static function path(?string $expression, ?bool $nothrow = null)
     {
@@ -304,7 +305,7 @@ class TalesInternal implements TalesInterface
      * @return null|string|string[]
      * @throws ParserException
      * @throws UnknownModifierException
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public static function string(string $expression, ?bool $nothrow = null): string
     {
@@ -319,7 +320,7 @@ class TalesInternal implements TalesInterface
      * @return null|string|string[]
      * @throws ParserException
      * @throws UnknownModifierException
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public static function parseString(string $expression, bool $nothrow, string $tales_prefix): string
     {
@@ -471,7 +472,7 @@ class TalesInternal implements TalesInterface
      * @return string
      * @throws ParserException
      * @throws UnknownModifierException
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public static function exists(string $src): string
     {
@@ -510,7 +511,7 @@ class TalesInternal implements TalesInterface
      * @return string
      * @throws ParserException
      * @throws UnknownModifierException
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public static function json(string $src, bool $nothrow): string
     {
@@ -526,7 +527,7 @@ class TalesInternal implements TalesInterface
      * @return string
      * @throws ParserException
      * @throws UnknownModifierException
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public static function urlencode(string $src, bool $nothrow): string
     {
@@ -545,7 +546,7 @@ class TalesInternal implements TalesInterface
      * @return string
      * @throws ParserException
      * @throws UnknownModifierException
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public static function compileToPHPExpression(string $expression, ?bool $nothrow = null): string
     {
@@ -591,7 +592,7 @@ class TalesInternal implements TalesInterface
      * @return string or array
      * @throws ParserException
      * @throws UnknownModifierException
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public static function compileToPHPExpressions(?string $expression, ?bool $nothrow = null)
     {
