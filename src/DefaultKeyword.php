@@ -13,12 +13,15 @@ declare(strict_types=1);
 
 namespace PhpTal;
 
+use Countable;
+use stdClass;
+
 /**
  * Representation of the template 'default' keyword
  *
  * @package PHPTAL
  */
-class DefaultKeyword implements \Countable
+class DefaultKeyword implements Countable
 {
     /**
      * @return string
@@ -37,10 +40,10 @@ class DefaultKeyword implements \Countable
     }
 
     /**
-     * @return \stdClass
+     * @return stdClass
      */
-    public function jsonSerialize(): \stdClass
+    public function jsonSerialize(): stdClass
     {
-        return new \stdClass();
+        return new stdClass();
     }
 }

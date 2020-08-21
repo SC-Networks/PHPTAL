@@ -15,6 +15,16 @@ declare(strict_types=1);
 
 namespace PhpTal;
 
+use ArrayIterator;
+use Closure;
+use Countable;
+use DOMNodeList;
+use Iterator;
+use IteratorAggregate;
+use IteratorIterator;
+use stdClass;
+use Traversable;
+
 /**
  * Stores tal:repeat information during template execution.
  *
@@ -32,7 +42,7 @@ namespace PhpTal;
  * @package PHPTAL
  * @author Laurent Bedubourg <lbedubourg@motion-twin.com>
  */
-class RepeatController implements \Iterator
+class RepeatController implements Iterator
 {
     /**
      * @var string
@@ -60,7 +70,7 @@ class RepeatController implements \Iterator
     private $uses_groups = false;
 
     /**
-     * @var \Iterator
+     * @var Iterator
      */
     protected $iterator;
 
@@ -94,27 +104,27 @@ class RepeatController implements \Iterator
     public function __construct($source)
     {
         if (is_string($source)) {
-            $this->iterator = new \ArrayIterator(str_split($source));  // FIXME: invalid for UTF-8 encoding, use preg_match_all('/./u') trick
+            $this->iterator = new ArrayIterator(str_split($source));  // FIXME: invalid for UTF-8 encoding, use preg_match_all('/./u') trick
         } elseif (is_array($source)) {
-            $this->iterator = new \ArrayIterator($source);
-        } elseif ($source instanceof \IteratorAggregate) {
+            $this->iterator = new ArrayIterator($source);
+        } elseif ($source instanceof IteratorAggregate) {
             $this->iterator = $source->getIterator();
-        } elseif ($source instanceof \DOMNodeList) {
+        } elseif ($source instanceof DOMNodeList) {
             $array = [];
             foreach ($source as $k => $v) {
                 $array[$k] = $v;
             }
-            $this->iterator = new \ArrayIterator($array);
-        } elseif ($source instanceof \Iterator) {
+            $this->iterator = new ArrayIterator($array);
+        } elseif ($source instanceof Iterator) {
             $this->iterator = $source;
-        } elseif ($source instanceof \Traversable) {
-            $this->iterator = new \IteratorIterator($source);
-        } elseif ($source instanceof \Closure) {
-            $this->iterator = new \ArrayIterator((array)$source());
-        } elseif ($source instanceof \stdClass) {
-            $this->iterator = new \ArrayIterator((array)$source);
+        } elseif ($source instanceof Traversable) {
+            $this->iterator = new IteratorIterator($source);
+        } elseif ($source instanceof Closure) {
+            $this->iterator = new ArrayIterator((array)$source());
+        } elseif ($source instanceof stdClass) {
+            $this->iterator = new ArrayIterator((array)$source);
         } else {
-            $this->iterator = new \ArrayIterator([]);
+            $this->iterator = new ArrayIterator([]);
         }
     }
 
@@ -157,7 +167,7 @@ class RepeatController implements \Iterator
     public function length(): ?int
     {
         if ($this->length === null) {
-            if ($this->iterator instanceof \Countable) {
+            if ($this->iterator instanceof Countable) {
                 return $this->length = count($this->iterator);
             }
 

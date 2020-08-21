@@ -12,9 +12,11 @@
 
 namespace PhpTal\Exception;
 
+use Exception;
+
 /**
  * @package PHPTAL
  */
-class PhpTalException extends \Exception
+class PhpTalException extends Exception
 {
 }

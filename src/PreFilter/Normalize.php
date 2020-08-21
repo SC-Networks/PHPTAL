@@ -16,6 +16,7 @@ namespace PhpTal\PreFilter;
 use PhpTal\Dom\Attr;
 use PhpTal\Dom\Element;
 use PhpTal\Dom\Text;
+use PhpTal\Exception\PhpTalException;
 use PhpTal\PreFilter;
 use PhpTal\TalNamespace\Builtin;
 
@@ -50,7 +51,7 @@ class Normalize extends PreFilter
      * @param Element $root PHPTAL DOM node to modify in place
      *
      * @return void
-     * @throws \PhpTal\Exception\PhpTalException
+     * @throws PhpTalException
      */
     public function filterDOM(Element $root): void
     {
@@ -113,7 +114,7 @@ class Normalize extends PreFilter
      * @param Element $root
      *
      * @return void
-     * @throws \PhpTal\Exception\PhpTalException
+     * @throws PhpTalException
      */
     protected function findElementToFilter(Element $root): void
     {

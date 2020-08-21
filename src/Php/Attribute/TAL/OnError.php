@@ -14,9 +14,14 @@ declare(strict_types=1);
 
 namespace PhpTal\Php\Attribute\TAL;
 
+use PhpTal\Exception\ParserException;
+use PhpTal\Exception\PhpNotAllowedException;
+use PhpTal\Exception\PhpTalException;
+use PhpTal\Exception\UnknownModifierException;
 use PhpTal\Php\Attribute;
 use PhpTal\Php\CodeWriter;
 use PhpTal\Php\TalesInternal;
+use ReflectionException;
 
 /**
  * TAL Specifications 1.4
@@ -56,11 +61,11 @@ class OnError extends Attribute
      * @param CodeWriter $codewriter
      *
      * @return void
-     * @throws \PhpTal\Exception\ParserException
-     * @throws \PhpTal\Exception\PhpNotAllowedException
-     * @throws \PhpTal\Exception\PhpTalException
-     * @throws \PhpTal\Exception\UnknownModifierException
-     * @throws \ReflectionException
+     * @throws ParserException
+     * @throws PhpNotAllowedException
+     * @throws PhpTalException
+     * @throws UnknownModifierException
+     * @throws ReflectionException
      */
     public function after(CodeWriter $codewriter): void
     {

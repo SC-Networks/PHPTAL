@@ -14,12 +14,17 @@ declare(strict_types=1);
 
 namespace PhpTal\Php\Attribute\TAL;
 
+use PhpTal\Exception\ParserException;
+use PhpTal\Exception\PhpNotAllowedException;
+use PhpTal\Exception\PhpTalException;
 use PhpTal\Exception\TemplateException;
+use PhpTal\Exception\UnknownModifierException;
 use PhpTal\Php\Attribute;
 use PhpTal\Php\CodeWriter;
 use PhpTal\Php\TalesChainExecutor;
 use PhpTal\Php\TalesChainReaderInterface;
 use PhpTal\Php\TalesInternal;
+use ReflectionException;
 
 /**
  * TAL spec 1.4 for tal:define content
@@ -80,10 +85,10 @@ class Define extends Attribute implements TalesChainReaderInterface
      * @param CodeWriter $codewriter
      *
      * @return void
-     * @throws \PhpTal\Exception\ParserException
-     * @throws \PhpTal\Exception\PhpNotAllowedException
-     * @throws \PhpTal\Exception\UnknownModifierException
-     * @throws \ReflectionException
+     * @throws ParserException
+     * @throws PhpNotAllowedException
+     * @throws UnknownModifierException
+     * @throws ReflectionException
      */
     public function before(CodeWriter $codewriter): void
     {
@@ -137,7 +142,7 @@ class Define extends Attribute implements TalesChainReaderInterface
      * @param CodeWriter $codewriter
      *
      * @return void
-     * @throws \PhpTal\Exception\PhpTalException
+     * @throws PhpTalException
      */
     public function after(CodeWriter $codewriter): void
     {
@@ -154,7 +159,7 @@ class Define extends Attribute implements TalesChainReaderInterface
      * @param array $parts
      *
      * @return void
-     * @throws \PhpTal\Exception\PhpTalException
+     * @throws PhpTalException
      */
     private function chainedDefine(CodeWriter $codewriter, $parts): void
     {
@@ -166,7 +171,7 @@ class Define extends Attribute implements TalesChainReaderInterface
      *
      * @return void
      * @throws TemplateException
-     * @throws \PhpTal\Exception\PhpTalException
+     * @throws PhpTalException
      */
     public function talesChainNothingKeyword(TalesChainExecutor $executor): void
     {
@@ -188,7 +193,7 @@ class Define extends Attribute implements TalesChainReaderInterface
      *
      * @return void
      * @throws TemplateException
-     * @throws \PhpTal\Exception\PhpTalException
+     * @throws PhpTalException
      */
     public function talesChainDefaultKeyword(TalesChainExecutor $executor): void
     {
@@ -211,7 +216,7 @@ class Define extends Attribute implements TalesChainReaderInterface
      * @param bool $islast
      *
      * @return void
-     * @throws \PhpTal\Exception\PhpTalException
+     * @throws PhpTalException
      */
     public function talesChainPart(TalesChainExecutor $executor, string $expression, bool $islast): void
     {

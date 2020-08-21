@@ -18,6 +18,7 @@ declare(strict_types=1);
 
 namespace Tests;
 
+use stdClass;
 use Tests\Testcase\PhpTalTestCase;
 use Tests\Testhelper\Helper;
 
@@ -35,7 +36,7 @@ class TalesExistTest extends PhpTalTestCase
 
     public function testLevel2(): void
     {
-        $o = new \stdClass();
+        $o = new stdClass();
         $o->foo = 1;
         $tpl = $this->newPHPTAL('input/tales-exist-02.html');
         $tpl->o = $o;

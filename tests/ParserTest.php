@@ -18,6 +18,8 @@ declare(strict_types=1);
 
 namespace Tests;
 
+use DOMNode;
+use Exception;
 use PhpTal\Dom\PHPTALDocumentBuilder;
 use PhpTal\Dom\SaxXmlParser;
 use PhpTal\Exception\PhpTalException;
@@ -33,7 +35,7 @@ class ParserTest extends PhpTalTestCase
             TAL_TEST_FILES_DIR . 'input/parser.01.xml'
         )->getResult();
 
-        if ($tree instanceof \DOMNode) {
+        if ($tree instanceof DOMNode) {
             $this->markTestSkipped();
         }
 
@@ -46,12 +48,12 @@ class ParserTest extends PhpTalTestCase
     {
         $parser = new SaxXmlParser('UTF-8');
         try {
-            $tree = $parser->parseFile(
+            $parser->parseFile(
                 new PHPTALDocumentBuilder(),
                 TAL_TEST_FILES_DIR . 'input/parser.02.xml'
             )->getResult();
             static::assertTrue(true);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             static::assertTrue(false);
         }
     }
@@ -61,7 +63,7 @@ class ParserTest extends PhpTalTestCase
         try {
             $parser = new SaxXmlParser('UTF-8');
             $parser->parseFile(new PHPTALDocumentBuilder(), TAL_TEST_FILES_DIR . 'input/parser.03.xml')->getResult();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             static::assertStringContainsString('href', $e->getMessage());
             static::assertStringContainsString('quote', $e->getMessage());
         }

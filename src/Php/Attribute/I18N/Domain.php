@@ -14,8 +14,13 @@ declare(strict_types=1);
 
 namespace PhpTal\Php\Attribute\I18N;
 
+use PhpTal\Exception\ConfigurationException;
+use PhpTal\Exception\ParserException;
+use PhpTal\Exception\PhpTalException;
+use PhpTal\Exception\UnknownModifierException;
 use PhpTal\Php\Attribute;
 use PhpTal\Php\CodeWriter;
+use ReflectionException;
 
 /**
  * i18n:domain
@@ -35,11 +40,11 @@ class Domain extends Attribute
      * @param CodeWriter $codewriter
      *
      * @return void
-     * @throws \PhpTal\Exception\ConfigurationException
-     * @throws \PhpTal\Exception\ParserException
-     * @throws \PhpTal\Exception\PhpTalException
-     * @throws \PhpTal\Exception\UnknownModifierException
-     * @throws \ReflectionException
+     * @throws ConfigurationException
+     * @throws ParserException
+     * @throws PhpTalException
+     * @throws UnknownModifierException
+     * @throws ReflectionException
      */
     public function before(CodeWriter $codewriter): void
     {
@@ -61,7 +66,7 @@ class Domain extends Attribute
      * @param CodeWriter $codewriter
      *
      * @return void
-     * @throws \PhpTal\Exception\ConfigurationException
+     * @throws ConfigurationException
      */
     public function after(CodeWriter $codewriter): void
     {

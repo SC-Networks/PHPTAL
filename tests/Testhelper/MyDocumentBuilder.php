@@ -18,6 +18,7 @@ declare(strict_types=1);
 
 namespace Tests\Testhelper;
 
+use Exception;
 use PhpTal\Dom\DocumentBuilder;
 
 class MyDocumentBuilder extends DocumentBuilder
@@ -75,12 +76,12 @@ class MyDocumentBuilder extends DocumentBuilder
      * @param string $decl
      *
      * @return mixed
-     * @throws \Exception
+     * @throws Exception
      */
     public function onXmlDecl(string $decl): void
     {
         if (!$this->allow_xmldec) {
-            throw new \Exception('more than one xml decl');
+            throw new Exception('more than one xml decl');
         }
         $this->specifics++;
         $this->allow_xmldec = false;

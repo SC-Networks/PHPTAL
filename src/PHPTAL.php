@@ -14,6 +14,9 @@ declare(strict_types=1);
 namespace PhpTal;
 
 use PhpTal\Php\TalesInternal;
+use RuntimeException;
+use stdClass;
+use Throwable;
 
 /**
  * PHPTAL template entry point.
@@ -118,7 +121,7 @@ class PHPTAL implements PhpTalInterface
     /**
      * global execution context
      *
-     * @var \stdClass
+     * @var stdClass
      */
     protected $globalContext;
 
@@ -203,7 +206,7 @@ class PHPTAL implements PhpTalInterface
     public function __construct(?string $path = null)
     {
         $this->path = $path;
-        $this->globalContext = new \stdClass();
+        $this->globalContext = new stdClass();
         $this->context = new Context();
         $this->context->setGlobal($this->globalContext);
 
@@ -650,7 +653,7 @@ class PHPTAL implements PhpTalInterface
      *
      * @return string
      * @throws Exception\TemplateException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function execute(): string
     {
@@ -669,7 +672,7 @@ class PHPTAL implements PhpTalInterface
                 ob_start();
                 $templateFunction($this, $this->context);
                 $res = ob_get_clean();
-            } catch (\Throwable $e) {
+            } catch (Throwable $e) {
                 ob_end_clean();
                 throw $e;
             }
@@ -687,7 +690,7 @@ class PHPTAL implements PhpTalInterface
             if ($this->postfilter !== null) {
                 return $this->postfilter->filter($res);
             }
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             ExceptionHandler::handleException($e, $this->getEncoding());
         }
 
@@ -700,7 +703,7 @@ class PHPTAL implements PhpTalInterface
      *
      * @return void
      * @throws Exception\TemplateException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function echoExecute(): void
     {
@@ -718,7 +721,7 @@ class PHPTAL implements PhpTalInterface
 
             $templateFunction = $this->getFunctionName();
             $templateFunction($this, $this->context);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             ExceptionHandler::handleException($e, $this->getEncoding());
         }
     }
@@ -736,7 +739,7 @@ class PHPTAL implements PhpTalInterface
      * @throws Exception\IOException
      * @throws Exception\MacroMissingException
      * @throws Exception\TemplateException
-     * @throws \Throwable
+     * @throws Throwable
      */
     final public function executeMacroOfTemplate(string $path, PhpTalInterface $local_tpl): void
     {
@@ -812,7 +815,7 @@ class PHPTAL implements PhpTalInterface
         if (!file_exists($this->getPhpCodeDestination() . $path) &&
             !mkdir($concurrentDirectory = $this->getPhpCodeDestination() . $path, 0777, true) &&
             !is_dir($concurrentDirectory)) {
-            throw new \RuntimeException(sprintf('Directory "%s" was not created', $concurrentDirectory));
+            throw new RuntimeException(sprintf('Directory "%s" was not created', $concurrentDirectory));
         }
         return $path;
     }
@@ -834,7 +837,7 @@ class PHPTAL implements PhpTalInterface
      * @throws Exception\ConfigurationException
      * @throws Exception\IOException
      * @throws Exception\TemplateException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function prepare(): PhpTalInterface
     {
@@ -866,7 +869,7 @@ class PHPTAL implements PhpTalInterface
                 ob_start();
                 try {
                     eval("?>\n".$result);
-                } catch (\Throwable $e) {
+                } catch (Throwable $e) {
                     ob_end_clean();
                     throw $e;
                 }
@@ -1111,9 +1114,9 @@ class PHPTAL implements PhpTalInterface
     /**
      * only for use in generated template code
      *
-     * @return \stdClass
+     * @return stdClass
      */
-    public function getGlobalContext(): \stdClass
+    public function getGlobalContext(): stdClass
     {
         return $this->globalContext;
     }

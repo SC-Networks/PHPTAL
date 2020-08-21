@@ -18,6 +18,7 @@ declare(strict_types=1);
 
 namespace Tests;
 
+use Exception;
 use PhpTal\Exception\ConfigurationException;
 use PhpTal\Exception\IOException;
 use PhpTal\Exception\PhpTalException;
@@ -25,6 +26,7 @@ use PhpTal\Exception\TemplateException;
 use PhpTal\PHPTAL;
 use Tests\Testcase\PhpTalTestCase;
 use Tests\Testhelper\Helper;
+use Throwable;
 
 class PhptalTest extends PhpTalTestCase
 {
@@ -49,8 +51,8 @@ class PhptalTest extends PhpTalTestCase
         $tpl = $this->newPHPTAL('input/phptal.03.html');
         ob_start();
         try {
-            $res = $tpl->execute();
-        } catch (\Exception $e) {
+            $tpl->execute();
+        } catch (Exception $e) {
         }
         $c = ob_get_contents();
         ob_end_clean();
@@ -213,7 +215,7 @@ class PhptalTest extends PhpTalTestCase
         echo "\n" . __CLASS__ . "::testPHPParseErrorDoesNotStopPHPTAL2 failed\n";
         try {
             @$tpl->execute(); // if test dies for no apparent reason, the reason is '@'
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             ob_end_clean();
             throw $e;
         }

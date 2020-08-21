@@ -18,6 +18,8 @@ declare(strict_types=1);
 
 namespace Tests;
 
+use DOMDocument;
+use SimpleXMLElement;
 use Tests\Testcase\PhpTalTestCase;
 use Tests\Testhelper\Helper;
 use Tests\Testhelper\MyIterableWithSize;
@@ -150,7 +152,7 @@ class TalTestCaseRepeatTest extends PhpTalTestCase
     public function testTraversableRepeat(): void
     {
         static::markTestSkipped('this condition works with php only. maybe add comparism-operators to tal:condition?');
-        $doc = new \DOMDocument();
+        $doc = new DOMDocument();
         $doc->loadXML('<a><b/><c/><d/><e/><f/><g/></a>');
 
         $tpl = $this->newPHPTAL();
@@ -252,7 +254,7 @@ class TalTestCaseRepeatTest extends PhpTalTestCase
     {
         $tpl = $this->newPHPTAL();
         $tpl->setSource("<tal:block tal:repeat='s sxml'><b tal:content='structure s' />\n</tal:block>");
-        $tpl->sxml = new \SimpleXMLElement("<x><y>test</y><y attr=\"test\"><z>test</z></y><y/></x>");
+        $tpl->sxml = new SimpleXMLElement("<x><y>test</y><y attr=\"test\"><z>test</z></y><y/></x>");
         static::assertSame(
             "<b><y>test</y></b>\n<b><y attr=\"test\"><z>test</z></y></b>\n<b><y/></b>\n",
             $tpl->execute()

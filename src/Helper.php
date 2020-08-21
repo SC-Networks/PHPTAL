@@ -2,8 +2,12 @@
 
 namespace PhpTal;
 
+use Countable;
+use SimpleXMLElement;
+
 /**
  * Class Helper
+ *
  * @package PhpTal
  */
 class Helper
@@ -19,7 +23,7 @@ class Helper
     public static function phptal_isempty($var): bool
     {
         return in_array($var, [null, false, ''], true)
-            || ((is_array($var) || $var instanceof \Countable) && count($var) === 0);
+            || ((is_array($var) || $var instanceof Countable) && count($var) === 0);
     }
 
 
@@ -33,7 +37,7 @@ class Helper
     public static function phptal_true($var): bool
     {
         $var = static::phptal_unravel_closure($var);
-        return $var && (!$var instanceof \Countable || count($var));
+        return $var && (!$var instanceof Countable || count($var));
     }
 
 
@@ -68,7 +72,7 @@ class Helper
         if (is_array($var)) {
             return implode(', ', array_map([__CLASS__, 'phptal_tostring'], $var));
         }
-        if ($var instanceof \SimpleXMLElement) {
+        if ($var instanceof SimpleXMLElement) {
             /* There is no sane way to tell apart element and attribute nodes
                in SimpleXML, so here's a guess that if something has no attributes
                or children, and doesn't output <, then it's an attribute */

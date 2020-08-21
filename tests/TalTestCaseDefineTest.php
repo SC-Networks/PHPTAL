@@ -21,6 +21,7 @@ namespace Tests;
 use PhpTal\Exception\TemplateException;
 use PhpTal\Php\Attribute\TAL\Define;
 use PhpTal\Php\TalesInternal;
+use PhpTal\PHPTAL;
 use Tests\Testcase\PhpTalTestCase;
 use Tests\Testhelper\DummyDefinePhpNode;
 use Tests\Testhelper\Helper;
@@ -152,7 +153,7 @@ class TalTestCaseDefineTest extends PhpTalTestCase
     public function testDefineContent(): void
     {
         $tpl = $this->newPHPTAL('input/tal-define.11.html');
-        $tpl->setOutputMode(\PhpTal\PHPTAL::XML);
+        $tpl->setOutputMode(PHPTAL::XML);
         $res = $tpl->execute();
         $res = Helper::normalizeHtml($res);
         $exp = Helper::normalizeHtmlFile('output/tal-define.11.html');
@@ -163,7 +164,7 @@ class TalTestCaseDefineTest extends PhpTalTestCase
     {
         TalesInternal::setFunctionWhitelist(['true']);
         $tpl = $this->newPHPTAL('input/tal-define.12.html');
-        $tpl->setOutputMode(\PhpTal\PHPTAL::XML);
+        $tpl->setOutputMode(PHPTAL::XML);
         $res = $tpl->execute();
         $res = Helper::normalizeHtml($res);
         $exp = Helper::normalizeHtmlFile('output/tal-define.12.html');
@@ -233,7 +234,7 @@ class TalTestCaseDefineTest extends PhpTalTestCase
     public function testGlobalDefineNonEmptySpan(): void
     {
         $tpl = $this->newPHPTAL();
-        $tpl->setOutputMode(\PhpTal\PHPTAL::XML);
+        $tpl->setOutputMode(PHPTAL::XML);
 
         $tpl->setSource('<div>
            <span tal:define="global x \'ok\'" class="foo" />
@@ -247,7 +248,7 @@ class TalTestCaseDefineTest extends PhpTalTestCase
     public function testGlobalDefineNonEmptySpan2(): void
     {
         $tpl = $this->newPHPTAL();
-        $tpl->setOutputMode(\PhpTal\PHPTAL::XML);
+        $tpl->setOutputMode(PHPTAL::XML);
 
         $tpl->setSource('<div>
            <span tal:define="global x \'ok\'" tal:attributes="class \'foo\'" />

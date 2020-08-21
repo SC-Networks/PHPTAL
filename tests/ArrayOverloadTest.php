@@ -18,6 +18,7 @@ declare(strict_types=1);
 
 namespace Tests;
 
+use stdClass;
 use Tests\Testcase\PhpTalTestCase;
 use Tests\Testhelper\Helper;
 use Tests\Testhelper\MyArray;
@@ -28,7 +29,7 @@ class ArrayOverloadTest extends PhpTalTestCase
     {
         $arr = new MyArray();
         for ($i = 0; $i < 20; $i++) {
-            $val = new \stdClass();
+            $val = new stdClass();
             $val->foo = "foo value $i";
             $arr->push($val);
         }

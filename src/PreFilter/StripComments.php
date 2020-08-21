@@ -17,6 +17,7 @@ use PhpTal\Dom\CDATASection;
 use PhpTal\Dom\Comment;
 use PhpTal\Dom\Defs;
 use PhpTal\Dom\Element;
+use PhpTal\Exception\PhpTalException;
 use PhpTal\PreFilter;
 
 class StripComments extends PreFilter
@@ -31,7 +32,7 @@ class StripComments extends PreFilter
      *
      * @param Element $element
      * @return void
-     * @throws \PhpTal\Exception\PhpTalException
+     * @throws PhpTalException
      */
     public function filterDOM(Element $element): void
     {

@@ -13,12 +13,14 @@ declare(strict_types=1);
 
 namespace PhpTal;
 
+use Countable;
+
 /**
  * Interface for template keywords
  *
  * @package PHPTAL
  */
-interface KeywordsInterface extends \Countable
+interface KeywordsInterface extends Countable
 {
     /**
      * @return string

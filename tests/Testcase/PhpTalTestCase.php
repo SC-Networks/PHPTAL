@@ -18,6 +18,8 @@ declare(strict_types=1);
 
 namespace Tests\Testcase;
 
+use DOMDocument;
+use Exception;
 use PhpTal\PHPTAL;
 use PhpTal\PhpTalInterface;
 use PHPUnit\Framework\TestCase;
@@ -67,7 +69,7 @@ abstract class PhpTalTestCase extends TestCase
         }
 
         if ($unflushed) {
-            throw new \Exception("Unflushed buffers: $unflushed");
+            throw new Exception("Unflushed buffers: $unflushed");
         }
     }
 
@@ -82,12 +84,12 @@ abstract class PhpTalTestCase extends TestCase
 
     protected function assertXMLEquals(string $expect, string $test): void
     {
-        $doc = new \DOMDocument();
+        $doc = new DOMDocument();
         static::assertTrue($doc->loadXML($expect), "Can load $expect");
         $doc->normalize();
         $expect = $doc->saveXML();
 
-        $doc = new \DOMDocument();
+        $doc = new DOMDocument();
         static::assertTrue($doc->loadXML($test), "Can load $test");
         $doc->normalize();
         $test = $doc->saveXML();

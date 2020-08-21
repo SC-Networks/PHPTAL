@@ -18,6 +18,7 @@ declare(strict_types=1);
 
 namespace Tests;
 
+use stdClass;
 use Tests\Testcase\PhpTalTestCase;
 use Tests\Testhelper\Helper;
 
@@ -70,7 +71,7 @@ class OldTest extends PhpTalTestCase
     public function test13(): void  // default keyword
     {
         $tpl = $this->newPHPTAL('input/old-13.html');
-        $l = new \stdClass(); // DummyTag();
+        $l = new stdClass(); // DummyTag();
         $l->href = "http://www.example.com";
         $l->title = "example title";
         $l->name = "my link content";
@@ -148,9 +149,9 @@ class OldTest extends PhpTalTestCase
 
     public function test31(): void // test path evals
     {
-        $a = new \stdClass;
-        $a->fooval = new \stdClass;
-        $a->fooval->b = new \stdClass;
+        $a = new stdClass;
+        $a->fooval = new stdClass;
+        $a->fooval->b = new stdClass;
         $a->fooval->b->barval = "it's working";
 
         $tpl = $this->newPHPTAL('input/old-31.html');

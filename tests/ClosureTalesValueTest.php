@@ -18,6 +18,8 @@ declare(strict_types=1);
 
 namespace Tests;
 
+use stdClass;
+use TestClosureFromMethod;
 use Tests\Testcase\PhpTalTestCase;
 
 class ClosureTalesValueTest extends PhpTalTestCase
@@ -98,10 +100,10 @@ PHP
 
     public function testClosureDeep(): void
     {
-        $obj = new \stdClass();
+        $obj = new stdClass();
         eval("\$obj->foon = function () { return 'hello'; };");
 
-        $objobj = new \stdClass();
+        $objobj = new stdClass();
         $objobj->obj = $obj;
 
         $arr = ['one' => ['two' => ['three' => $obj]]];
@@ -175,7 +177,7 @@ hello
 HTML;
         $tpl = $this->newPHPTAL();
         $tpl->setSource($source);
-        $tpl->obj = new \TestClosureFromMethod();
+        $tpl->obj = new TestClosureFromMethod();
 
         static::assertSame($expected, $tpl->execute());
     }

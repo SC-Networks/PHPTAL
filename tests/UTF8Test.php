@@ -48,7 +48,7 @@ class UTF8Test extends PhpTalTestCase
 
     public function testLipsum(): void
     {
-        $tpl = $this->newPHPTAL()->setSource(rawurldecode('<?xml version="1.0" encoding="UTF-8"?>
+        $this->newPHPTAL()->setSource(rawurldecode('<?xml version="1.0" encoding="UTF-8"?>
                 <test>Lørem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Iñtërnâtiônàlizætiøn, これは日本語のテキストです。読めますか. देखें हिन्दी कैसी नजर आती है। अरे वाह ये तो नजर आती है।. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</test>'))->execute();
     }
 
@@ -57,7 +57,7 @@ class UTF8Test extends PhpTalTestCase
         /* Based on: UTF-8 decoder capability and stress test
            Markus Kuhn <http://www.cl.cam.ac.uk/~mgk25/> - 2003-02-19 */
 
-        $tpl = $this->newPHPTAL()->setSource(rawurldecode('<?xml version="1.0" encoding="UTF-8"?>
+        $this->newPHPTAL()->setSource(rawurldecode('<?xml version="1.0" encoding="UTF-8"?>
             <test>
                                                                                              %7C
                 1  Some correct UTF-8 text                                                    %7C

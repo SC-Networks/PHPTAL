@@ -14,8 +14,13 @@ declare(strict_types=1);
 
 namespace PhpTal\Php\Attribute\TAL;
 
+use PhpTal\Exception\ParserException;
+use PhpTal\Exception\PhpNotAllowedException;
+use PhpTal\Exception\PhpTalException;
+use PhpTal\Exception\UnknownModifierException;
 use PhpTal\Php\Attribute;
 use PhpTal\Php\CodeWriter;
+use ReflectionException;
 
 /**
  * TAL Specifications 1.4
@@ -60,10 +65,10 @@ class OmitTag extends Attribute
      * @param CodeWriter $codewriter
      *
      * @return void
-     * @throws \PhpTal\Exception\ParserException
-     * @throws \PhpTal\Exception\PhpNotAllowedException
-     * @throws \PhpTal\Exception\UnknownModifierException
-     * @throws \ReflectionException
+     * @throws ParserException
+     * @throws PhpNotAllowedException
+     * @throws UnknownModifierException
+     * @throws ReflectionException
      */
     public function before(CodeWriter $codewriter): void
     {
@@ -85,7 +90,7 @@ class OmitTag extends Attribute
      * @param CodeWriter $codewriter
      *
      * @return void
-     * @throws \PhpTal\Exception\PhpTalException
+     * @throws PhpTalException
      */
     public function after(CodeWriter $codewriter): void
     {

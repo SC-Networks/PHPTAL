@@ -13,8 +13,10 @@ declare(strict_types=1);
 
 namespace PhpTal;
 
+use ParseError;
 use PhpTal\Exception\TemplateException;
 use PhpTal\TalNamespace\Builtin;
+use Throwable;
 
 class ExceptionHandler
 {
@@ -38,14 +40,14 @@ class ExceptionHandler
      *
      * Doesn't change exception handler if non-default one is set.
      *
-     * @param \Throwable $e exception to re-throw and display
+     * @param Throwable $e exception to re-throw and display
      * @param string $encoding
      *
      * @return void
      * @throws TemplateException
-     * @throws \Throwable
+     * @throws Throwable
      */
-    public static function handleException(\Throwable $e, string $encoding): void
+    public static function handleException(Throwable $e, string $encoding): void
     {
         // PHPTAL's handler is only useful on fresh HTTP response
         if (PHP_SAPI !== 'cli' && !headers_sent()) {
@@ -59,7 +61,7 @@ class ExceptionHandler
             }
         }
 
-        if (get_class($e) === \ParseError::class) {
+        if (get_class($e) === ParseError::class) {
             $e = new TemplateException($e->getMessage());
         }
         throw $e; // throws instead of outputting immediately to support user's try/catch
@@ -69,9 +71,9 @@ class ExceptionHandler
     /**
      * Generates simple error page. Sets appropriate HTTP status to prevent page being indexed.
      *
-     * @param \Throwable $e exception to display
+     * @param Throwable $e exception to display
      */
-    public function defaultExceptionHandler(\Throwable $e): void
+    public function defaultExceptionHandler(Throwable $e): void
     {
         if (!headers_sent()) {
             header('HTTP/1.1 500 PHPTAL Exception');

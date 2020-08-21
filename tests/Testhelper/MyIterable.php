@@ -18,7 +18,9 @@ declare(strict_types=1);
 
 namespace Tests\Testhelper;
 
-class MyIterable implements \Iterator
+use Iterator;
+
+class MyIterable implements Iterator
 {
 
     /**

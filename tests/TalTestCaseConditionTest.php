@@ -18,6 +18,7 @@ declare(strict_types=1);
 
 namespace Tests;
 
+use Exception;
 use Tests\Testcase\PhpTalTestCase;
 use Tests\Testhelper\CountableImpl;
 use Tests\Testhelper\Event;
@@ -54,7 +55,7 @@ class TalTestCaseConditionTest extends PhpTalTestCase
     {
         $tpl = $this->newPHPTAL('input/tal-condition.04.html');
         $tpl->somevar = true;
-        $this->expectException(\Exception::class);
+        $this->expectException(Exception::class);
         $tpl->execute();
     }
 

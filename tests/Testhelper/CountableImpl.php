@@ -18,7 +18,9 @@ declare(strict_types=1);
 
 namespace Tests\Testhelper;
 
-class CountableImpl implements \Countable
+use Countable;
+
+class CountableImpl implements Countable
 {
     /**
      * @var int

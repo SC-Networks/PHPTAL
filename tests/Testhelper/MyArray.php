@@ -18,7 +18,9 @@ declare(strict_types=1);
 
 namespace Tests\Testhelper;
 
-class MyArray implements \ArrayAccess
+use ArrayAccess;
+
+class MyArray implements ArrayAccess
 {
 
     /**

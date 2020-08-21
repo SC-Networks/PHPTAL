@@ -15,6 +15,7 @@ declare(strict_types=1);
 namespace PhpTal\Php\Attribute\METAL;
 
 use PhpTal\Exception\ParserException;
+use PhpTal\Exception\PhpTalException;
 use PhpTal\Exception\TemplateException;
 use PhpTal\Php\Attribute;
 use PhpTal\Php\CodeWriter;
@@ -85,7 +86,7 @@ class DefineMacro extends Attribute
      * @param CodeWriter $codewriter
      *
      * @return void
-     * @throws \PhpTal\Exception\PhpTalException
+     * @throws PhpTalException
      */
     public function after(CodeWriter $codewriter): void
     {

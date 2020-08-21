@@ -16,8 +16,13 @@ namespace PhpTal\Php;
 
 use PhpTal\Dom\Element;
 use PhpTal\Exception\ConfigurationException;
+use PhpTal\Exception\ParserException;
+use PhpTal\Exception\PhpNotAllowedException;
 use PhpTal\Exception\PhpTalException;
+use PhpTal\Exception\TemplateException;
+use PhpTal\Exception\UnknownModifierException;
 use PhpTal\PHPTAL;
+use ReflectionException;
 
 /**
  * Helps generate php representation of a template.
@@ -221,10 +226,10 @@ class CodeWriter
      * @param string $src
      *
      * @return string|array
-     * @throws \PhpTal\Exception\ParserException
-     * @throws \PhpTal\Exception\UnknownModifierException
-     * @throws \ReflectionException
-     * @throws \PhpTal\Exception\PhpNotAllowedException
+     * @throws ParserException
+     * @throws UnknownModifierException
+     * @throws ReflectionException
+     * @throws PhpNotAllowedException
      */
     public function evaluateExpression(string $src)
     {
@@ -361,7 +366,7 @@ class CodeWriter
      * @param Element $treeGen
      * @return void
      * @throws PhpTalException
-     * @throws \PhpTal\Exception\TemplateException
+     * @throws TemplateException
      */
     public function doTemplateFile(string $functionName, Element $treeGen): void
     {
@@ -681,9 +686,9 @@ class CodeWriter
      * @param string $src
      *
      * @return string
-     * @throws \PhpTal\Exception\ParserException
-     * @throws \PhpTal\Exception\UnknownModifierException
-     * @throws \ReflectionException
+     * @throws ParserException
+     * @throws UnknownModifierException
+     * @throws ReflectionException
      */
     public function interpolateTalesVarsInString(string $src): string
     {

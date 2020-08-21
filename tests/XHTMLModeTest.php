@@ -19,6 +19,7 @@ declare(strict_types=1);
 namespace Tests;
 
 use PhpTal\Php\TalesInternal;
+use PhpTal\PHPTAL;
 use Tests\Testcase\PhpTalTestCase;
 use Tests\Testhelper\Helper;
 
@@ -106,7 +107,7 @@ class XHTMLModeTest extends PhpTalTestCase
         ];
         foreach ($emptyElements as $name) {
             $tpl = $this->newPHPTAL();
-            $tpl->setOutputMode(\PhpTal\PHPTAL::XHTML);
+            $tpl->setOutputMode(PHPTAL::XHTML);
             $tpl->setSource('<' . $name . '>foo</' . $name . '>');
             $res = $tpl->execute();
             static::assertSame('<' . $name . '/>', $res);

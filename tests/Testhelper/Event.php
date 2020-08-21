@@ -18,23 +18,25 @@ declare(strict_types=1);
 
 namespace Tests\Testhelper;
 
+use Countable;
+
 class Event
 {
 
     /**
-     * @var \Countable
+     * @var Countable
      */
     private $artists;
 
     /**
-     * @param \Countable $artists
+     * @param Countable $artists
      */
-    public function setArtists(\Countable $artists): void
+    public function setArtists(Countable $artists): void
     {
         $this->artists = $artists;
     }
 
-    public function getArtists(): \Countable
+    public function getArtists(): Countable
     {
         return $this->artists;
     }

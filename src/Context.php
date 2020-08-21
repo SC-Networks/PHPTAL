@@ -14,6 +14,11 @@ declare(strict_types=1);
 
 namespace PhpTal;
 
+use ArrayAccess;
+use BadMethodCallException;
+use Countable;
+use stdClass;
+
 /**
  * This class handles template execution context.
  * Holds template variables and carries state/scope across macro executions.
@@ -22,7 +27,7 @@ namespace PhpTal;
 class Context
 {
     /**
-     * @var \stdClass
+     * @var stdClass
      */
     public $repeat;
 
@@ -62,7 +67,7 @@ class Context
     private $_parentContext;
 
     /**
-     * @var \stdClass
+     * @var stdClass
      */
     private $_globalContext;
 
@@ -76,7 +81,7 @@ class Context
      */
     public function __construct()
     {
-        $this->repeat = new \stdClass();
+        $this->repeat = new stdClass();
     }
 
     /**
@@ -103,11 +108,11 @@ class Context
      * set stdClass object which has property of every global variable
      * It can use __isset() and __get() [none of them or both]
      *
-     * @param \stdClass $globalContext
+     * @param stdClass $globalContext
      *
      * @return void
      */
-    public function setGlobal(\stdClass $globalContext): void
+    public function setGlobal(stdClass $globalContext): void
     {
         $this->_globalContext = $globalContext;
     }
@@ -508,12 +513,12 @@ class Context
                     continue;
                 }
 
-                if ($base instanceof \ArrayAccess && $base->offsetExists($current)) {
+                if ($base instanceof ArrayAccess && $base->offsetExists($current)) {
                     $base = $base->offsetGet($current);
                     continue;
                 }
 
-                if (($current === 'length' || $current === 'size') && $base instanceof \Countable) {
+                if (($current === 'length' || $current === 'size') && $base instanceof Countable) {
                     $base = $base->count();
                     continue;
                 }
@@ -538,7 +543,7 @@ class Context
                     try {
                         $base = $base->__call($current, []);
                         continue;
-                    } catch (\BadMethodCallException $e) {
+                    } catch (BadMethodCallException $e) {
                         // noop
                     }
                 }

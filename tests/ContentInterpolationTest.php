@@ -18,6 +18,7 @@ declare(strict_types=1);
 
 namespace Tests;
 
+use PhpTal\Exception\ParserException;
 use PhpTal\Exception\VariableNotFoundException;
 use PhpTal\Php\TalesInternal;
 use Tests\Testcase\PhpTalTestCase;
@@ -287,7 +288,7 @@ EOT;
             // PHP 5.4: short tag <?= is always enabled.
             static::assertSame('<p>test<? print("<x>"); ?>test<_ "&amp;" ?>test</p>', $tpl->execute());
         }
-        catch(\PhpTal\Exception\ParserException $e) {/* xml ill-formedness error is ok too */}
+        catch(ParserException $e) {/* xml ill-formedness error is ok too */}
         ini_restore('short_open_tag');
     }
 

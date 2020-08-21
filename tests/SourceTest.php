@@ -78,7 +78,7 @@ class SourceTest extends PhpTalTestCase
     public function testFailsIfNotFound(): void
     {
         $this->expectException(IOException::class);
-        $tpl = $this->newPHPTAL()->addSourceResolver(new CantFindAThing())->setTemplate("something")->execute();
+        $this->newPHPTAL()->addSourceResolver(new CantFindAThing())->setTemplate("something")->execute();
     }
 
     public function testFallsBack(): void

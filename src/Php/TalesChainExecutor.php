@@ -14,6 +14,8 @@ declare(strict_types=1);
 
 namespace PhpTal\Php;
 
+use PhpTal\Exception\PhpTalException;
+
 /**
  * @package PHPTAL
  */
@@ -55,7 +57,7 @@ class TalesChainExecutor
      * @param array $chain
      * @param TalesChainReaderInterface $reader
      *
-     * @throws \PhpTal\Exception\PhpTalException
+     * @throws PhpTalException
      */
     public function __construct(CodeWriter $codewriter, array $chain, TalesChainReaderInterface $reader)
     {
@@ -76,7 +78,7 @@ class TalesChainExecutor
     /**
      * @param string $condition
      * @return void
-     * @throws \PhpTal\Exception\PhpTalException
+     * @throws PhpTalException
      */
     public function doIf(string $condition): void
     {
@@ -90,7 +92,7 @@ class TalesChainExecutor
 
     /**
      * @return void
-     * @throws \PhpTal\Exception\PhpTalException
+     * @throws PhpTalException
      */
     public function doElse(): void
     {
@@ -115,7 +117,7 @@ class TalesChainExecutor
 
     /**
      * @return void
-     * @throws \PhpTal\Exception\PhpTalException
+     * @throws PhpTalException
      */
     private function executeChain(): void
     {
