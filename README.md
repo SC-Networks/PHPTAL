@@ -8,7 +8,7 @@
 Requirements
 ============
 
-To use PHPTAL in your projects, you will require PHP 7.2 or later.
+To use PHPTAL in your projects, you will require PHP 7.3 or later.
 
 If you want to use the builtin internationalisation system (I18N), the php-gettext extension must be installed or compiled into PHP (`--with-gettext`).
 
@@ -35,3 +35,6 @@ Addition development requirements (optional)
 If you would like to generate the offical html/text handbook by calling
 `make doc`, you will need to install the `xmlto` package. Please use
 your operating systems package manager to install it.
+
+If you'd like to create the sourcecode documentation, you need the `phpDocumentor.phar` executable
+in your `$PATH`.

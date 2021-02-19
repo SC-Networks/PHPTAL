@@ -2,5 +2,7 @@ build
 /vendor/
 /composer.lock
 bin/
+docs
 doc/temp
+.phpdoc
 .phpunit.result.cache
