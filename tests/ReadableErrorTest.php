@@ -97,6 +97,7 @@ class ReadableErrorTest extends PhpTalTestCase
             static::fail('Not thrown');
         } catch (TemplateException $e) {
             $msg = $e->getMessage();
+            echo $msg.PHP_EOL.$e->srcFile;
             static::assertIsString($e->srcFile, $msg);
             static::assertStringContainsString($expected_file ?: $file, $e->srcFile, $msg);
             static::assertEquals($line, $e->srcLine, 'Wrong line number: ' . $msg . "\n" . $tpl->getCodePath());
