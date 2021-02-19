@@ -151,13 +151,12 @@ class TalTestCaseRepeatTest extends PhpTalTestCase
 
     public function testTraversableRepeat(): void
     {
-        static::markTestSkipped('this condition works with php only. maybe add comparism-operators to tal:condition?');
         $doc = new DOMDocument();
         $doc->loadXML('<a><b/><c/><d/><e/><f/><g/></a>');
 
         $tpl = $this->newPHPTAL();
         $tpl->setSource(
-            '<tal:block tal:repeat="node nodes"><tal:block tal:condition="php:repeat.node.index==4">(len=${repeat/node/length})</tal:block>${repeat/node/key}${node/tagName}</tal:block>'
+            '<tal:block tal:repeat="node nodes"><tal:block tal:condition="php:repeat.node.index==4">(len=${nodes/length})</tal:block>${repeat/node/key}${node/tagName}</tal:block>'
         );
         $tpl->nodes = $doc->getElementsByTagName('*');
 

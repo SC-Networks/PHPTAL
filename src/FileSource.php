@@ -35,7 +35,14 @@ class FileSource implements SourceInterface
     {
         $this->path = realpath($path);
         if ($this->path === false) {
-            throw new Exception\IOException("Unable to find real path of file '$path' (in " . getcwd() . ')');
+            throw new Exception\IOException(
+                sprintf('Unable to find real path of file \'%s\' (in %s)', $path, getcwd())
+            );
+        }
+        if (is_dir($this->path)) {
+            throw new Exception\IOException(
+                sprintf('Path \'%s\' points to a directory', $this->path)
+            );
         }
     }
 

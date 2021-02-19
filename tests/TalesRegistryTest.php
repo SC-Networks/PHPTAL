@@ -72,7 +72,7 @@ namespace Tests {
         public function testUnregisterFunction(): void
         {
             $this->expectException(UnknownModifierException::class);
-            $test_prefix = 'testprefix';
+            $test_prefix = uniqid('testprefix');
             TalesRegistry::registerPrefix($test_prefix, 'registry_test_callback3');
             TalesRegistry::unregisterPrefix($test_prefix);
             $this->newPHPTAL()->setSource('<p tal:content="' . $test_prefix . ':"/>')->execute();
