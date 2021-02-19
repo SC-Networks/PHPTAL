@@ -98,13 +98,8 @@ class ReadableErrorTest extends PhpTalTestCase
         } catch (TemplateException $e) {
             $msg = $e->getMessage();
             static::assertIsString($e->srcFile, $msg);
-
-			/**
-			 * @todo These assertions fail on certain environments (github
-			 * actions for example). The cuase is unknown
             static::assertStringContainsString($expected_file ?: $file, $e->srcFile, $msg);
             static::assertEquals($line, $e->srcLine, 'Wrong line number: ' . $msg . "\n" . $tpl->getCodePath());
-			 */
         }
     }
 }

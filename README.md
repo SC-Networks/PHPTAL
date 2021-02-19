@@ -3,7 +3,7 @@
 
 [![Monthly Downloads](https://poser.pugx.org/scn/phptal/d/monthly)](https://packagist.org/packages/scn/phptal)
 [![License](https://poser.pugx.org/scn/phptal/license)](LICENSE)
-[![Build Status](https://travis-ci.org/SC-Networks/PHPTAL.svg?branch=master)](https://travis-ci.org/SC-Networks/PHPTAL)
+[![unittest](https://github.com/SC-Networks/PHPTAL/actions/workflows/unittests.yml/badge.svg)](https://github.com/SC-Networks/PHPTAL/actions/workflows/unittests.yml)
 
 Requirements
 ============
