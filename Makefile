@@ -7,7 +7,7 @@ test::
 	bin/phpunit
 
 docs::
-	bin/phpdoc -d classes -t docs -p
+	phpDocumentor.phar -d src -t docs
 
 doc::
 	$(MAKE) $(MFLAGS) -C doc
