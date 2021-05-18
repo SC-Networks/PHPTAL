@@ -1,5 +1,10 @@
 # Changelog
 
+v3.1.0 2021-05-18
+-------
+additions:
+ * Add support for php 8
+
 v3.0.2 2019-09-09
 -------
 chores:
