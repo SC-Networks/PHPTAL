@@ -42,31 +42,31 @@ class LogIteratorCalls implements Iterator
         }
     }
 
-    public function current()
+    public function current(): mixed
     {
         $this->log .= "current\n";
         return $this->i->current();
     }
 
-    public function next()
+    public function next(): void
     {
         $this->log .= "next\n";
-        return $this->i->next();
+        $this->i->next();
     }
 
-    public function key()
+    public function key(): mixed
     {
         $this->log .= "key\n";
         return $this->i->key();
     }
 
-    public function rewind()
+    public function rewind(): void
     {
         $this->log .= "rewind\n";
-        return $this->i->rewind();
+        $this->i->rewind();
     }
 
-    public function valid()
+    public function valid(): bool
     {
         $this->log .= "valid\n";
         return $this->i->valid();

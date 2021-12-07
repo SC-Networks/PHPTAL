@@ -8,9 +8,17 @@
 Requirements
 ============
 
-To use PHPTAL in your projects, you will require PHP 7.3 or later.
+See the compatibility table below for supported php versions.
 
 If you want to use the builtin internationalisation system (I18N), the php-gettext extension must be installed or compiled into PHP (`--with-gettext`).
+
+Compatibility
+=============
+
+| PHPTAL-Version | PHP-Version(s) |
+|----------------|----------------|
+| 3.x            | 7.3, 7.4, 8.0  |
+| master         | 8.1            |
 
 Composer install (recommended)
 ==============================

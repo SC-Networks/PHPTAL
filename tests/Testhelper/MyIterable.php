@@ -63,10 +63,9 @@ class MyIterable implements Iterator
     /**
      * @return int
      */
-    public function next(): int
+    public function next(): void
     {
         $this->index++;
-        return $this->index;
     }
 
     /**

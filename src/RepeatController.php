@@ -133,7 +133,7 @@ class RepeatController implements Iterator
      *
      * @return Mixed    The current element value
      */
-    public function current()
+    public function current(): mixed
     {
         return $this->current;
     }
@@ -143,8 +143,7 @@ class RepeatController implements Iterator
      *
      * @return String/Int   The current element key
      */
-    public function key()
-    {
+    public function key(): mixed {
         return $this->key;
     }
 

@@ -40,10 +40,8 @@ class MyArray implements ArrayAccess
 
     /**
      * @param string $index
-     *
-     * @return mixed
      */
-    public function offsetGet($index)
+    public function offsetGet($index): mixed
     {
         return $this->values[$index];
     }
