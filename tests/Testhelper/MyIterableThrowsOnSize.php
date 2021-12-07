@@ -25,7 +25,7 @@ class MyIterableThrowsOnSize extends MyIterable implements Countable
     /**
      * @throws SizeCalledException
      */
-    public function count()
+    public function count(): int
     {
         throw new SizeCalledException('count() called');
     }
