@@ -25,7 +25,7 @@ use PhpTal\Php\CodeWriter;
 class Id extends Attribute
 {
     /**
-     * @var
+     * @var string
      */
     private $var;
 

@@ -101,7 +101,7 @@ class TemplateException extends PhpTalException
     /**
      * @param string $path
      *
-     * @return false|int
+     * @return int
      */
     private function isTemplatePath(string $path): int
     {

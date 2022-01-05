@@ -386,7 +386,7 @@ class Element extends Node
      *
      * NB: This method doesn't handle namespaces properly.
      *
-     * @param $qname
+     * @param string $qname
      *
      * @return Attr
      */

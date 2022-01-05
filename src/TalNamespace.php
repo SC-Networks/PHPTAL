@@ -46,7 +46,7 @@ abstract class TalNamespace
      */
     public function __construct(string $prefix, string $namespace_uri)
     {
-        if (empty($namespace_uri) || empty($prefix)) {
+        if (trim($namespace_uri) === '' || trim($prefix) === '') {
             throw new Exception\ConfigurationException("Can't create namespace with empty prefix or namespace URI");
         }
 

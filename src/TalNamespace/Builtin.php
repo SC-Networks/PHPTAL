@@ -24,7 +24,6 @@ use PhpTal\TalNamespaceAttribute;
  */
 class Builtin extends TalNamespace
 {
-
     public const NS_METAL = 'http://xml.zope.org/namespaces/metal';
     public const NS_TAL = 'http://xml.zope.org/namespaces/tal';
     public const NS_I18N = 'http://xml.zope.org/namespaces/i18n';
@@ -47,7 +46,7 @@ class Builtin extends TalNamespace
         $name = str_replace(' ', '', ucwords(str_replace('-', ' ', $name)));
 
         // case is important when using autoload on case-sensitive filesystems
-            $class = 'PhpTal\\Php\\Attribute\\'.strtoupper($this->getPrefix()).'\\'.$name;
+        $class = 'PhpTal\\Php\\Attribute\\'.strtoupper($this->getPrefix()).'\\'.$name;
 
         return new $class($tag, $expression);
     }

@@ -121,7 +121,7 @@ abstract class TalNamespaceAttribute
 
     /**
      * @param Dom\Element $tag
-     * @param $expression
+     * @param mixed $expression
      * @return mixed
      */
     public function createAttributeHandler(Dom\Element $tag, $expression)

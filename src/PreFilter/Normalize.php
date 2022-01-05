@@ -79,7 +79,7 @@ class Normalize extends PreFilter
 
                 if ($norm === '') {
                     $root->removeChild($node);
-                } elseif ($lastTextNode) {
+                } elseif ($lastTextNode !== null) {
                     // "foo " . " bar" gives 2 spaces.
                     $norm = $lastTextNode->getValueEscaped() . ltrim($norm, ' ');
 

@@ -29,10 +29,9 @@ class StringSource implements SourceInterface
     private $data;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $realpath;
-
 
     /**
      * StringSource constructor.
@@ -43,7 +42,7 @@ class StringSource implements SourceInterface
     public function __construct($data, ?string $realpath = null)
     {
         $this->data = $data;
-        $this->realpath = $realpath ?: self::NO_PATH_PREFIX . md5($data) . '>';
+        $this->realpath = $realpath ?? self::NO_PATH_PREFIX . md5($data) . '>';
     }
 
     public function getLastModifiedTime(): int

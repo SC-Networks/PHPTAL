@@ -68,7 +68,7 @@ class FillSlot extends Attribute
     private static $uid = 0;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $function_name;
 

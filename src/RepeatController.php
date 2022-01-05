@@ -85,7 +85,7 @@ class RepeatController implements Iterator
     public $end;
 
     /**
-     * @var int
+     * @var int|null|string
      */
     private $length;
 
@@ -143,7 +143,8 @@ class RepeatController implements Iterator
      *
      * @return String/Int   The current element key
      */
-    public function key(): mixed {
+    public function key(): mixed
+    {
         return $this->key;
     }
 

@@ -111,7 +111,7 @@ class Translate extends Content
 
     /**
      * @param TalesChainExecutor $executor
-     * @param mixed $expression
+     * @param string $expression
      * @param bool $islast
      *
      * @return void
@@ -136,7 +136,7 @@ class Translate extends Content
     }
 
     /**
-     * @param Node|Element $tag
+     * @param Node&Element $tag
      * @param bool $preserve_tags
      * @param string $encoding
      *
@@ -177,7 +177,7 @@ class Translate extends Content
 
     /**
      * @param CodeWriter $codewriter
-     * @param Node|Element $tag
+     * @param Node&Element $tag
      *
      * @return void
      *

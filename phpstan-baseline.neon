@@ -1,0 +1,22 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Offset numeric\\-string does not exist on string\\.$#"
+			count: 1
+			path: src/Context.php
+
+		-
+			message: "#^Parameter \\#2 \\$array of function implode expects array\\<string\\>, array\\<int\\|string, array\\> given\\.$#"
+			count: 1
+			path: src/GetTextTranslator.php
+
+		-
+			message: "#^Instanceof between mixed and DOMNodeList will always evaluate to false\\.$#"
+			count: 1
+			path: src/RepeatController.php
+
+		-
+			message: "#^Property PhpTal\\\\RepeatController\\:\\:\\$iterator \\(Iterator\\) does not accept Traversable\\<mixed, mixed\\>\\.$#"
+			count: 1
+			path: src/RepeatController.php
+

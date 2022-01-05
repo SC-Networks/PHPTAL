@@ -417,7 +417,7 @@ class SaxXmlParser
     /**
      * @param string $name
      *
-     * @return false|int
+     * @return bool
      * @throws ParserException
      */
     private function isValidQName(string $name): bool
@@ -547,7 +547,7 @@ class SaxXmlParser
 
     /**
      * @param string $c
-     * 
+     *
      * @return bool
      */
     public static function isWhiteChar($c): bool

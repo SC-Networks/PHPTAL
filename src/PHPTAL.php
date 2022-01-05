@@ -30,7 +30,6 @@ use Throwable;
  */
 class PHPTAL implements PhpTalInterface
 {
-
     public const PHPTAL_VERSION = '3_0_2';
 
     /**
@@ -79,21 +78,21 @@ class PHPTAL implements PhpTalInterface
     /**
      *  template source (only set when not working with file)
      *
-     * @var StringSource|null
+     * @var SourceInterface|null
      */
     protected $source;
 
     /**
      * destination of PHP intermediate file
      *
-     * @var string
+     * @var string|null
      */
     protected $codeFile;
 
     /**
      * php function generated for the template
      *
-     * @var string
+     * @var string|null
      */
     protected $functionName;
 
@@ -1025,8 +1024,8 @@ class PHPTAL implements PhpTalInterface
      */
     public function getFunctionName(): string
     {
-       // function name is used as base for caching, so it must be unique for
-       // every combination of settings that changes code in compiled template
+        // function name is used as base for caching, so it must be unique for
+        // every combination of settings that changes code in compiled template
 
         if (!$this->functionName) {
             // just to make tempalte name recognizable

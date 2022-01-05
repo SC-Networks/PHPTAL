@@ -76,7 +76,6 @@ class GetTextTranslator implements TranslationServiceInterface
      */
     public function setLanguage(...$langs): string
     {
-
         $langCode = $this->trySettingLanguages(LC_ALL, $langs);
         if ($langCode) {
             return $langCode;
@@ -167,7 +166,6 @@ class GetTextTranslator implements TranslationServiceInterface
      */
     public function translate(string $key, bool $htmlencode): string
     {
-
         $value = gettext($key);
 
         if ($htmlencode) {

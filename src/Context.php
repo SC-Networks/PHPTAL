@@ -36,12 +36,12 @@ class Context
      */
 
     /**
-     * @var string
+     * @var string|null
      */
     public $_xmlDeclaration;
 
     /**
-     * @var string
+     * @var string|null
      */
     public $_docType;
 
@@ -62,7 +62,7 @@ class Context
     private $_slotsStack = [];
 
     /**
-     * @var Context
+     * @var Context|null
      */
     private $_parentContext;
 
@@ -481,12 +481,11 @@ class Context
      */
     public static function path($base, string $path, bool $nothrow = null)
     {
-
         if ($base === null) {
             if ($nothrow) {
                 return null;
             }
-            static::pathError($base, $path, $path, $path);
+            self::pathError($base, $path, $path, $path);
         }
 
         $chunks = explode('/', $path);
@@ -558,7 +557,7 @@ class Context
                     return null;
                 }
 
-                static::pathError($base, $path, $current, $prev);
+                self::pathError($base, $path, $current, $prev);
             }
 
             // array handling
@@ -579,7 +578,7 @@ class Context
                     return null;
                 }
 
-                static::pathError($base, $path, $current, $prev);
+                self::pathError($base, $path, $current, $prev);
             }
 
             // string handling
@@ -603,7 +602,7 @@ class Context
                 return null;
             }
 
-            static::pathError($base, $path, $current, $prev);
+            self::pathError($base, $path, $current, $prev);
         }
 
         return $base;

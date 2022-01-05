@@ -22,12 +22,12 @@ namespace PhpTal\Dom;
 abstract class DocumentBuilder
 {
     /**
-     * @var Node[]
+     * @var array<Node&Element>
      */
     protected $stack;
 
     /**
-     * @var Element
+     * @var (Element&Node)|null
      */
     protected $current;
 
@@ -86,7 +86,7 @@ abstract class DocumentBuilder
     abstract public function onComment(string $data): void;
 
     /**
-     * @param $data
+     * @param string $data
      *
      * @return void
      */

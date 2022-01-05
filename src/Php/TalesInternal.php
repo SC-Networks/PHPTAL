@@ -276,7 +276,7 @@ class TalesInternal implements TalesInterface
      *
      * @param string $expression
      *
-     * @return false|int
+     * @return int
      */
     private static function checkExpressionPart(string $expression): int
     {
@@ -302,7 +302,7 @@ class TalesInternal implements TalesInterface
      * @param string $expression
      * @param bool $nothrow
      *
-     * @return null|string|string[]
+     * @return string
      * @throws ParserException
      * @throws UnknownModifierException
      * @throws ReflectionException
@@ -317,7 +317,7 @@ class TalesInternal implements TalesInterface
      * @param bool $nothrow
      * @param string $tales_prefix prefix added to all TALES in the string
      *
-     * @return null|string|string[]
+     * @return string
      * @throws ParserException
      * @throws UnknownModifierException
      * @throws ReflectionException
@@ -456,7 +456,7 @@ class TalesInternal implements TalesInterface
 
         $transformed = Transformer::transform($src, '$ctx->');
 
-        static::checkTokens($transformed);
+        self::checkTokens($transformed);
 
         return $transformed;
     }
@@ -467,7 +467,6 @@ class TalesInternal implements TalesInterface
      * Returns the code required to invoke Context::exists() on specified path.
      *
      * @param string $src
-     * @param bool $nothrow
      *
      * @return string
      * @throws ParserException
@@ -489,7 +488,6 @@ class TalesInternal implements TalesInterface
      * Returns the number as is.
      *
      * @param string $src
-     * @param bool $nothrow
      *
      * @return string
      * @throws ParserException
@@ -589,7 +587,7 @@ class TalesInternal implements TalesInterface
      * @param string $expression
      * @param bool $nothrow if true, invalid expression will return NULL (at run time) rather than throwing exception
      *
-     * @return string or array
+     * @return string|array<string>
      * @throws ParserException
      * @throws UnknownModifierException
      * @throws ReflectionException
@@ -651,7 +649,7 @@ class TalesInternal implements TalesInterface
      */
     public static function isPhpModifierAllowed(): bool
     {
-        return static::$phpModifierAllowed;
+        return self::$phpModifierAllowed;
     }
 
     /**
@@ -659,7 +657,7 @@ class TalesInternal implements TalesInterface
      */
     public static function setPhpModifierAllowed(bool $phpModifierAllowed): void
     {
-        static::$phpModifierAllowed = $phpModifierAllowed;
+        self::$phpModifierAllowed = $phpModifierAllowed;
     }
 
 
@@ -681,6 +679,7 @@ class TalesInternal implements TalesInterface
                 switch ($token[0]) {
                     default:
                         $clear[] = $token;
+                        // no break
                     case T_OPEN_TAG:
                     case T_CLOSE_TAG:
                     case T_WHITESPACE:
@@ -706,18 +705,17 @@ class TalesInternal implements TalesInterface
      */
     private static function checkTokens($src): void
     {
+        $checkWhitelist = self::$functionWhitelist !== [];
 
-        $checkWhitelist = static::$functionWhitelist !== [];
-
-        foreach (static::tokenize($src) as $token) {
-            if (in_array($token[0], static::$tokenBlacklist)) {
+        foreach (self::tokenize($src) as $token) {
+            if (in_array($token[0], self::$tokenBlacklist)) {
                 $message = 'User tried to execute disallowed php token ' . token_name($token[0]);
                 throw new ParserException($message);
             }
 
             if ($checkWhitelist &&
                 $token[0] === T_STRING &&
-                !in_array(strtolower($token[1]), static::$functionWhitelist)
+                !in_array(strtolower($token[1]), self::$functionWhitelist)
             ) {
                 $message = "User tried to execute not whitelisted statement '" . $token[1] . "'";
                 throw new ParserException($message);
@@ -730,7 +728,6 @@ class TalesInternal implements TalesInterface
      */
     public static function setFunctionWhitelist(array $functionWhitelist): void
     {
-
         $functionWhitelist = array_map(static function ($e) {
             return strtolower(trim($e));
         }, $functionWhitelist);

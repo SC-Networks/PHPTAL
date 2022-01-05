@@ -40,7 +40,7 @@ class Compress extends Normalize
      * last text node before closing tag that may need trailing whitespace trimmed.
      * It's often last-child, but comments, multiple end tags make that trickier.
      *
-     * @var Text
+     * @var Text|null
      */
     private $most_recent_text_node;
 

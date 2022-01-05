@@ -12,14 +12,12 @@ use ReflectionException;
  */
 interface TalesRegistryInterface
 {
-
-
     /**
      * get callback for the prefix
      *
      * @param string $prefix
      *
-     * @return callback or NULL
+     * @return null|callable
      */
     public static function getCallback(string $prefix): ?callable;
 

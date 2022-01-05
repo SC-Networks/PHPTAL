@@ -100,9 +100,9 @@ class Transformer
                         $state = self::ST_NONE;
                         continue 2;
                     }
-                /* NO BREAK - ST_WHITE is almost the same as ST_NONE */
 
                 // no specific state defined, just eat char and see what to do with it.
+                // no break
                 case self::ST_NONE:
                     // begin of eval without {
                     if ($c === '$' && $i + 1 < $len && self::isAlpha($str[$i + 1])) {
@@ -413,7 +413,7 @@ class Transformer
      */
     private static function isDigitCompound(string $c): bool
     {
-        return (static::isDigit($c) || $c === '.');
+        return (self::isDigit($c) || $c === '.');
     }
 
     /**
@@ -423,6 +423,6 @@ class Transformer
      */
     private static function isVarNameChar(string $c): bool
     {
-        return static::isAlpha($c) || static::isDigit($c) || $c === '_' || $c === '\\';
+        return self::isAlpha($c) || self::isDigit($c) || $c === '_' || $c === '\\';
     }
 }

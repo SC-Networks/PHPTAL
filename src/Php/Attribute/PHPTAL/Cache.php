@@ -89,11 +89,13 @@ class Cache extends Attribute
         }
         switch ($matches[2]) {
             case 'd':
-                $cache_len .= '*24'; /* no break */
+                $cache_len .= '*24';
+                /* no break */
             case 'h':
-                $cache_len .= '*60'; /* no break */
+                $cache_len .= '*60';
+                /* no break */
             case 'm':
-                $cache_len .= '*60'; /* no break */
+                $cache_len .= '*60';
         }
 
         $cache_tag = '"' . addslashes($this->phpelement->getQualifiedName() . ':' . $this->phpelement->getSourceLine()) . '"';

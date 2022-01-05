@@ -57,7 +57,7 @@ class Attributes extends Attribute implements TalesChainReaderInterface
     /**
      * value for default keyword
      *
-     * @var string
+     * @var string|false
      */
     private $default_escaped;
 

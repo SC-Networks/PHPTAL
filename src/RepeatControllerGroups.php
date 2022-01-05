@@ -43,7 +43,7 @@ class RepeatControllerGroups
     protected $vars = [];
 
     /**
-     * @var
+     * @var string
      */
     protected $branch;
 
@@ -114,7 +114,7 @@ class RepeatControllerGroups
             if (!isset($this->cache['L'])) {
                 $hash = md5($data);
 
-                if (empty($this->dict['L'])) {
+                if (!array_key_exists('L', $this->dict)) {
                     $this->dict['L'] = $hash;
                     $res = false;
                 } elseif ($this->dict['L'] !== $hash) {

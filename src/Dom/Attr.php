@@ -21,7 +21,6 @@ namespace PhpTal\Dom;
  */
 class Attr
 {
-
     public const HIDDEN = -1;
     public const NOT_REPLACED = 0;
     public const VALUE_REPLACED = 1;
@@ -49,7 +48,7 @@ class Attr
 
     /**
      * attribute's value can be overriden with a variable
-     * @var string
+     * @var string|null
      */
     private $phpVariable;
 

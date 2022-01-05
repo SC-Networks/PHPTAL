@@ -25,7 +25,7 @@ use PhpTal\Php\CodeWriter;
 abstract class Node
 {
     /**
-     * @var Element
+     * @var Element|null
      */
     public $parentNode;
 

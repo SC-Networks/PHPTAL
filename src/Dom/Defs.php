@@ -38,7 +38,7 @@ class Defs
 {
 
     /**
-     * @var Defs
+     * @var Defs|null
      */
     private static $instance;
 

@@ -120,9 +120,9 @@ final class TalesRegistry implements TalesRegistryInterface
     /**
      * get callback for the prefix
      *
-     * @param $prefix
+     * @param string $prefix
      *
-     * @return callback or NULL
+     * @return null|callable
      * @throws Exception\UnknownModifierException
      * @throws ReflectionException
      */

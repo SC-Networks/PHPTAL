@@ -28,7 +28,6 @@ interface TalesChainReaderInterface
 
     /**
      * @param TalesChainExecutor $executor
-     * @return mixed
      */
     public function talesChainDefaultKeyword(TalesChainExecutor $executor): void;
 
@@ -36,7 +35,6 @@ interface TalesChainReaderInterface
      * @param TalesChainExecutor $executor
      * @param string $expression
      * @param bool $islast
-     * @return mixed
      */
     public function talesChainPart(TalesChainExecutor $executor, string $expression, bool $islast): void;
 }

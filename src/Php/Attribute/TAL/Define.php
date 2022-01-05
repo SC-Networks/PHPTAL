@@ -64,7 +64,7 @@ class Define extends Attribute implements TalesChainReaderInterface
     private $defineScope;
 
     /**
-     * @var
+     * @var null|string
      */
     private $defineVar;
 
