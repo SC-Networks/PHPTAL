@@ -28,7 +28,7 @@ namespace PhpTal;
 class GetTextTranslator implements TranslationServiceInterface
 {
     /**
-     * @var array
+     * @var array<string, string>
      */
     private $vars = [];
 
@@ -70,7 +70,7 @@ class GetTextTranslator implements TranslationServiceInterface
      *
      * setLanguage("en_US.utf8","en_US","en_GB","en")
      *
-     * @param array $langs
+     * @param string $langs
      * @return string - chosen language
      * @throws Exception\ConfigurationException
      */
@@ -95,7 +95,7 @@ class GetTextTranslator implements TranslationServiceInterface
 
     /**
      * @param int $category
-     * @param array $langs
+     * @param array<string> $langs
      *
      * @return string
      */

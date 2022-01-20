@@ -28,7 +28,7 @@ interface TranslationServiceInterface
      *
      * setLanguage('fr_FR', 'fr_FR@euro')
      *
-     * @param array $langs
+     * @param string $langs
      *
      * @return string - chosen language
      */

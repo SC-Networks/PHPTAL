@@ -28,9 +28,8 @@ use PhpTal\TalNamespace\Builtin;
  */
 class XmlnsState
 {
-
     /**
-     * @var array
+     * @var array<string, string>
      */
     private $prefix_to_uri;
 
@@ -40,7 +39,7 @@ class XmlnsState
     private $current_default;
 
     /** Create a new XMLNS state inheriting provided aliases.
-     * @param array $prefix_to_uri
+     * @param array<string, string> $prefix_to_uri
      * @param string $current_default
      */
     public function __construct(array $prefix_to_uri, string $current_default)
@@ -98,7 +97,7 @@ class XmlnsState
      * This method is used by the PHPTAL parser to keep track of xmlns fluctuation for
      * each encountered node.
      *
-     * @param array $nodeAttributes
+     * @param array<string, string> $nodeAttributes
      *
      * @return XmlnsState
      */

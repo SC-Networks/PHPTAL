@@ -50,7 +50,7 @@ class Attributes extends Attribute implements TalesChainReaderInterface
     /**
      * before creates several variables that need to be freed in after
      *
-     * @var array
+     * @var array<string>
      */
     private $vars_to_recycle = [];
 
@@ -186,7 +186,7 @@ class Attributes extends Attribute implements TalesChainReaderInterface
     /**
      * @param CodeWriter $codewriter
      * @param string $qname
-     * @param array $chain
+     * @param array<string> $chain
      *
      * @return void
      * @throws PhpTalException

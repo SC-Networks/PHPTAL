@@ -47,7 +47,7 @@ interface PhpTalInterface
     /**
      * Get template repositories.
      *
-     * @return array
+     * @return array<string>
      */
     public function getTemplateRepositories() :array;
 

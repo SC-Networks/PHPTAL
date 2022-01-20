@@ -20,7 +20,6 @@ namespace PhpTal;
  */
 class FileSourceResolver implements SourceResolverInterface
 {
-
     /**
      * @var string[]
      */
@@ -28,7 +27,7 @@ class FileSourceResolver implements SourceResolverInterface
 
     /**
      * FileSourceResolver constructor.
-     * @param array $repositories
+     * @param array<string> $repositories
      */
     public function __construct(array $repositories)
     {

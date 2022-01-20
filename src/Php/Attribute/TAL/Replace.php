@@ -102,11 +102,11 @@ class Replace extends Attribute implements TalesChainReaderInterface
      * support expressions like "foo | bar"
      *
      * @param CodeWriter $codewriter
-     * @param array $expArray
+     * @param array<string> $expArray
      *
      * @throws PhpTalException
      */
-    private function replaceByChainedExpression(CodeWriter $codewriter, $expArray)
+    private function replaceByChainedExpression(CodeWriter $codewriter, $expArray): void
     {
         new TalesChainExecutor($codewriter, $expArray, $this);
     }

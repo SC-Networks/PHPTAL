@@ -249,7 +249,7 @@ class PHPTAL implements PhpTalInterface
      * Use setTemplate() or addSourceResolver() whenever possible.
      *
      * @param string $src The phptal template source.
-     * @param string $path Fake and 'unique' template path.
+     * @param null|string $path Fake and 'unique' template path.
      *
      * @return $this
      */
@@ -285,7 +285,7 @@ class PHPTAL implements PhpTalInterface
     /**
      * Get template repositories.
      *
-     * @return array
+     * @return array<string>
      */
     public function getTemplateRepositories(): array
     {

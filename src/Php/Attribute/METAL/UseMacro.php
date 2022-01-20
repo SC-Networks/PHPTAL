@@ -48,7 +48,7 @@ use ReflectionException;
 class UseMacro extends Attribute
 {
     /**
-     * @var array
+     * @var array<string, string>
      */
     public static $ALLOWED_ATTRIBUTES = [
         'fill-slot' => Builtin::NS_METAL,

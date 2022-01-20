@@ -156,9 +156,8 @@ class Define extends Attribute implements TalesChainReaderInterface
 
     /**
      * @param CodeWriter $codewriter
-     * @param array $parts
+     * @param array<string> $parts
      *
-     * @return void
      * @throws PhpTalException
      */
     private function chainedDefine(CodeWriter $codewriter, $parts): void
@@ -246,7 +245,11 @@ class Define extends Attribute implements TalesChainReaderInterface
      *
      * @param string $exp
      *
-     * @return array
+     * @return array{
+     *  0: false|string,
+     *  1: string|null,
+     *  2: string|null
+     * }
      */
     public function parseExpression(string $exp): array
     {

@@ -39,7 +39,7 @@ abstract class Attribute
 
     /**
      * Attribute value specified by the element.
-     * @string
+     * @var string
      */
     protected $expression;
 
@@ -122,7 +122,10 @@ abstract class Attribute
     /**
      * @param string $exp
      *
-     * @return array
+     * @return array{
+     *  0: string,
+     *  1: null|string
+     * }
      */
     protected function parseSetExpression(string $exp): array
     {

@@ -46,7 +46,7 @@ class CodeWriter
 
     /**
      * keeps track of seen functions for function_exists
-     * @var array
+     * @var array<string, bool>
      */
     private $known_functions = [];
 
@@ -66,22 +66,22 @@ class CodeWriter
     private $indentation = 0;
 
     /**
-     * @var array
+     * @var array<int, string>
      */
     private $codeBuffer = [];
 
     /**
-     * @var array
+     * @var array<string>
      */
     private $htmlBuffer = [];
 
     /**
-     * @var array
+     * @var array<string>
      */
     private $segments = [];
 
     /**
-     * @var array
+     * @var array<CodeWriter>
      */
     private $contexts = [];
 
@@ -210,7 +210,7 @@ class CodeWriter
     /**
      * @param string $src
      *
-     * @return array
+     * @return array<string>
      */
     public function splitExpression(string $src): array
     {
@@ -225,7 +225,7 @@ class CodeWriter
     /**
      * @param string $src
      *
-     * @return string|array
+     * @return string|array<string>
      * @throws ParserException
      * @throws UnknownModifierException
      * @throws ReflectionException

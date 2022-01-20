@@ -50,14 +50,21 @@ class Context
      */
     private $_nothrow;
 
-
     /**
-     * @var array TODO What type?
+     * @var array<string, string|array{
+     *  0: string,
+     *  1: PhpTalInterface,
+     *  2: PhpTalInterface
+     * }>
      */
     private $_slots = [];
 
     /**
-     * @var array
+     * @var array<array<string, string|array{
+     *  0: string,
+     *  1: PhpTalInterface,
+     *  2: PhpTalInterface
+     * }>>
      */
     private $_slotsStack = [];
 
@@ -314,8 +321,6 @@ class Context
      * @param callable $callback
      * @param PhpTalInterface $_thistpl
      * @param PhpTalInterface $tpl
-     *
-     * @return void
      */
     public function fillSlotCallback(
         string $key,

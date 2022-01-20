@@ -14,6 +14,8 @@ declare(strict_types=1);
 
 namespace PhpTal;
 
+use PhpTal\Php\Attribute;
+
 /**
  * Information about TAL attributes (in which order they are executed and how they generate the code)
  *
@@ -122,7 +124,7 @@ abstract class TalNamespaceAttribute
     /**
      * @param Dom\Element $tag
      * @param mixed $expression
-     * @return mixed
+     * @return Attribute
      */
     public function createAttributeHandler(Dom\Element $tag, $expression)
     {

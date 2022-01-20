@@ -45,7 +45,7 @@ class Compress extends Normalize
     private $most_recent_text_node;
 
     /**
-     * @var array
+     * @var array<string>
      */
     private static $no_interelement_space = [
         'html',
@@ -65,7 +65,7 @@ class Compress extends Normalize
     /**
      *  li is deliberately omitted, as it's commonly used with display:inline in menus.
      *
-     * @var array
+     * @var array<string>
      */
     private static $breaks_line = [
         'address',
@@ -119,7 +119,7 @@ class Compress extends Normalize
     /**
      *  replaced elements need to preserve spaces before and after
      *
-     * @var array
+     * @var array<string>
      */
     private static $inline_blocks = [
         'select',
@@ -135,7 +135,7 @@ class Compress extends Normalize
     /**
      * pre-defined order of attributes roughly by popularity
      *
-     * @var array
+     * @var array<string>
      */
     private static $attributes_order = [
         'href',

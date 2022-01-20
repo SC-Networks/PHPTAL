@@ -50,7 +50,7 @@ class Transformer
     public const ST_DEFINE = 8;  // @MY_DEFINE
 
     /**
-     * @var array
+     * @var array<string, string>
      */
     private static $TranslationTable = [
         'not' => '!',

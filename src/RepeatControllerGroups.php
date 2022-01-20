@@ -23,12 +23,12 @@ namespace PhpTal;
 class RepeatControllerGroups
 {
     /**
-     * @var array
+     * @var array<string, string>
      */
     protected $dict = [];
 
     /**
-     * @var array
+     * @var array<string, string>
      */
     protected $cache = [];
 
@@ -38,7 +38,7 @@ class RepeatControllerGroups
     protected $data;
 
     /**
-     * @var array
+     * @var array<string>
      */
     protected $vars = [];
 

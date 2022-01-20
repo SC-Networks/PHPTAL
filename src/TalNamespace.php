@@ -33,13 +33,11 @@ abstract class TalNamespace
     private $namespace_uri;
 
     /**
-     * @var array
+     * @var array<string, TalNamespaceAttribute>
      */
     protected $attributes;
 
     /**
-     * TalNamespace constructor.
-     *
      * @param string $prefix
      * @param string $namespace_uri
      * @throws Exception\ConfigurationException
@@ -103,7 +101,7 @@ abstract class TalNamespace
     }
 
     /**
-     * @return array
+     * @return array<string, TalNamespaceAttribute>
      */
     public function getAttributes(): array
     {

@@ -149,9 +149,9 @@ class State
     /**
      * compile TALES expression according to current talesMode
      *
-     * @param string $expression
+     * @param null|string $expression
      *
-     * @return string|array string with PHP code or array with expressions for TalesChainExecutor
+     * @return string|array<string> string with PHP code or array with expressions for TalesChainExecutor
      * @throws ParserException
      * @throws UnknownModifierException
      * @throws ReflectionException
@@ -220,7 +220,7 @@ class State
     /**
      * callback for interpolating TALES with HTML-escaping
      *
-     * @param array $matches
+     * @param array<int, string> $matches
      *
      * @return string
      * @throws ParserException
@@ -252,7 +252,7 @@ class State
     /**
      * callback for interpolating TALES with CDATA escaping
      *
-     * @param array $matches
+     * @param array<int, string> $matches
      *
      * @return string
      * @throws ParserException
@@ -264,7 +264,7 @@ class State
     }
 
     /**
-     * @param array $matches
+     * @param array<int, string> $matches
      * @param string $format
      *
      * @return string

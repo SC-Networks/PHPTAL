@@ -29,8 +29,7 @@ abstract class PreFilter implements FilterInterface
     /**
      * @see getPHPTAL()
      */
-    private $phptal;
-
+    private ?PhpTalInterface $phptal = null;
 
     /**
      * Receives DOMElement (of PHP5 DOM API) of parsed file (documentElement), or element
@@ -112,10 +111,8 @@ abstract class PreFilter implements FilterInterface
     /**
      * Returns PHPTAL class instance that is currently using this prefilter.
      * May return NULL if PHPTAL didn't start filtering yet.
-     *
-     * @return PhpTalInterface
      */
-    final protected function getPHPTAL(): PhpTalInterface
+    final protected function getPHPTAL(): ?PhpTalInterface
     {
         return $this->phptal;
     }

@@ -59,7 +59,7 @@ class SaxXmlParser
     public const BOM_STR = "\xef\xbb\xbf";
 
     /**
-     * @var array
+     * @var array<int, string>
      */
     public static $state_names = [
         self::ST_ROOT => 'root node',
@@ -491,7 +491,7 @@ class SaxXmlParser
      * preg callback
      * Changes all bytes to hexadecimal XML entities
      *
-     * @param array $m first array element is used for input
+     * @param array<int, string> $m first array element is used for input
      *
      * @return string
      */

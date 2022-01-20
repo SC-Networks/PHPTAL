@@ -28,8 +28,13 @@ final class TalesRegistry implements TalesRegistryInterface
 {
 
     /**
-     * {callback, bool is_fallback}
-     * @var array
+     * @var array<
+     *  string,
+     *  array{
+     *    callback: array<string>,
+     *    is_fallback: bool
+     *  }
+     * >
      */
     private static $callbacks = [
         'not' => ['callback' => [TalesInternal::class, 'not'], 'is_fallback' => false],

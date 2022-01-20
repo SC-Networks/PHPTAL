@@ -36,7 +36,6 @@ use PhpTal\TalNamespaceAttribute;
  */
 class Defs
 {
-
     /**
      * @var Defs|null
      */
@@ -44,11 +43,13 @@ class Defs
 
     /**
      * list of \PhpTal\TalNamespace objects
+     *
+     * @var array<string, TalNamespace>
      */
     private $namespaces_by_uri = [];
 
     /**
-     * @var array
+     * @var array<string, string>
      */
     private $prefix_to_uri = [
         'xml' => Builtin::NS_XML,
@@ -61,6 +62,8 @@ class Defs
      *
      * In fact, some browsers does not support the later form so PHPTAL
      * ensure these tags are correctly echoed.
+     *
+     * @var array<string>
      */
     private static $XHTML_EMPTY_TAGS = [
         'area',
@@ -87,6 +90,8 @@ class Defs
     /**
      * This array contains XHTML boolean attributes, their value is self
      * contained (ie: they are present or not).
+     *
+     * @var array<string>
      */
     private static $XHTML_BOOLEAN_ATTRIBUTES = [
         'autoplay',
@@ -180,7 +185,7 @@ class Defs
     /**
      * array prefix => uri for prefixes that don't have to be declared in PHPTAL
      *
-     * @return array
+     * @return array<string, string>
      */
     public function getPredefinedPrefixes(): array
     {

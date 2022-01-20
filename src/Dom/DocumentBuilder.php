@@ -101,7 +101,7 @@ abstract class DocumentBuilder
 
     /**
      * @param string $element_qname
-     * @param array $attributes
+     * @param array<string, string> $attributes
      *
      * @return void
      */

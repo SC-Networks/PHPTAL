@@ -43,9 +43,7 @@ use ReflectionException;
  */
 class Condition extends Attribute implements TalesChainReaderInterface
 {
-    /**
-     * @var array
-     */
+    /** @var array<string> */
     private $expressions = [];
 
     /**

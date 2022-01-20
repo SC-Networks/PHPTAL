@@ -41,6 +41,8 @@ use Traversable;
  *
  * @package PHPTAL
  * @author Laurent Bedubourg <lbedubourg@motion-twin.com>
+ *
+ * @implements Iterator<string, mixed>
  */
 class RepeatController implements Iterator
 {
@@ -70,7 +72,7 @@ class RepeatController implements Iterator
     private $uses_groups = false;
 
     /**
-     * @var Iterator
+     * @var Iterator<mixed>
      */
     protected $iterator;
 

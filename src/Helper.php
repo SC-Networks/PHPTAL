@@ -12,7 +12,6 @@ use SimpleXMLElement;
  */
 class Helper
 {
-
     /**
      * helper function for chained expressions
      *
@@ -25,7 +24,6 @@ class Helper
         return in_array($var, [null, false, ''], true)
             || ((is_array($var) || $var instanceof Countable) && count($var) === 0);
     }
-
 
     /**
      * helper function for conditional expressions
@@ -40,11 +38,13 @@ class Helper
         return $var && (!$var instanceof Countable || count($var));
     }
 
-
     /**
      * convert to string and html-escape given value (of any type)
      *
      * @access private
+     *
+     * @param mixed $var
+     * @param string $encoding
      */
     public static function phptal_escape($var, $encoding): string
     {
@@ -54,11 +54,12 @@ class Helper
         return htmlspecialchars(static::phptal_tostring($var), ENT_QUOTES, $encoding);
     }
 
-
     /**
      * convert anything to string
      *
      * @access private
+     *
+     * @param mixed $var
      */
     public static function phptal_tostring($var): string
     {
@@ -85,7 +86,6 @@ class Helper
         return (string) static::phptal_unravel_closure($var);
     }
 
-
     /**
      * unravel the provided expression if it is a closure
      *
@@ -94,6 +94,9 @@ class Helper
      * value is found it is returned.
      *
      * This function has no effect on non-Closure expressions
+     *
+     * @param mixed $var
+     * @return mixed
      */
     public static function phptal_unravel_closure($var)
     {

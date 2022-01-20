@@ -98,7 +98,7 @@ class Content extends Attribute implements TalesChainReaderInterface
 
     /**
      * @param CodeWriter $codewriter
-     * @param array $code
+     * @param array<string> $code
      *
      * @return void
      * @throws PhpTalException

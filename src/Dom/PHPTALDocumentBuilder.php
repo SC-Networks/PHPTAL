@@ -149,9 +149,8 @@ class PHPTALDocumentBuilder extends DocumentBuilder
 
     /**
      * @param string $element_qname
-     * @param array $attributes
+     * @param array<string, string> $attributes
      *
-     * @return void
      * @throws ParserException
      * @throws PhpTalException
      * @throws TemplateException

@@ -109,7 +109,10 @@ class TemplateException extends PhpTalException
     }
 
     /**
-     * @return array
+     * @return array{
+     *  0: null|string,
+     *  1: null|int
+     * }
      */
     private function findFileAndLine(): array
     {

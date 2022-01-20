@@ -65,7 +65,7 @@ class TalesInternal implements TalesInterface
     private static $phpModifierAllowed = false;
 
     /**
-     * @var array
+     * @var array<int>
      */
     private static $tokenBlacklist = [
         T_CLASS_C,
@@ -90,7 +90,7 @@ class TalesInternal implements TalesInterface
     ];
 
     /**
-     * @var array
+     * @var array<string>
      */
     private static $functionWhitelist = [];
 
@@ -179,7 +179,7 @@ class TalesInternal implements TalesInterface
      * @param string $expression
      * @param bool $nothrow
      *
-     * @return array|string
+     * @return array<string>|string
      * @throws ParserException
      * @throws UnknownModifierException
      * @throws ReflectionException
@@ -558,7 +558,7 @@ class TalesInternal implements TalesInterface
     }
 
     /**
-     * @param array $array
+     * @param array<string> $array
      * @param bool $nothrow
      *
      * @return string
@@ -624,12 +624,12 @@ class TalesInternal implements TalesInterface
 
     /**
      * @param string $typePrefix
-     * @param array|string $expressions
+     * @param array<string>|string $expressions
      *
      * @return void
      * @throws ParserException
      */
-    private static function verifyPHPExpressions(string $typePrefix, $expressions): void
+    private static function verifyPHPExpressions(string $typePrefix, string|array $expressions): void
     {
         if (!is_array($expressions)) {
             $expressions = [$expressions];
@@ -666,7 +666,7 @@ class TalesInternal implements TalesInterface
      *
      * @param string $src
      *
-     * @return array
+     * @return array<int, array<int, int|string>>
      */
     private static function tokenize($src): array
     {
@@ -724,14 +724,13 @@ class TalesInternal implements TalesInterface
     }
 
     /**
-     * @param array $functionWhitelist
+     * @param array<string> $functionWhitelist
      */
     public static function setFunctionWhitelist(array $functionWhitelist): void
     {
-        $functionWhitelist = array_map(static function ($e) {
-            return strtolower(trim($e));
-        }, $functionWhitelist);
-
-        self::$functionWhitelist = $functionWhitelist;
+        self::$functionWhitelist = array_map(
+            fn ($e) => strtolower(trim($e)),
+            $functionWhitelist
+        );
     }
 }

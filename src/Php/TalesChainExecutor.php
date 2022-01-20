@@ -30,7 +30,7 @@ class TalesChainExecutor
     private $state = 0;
 
     /**
-     * @var array
+     * @var array<int, string>
      */
     private $chain;
 
@@ -49,12 +49,11 @@ class TalesChainExecutor
      */
     private $reader;
 
-
     /**
      * TalesChainExecutor constructor.
      *
      * @param CodeWriter $codewriter
-     * @param array $chain
+     * @param array<int, string> $chain
      * @param TalesChainReaderInterface $reader
      *
      * @throws PhpTalException

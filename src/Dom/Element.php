@@ -17,6 +17,7 @@ namespace PhpTal\Dom;
 use PhpTal\Exception\ParserException;
 use PhpTal\Exception\PhpTalException;
 use PhpTal\Exception\TemplateException;
+use PhpTal\Php\Attribute;
 use PhpTal\Php\CodeWriter;
 use PhpTal\PHPTAL;
 use PhpTal\TalNamespace\Builtin;
@@ -48,17 +49,17 @@ class Element extends Node
     private $attribute_nodes;
 
     /**
-     * @var array
+     * @var array<Attribute>
      */
     protected $replaceAttributes = [];
 
     /**
-     * @var array
+     * @var array<Attribute>
      */
     protected $contentAttributes = [];
 
     /**
-     * @var array
+     * @var array<Attribute>
      */
     protected $surroundAttributes = [];
 
@@ -96,7 +97,7 @@ class Element extends Node
     /**
      * @param string $qname qualified name of the element, e.g. "tal:block"
      * @param string $namespace_uri namespace of this element
-     * @param array $attribute_nodes array of \PhpTal\Dom\Attr elements
+     * @param array<Attr> $attribute_nodes array of \PhpTal\Dom\Attr elements
      * @param XmlnsState $xmlns object that represents namespaces/prefixes known in element's context
      *
      * @throws ParserException
@@ -300,7 +301,7 @@ class Element extends Node
     /**
      * Replace all attributes
      *
-     * @param array $nodes array of \PhpTal\Dom\Attr objects
+     * @param array<Attr> $nodes array of \PhpTal\Dom\Attr objects
      */
     public function setAttributeNodes(array $nodes): void
     {
@@ -649,7 +650,7 @@ class Element extends Node
     }
 
     /**
-     * @return array
+     * @return array<string, Attr>
      */
     private function separateAttributes(): array
     {
@@ -669,9 +670,8 @@ class Element extends Node
     }
 
     /**
-     * @param array $talAttributes
+     * @param array<string, Attr> $talAttributes
      *
-     * @return void
      * @throws TemplateException
      * @throws ParserException
      */
