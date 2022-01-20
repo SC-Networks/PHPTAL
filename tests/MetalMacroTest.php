@@ -76,7 +76,6 @@ class MetalMacroTest extends PhpTalTestCase
 
     public function testEvaluatedMacroNameTalesPHP(): void
     {
-        static::markTestSkipped('chaining does not work anymore at the moment.');
         $call = new stdClass();
         $call->first = 1;
         $call->second = 2;

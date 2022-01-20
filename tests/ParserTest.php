@@ -18,7 +18,6 @@ declare(strict_types=1);
 
 namespace Tests;
 
-use DOMNode;
 use Exception;
 use PhpTal\Dom\PHPTALDocumentBuilder;
 use PhpTal\Dom\SaxXmlParser;
@@ -34,10 +33,6 @@ class ParserTest extends PhpTalTestCase
             new PHPTALDocumentBuilder(),
             TAL_TEST_FILES_DIR . 'input/parser.01.xml'
         )->getResult();
-
-        if ($tree instanceof DOMNode) {
-            $this->markTestSkipped();
-        }
 
         $children = $tree->childNodes;
         static::assertCount(3, $children);

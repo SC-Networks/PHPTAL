@@ -19,7 +19,6 @@ declare(strict_types=1);
 namespace Tests;
 
 use PhpTal\Exception\ConfigurationException;
-use PhpTal\Exception\PhpTalException;
 use PhpTal\GetTextTranslator;
 use Tests\Testcase\PhpTalTestCase;
 
@@ -27,11 +26,7 @@ class GetTextTest extends PhpTalTestCase
 {
     private function getTextTranslator(): GetTextTranslator
     {
-        try {
-            return new GetTextTranslator();
-        } catch (PhpTalException $e) {
-            static::markTestSkipped($e->getMessage());
-        }
+        return new GetTextTranslator();
     }
 
     public function testSimple(): void

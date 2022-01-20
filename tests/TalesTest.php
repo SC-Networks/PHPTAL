@@ -196,24 +196,21 @@ class TalesTest extends PhpTalTestCase
 
     public function testNamespaceFunction(): void
     {
-        // todo: namespacing is gone for now, this maybe should be implemented again somehow
         TalesInternal::setFunctionWhitelist(['strlen', 'x']);
         TalesInternal::setPhpModifierAllowed(true);
         static::assertSame('\strlen($ctx->x)', TalesInternal::compileToPHPExpressions('php:\strlen(x)'));
-//        static::assertSame('my\len($ctx->x)', TalesInternal::compileToPHPExpressions('php:my\len(x)'));
-//        static::assertSame('my\subns\len($ctx->x)', TalesInternal::compileToPHPExpressions('php:my\subns\len(x)'));
+        static::assertSame('my\len($ctx->x)', TalesInternal::compileToPHPExpressions('php:my\len(x)'));
+        static::assertSame('my\subns\len($ctx->x)', TalesInternal::compileToPHPExpressions('php:my\subns\len(x)'));
     }
 
     public function testNamespaceClass(): void
     {
-        static::markTestSkipped('namespacing is gone for now, this maybe should be implemented again somehow');
         static::assertSame('\Foo::strlen($ctx->x)', TalesInternal::compileToPHPExpressions('php:\Foo::strlen(x)'));
         static::assertSame('My\Foo::strlen($ctx->x)', TalesInternal::compileToPHPExpressions('php:My\Foo::strlen(x)'));
     }
 
     public function testNamespaceConstant(): void
     {
-        static::markTestSkipped('namespacing is gone for now, this maybe should be implemented again somehow');
         static::assertSame('My\Foo::TAU', TalesInternal::compileToPHPExpressions('php:My\Foo::TAU'));
         static::assertSame(
             '$ctx->date_filter->isFilterApplied(\My\Foo::TODAY)',
