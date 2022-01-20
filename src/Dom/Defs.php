@@ -43,11 +43,6 @@ class Defs
     private static $instance;
 
     /**
-     * @var array
-     */
-    private $dictionary = [];
-
-    /**
      * list of \PhpTal\TalNamespace objects
      */
     private $namespaces_by_uri = [];
@@ -291,10 +286,5 @@ class Defs
     {
         $this->namespaces_by_uri[$ns->getNamespaceURI()] = $ns;
         $this->prefix_to_uri[$ns->getPrefix()] = $ns->getNamespaceURI();
-        $prefix = strtolower($ns->getPrefix());
-        foreach ($ns->getAttributes() as $name => $attribute) {
-            $key = $prefix . ':' . strtolower($name);
-            $this->dictionary[$key] = $attribute;
-        }
     }
 }
