@@ -121,7 +121,6 @@ class TemplateException extends PhpTalException
         }
 
         $eval_line = 0;
-        $eval_path = null;
 
         // searches backtrace to find template file
         foreach ($this->getTrace() as $tr) {
@@ -135,9 +134,9 @@ class TemplateException extends PhpTalException
 
             // PHPTAL.php uses eval() on first run to catch fatal errors. This makes template path invisible.
             // However, function name matches template path and eval() is visible in backtrace.
-            if (strpos($tr['file'], 'eval()') !== false) {
+            if (str_contains($tr['file'], 'eval()')) {
                 $eval_line = $tr['line'];
-            } elseif ($eval_line && isset($tr['function'], $tr['args'][0]) &&
+            } elseif ($eval_line && isset($tr['args'][0]) &&
                 $this->isTemplatePath('/' . $tr['function'] . '.php') && $tr['args'][0] instanceof PHPTAL) {
                 return [$tr['args'][0]->getCodePath(), $eval_line];
             }
