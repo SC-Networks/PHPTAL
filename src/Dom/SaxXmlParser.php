@@ -479,7 +479,7 @@ class SaxXmlParser
             $forbid = '/((?>[\x00-\x08\x0B\x0C\x0E-\x1F\x7F-\x84\x86-\x9F]+))/s';
 
             if (preg_match($forbid, $str)) {
-                $str = preg_replace_callback($forbid, ['self', 'convertBytesToEntities'], $str);
+                $str = preg_replace_callback($forbid, fn (array $element): string => self::convertBytesToEntities($element), $str);
                 $this->raiseError('Invalid ISO-8859-1 characters: ' . $str);
             }
         }
