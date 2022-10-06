@@ -41,6 +41,7 @@ class MyArray implements \ArrayAccess
      *
      * @return mixed
      */
+    #[\ReturnTypeWillChange]
     public function offsetGet($index)
     {
         return $this->values[$index];

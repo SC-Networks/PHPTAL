@@ -123,6 +123,7 @@ class RepeatController implements \Iterator
      *
      * @return Mixed    The current element value
      */
+    #[\ReturnTypeWillChange]
     public function current()
     {
         return $this->current;
@@ -133,6 +134,7 @@ class RepeatController implements \Iterator
      *
      * @return String/Int   The current element key
      */
+    #[\ReturnTypeWillChange]
     public function key()
     {
         return $this->key;

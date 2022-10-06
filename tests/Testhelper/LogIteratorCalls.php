@@ -39,30 +39,35 @@ class LogIteratorCalls implements \Iterator
         }
     }
 
+    #[\ReturnTypeWillChange]
     public function current()
     {
         $this->log .= "current\n";
         return $this->i->current();
     }
 
+    #[\ReturnTypeWillChange]
     public function next()
     {
         $this->log .= "next\n";
         return $this->i->next();
     }
 
+    #[\ReturnTypeWillChange]
     public function key()
     {
         $this->log .= "key\n";
         return $this->i->key();
     }
 
+    #[\ReturnTypeWillChange]
     public function rewind()
     {
         $this->log .= "rewind\n";
         return $this->i->rewind();
     }
 
+    #[\ReturnTypeWillChange]
     public function valid()
     {
         $this->log .= "valid\n";

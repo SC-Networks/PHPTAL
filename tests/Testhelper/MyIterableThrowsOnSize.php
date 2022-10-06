@@ -23,6 +23,7 @@ class MyIterableThrowsOnSize extends MyIterable implements \Countable
     /**
      * @throws SizeCalledException
      */
+    #[\ReturnTypeWillChange]
     public function count()
     {
         throw new SizeCalledException('count() called');
