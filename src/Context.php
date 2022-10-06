@@ -19,6 +19,7 @@ namespace PhpTal;
  * Holds template variables and carries state/scope across macro executions.
  *
  */
+#[\AllowDynamicProperties]
 class Context
 {
     /**

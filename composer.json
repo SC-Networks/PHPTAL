@@ -31,7 +31,9 @@
     ],
     "require": {
         "php": "^7.2",
-        "symfony/polyfill-mbstring": "^1.12"
+        "symfony/polyfill-mbstring": "^1.12",
+        "symfony/polyfill-php81": "^1.26",
+        "symfony/polyfill-php82": "^1.26"
     },
     "require-dev": {
         "php": "^7.2",

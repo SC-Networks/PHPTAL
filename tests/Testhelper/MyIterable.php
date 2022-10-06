@@ -61,6 +61,7 @@ class MyIterable implements \Iterator
     /**
      * @return int
      */
+    #[\ReturnTypeWillChange]
     public function next(): int
     {
         $this->index++;
