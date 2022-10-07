@@ -11,7 +11,6 @@ use stdClass;
  */
 interface PhpTalInterface
 {
-
     /**
      * Set template from file path.
      *

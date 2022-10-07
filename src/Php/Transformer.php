@@ -101,8 +101,8 @@ class Transformer
                         continue 2;
                     }
 
-                // no specific state defined, just eat char and see what to do with it.
-                // no break
+                    // no specific state defined, just eat char and see what to do with it.
+                    // no break
                 case self::ST_NONE:
                     // begin of eval without {
                     if ($c === '$' && $i + 1 < $len && self::isAlpha($str[$i + 1])) {
@@ -146,7 +146,7 @@ class Transformer
                     }
                     break;
 
-                // $xxx
+                    // $xxx
                 case self::ST_EVAL:
                     if (!self::isVarNameChar($c)) {
                         $result .= $prefix . substr($str, $mark, $i - $mark);
@@ -155,7 +155,7 @@ class Transformer
                     }
                     break;
 
-                // single quoted string
+                    // single quoted string
                 case self::ST_STR:
                     if ($c === '\\') {
                         $backslashed = true;
@@ -168,7 +168,7 @@ class Transformer
                     }
                     break;
 
-                // double quoted string
+                    // double quoted string
                 case self::ST_ESTR:
                     if ($c === '\\') {
                         $backslashed = true;
@@ -197,7 +197,7 @@ class Transformer
                     }
                     break;
 
-                // var state
+                    // var state
                 case self::ST_VAR:
                     if (self::isVarNameChar($c)) {
                         // noop
@@ -255,7 +255,7 @@ class Transformer
                     }
                     break;
 
-                // object member
+                    // object member
                 case self::ST_MEMBER:
                     if (self::isVarNameChar($c)) {
                         // noop
@@ -310,7 +310,7 @@ class Transformer
                     }
                     break;
 
-                // wait for separator
+                    // wait for separator
                 case self::ST_DEFINE:
                     if (self::isVarNameChar($c)) {
                         // noop
@@ -321,10 +321,10 @@ class Transformer
                     }
                     break;
 
-                // static call, can be const, static var, static method
-                // Klass::$static
-                // Klass::const
-                // Kclass::staticMethod()
+                    // static call, can be const, static var, static method
+                    // Klass::$static
+                    // Klass::const
+                    // Kclass::staticMethod()
                 //
                 case self::ST_STATIC:
                     if (self::isVarNameChar($c)) {
@@ -355,7 +355,7 @@ class Transformer
                     }
                     break;
 
-                // numeric value
+                    // numeric value
                 case self::ST_NUM:
                     if (!self::isDigitCompound($c)) {
                         $var = substr($str, $mark, $i - $mark);

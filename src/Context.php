@@ -14,6 +14,7 @@ declare(strict_types=1);
 
 namespace PhpTal;
 
+use AllowDynamicProperties;
 use ArrayAccess;
 use BadMethodCallException;
 use Countable;
@@ -22,8 +23,8 @@ use stdClass;
 /**
  * This class handles template execution context.
  * Holds template variables and carries state/scope across macro executions.
- *
  */
+#[AllowDynamicProperties]
 class Context
 {
     /**
