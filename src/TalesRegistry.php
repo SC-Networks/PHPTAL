@@ -26,7 +26,6 @@ use ReflectionMethod;
  */
 final class TalesRegistry implements TalesRegistryInterface
 {
-
     /**
      * @var array<
      *  string,

@@ -37,7 +37,6 @@ use PhpTal\Exception\TemplateException;
  */
 class SaxXmlParser
 {
-
     // available parser states
     public const ST_ROOT = 0;
     public const ST_TEXT = 1;
@@ -231,7 +230,7 @@ class SaxXmlParser
                                 $mark = $i + 1; // mark text start
                                 $state = self::ST_TEXT;
                                 $builder->onElementStart($tagname, $attributes);
-                            } else /* isWhiteChar */ {
+                            } else { /* isWhiteChar */
                                 $state = self::ST_TAG_ATTRIBUTES;
                             }
                         }
@@ -342,7 +341,7 @@ class SaxXmlParser
 
                             if ($c === '=') {
                                 $state = self::ST_ATTR_VALUE;
-                            } else /* white char */ {
+                            } else { /* white char */
                                 $state = self::ST_ATTR_EQ;
                             }
                         } elseif ($c === '/' || $c === '>') {

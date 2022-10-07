@@ -24,7 +24,6 @@ use PhpTal\Php\CodeWriter;
  */
 class Tales extends Attribute
 {
-
     /**
      * @var string
      */

@@ -23,7 +23,6 @@ use PhpTal\Php\CodeWriter;
  */
 class Debug extends Attribute
 {
-
     /**
      * @var bool
      */
