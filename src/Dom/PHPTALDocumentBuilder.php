@@ -36,10 +36,7 @@ class PHPTALDocumentBuilder extends DocumentBuilder
      */
     private $encoding;
 
-    /**
-     * @var Element
-     */
-    private $documentElement;
+    private ?Element $documentElement = null;
 
     /**
      * PHPTALDocumentBuilder constructor.
