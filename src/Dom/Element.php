@@ -90,11 +90,6 @@ class Element extends Node
     public $childNodes = [];
 
     /**
-     * @var XmlnsState
-     */
-    private $xmlns;
-
-    /**
      * @param string $qname qualified name of the element, e.g. "tal:block"
      * @param string $namespace_uri namespace of this element
      * @param array<Attr> $attribute_nodes array of \PhpTal\Dom\Attr elements
@@ -103,12 +98,15 @@ class Element extends Node
      * @throws ParserException
      * @throws TemplateException
      */
-    public function __construct(string $qname, string $namespace_uri, array $attribute_nodes, XmlnsState $xmlns)
-    {
+    public function __construct(
+        string $qname,
+        string $namespace_uri,
+        array $attribute_nodes,
+        private readonly XmlnsState $xmlns,
+    ) {
         $this->qualifiedName = $qname;
         $this->attribute_nodes = $attribute_nodes;
         $this->namespace_uri = $namespace_uri;
-        $this->xmlns = $xmlns;
 
         // implements inheritance of element's namespace to tal attributes (<metal: use-macro>)
         foreach ($attribute_nodes as $index => $attr) {

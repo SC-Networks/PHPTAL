@@ -30,39 +30,23 @@ class TalesChainExecutor
     private $state = 0;
 
     /**
-     * @var array<int, string>
-     */
-    private $chain;
-
-    /**
      * @var bool
      */
     private $chainStarted = false;
 
     /**
-     * @var CodeWriter
-     */
-    private $codewriter;
-
-    /**
-     * @var TalesChainReaderInterface
-     */
-    private $reader;
-
-    /**
-     * TalesChainExecutor constructor.
-     *
      * @param CodeWriter $codewriter
      * @param array<int, string> $chain
      * @param TalesChainReaderInterface $reader
      *
      * @throws PhpTalException
      */
-    public function __construct(CodeWriter $codewriter, array $chain, TalesChainReaderInterface $reader)
-    {
+    public function __construct(
+        private readonly CodeWriter $codewriter,
+        private array $chain,
+        private readonly TalesChainReaderInterface $reader,
+    ) {
         $this->chain = $chain;
-        $this->codewriter = $codewriter;
-        $this->reader = $reader;
         $this->executeChain();
     }
 

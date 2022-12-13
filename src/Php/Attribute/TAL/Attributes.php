@@ -61,15 +61,9 @@ class Attributes extends Attribute implements TalesChainReaderInterface
      */
     private $default_escaped;
 
-    /**
-     * @var string
-     */
-    private $attribute;
+    private string $attribute = '';
 
-    /**
-     * @var string
-     */
-    private $attkey;
+    private string $attkey = '';
 
     /**
      * Called before element printing.
