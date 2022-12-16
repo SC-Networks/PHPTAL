@@ -139,7 +139,7 @@ EOT;
         $tpl->execute();
     }
 
-    public function testErrorsThrow2(): void
+    public function testErrorsThrow2(): never
     {
         $this->expectException(VariableNotFoundException::class);
         $this->markTestSkipped("tal:define and tal:attributes rely on chains not throwing");//FIXME
@@ -149,7 +149,7 @@ EOT;
         $tpl->execute();
     }
 
-    public function testErrorsThrow3(): void
+    public function testErrorsThrow3(): never
     {
         $this->expectException(VariableNotFoundException::class);
         $this->markTestSkipped("tal:define and tal:attributes rely on chains not throwing");//FIXME
@@ -159,7 +159,7 @@ EOT;
         $tpl->execute();
     }
 
-    public function testErrorsThrow4(): void
+    public function testErrorsThrow4(): never
     {
         $this->expectException(VariableNotFoundException::class);
         $this->markTestSkipped("tal:define and tal:attributes rely on chains not throwing");//FIXME

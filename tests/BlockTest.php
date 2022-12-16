@@ -23,7 +23,7 @@ use Tests\Testcase\PhpTalTestCase;
 
 class BlockTest extends PhpTalTestCase
 {
-    function testTalBlock()
+    public function testTalBlock()
     {
         $t = $this->newPHPTAL();
         $t->setSource('<tal:block content="string:content"></tal:block>');
@@ -31,7 +31,7 @@ class BlockTest extends PhpTalTestCase
         static::assertSame('content', $res);
     }
 
-    function testMetalBlock()
+    public function testMetalBlock()
     {
         $t = $this->newPHPTAL();
         $t->setSource('<metal:block>foo</metal:block>');
@@ -39,7 +39,7 @@ class BlockTest extends PhpTalTestCase
         static::assertSame('foo', $res);
     }
 
-    function testSomeNamespaceBlock()
+    public function testSomeNamespaceBlock()
     {
         $t = $this->newPHPTAL();
         $t->setSource('<foo:block xmlns:foo="http://phptal.example.com">foo</foo:block>');
@@ -47,7 +47,7 @@ class BlockTest extends PhpTalTestCase
         static::assertSame('<foo:block xmlns:foo="http://phptal.example.com">foo</foo:block>', $res);
     }
 
-    function testInvalidNamespaceBlock()
+    public function testInvalidNamespaceBlock()
     {
         $this->expectException(ParserException::class);
         $t = $this->newPHPTAL();

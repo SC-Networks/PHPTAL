@@ -22,11 +22,6 @@ use PhpTal\FilterInterface;
 
 class MyPostFilter implements FilterInterface
 {
-    /**
-     * @param string $str
-     *
-     * @return string
-     */
     public function filter(string $str): string
     {
         if (preg_match('|<root>(.*?)</root>|s', $str, $m)) {

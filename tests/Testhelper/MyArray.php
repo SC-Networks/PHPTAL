@@ -22,16 +22,10 @@ use ArrayAccess;
 
 class MyArray implements ArrayAccess
 {
-
-    /**
-     * @var array
-     */
-    private $values = [];
+    private array $values = [];
 
     /**
      * @param $value
-     *
-     * @return void
      */
     public function push($value): void
     {
@@ -48,31 +42,19 @@ class MyArray implements ArrayAccess
 
     /**
      * @param string $index
-     * @param mixed $value
      *
-     * @return void
      */
-    public function offsetSet($index, $value): void
+    public function offsetSet($index, mixed $value): void
     {
         $this->values[$index] = $value;
     }
 
-    /**
-     * @param mixed $of
-     *
-     * @return bool
-     */
-    public function offsetExists($of): bool
+    public function offsetExists(mixed $of): bool
     {
         return isset($this->values[$of]);
     }
 
-    /**
-     * @param mixed $of
-     *
-     * @return void
-     */
-    public function offsetUnset($of): void
+    public function offsetUnset(mixed $of): void
     {
         unset($this->values[$of]);
     }

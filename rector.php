@@ -23,13 +23,15 @@ return static function (RectorConfig $rector_config): void {
         'tests/'
     ]);
 
+    // import all kind of names
+    $rector_config->importNames();
+
     // Define what rule sets will be applied
     $rector_config->import(SetList::DEAD_CODE);
     $rector_config->skip([
         StringClassNameToClassConstantRector::class,
         UnionTypesRector::class,
         JsonThrowOnErrorRector::class,
-
     ]);
 
     // define sets of rules

@@ -20,9 +20,6 @@ namespace Tests\Testhelper;
 
 class MyIterableWithSize extends MyIterable
 {
-    /**
-     * @return int
-     */
     public function size(): int
     {
         return $this->size;

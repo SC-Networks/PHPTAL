@@ -17,7 +17,6 @@ declare(strict_types=1);
  */
 
 namespace {
-
     use PhpTal\Php\TalesInternal;
 
     function registry_test_callback(string $arg, bool $nothrow): string
@@ -37,7 +36,6 @@ namespace {
 }
 
 namespace Tests {
-
     use PhpTal\Exception\ConfigurationException;
     use PhpTal\Exception\UnknownModifierException;
     use PhpTal\TalesRegistry;
@@ -45,7 +43,6 @@ namespace Tests {
 
     class TalesRegistryTest extends PhpTalTestCase
     {
-
         public function testRegisterFunction(): void
         {
             TalesRegistry::registerPrefix('registry_test', 'registry_test_callback');
@@ -57,9 +54,7 @@ namespace Tests {
 
         public function testRegisterFunctionAcceptsClosure(): void
         {
-            TalesRegistry::registerPrefix('foobar', function (string $arg) {
-                return '"ok' . $arg . '"';
-            });
+            TalesRegistry::registerPrefix('foobar', fn (string $arg) => '"ok' . $arg . '"');
             static::assertSame(
                 '<p>ok1</p>',
                 $this->newPHPTAL()->setSource('<p tal:content="foobar:1"/>')->execute()

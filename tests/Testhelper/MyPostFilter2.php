@@ -22,10 +22,6 @@ use PhpTal\FilterInterface;
 
 class MyPostFilter2 implements FilterInterface
 {
-    /**
-     * @param string $str
-     * @return string
-     */
     public function filter(string $str): string
     {
         return str_replace('test', 'test-filtered', $str);

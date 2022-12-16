@@ -77,7 +77,7 @@ class I18NAttributesTest extends PhpTalTestCase
         );
     }
 
-    public function testTranslateTalAttributeEscape(): void
+    public function testTranslateTalAttributeEscape(): never
     {
         $this->markTestSkipped("Hard to fix bug");
 
@@ -114,8 +114,10 @@ class I18NAttributesTest extends PhpTalTestCase
     public function testInterpolation(): void
     {
         $t = new DummyTranslator();
-        $t->setTranslation('foo ${someObject/method} bar ${otherObject/method} buz',
-            'ok ${someObject/method} ok ${otherObject/method} ok');
+        $t->setTranslation(
+            'foo ${someObject/method} bar ${otherObject/method} buz',
+            'ok ${someObject/method} ok ${otherObject/method} ok'
+        );
 
         $tpl = $this->newPHPTAL('input/i18n-attributes-05.html');
         $tpl->setTranslator($t);

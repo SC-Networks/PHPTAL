@@ -27,7 +27,6 @@ use Tests\Testhelper\Helper;
 
 class MetalMacroTest extends PhpTalTestCase
 {
-
     public function testSimple(): void
     {
         $tpl = $this->newPHPTAL('input/metal-macro.01.html');
@@ -106,7 +105,8 @@ class MetalMacroTest extends PhpTalTestCase
     public function testExternalMacroMissingException(): void
     {
         $tpl = $this->newPHPTAL();
-        $tpl->setSource(sprintf('<tal:block metal:use-macro="%sinput/metal-macro.07.html/this-macro-doesnt-exist"/>',
+        $tpl->setSource(sprintf(
+            '<tal:block metal:use-macro="%sinput/metal-macro.07.html/this-macro-doesnt-exist"/>',
             TAL_TEST_FILES_DIR
         ));
         $this->expectException(MacroMissingException::class);
@@ -126,7 +126,8 @@ class MetalMacroTest extends PhpTalTestCase
         $tpl = $this->newPHPTAL();
         $tpl->defined_later_var = 'defined_later';
         $tpl->ok_var = '??'; // fallback in case test fails
-        $tpl->setSource(sprintf('<tal:block metal:use-macro="%sinput/metal-macro.09.html/defined_earlier" />',
+        $tpl->setSource(sprintf(
+            '<tal:block metal:use-macro="%sinput/metal-macro.09.html/defined_earlier" />',
             TAL_TEST_FILES_DIR
         ));
         $res = $tpl->execute();
@@ -140,7 +141,8 @@ class MetalMacroTest extends PhpTalTestCase
             '<p>
           <metal:block define-macro=" foo " />
               <a metal:define-macro="foo">bar</a>
-         </p>');
+         </p>'
+        );
         $this->expectException(PhpTalException::class);
         $tpl->execute();
     }
@@ -159,7 +161,8 @@ class MetalMacroTest extends PhpTalTestCase
     public function testExternalTemplateThrowsError(): void
     {
         $tpl = $this->newPHPTAL();
-        $tpl->setSource(sprintf('<phptal:block metal:use-macro="%sinput/metal-macro.10.html/throwerr"/>',
+        $tpl->setSource(sprintf(
+            '<phptal:block metal:use-macro="%sinput/metal-macro.10.html/throwerr"/>',
             TAL_TEST_FILES_DIR
         ));
         $this->expectException(ParserException::class);
@@ -169,8 +172,10 @@ class MetalMacroTest extends PhpTalTestCase
     public function testOnErrorCapturesErorrInExternalMacro(): void
     {
         $tpl = $this->newPHPTAL();
-        $tpl->setSource(sprintf('<phptal:block tal:on-error="string:ok"
-        metal:use-macro="%sinput/metal-macro.10.html/throwerr"/>', TAL_TEST_FILES_DIR
+        $tpl->setSource(sprintf(
+            '<phptal:block tal:on-error="string:ok"
+        metal:use-macro="%sinput/metal-macro.10.html/throwerr"/>',
+            TAL_TEST_FILES_DIR
         ));
 
         static::assertSame('ok', $tpl->execute());

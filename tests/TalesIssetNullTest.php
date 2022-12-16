@@ -24,7 +24,7 @@ use Tests\Testhelper\DummyObjectX;
 
 class TalesIssetNullTest extends PhpTalTestCase
 {
-    function testIt()
+    public function testIt()
     {
         $dummy = new DummyObjectX();
         $dummy->foo = null;

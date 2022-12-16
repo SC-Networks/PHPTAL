@@ -26,7 +26,6 @@ use Tests\Testhelper\Helper;
 
 class ContentInterpolationTest extends PhpTalTestCase
 {
-
     public function tearDown(): void
     {
         TalesInternal::setFunctionWhitelist([]);
@@ -280,15 +279,13 @@ EOT;
 
     public function testPHPBlock54(): void
     {
-
         $tpl = $this->newPHPTAL();
         $tpl->setSource('<p>test<? print("<x>"); ?>test<?= "&amp;" ?>test</p>');
-        try
-        {
+        try {
             // PHP 5.4: short tag <?= is always enabled.
             static::assertSame('<p>test<? print("<x>"); ?>test<_ "&amp;" ?>test</p>', $tpl->execute());
+        } catch(ParserException) {/* xml ill-formedness error is ok too */
         }
-        catch(ParserException $e) {/* xml ill-formedness error is ok too */}
         ini_restore('short_open_tag');
     }
 
@@ -311,7 +308,7 @@ EOT;
     public function testErrorsThrow3(): void
     {
         $tpl = $this->newPHPTAL();
-        $tpl->foo = array();
+        $tpl->foo = [];
         $tpl->setSource('<p>${foo/error | foo/error}</p>');
         $this->expectException(VariableNotFoundException::class);
         $tpl->execute();

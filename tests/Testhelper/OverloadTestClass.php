@@ -25,18 +25,12 @@ class OverloadTestClass
      */
     public $vars = ['foo' => 'bar', 'baz' => 'biz'];
 
-    /**
-     * @param string $name
-     * @param mixed $value
-     */
-    public function __set(string $name, $value)
+    public function __set(string $name, mixed $value)
     {
         $this->vars[$name] = $value;
     }
 
     /**
-     * @param string $name
-     *
      * @return mixed
      */
     public function __get(string $name)
@@ -48,8 +42,6 @@ class OverloadTestClass
     }
 
     /**
-     * @param string $key
-     *
      * @return bool
      */
     public function __isset(string $key)
@@ -58,8 +50,6 @@ class OverloadTestClass
     }
 
     /**
-     * @param string $func
-     * @param array $args
      *
      * @return string
      */

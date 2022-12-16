@@ -22,7 +22,7 @@ use Tests\Testcase\PhpTalTestCase;
 
 class PhptalUsageTest extends PhpTalTestCase
 {
-    function testMultiUse()
+    public function testMultiUse()
     {
         $t = $this->newPHPTAL();
         $t->title = 'hello';
@@ -35,7 +35,7 @@ class PhptalUsageTest extends PhpTalTestCase
         static::assertStringContainsString('hello', $b);
     }
 
-    function testSetSourceReset()
+    public function testSetSourceReset()
     {
         $t = $this->newPHPTAL();
         $t->setSource('<p>Hello</p>');

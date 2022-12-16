@@ -140,7 +140,7 @@ class MetalSlotTest extends PhpTalTestCase
         static::assertSame($exp, $res, $tpl->getCodePath());
     }
 
-    public function testRecursiveUnFill(): void
+    public function testRecursiveUnFill(): never
     {
         $this->markTestSkipped("known bug"); // FIXME
 
@@ -270,7 +270,8 @@ class MetalSlotTest extends PhpTalTestCase
 
     public function testSlotBug(): void
     {
-        $tpl = $this->newPHPTAL()->setSource(<<<HTML
+        $tpl = $this->newPHPTAL()->setSource(
+            <<<HTML
         <div>
          <tal:block metal:define-macro="subpage">
            <tal:block metal:use-macro="page">
@@ -298,7 +299,8 @@ HTML
         static::assertSame(
             Helper::normalizeHtml('<div>page/value:<div>OK toplevel-filled page/value</div>page/valuebis:<div>OK subpage filled page/valuebis</div></div>'),
             Helper::normalizeHtml($tpl->execute()),
-            $tpl->getCodePath());
+            $tpl->getCodePath()
+        );
     }
 
     public function testNestedSlots(): void

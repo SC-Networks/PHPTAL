@@ -23,7 +23,6 @@ use Tests\Testhelper\Helper;
 
 class DoctypeTest extends PhpTalTestCase
 {
-
     public function testSimple(): void
     {
         $tpl = $this->newPHPTAL('input/doctype.01.html');
@@ -37,11 +36,11 @@ class DoctypeTest extends PhpTalTestCase
     {
         $src = "<!DOCTYPE html>\n\n\n<html></html>";
         $tpl = $this->newPHPTAL()->setSource($src);
-        static::assertSame($src,$tpl->execute());
+        static::assertSame($src, $tpl->execute());
 
         $src = "<!DOCTYPE html>\n<html></html>";
         $tpl->setSource($src);
-        static::assertSame($src,$tpl->execute());
+        static::assertSame($src, $tpl->execute());
     }
 
     public function testMacro(): void

@@ -25,7 +25,7 @@ use Tests\Testhelper\MyArray;
 
 class ArrayOverloadTest extends PhpTalTestCase
 {
-    function testIt()
+    public function testIt()
     {
         $arr = new MyArray();
         for ($i = 0; $i < 20; $i++) {

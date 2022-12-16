@@ -24,7 +24,6 @@ use Tests\Testhelper\Helper;
 
 class TalTestCaseAttributesTest extends PhpTalTestCase
 {
-
     public function testSimple(): void
     {
         $tpl = $this->newPHPTAL('input/tal-attributes.01.html');

@@ -25,7 +25,6 @@ use Tests\Testhelper\Helper;
 
 class HTML5ModeTest extends PhpTalTestCase
 {
-
     public function tearDown(): void
     {
         TalesInternal::setFunctionWhitelist([]);
@@ -83,10 +82,12 @@ class HTML5ModeTest extends PhpTalTestCase
 
     public function testAttr(): void
     {
-        static::assertSame('<html url=http://example.com/?test#test foo=" foo" bar=/bar quz="quz/"></html>',
+        static::assertSame(
+            '<html url=http://example.com/?test#test foo=" foo" bar=/bar quz="quz/"></html>',
             $this->newPHPTAL()->setOutputMode(PHPTAL::HTML5)->setSource(
                 '<html url="http://example.com/?test#test" foo=" foo" bar="/bar" quz="quz/"></html>'
-            )->execute());
+            )->execute()
+        );
     }
 
     public function testEmpty(): void
@@ -211,7 +212,7 @@ class HTML5ModeTest extends PhpTalTestCase
                 </html>', $res);
     }
 
-    function testMixedModes()
+    public function testMixedModes()
     {
         $tpl = $this->newPHPTAL();
         $tpl->setOutputMode(PHPTAL::HTML5);
@@ -227,9 +228,7 @@ class HTML5ModeTest extends PhpTalTestCase
         return Helper::normalizeHtml(
             preg_replace_callback(
                 '/&#x?[a-f0-9]+;/i',
-                function (array $entities) {
-                    return htmlspecialchars(html_entity_decode($entities[0]));
-                },
+                fn (array $entities) => htmlspecialchars(html_entity_decode($entities[0])),
                 $str
             )
         );

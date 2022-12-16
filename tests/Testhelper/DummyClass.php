@@ -35,17 +35,11 @@ class DummyClass
      */
     public $protTest = 'prot-property';
 
-    /**
-     * @return string
-     */
     protected function protTest(): string
     {
         return 'prot-method';
     }
 
-    /**
-     * @return string
-     */
     public function pubTest(): string
     {
         return 'pub-method';

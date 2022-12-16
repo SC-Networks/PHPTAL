@@ -25,20 +25,11 @@ use Tests\Testhelper\TestCodeCache;
 
 class CodeCacheTest extends PhpTalTestCase
 {
-    /**
-     * @var PHPTAL
-     */
-    private $phptal;
+    private ?TestCodeCache $phptal = null;
 
-    /**
-     * @var string
-     */
-    private $codeDestination;
+    private ?string $codeDestination = null;
 
-    /**
-     * @var int
-     */
-    private $subpathRecursionLevel = 0;
+    private int $subpathRecursionLevel = 0;
 
     private function resetPHPTAL()
     {
@@ -158,25 +149,31 @@ class CodeCacheTest extends PhpTalTestCase
 
         static::assertSame(
             Helper::normalizeHtml('<div> 1 <div> 2 </div> </div>'),
-            Helper::normalizeHtml($this->phptal->execute()), "1st run"
+            Helper::normalizeHtml($this->phptal->execute()),
+            "1st run"
         );
         static::assertSame(
             Helper::normalizeHtml('<div> 1 <div> 2 </div> </div>'),
-            Helper::normalizeHtml($this->phptal->execute()), "2nd run"
+            Helper::normalizeHtml($this->phptal->execute()),
+            "2nd run"
         );
         static::assertSame(
             Helper::normalizeHtml('<div> 1 <div> 2 </div> </div>'),
-            Helper::normalizeHtml($this->phptal->execute()), "3rd run"
+            Helper::normalizeHtml($this->phptal->execute()),
+            "3rd run"
         );
-        static::assertSame(Helper::normalizeHtml('<div> 1 <div> 2 </div> </div>'),
-            Helper::normalizeHtml($this->phptal->execute()), "4th run");
+        static::assertSame(
+            Helper::normalizeHtml('<div> 1 <div> 2 </div> </div>'),
+            Helper::normalizeHtml($this->phptal->execute()),
+            "4th run"
+        );
     }
 
     private function executeGarbageRemovalTest(int $subpath_recursion)
     {
         $this->subpathRecursionLevel = $subpath_recursion;
 
-        $src = '<test uniq="' . time() . mt_rand() . '" phptal:cache="1d" />';
+        $src = '<test uniq="' . time() . random_int(0, mt_getrandmax()) . '" phptal:cache="1d" />';
         $this->phptal->setSubpathRecursionLevel($this->subpathRecursionLevel);
         $this->phptal->setSource($src);
         $this->phptal->execute();

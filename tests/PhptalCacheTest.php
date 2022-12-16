@@ -23,12 +23,12 @@ use Tests\Testcase\PhpTalTestCase;
 
 class PhptalCacheTest extends PhpTalTestCase
 {
-    private $cacheTestRnd;
+    private string $cacheTestRnd;
 
     public function setUp(): void
     {
         parent::setUp();
-        $this->cacheTestRnd = time() . mt_rand();
+        $this->cacheTestRnd = time() . random_int(0, mt_getrandmax());
     }
 
     private function PHPTALWithSource(string $source): PHPTAL
@@ -68,7 +68,6 @@ class PhptalCacheTest extends PhpTalTestCase
 
     public function testTimedExpiry(): void
     {
-
         $tpl = $this->PHPTALWithSource('<div phptal:cache="1s" tal:content="var" />');
         $tpl->var = 'FIRST';
         static::assertStringContainsString("FIRST", $tpl->execute());

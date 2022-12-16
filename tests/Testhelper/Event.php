@@ -22,15 +22,8 @@ use Countable;
 
 class Event
 {
+    private ?Countable $artists = null;
 
-    /**
-     * @var Countable
-     */
-    private $artists;
-
-    /**
-     * @param Countable $artists
-     */
     public function setArtists(Countable $artists): void
     {
         $this->artists = $artists;

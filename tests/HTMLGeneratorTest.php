@@ -22,7 +22,6 @@ use Tests\Testcase\PhpTalTestCase;
 
 class HTMLGeneratorTest extends PhpTalTestCase
 {
-
     public function testTalDoesntConsumeNewline(): void
     {
         $res = $this->newPHPTAL()->setSource('<tal:block tal:condition="true">I\'m on a line</tal:block>

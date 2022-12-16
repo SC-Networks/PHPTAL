@@ -24,7 +24,6 @@ use Tests\Testhelper\Helper;
 
 class TalesStringTest extends PhpTalTestCase
 {
-
     public function testSimple(): void
     {
         static::assertSame('\'this is a string\'', TalesInternal::string('this is a string'));

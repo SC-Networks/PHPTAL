@@ -27,16 +27,12 @@ use Tests\Testhelper\Helper;
 
 abstract class PhpTalTestCase extends TestCase
 {
-
     /**
      * @var string
      */
     private $cwd_backup;
 
-    /**
-     * @var int
-     */
-    private $buffer_level;
+    private int $buffer_level;
 
     public function setUp(): void
     {

@@ -23,10 +23,7 @@ use Tests\Testhelper\Helper;
 
 class TalTestCaseOmitTagTest extends PhpTalTestCase
 {
-    /**
-     * @var int
-     */
-    private $call_count = 0;
+    private int $call_count = 0;
 
 
     public function testSimple(): void

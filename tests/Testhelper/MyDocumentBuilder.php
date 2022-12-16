@@ -23,7 +23,6 @@ use PhpTal\Dom\DocumentBuilder;
 
 class MyDocumentBuilder extends DocumentBuilder
 {
-
     /**
      * @var string
      */
@@ -60,11 +59,6 @@ class MyDocumentBuilder extends DocumentBuilder
         parent::__construct();
     }
 
-    /**
-     * @param string $dt
-     *
-     * @return void
-     */
     public function onDoctype(string $dt): void
     {
         $this->specifics++;
@@ -73,7 +67,6 @@ class MyDocumentBuilder extends DocumentBuilder
     }
 
     /**
-     * @param string $decl
      *
      * @return mixed
      * @throws Exception
@@ -88,18 +81,12 @@ class MyDocumentBuilder extends DocumentBuilder
         $this->result .= $decl;
     }
 
-    /**
-     * @param string $data
-     *
-     * @return void
-     */
     public function onCDATASection(string $data): void
     {
         $this->onProcessingInstruction('<![CDATA[' . $data . ']]>');
     }
 
     /**
-     * @param string $data
      * @return mixed
      */
     public function onProcessingInstruction(string $data): void
@@ -162,4 +149,3 @@ class MyDocumentBuilder extends DocumentBuilder
         // noop
     }
 }
-

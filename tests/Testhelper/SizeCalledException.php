@@ -22,5 +22,4 @@ use Exception;
 
 class SizeCalledException extends Exception
 {
-
 }

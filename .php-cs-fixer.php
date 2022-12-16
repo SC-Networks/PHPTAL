@@ -1,13 +1,17 @@
 <?php
 
-$finder = \PhpCsFixer\Finder::create()
+use PhpCsFixer\Config;
+use PhpCsFixer\Finder;
+
+$finder = Finder::create()
 ->in(
     [
         __DIR__ . '/src',
+        __DIR__ . '/tests',
     ]
 );
 
-return (new \PhpCsFixer\Config())
+return (new Config())
 ->setRules([
     '@PSR2' => true,
     'array_syntax' => [

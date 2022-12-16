@@ -26,7 +26,6 @@ use Tests\Testhelper\Helper;
 
 class I18NTranslateTest extends PhpTalTestCase
 {
-
     public function testFailsWhenTranslatorNotSet(): void
     {
         $tpl = $this->newPHPTAL('input/i18n-translate-01.html');
@@ -104,7 +103,6 @@ class I18NTranslateTest extends PhpTalTestCase
 
         $tpl->setSource('<div i18n:domain="foo${bar}$${quz}">${t/domain}</div>');
         static::assertSame(Helper::normalizeHtml('<div>foobaz${quz}</div>'), Helper::normalizeHtml($tpl->execute()));
-
     }
 
     public function testTranslateChain(): void

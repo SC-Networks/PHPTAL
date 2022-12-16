@@ -75,12 +75,12 @@ class DummyTranslator implements TranslationServiceInterface
             $v = htmlspecialchars($v ?? '');
         }
 
-        while (preg_match('/\$\{(.*?)\}/sm', $v, $m)) {
+        while (preg_match('/\$\{(.*?)\}/sm', (string) $v, $m)) {
             [$src, $var] = $m;
             if (!isset($this->vars[$var])) {
                 return "!*$var* is not defined!";
             }
-            $v = str_replace($src, $this->vars[$var], $v);
+            $v = str_replace($src, $this->vars[$var], (string) $v);
         }
 
         return $v;

@@ -25,7 +25,6 @@ use Tests\Testhelper\Helper;
 
 class EscapeHTMLTest extends PhpTalTestCase
 {
-
     public function tearDown(): void
     {
         TalesInternal::setFunctionWhitelist([]);
