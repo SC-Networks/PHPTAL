@@ -30,7 +30,6 @@ class MyTestResolver implements SourceResolverInterface
     public $called = 0;
 
     /**
-     * @param string $path
      * @return SourceInterface
      */
     public function resolve(string $path): ?SourceInterface

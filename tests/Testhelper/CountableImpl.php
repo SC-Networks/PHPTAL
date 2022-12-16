@@ -22,10 +22,7 @@ use Countable;
 
 class CountableImpl implements Countable
 {
-    /**
-     * @var int
-     */
-    private $cnt;
+    private readonly int $cnt;
 
     public function __construct(int $cnt = null)
     {

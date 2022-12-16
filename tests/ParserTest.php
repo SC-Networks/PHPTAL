@@ -48,7 +48,7 @@ class ParserTest extends PhpTalTestCase
                 TAL_TEST_FILES_DIR . 'input/parser.02.xml'
             )->getResult();
             static::assertTrue(true);
-        } catch (Exception $e) {
+        } catch (Exception) {
             static::assertTrue(false);
         }
     }
@@ -89,7 +89,7 @@ class ParserTest extends PhpTalTestCase
             <t><1element /></t>')->getResult();
 
             $this->fail("Accepted invalid element name starting with a number");
-        } catch (PhpTalException $e) {
+        } catch (PhpTalException) {
         }
     }
 
@@ -99,7 +99,7 @@ class ParserTest extends PhpTalTestCase
         try {
             $parser->parseString(new PHPTALDocumentBuilder(), '<t><element~ /></t>');
             $this->fail('Accepted invalid element name');
-        } catch (PhpTalException $e) {
+        } catch (PhpTalException) {
         }
     }
 }

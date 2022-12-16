@@ -24,7 +24,6 @@ use Tests\Testhelper\Helper;
 
 class PhpModeTestTestCase extends PhpTalTestCase
 {
-
     public function tearDown(): void
     {
         TalesInternal::setFunctionWhitelist([]);

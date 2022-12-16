@@ -33,7 +33,7 @@ class MyIterableThrowsOnSize extends MyIterable implements Countable
     /**
      * @throws SizeCalledException
      */
-    public function length()
+    public function length(): never
     {
         throw new SizeCalledException('length() called');
     }
@@ -41,7 +41,7 @@ class MyIterableThrowsOnSize extends MyIterable implements Countable
     /**
      * @throws SizeCalledException
      */
-    public function size()
+    public function size(): never
     {
         throw new SizeCalledException('size() called');
     }

@@ -22,7 +22,7 @@ use Exception;
 
 class OnErrorDummyObject
 {
-    public function throwException(): void
+    public function throwException(): never
     {
         throw new Exception('error thrown');
     }

@@ -27,21 +27,11 @@ use Tests\Testhelper\Helper;
 
 class TalTestCaseCommentTest extends PhpTalTestCase
 {
+    private DummyPhpNode $tag;
 
-    /**
-     * @var DummyPhpNode
-     */
-    private $tag;
+    private CodeWriter $gen;
 
-    /**
-     * @var CodeWriter
-     */
-    private $gen;
-
-    /**
-     * @var Comment
-     */
-    private $att;
+    private ?Comment $att = null;
 
     public function setUp(): void
     {
@@ -60,7 +50,6 @@ class TalTestCaseCommentTest extends PhpTalTestCase
     {
         $this->newComment('my dummy comment');
         $this->att->before($this->gen);
-        $this->att->after($this->gen);
         $res = $this->gen->getResult();
         static::assertSame(
             Helper::normalizePhpSource('<?php /* my dummy comment */; ?>'),
@@ -73,7 +62,6 @@ class TalTestCaseCommentTest extends PhpTalTestCase
         $comment = "my dummy comment\non more than one\nline";
         $this->newComment($comment);
         $this->att->before($this->gen);
-        $this->att->after($this->gen);
         $res = $this->gen->getResult();
         static::assertSame(Helper::normalizePhpSource("<?php /* $comment */; ?>"), Helper::normalizePhpSource($res));
     }
@@ -83,7 +71,6 @@ class TalTestCaseCommentTest extends PhpTalTestCase
         $comment = "my dummy */ comment\non more than one\nline";
         $this->newComment($comment);
         $this->att->before($this->gen);
-        $this->att->after($this->gen);
         $res = $this->gen->getResult();
         $comment = str_replace('*/', '* /', $comment);
         static::assertSame(Helper::normalizePhpSource("<?php /* $comment */; ?>"), Helper::normalizePhpSource($res));

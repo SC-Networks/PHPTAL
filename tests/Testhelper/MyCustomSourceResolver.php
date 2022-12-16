@@ -24,8 +24,6 @@ use PhpTal\SourceResolverInterface;
 class MyCustomSourceResolver implements SourceResolverInterface
 {
     /**
-     * @param string $path
-     *
      * @return SourceInterface
      */
     public function resolve(string $path): ?SourceInterface

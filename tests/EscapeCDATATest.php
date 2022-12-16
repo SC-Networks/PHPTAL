@@ -25,11 +25,7 @@ use Tests\Testhelper\Helper;
 
 class EscapeCDATATest extends PhpTalTestCase
 {
-
-    /**
-     * @var string
-     */
-    private $last_code_path;
+    private ?string $last_code_path = null;
 
     public function tearDown(): void
     {
@@ -48,9 +44,6 @@ class EscapeCDATATest extends PhpTalTestCase
         return $tpl->execute();
     }
 
-    /**
-     * @return void
-     */
     public function testTrimString(): void
     {
         static::assertSame(
@@ -79,7 +72,7 @@ class EscapeCDATATest extends PhpTalTestCase
         );
 
         // either way is good
-        if (false !== strpos($res, '<![CDATA[')) {
+        if (str_contains($res, '<![CDATA[')) {
             static::assertSame('<div><![CDATA["< & &amp; &quot; &lt;,"< & &amp; &quot; &lt;]]></div>', $res);
         } else {
             static::assertSame(

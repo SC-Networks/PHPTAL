@@ -26,7 +26,6 @@ class ClosureTalesValueTest extends PhpTalTestCase
 {
     public function testClosureVariable(): void
     {
-
         $source = <<<HTML
 <tal:block content="foon"/>
 <tal:if condition="false">do not show</tal:if>
@@ -130,7 +129,6 @@ HTML;
 
     public function testNestedClosure(): void
     {
-
         eval("
             \$closure = function () {
                 return function () {
@@ -156,7 +154,6 @@ HTML;
 
     public function testClosureFromMethod(): void
     {
-
         eval(<<<PHP
             class TestClosureFromMethod {
                 function closeur() {

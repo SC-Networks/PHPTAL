@@ -59,7 +59,7 @@ class XmlParserTest extends PhpTalTestCase
         try {
             $parser->parseFile($builder = new MyDocumentBuilder(), 'input/xml.02.xml')->getResult();
             static::assertTrue(false);
-        } catch (Exception $e) {
+        } catch (Exception) {
             static::assertTrue(true);
         }
     }
@@ -78,7 +78,7 @@ class XmlParserTest extends PhpTalTestCase
     }
 
 
-    public function testRejectsInvalidAttributes1(): void
+    public function testRejectsInvalidAttributes1(): never
     {
         $this->expectException(ParserException::class);
         $parser = new SaxXmlParser('UTF-8');
@@ -86,7 +86,7 @@ class XmlParserTest extends PhpTalTestCase
         $this->fail($builder->result);
     }
 
-    public function testRejectsInvalidAttributes2(): void
+    public function testRejectsInvalidAttributes2(): never
     {
         $this->expectException(ParserException::class);
         $parser = new SaxXmlParser('UTF-8');
@@ -133,7 +133,7 @@ class XmlParserTest extends PhpTalTestCase
         try {
             $parser->parseString($builder = new MyDocumentBuilder(), $src)->getResult();
             static::assertSame('<a> ]]&gt; </a>', $builder->result);
-        } catch (ParserException $e) { /* ok - rejecting is one way to do it */
+        } catch (ParserException) { /* ok - rejecting is one way to do it */
         }
     }
 
@@ -156,7 +156,7 @@ class XmlParserTest extends PhpTalTestCase
                 '<a href="?foo=1&amp;bar=baz&amp;copy=true&amp;reg=x"> &amp; ; &#x100; &nbsp; &#10; &amp;--;</a>',
                 $builder->result
             );
-        } catch (ParserException $e) { /* ok - rejecting is one way to do it */
+        } catch (ParserException) { /* ok - rejecting is one way to do it */
         }
     }
 
@@ -164,7 +164,8 @@ class XmlParserTest extends PhpTalTestCase
     {
         $parser = new SaxXmlParser('UTF-8');
         try {
-            $parser->parseString(new PHPTALDocumentBuilder(),
+            $parser->parseString(
+                new PHPTALDocumentBuilder(),
                 "<x>1
 
 3
@@ -172,7 +173,8 @@ class XmlParserTest extends PhpTalTestCase
 <!-- 5 -->
             <x:y/> error in line 6!
             </x>
-        ");
+        "
+            );
             $this->fail("Accepted invalid XML");
         } catch (ParserException $e) {
             static::assertSame(6, $e->srcLine);
@@ -183,7 +185,8 @@ class XmlParserTest extends PhpTalTestCase
     {
         $parser = new SaxXmlParser('UTF-8');
         try {
-            $parser->parseString(new PHPTALDocumentBuilder(),
+            $parser->parseString(
+                new PHPTALDocumentBuilder(),
                 "<x foo1='
 2'
 
@@ -193,7 +196,8 @@ bar4='baz'
 <!------->
 
 
-");
+"
+            );
             $this->fail("Accepted invalid XML");
         } catch (ParserException $e) {
             static::assertSame(7, $e->srcLine);
@@ -204,7 +208,8 @@ bar4='baz'
     {
         $parser = new SaxXmlParser('UTF-8');
         try {
-            $parser->parseString(new PHPTALDocumentBuilder(),
+            $parser->parseString(
+                new PHPTALDocumentBuilder(),
                 "
 
 <x foo1='
@@ -215,7 +220,8 @@ bar4='baz'
 xxxx/>
 
 
-");
+"
+            );
             $this->fail("Accepted invalid XML");
         } catch (ParserException $e) {
             static::assertSame(8, $e->srcLine);

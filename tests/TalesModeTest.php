@@ -29,7 +29,7 @@ class TalesModeTest extends PhpTalTestCase
             $tpl = $this->newPHPTAL('input/tales.mode.01.xml');
             $tpl->execute();
             static::assertTrue(false);
-        } catch (PhpTalException $e) {
+        } catch (PhpTalException) {
             static::assertTrue(true);
         }
     }

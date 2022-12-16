@@ -50,7 +50,7 @@ class CommentTest extends PhpTalTestCase
         static::assertSame($source, $res);
     }
 
-    public function testNestedComments(): void
+    public function testNestedComments(): never
     {
         $this->expectException(ParserException::class);
         $source = '<html><!--<!--<!--></html>';
@@ -60,7 +60,7 @@ class CommentTest extends PhpTalTestCase
         $this->fail("Ill-formed comment accepted");
     }
 
-    public function testDashedComment(): void
+    public function testDashedComment(): never
     {
         $this->expectException(ParserException::class);
         $source = '<html><!--- XML hates you ---></html>';

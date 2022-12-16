@@ -35,9 +35,7 @@ class StupidCacheTrigger implements TriggerInterface
 
     /**
      * @param $id
-     * @param PhpTalInterface $tpl
      *
-     * @return int
      */
     public function start($id, PhpTalInterface $tpl): int
     {
@@ -60,9 +58,7 @@ class StupidCacheTrigger implements TriggerInterface
 
     /**
      * @param $id
-     * @param PhpTalInterface $tpl
      *
-     * @return void
      */
     public function end($id, PhpTalInterface $tpl): void
     {

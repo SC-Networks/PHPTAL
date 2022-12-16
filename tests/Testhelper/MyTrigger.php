@@ -28,16 +28,11 @@ class MyTrigger implements TriggerInterface
      */
     public $useCache = false;
 
-    /**
-     * @var string
-     */
-    private $cache;
+    private string|bool|null $cache = null;
 
     /**
      * @param $id
-     * @param PhpTalInterface $tpl
      *
-     * @return int
      */
     public function start($id, PhpTalInterface $tpl): int
     {
@@ -53,9 +48,7 @@ class MyTrigger implements TriggerInterface
 
     /**
      * @param $id
-     * @param PhpTalInterface $tpl
      *
-     * @return void
      */
     public function end($id, PhpTalInterface $tpl): void
     {

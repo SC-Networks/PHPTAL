@@ -21,6 +21,7 @@ namespace Tests;
 use PhpTal\Exception\ConfigurationException;
 use PhpTal\GetTextTranslator;
 use Tests\Testcase\PhpTalTestCase;
+use Tests\Testhelper\Helper;
 
 class GetTextTest extends PhpTalTestCase
 {
@@ -38,8 +39,8 @@ class GetTextTest extends PhpTalTestCase
 
         $tpl = $this->newPHPTAL('input/gettext.01.html');
         $tpl->setTranslator($gettext);
-        $res = Testhelper\Helper::normalizeHtml($tpl->execute());
-        $exp = Testhelper\Helper::normalizeHtmlFile('output/gettext.01.html');
+        $res = Helper::normalizeHtml($tpl->execute());
+        $exp = Helper::normalizeHtmlFile('output/gettext.01.html');
         static::assertEquals($exp, $res);
     }
 
@@ -56,8 +57,8 @@ class GetTextTest extends PhpTalTestCase
 
         $tpl = $this->newPHPTAL('input/gettext.02.html');
         $tpl->setTranslator($gettext);
-        $res = Testhelper\Helper::normalizeHtml($tpl->execute());
-        $exp = Testhelper\Helper::normalizeHtmlFile('output/gettext.02.html');
+        $res = Helper::normalizeHtml($tpl->execute());
+        $exp = Helper::normalizeHtmlFile('output/gettext.02.html');
         static::assertEquals($exp, $res);
     }
 
@@ -77,8 +78,8 @@ class GetTextTest extends PhpTalTestCase
         $tpl->setTranslator($gettext);
         $tpl->login = 'john';
         $tpl->lastCxDate = '2004-12-25';
-        $res = Testhelper\Helper::normalizeHtml($tpl->execute());
-        $exp = Testhelper\Helper::normalizeHtmlFile('output/gettext.03.html');
+        $res = Helper::normalizeHtml($tpl->execute());
+        $exp = Helper::normalizeHtmlFile('output/gettext.03.html');
         static::assertEquals($exp, $res);
     }
 
@@ -100,8 +101,8 @@ class GetTextTest extends PhpTalTestCase
         $tpl->setTranslator($gettext);
         $tpl->login = 'john';
         $tpl->lastCxDate = '2004-12-25';
-        $res = Testhelper\Helper::normalizeHtml($tpl->execute());
-        $exp = Testhelper\Helper::normalizeHtmlFile('output/gettext.04.html');
+        $res = Helper::normalizeHtml($tpl->execute());
+        $exp = Helper::normalizeHtmlFile('output/gettext.04.html');
         static::assertEquals($exp, $res);
     }
 
@@ -115,8 +116,8 @@ class GetTextTest extends PhpTalTestCase
         $tpl = $this->newPHPTAL('input/gettext.05.html');
         $tpl->login = 'john smith';
         $tpl->setTranslator($gettext);
-        $res = Testhelper\Helper::normalizeHtml($tpl->execute());
-        $exp = Testhelper\Helper::normalizeHtmlFile('output/gettext.05.html');
+        $res = Helper::normalizeHtml($tpl->execute());
+        $exp = Helper::normalizeHtmlFile('output/gettext.05.html');
         static::assertEquals($exp, $res);
     }
 
@@ -130,8 +131,8 @@ class GetTextTest extends PhpTalTestCase
         $tpl = $this->newPHPTAL('input/gettext.06.html');
         $tpl->setTranslator($gettext);
         $res = $tpl->execute();
-        $res = Testhelper\Helper::normalizeHtml($res);
-        $exp = Testhelper\Helper::normalizeHtml('<root>
+        $res = Helper::normalizeHtml($res);
+        $exp = Helper::normalizeHtml('<root>
   <span>Not accentuated</span>
   <span>Accentuated key without canonicalization</span>
   <span>Accentuated key without canonicalization</span>
@@ -150,8 +151,8 @@ class GetTextTest extends PhpTalTestCase
         $tpl = $this->newPHPTAL('input/gettext.07.html');
         $tpl->setTranslator($gettext);
         $res = $tpl->execute();
-        $res = Testhelper\Helper::normalizeHtml($res);
-        $exp = Testhelper\Helper::normalizeHtmlFile('output/gettext.07.html');
+        $res = Helper::normalizeHtml($res);
+        $exp = Helper::normalizeHtmlFile('output/gettext.07.html');
         static::assertEquals($exp, $res);
     }
 }

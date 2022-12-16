@@ -90,6 +90,7 @@ class ReadableErrorTest extends PhpTalTestCase
 
     public function assertThrowsInLine(int $line, string $file, string $expected_file = null): void
     {
+        $tpl = null;
         try {
             $tpl = $this->newPHPTAL($file);
             $tpl->a_number = 1;

@@ -18,26 +18,17 @@ declare(strict_types=1);
 
 namespace Tests\Testhelper;
 
-class DummyToStringObject
+use Stringable;
+
+class DummyToStringObject implements Stringable
 {
     /**
-     * @var string
-     */
-    private $value;
-
-    /**
      * DummyToStringObject constructor.
-     *
-     * @param string $value
      */
-    public function __construct(string $value)
+    public function __construct(private readonly string $value)
     {
-        $this->value = $value;
     }
 
-    /**
-     * @return string
-     */
     public function __toString(): string
     {
         return $this->value;

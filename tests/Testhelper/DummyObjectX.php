@@ -20,11 +20,7 @@ namespace Tests\Testhelper;
 
 class DummyObjectX
 {
-
-    /**
-     * @var array
-     */
-    private $data;
+    private array $data;
 
     public function __construct()
     {

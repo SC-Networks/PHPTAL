@@ -26,7 +26,6 @@ use Tests\Testhelper\Helper;
 
 class TalesTest extends PhpTalTestCase
 {
-
     public function tearDown(): void
     {
         TalesInternal::setFunctionWhitelist([]);
@@ -101,8 +100,10 @@ class TalesTest extends PhpTalTestCase
 
     public function testURLEncode(): void
     {
-        static::assertSame('<p>Hello%20World</p>',
-            $this->newPHPTAL()->setSource('<p tal:content="urlencode:string:Hello World"/>')->execute());
+        static::assertSame(
+            '<p>Hello%20World</p>',
+            $this->newPHPTAL()->setSource('<p tal:content="urlencode:string:Hello World"/>')->execute()
+        );
     }
 
     public function testTaleNeverReturnsArray(): void

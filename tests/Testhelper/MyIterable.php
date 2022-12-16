@@ -22,11 +22,7 @@ use Iterator;
 
 class MyIterable implements Iterator
 {
-
-    /**
-     * @var int
-     */
-    private $index;
+    private int $index;
 
     /**
      * @var int
@@ -44,17 +40,11 @@ class MyIterable implements Iterator
         $this->index = 0;
     }
 
-    /**
-     * @return int
-     */
     public function current(): int
     {
         return $this->index;
     }
 
-    /**
-     * @return int
-     */
     public function key(): int
     {
         return $this->index;
@@ -68,9 +58,6 @@ class MyIterable implements Iterator
         $this->index++;
     }
 
-    /**
-     * @return bool
-     */
     public function valid(): bool
     {
         return $this->index < $this->size;

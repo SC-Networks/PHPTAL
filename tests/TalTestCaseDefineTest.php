@@ -28,7 +28,6 @@ use Tests\Testhelper\Helper;
 
 class TalTestCaseDefineTest extends PhpTalTestCase
 {
-
     public function tearDown(): void
     {
         TalesInternal::setFunctionWhitelist([]);
@@ -39,38 +38,38 @@ class TalTestCaseDefineTest extends PhpTalTestCase
     {
         $att = new Define(new DummyDefinePhpNode(), 'a b');
 
-        list($defineScope, $defineVar, $expression) = $att->parseExpression('local a_234z b');
+        [$defineScope, $defineVar, $expression] = $att->parseExpression('local a_234z b');
         static::assertSame('local', $defineScope);
         static::assertSame('a_234z', $defineVar);
         static::assertSame('b', $expression);
 
-        list($defineScope, $defineVar, $expression) = $att->parseExpression('global a_234z b');
+        [$defineScope, $defineVar, $expression] = $att->parseExpression('global a_234z b');
         static::assertSame('global', $defineScope);
         static::assertSame('a_234z', $defineVar);
         static::assertSame('b', $expression);
 
-        list($defineScope, $defineVar, $expression) = $att->parseExpression('a_234Z b');
+        [$defineScope, $defineVar, $expression] = $att->parseExpression('a_234Z b');
         static::assertFalse($defineScope);
         static::assertSame('a_234Z', $defineVar);
         static::assertSame('b', $expression);
 
-        list($defineScope, $defineVar, $expression) = $att->parseExpression('a');
+        [$defineScope, $defineVar, $expression] = $att->parseExpression('a');
         static::assertFalse($defineScope);
         static::assertSame('a', $defineVar);
         static::assertNull($expression);
 
-        list($defineScope, $defineVar, $expression) = $att->parseExpression('global a string: foo; bar; baz');
+        [$defineScope, $defineVar, $expression] = $att->parseExpression('global a string: foo; bar; baz');
         static::assertSame('global', $defineScope);
         static::assertSame('a', $defineVar);
         static::assertSame('string: foo; bar; baz', $expression);
 
 
-        list($defineScope, $defineVar, $expression) = $att->parseExpression('foo this != other');
+        [$defineScope, $defineVar, $expression] = $att->parseExpression('foo this != other');
         static::assertFalse($defineScope);
         static::assertSame('foo', $defineVar);
         static::assertSame('this != other', $expression);
 
-        list($defineScope, $defineVar, $expression) = $att->parseExpression('x exists: a | not: b | path: c | 128');
+        [$defineScope, $defineVar, $expression] = $att->parseExpression('x exists: a | not: b | path: c | 128');
         static::assertFalse($defineScope);
         static::assertSame('x', $defineVar);
         static::assertSame('exists: a | not: b | path: c | 128', $expression);

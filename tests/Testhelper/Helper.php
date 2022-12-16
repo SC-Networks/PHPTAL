@@ -36,7 +36,6 @@ class Helper
 
     public static function normalizePhpSource(string $code, bool $ignore_newlines = false): string
     {
-
         // ignore debug
         $code = preg_replace('!<\?php\s+/\* tag ".*?" from line \d+ \*/ ?; \?>!', '', $code);
         $code = preg_replace('!/\* tag ".*?" from line \d+ \*/ ?;!', '', $code);

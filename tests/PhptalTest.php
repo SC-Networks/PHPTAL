@@ -52,7 +52,7 @@ class PhptalTest extends PhpTalTestCase
         ob_start();
         try {
             $tpl->execute();
-        } catch (Exception $e) {
+        } catch (Exception) {
         }
         $c = ob_get_contents();
         ob_end_clean();
@@ -170,7 +170,7 @@ class PhptalTest extends PhpTalTestCase
             $tpl = $this->newPHPTAL();
             $tpl->setOutputMode(999);
             static::assertTrue(false);
-        } catch (PhpTalException $e) {
+        } catch (PhpTalException) {
             static::assertTrue(true);
         }
     }
@@ -212,7 +212,7 @@ class PhptalTest extends PhpTalTestCase
         $tpl = $this->newPHPTAL()->setSource('<x tal:content="php:\'deliberate parse\' \'error test\'"/>');
 
         ob_start();
-        echo "\n" . __CLASS__ . "::testPHPParseErrorDoesNotStopPHPTAL2 failed\n";
+        echo "\n" . self::class . "::testPHPParseErrorDoesNotStopPHPTAL2 failed\n";
         try {
             @$tpl->execute(); // if test dies for no apparent reason, the reason is '@'
         } catch (Throwable $e) {
