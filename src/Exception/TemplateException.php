@@ -105,7 +105,7 @@ class TemplateException extends PhpTalException
      */
     private function isTemplatePath(string $path): int
     {
-        return preg_match('/[\\\\\/]tpl_[0-9a-f]{8}_[^\\\\]+$/', $path);
+        return (int) preg_match('/[\\\\\/]tpl_[0-9a-f]{8}_[^\\\\]+$/', $path);
     }
 
     /**

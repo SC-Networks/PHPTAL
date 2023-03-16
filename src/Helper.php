@@ -78,7 +78,7 @@ class Helper
                in SimpleXML, so here's a guess that if something has no attributes
                or children, and doesn't output <, then it's an attribute */
 
-            $xml = $var->asXML();
+            $xml = (string) $var->asXML();
             if ($xml[0] === '<' || $var->attributes() || $var->children()) {
                 return $xml;
             }

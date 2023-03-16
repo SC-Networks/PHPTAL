@@ -46,6 +46,7 @@ class Builtin extends TalNamespace
         $name = str_replace(' ', '', ucwords(str_replace('-', ' ', $name)));
 
         // case is important when using autoload on case-sensitive filesystems
+        /** @var class-string<Attribute> $class */
         $class = 'PhpTal\\Php\\Attribute\\'.strtoupper($this->getPrefix()).'\\'.$name;
 
         return new $class($tag, $expression);

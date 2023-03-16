@@ -6,7 +6,92 @@ parameters:
 			path: src/Context.php
 
 		-
+			message: "#^Argument of an invalid type array\\<int, string\\>\\|false supplied for foreach, only iterables are supported\\.$#"
+			count: 1
+			path: src/Dom/SaxXmlParser.php
+
+		-
+			message: "#^Cannot access offset 0\\|int\\<2, max\\> on list\\<string\\>\\|false\\.$#"
+			count: 2
+			path: src/Dom/SaxXmlParser.php
+
+		-
+			message: "#^Parameter \\#1 \\$m of static method PhpTal\\\\Dom\\\\SaxXmlParser\\:\\:convertBytesToEntities\\(\\) expects array\\<int, string\\>, array\\<int\\|string, string\\> given\\.$#"
+			count: 1
+			path: src/Dom/SaxXmlParser.php
+
+		-
+			message: "#^Parameter \\#1 \\$value of function count expects array\\|Countable, array\\<int, string\\>\\|false given\\.$#"
+			count: 1
+			path: src/Dom/SaxXmlParser.php
+
+		-
+			message: "#^Parameter \\#2 \\$array of function implode expects array\\|null, array\\<int\\<0, max\\>, string\\>\\|false given\\.$#"
+			count: 1
+			path: src/Dom/SaxXmlParser.php
+
+		-
+			message: "#^Argument of an invalid type array\\|false supplied for foreach, only iterables are supported\\.$#"
+			count: 1
+			path: src/Exception/TemplateException.php
+
+		-
+			message: "#^Trying to invoke string but it might not be a callable\\.$#"
+			count: 2
+			path: src/PHPTAL.php
+
+		-
+			message: "#^Binary operation \"\\.\" between non\\-falsy\\-string and array\\<string\\>\\|string results in an error\\.$#"
+			count: 1
+			path: src/Php/Attribute/I18N/Translate.php
+
+		-
+			message: "#^PHPDoc tag @var with type PhpTal\\\\Dom\\\\Node is not subtype of native type mixed\\.$#"
+			count: 1
+			path: src/Php/Attribute/METAL/FillSlot.php
+
+		-
+			message: "#^Property PhpTal\\\\Php\\\\Attribute\\\\TAL\\\\Define\\:\\:\\$defineScope \\(string\\) does not accept string\\|false\\.$#"
+			count: 1
+			path: src/Php/Attribute/TAL/Define.php
+
+		-
+			message: "#^Binary operation \"\\.\" between non\\-falsy\\-string and array\\<string\\>\\|string results in an error\\.$#"
+			count: 1
+			path: src/Php/Attribute/TAL/OmitTag.php
+
+		-
+			message: "#^Parameter \\#2 \\$code of method PhpTal\\\\Php\\\\Attribute\\:\\:doEchoAttribute\\(\\) expects string, array\\<string\\>\\|string given\\.$#"
+			count: 1
+			path: src/Php/Attribute/TAL/OnError.php
+
+		-
+			message: "#^Binary operation \"\\.\" between 'new \\\\\\\\PhpTal…' and array\\<string\\>\\|string results in an error\\.$#"
+			count: 1
+			path: src/Php/Attribute/TAL/Repeat.php
+
+		-
 			message: "#^Instanceof between mixed and DOMNodeList will always evaluate to false\\.$#"
 			count: 1
 			path: src/RepeatController.php
+
+		-
+			message: "#^Method PhpTal\\\\RepeatController\\:\\:length\\(\\) should return int\\|null but returns int\\|string\\.$#"
+			count: 1
+			path: src/RepeatController.php
+
+		-
+			message: "#^Property PhpTal\\\\RepeatController\\:\\:\\$iterator \\(Iterator\\<mixed, mixed\\>\\) does not accept Traversable\\<mixed, mixed\\>\\.$#"
+			count: 1
+			path: src/RepeatController.php
+
+		-
+			message: "#^Property PhpTal\\\\RepeatControllerGroups\\:\\:\\$cache \\(array\\<string, string\\>\\) does not accept array\\<string, bool\\|string\\>\\.$#"
+			count: 3
+			path: src/RepeatControllerGroups.php
+
+		-
+			message: "#^Method PhpTal\\\\TalesRegistry\\:\\:getCallback\\(\\) should return \\(callable\\(string\\|null, bool\\)\\: mixed\\)\\|null but returns array\\{class\\-string, string\\}\\|\\(callable\\(string\\|null, bool\\)\\: mixed\\)\\.$#"
+			count: 1
+			path: src/TalesRegistry.php
 

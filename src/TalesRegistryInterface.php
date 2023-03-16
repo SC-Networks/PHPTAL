@@ -17,7 +17,7 @@ interface TalesRegistryInterface
      *
      * @param string $prefix
      *
-     * @return null|callable
+     * @return null|callable(?string, bool):mixed
      */
     public static function getCallback(string $prefix): ?callable;
 
@@ -36,7 +36,7 @@ interface TalesRegistryInterface
      * callback.
      *
      * @param string $prefix
-     * @param mixed $callback
+     * @param string|callable-string|callable(?string, bool):mixed|array{0: callable-string, 1: string} $callback
      * @param bool $is_fallback if true, method will be used as last resort (if there's no phptal_tales_foo)
      *
      * @throws Exception\ConfigurationException

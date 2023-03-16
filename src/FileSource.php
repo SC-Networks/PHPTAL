@@ -21,49 +21,39 @@ namespace PhpTal;
  */
 class FileSource implements SourceInterface
 {
-    /**
-     * @var string
-     */
-    private $path;
+    private string $path;
 
     /**
-     * FileSource constructor.
-     * @param string $path
      * @throws Exception\IOException
      */
     public function __construct(string $path)
     {
-        $this->path = realpath($path);
-        if ($this->path === false) {
+        $realPath = realpath($path);
+        if ($realPath === false) {
             throw new Exception\IOException(
                 sprintf('Unable to find real path of file \'%s\' (in %s)', $path, getcwd())
             );
         }
-        if (is_dir($this->path)) {
+        if (is_dir($realPath)) {
             throw new Exception\IOException(
-                sprintf('Path \'%s\' points to a directory', $this->path)
+                sprintf('Path \'%s\' points to a directory', $realPath)
             );
         }
+
+        $this->path = $realPath;
     }
 
-    /**
-     * @return string
-     */
     public function getRealPath(): string
     {
         return $this->path;
     }
 
-    /**
-     * @return int
-     */
     public function getLastModifiedTime(): int
     {
-        return filemtime($this->path);
+        return (int) filemtime($this->path);
     }
 
     /**
-     * @return string
      * @throws Exception\IOException
      */
     public function getData(): string

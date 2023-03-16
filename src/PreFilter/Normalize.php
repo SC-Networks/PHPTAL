@@ -69,7 +69,7 @@ class Normalize extends PreFilter
             return;
         }
 
-        /** @var Text $lastTextNode */
+        /** @var null|Text $lastTextNode */
         $lastTextNode = null;
         foreach ($root->childNodes as $node) {
             // CDATA is not normalized by design

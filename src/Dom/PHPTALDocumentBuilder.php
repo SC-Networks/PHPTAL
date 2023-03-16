@@ -47,9 +47,6 @@ class PHPTALDocumentBuilder extends DocumentBuilder
         $this->xmlns = new XmlnsState([], '');
     }
 
-    /**
-     * @return Element
-     */
     public function getResult(): Element
     {
         return $this->documentElement;

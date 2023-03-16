@@ -121,7 +121,7 @@ class SaxXmlParser
         if (!file_exists($src)) {
             throw new IOException("file $src not found");
         }
-        return $this->parseString($builder, file_get_contents($src), $src);
+        return $this->parseString($builder, (string) file_get_contents($src), $src);
     }
 
     /**

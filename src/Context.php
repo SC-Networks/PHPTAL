@@ -27,85 +27,54 @@ use stdClass;
 #[AllowDynamicProperties]
 class Context
 {
-    /**
-     * @var stdClass
-     */
-    public $repeat;
+    public stdClass $repeat;
 
     /**
      * n.b. The following variables *must* be prefixed with an underscore '_' for reasons...
      */
 
-    /**
-     * @var string|null
-     */
-    public $_xmlDeclaration;
+    public ?string $_xmlDeclaration = null;
 
-    /**
-     * @var string|null
-     */
-    public $_docType;
+    public ?string $_docType = null;
 
-    /**
-     * @var bool
-     */
-    private $_nothrow;
+    private bool $_nothrow = false;
 
     /**
      * @var array<string, string|array{
-     *  0: string,
+     *  0: callable-string|callable():string,
      *  1: PhpTalInterface,
      *  2: PhpTalInterface
      * }>
      */
-    private $_slots = [];
+    private array $_slots = [];
 
     /**
      * @var array<array<string, string|array{
-     *  0: string,
+     *  0: callable-string|callable():string,
      *  1: PhpTalInterface,
      *  2: PhpTalInterface
      * }>>
      */
-    private $_slotsStack = [];
+    private array $_slotsStack = [];
 
-    /**
-     * @var Context|null
-     */
-    private $_parentContext;
+    private ?Context $_parentContext = null;
 
-    /**
-     * @var stdClass
-     */
-    private $_globalContext;
+    private ?stdClass $_globalContext = null;
 
-    /**
-     * @var bool
-     */
-    private $_echoDeclarations = false;
+    private bool $_echoDeclarations = false;
 
-    /**
-     * Context constructor.
-     */
     public function __construct()
     {
         $this->repeat = new stdClass();
     }
 
-    /**
-     * @return void
-     */
-    public function __clone()
+    public function __clone(): void
     {
         $this->repeat = clone $this->repeat;
     }
 
     /**
      * will switch to this context when popContext() is called
-     *
-     * @param Context $parent
-     *
-     * @return void
      */
     public function setParent(Context $parent): void
     {
@@ -115,10 +84,6 @@ class Context
     /**
      * set stdClass object which has property of every global variable
      * It can use __isset() and __get() [none of them or both]
-     *
-     * @param stdClass $globalContext
-     *
-     * @return void
      */
     public function setGlobal(stdClass $globalContext): void
     {
@@ -128,7 +93,7 @@ class Context
     /**
      * save current execution context
      *
-     * @return Context (new)
+     * @return Context Cloned context
      */
     public function pushContext(): Context
     {
@@ -140,7 +105,7 @@ class Context
     /**
      * get previously saved execution context
      *
-     * @return Context (old)
+     * @return Context Parent context
      */
     public function popContext(): Context
     {
@@ -161,10 +126,8 @@ class Context
      * This method ensure PHPTAL uses the first DOCTYPE encountered (main
      * template or any macro template source containing a DOCTYPE.
      *
-     * @param string $doctype
      * @param bool $called_from_macro will do nothing if _echoDeclarations is also set
      *
-     * @return void
      * @throws Exception\ConfigurationException
      */
     public function setDocType(string $doctype, bool $called_from_macro): void
@@ -197,10 +160,8 @@ class Context
      * (main template or any macro template source containing an xml
      * declaration)
      *
-     * @param string $xmldec
      * @param bool $called_from_macro will do nothing if _echoDeclarations is also set
      *
-     * @return void
      * @throws Exception\ConfigurationException
      */
     public function setXmlDeclaration(string $xmldec, bool $called_from_macro): void
@@ -228,10 +189,6 @@ class Context
     /**
      * Activate or deactivate exception throwing during unknown path
      * resolution.
-     *
-     * @param bool $bool
-     *
-     * @return void
      */
     public function noThrow(bool $bool): void
     {
@@ -240,10 +197,6 @@ class Context
 
     /**
      * Returns true if specified slot is filled.
-     *
-     * @param string $key
-     *
-     * @return bool
      */
     public function hasSlot(string $key): bool
     {
@@ -254,10 +207,6 @@ class Context
      * Returns the content of specified filled slot.
      *
      * Use echoSlot() whenever you just want to output the slot
-     *
-     * @param string $key
-     *
-     * @return string
      */
     public function getSlot(string $key): string
     {
@@ -267,7 +216,7 @@ class Context
             }
             ob_start();
             call_user_func($this->_slots[$key][0], $this->_slots[$key][1], $this->_slots[$key][2]);
-            return ob_get_clean();
+            return (string) ob_get_clean();
         }
 
         if ($this->_parentContext) {
@@ -281,10 +230,6 @@ class Context
      * Immediately echoes content of specified filled slot.
      *
      * Equivalent of echo $this->getSlot();
-     *
-     * @param string $key
-     *
-     * @return string
      */
     public function echoSlot(string $key): string
     {
@@ -303,10 +248,6 @@ class Context
 
     /**
      * Fill a macro slot.
-     *
-     * @param string $key
-     * @param string $content
-     * @return void
      */
     public function fillSlot(string $key, string $content): void
     {
@@ -318,10 +259,7 @@ class Context
     }
 
     /**
-     * @param string $key
-     * @param callable $callback
-     * @param PhpTalInterface $_thistpl
-     * @param PhpTalInterface $tpl
+     * @param callable():string $callback
      */
     public function fillSlotCallback(
         string $key,
@@ -338,8 +276,6 @@ class Context
 
     /**
      * Push current filled slots on stack.
-     *
-     * @return void
      */
     public function pushSlots(): void
     {
@@ -349,8 +285,6 @@ class Context
 
     /**
      * Restore filled slots stack.
-     *
-     * @return void
      */
     public function popSlots(): void
     {
@@ -360,13 +294,9 @@ class Context
     /**
      * Context setter.
      *
-     * @param string $varname
-     * @param mixed $value
-     *
-     * @return void
      * @throws Exception\InvalidVariableNameException
      */
-    public function set(string $varname, $value): void
+    public function set(string $varname, mixed $value): void
     {
         $this->__set($varname, $value);
     }
@@ -374,13 +304,9 @@ class Context
     /**
      * Context setter.
      *
-     * @param string $varname
-     * @param mixed $value
-     *
-     * @return void
      * @throws Exception\InvalidVariableNameException
      */
-    public function __set(string $varname, $value): void
+    public function __set(string $varname, mixed $value): void
     {
         if (preg_match('/^_|\s/', $varname)) {
             throw new Exception\InvalidVariableNameException(
@@ -390,11 +316,6 @@ class Context
         $this->$varname = $value;
     }
 
-    /**
-     * @param string $varname
-     *
-     * @return bool
-     */
     public function __isset(string $varname): bool
     {
         // it doesn't need to check isset($this->$varname), because PHP does that _before_ calling __isset()
@@ -405,12 +326,9 @@ class Context
      * Context getter.
      * If variable doesn't exist, it will throw an exception, unless noThrow(true) has been called
      *
-     * @param string $varname
-     *
-     * @return mixed
      * @throws Exception\VariableNotFoundException
      */
-    public function __get(string $varname)
+    public function __get(string $varname): mixed
     {
         // PHP checks public properties first, there's no need to support them here
 
@@ -433,13 +351,9 @@ class Context
     /**
      * helper method for Context::path()
      *
-     * @param mixed $base
-     * @param string $path
-     * @param string $current
-     * @param string $basename
      * @throws Exception\VariableNotFoundException
      */
-    private static function pathError($base, string $path, string $current, ?string $basename): void
+    private static function pathError(mixed $base, string $path, string $current, ?string $basename): void
     {
         if ($current !== $path) {
             $pathinfo = " (in path '.../$path')";
@@ -482,10 +396,9 @@ class Context
      * throwing an exception when a part of the path cannot be resolved, null is
      * returned instead.
      *
-     * @return mixed
      * @throws Exception\VariableNotFoundException
      */
-    public static function path($base, string $path, bool $nothrow = null)
+    public static function path($base, string $path, bool $nothrow = null): mixed
     {
         if ($base === null) {
             if ($nothrow) {
