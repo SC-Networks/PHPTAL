@@ -30,12 +30,12 @@ final class TalesRegistry implements TalesRegistryInterface
      * @var array<
      *  string,
      *  array{
-     *    callback: array<string>,
+     *    callback: callable(?string, bool):mixed|callable-string|array{0: class-string, 1: string},
      *    is_fallback: bool
      *  }
      * >
      */
-    private static $callbacks = [
+    private static array $callbacks = [
         'not' => ['callback' => [TalesInternal::class, 'not'], 'is_fallback' => false],
         'path' => ['callback' => [TalesInternal::class, 'path'], 'is_fallback' => false],
         'string' => ['callback' => [TalesInternal::class, 'string'], 'is_fallback' => false],
@@ -69,7 +69,7 @@ final class TalesRegistry implements TalesRegistryInterface
      * A closure *must* return a string enclosed in double quotes.
      *
      * @param string $prefix
-     * @param mixed $callback
+     * @param string|callable-string|callable(?string, bool):mixed|array{0: callable-string, 1: string} $callback
      * @param bool $is_fallback if true, method will be used as last resort (if there's no phptal_tales_foo)
      *
      * @throws Exception\ConfigurationException
@@ -106,6 +106,7 @@ final class TalesRegistry implements TalesRegistryInterface
             throw new Exception\ConfigurationException('The function you are trying to register does not exist.');
         }
 
+        /** @var callable():mixed|callable-string|array{0: class-string, 1: string} $callback */
         static::$callbacks[$prefix] = ['callback' => $callback, 'is_fallback' => $is_fallback ?? false];
     }
 
@@ -126,7 +127,7 @@ final class TalesRegistry implements TalesRegistryInterface
      *
      * @param string $prefix
      *
-     * @return null|callable
+     * @return null|callable(?string, bool):mixed
      * @throws Exception\UnknownModifierException
      * @throws ReflectionException
      */

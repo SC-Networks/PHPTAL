@@ -26,8 +26,6 @@ interface SourceInterface
      * must not be empty. must be as unique as possible.
      *
      * it doesn't have to be path on disk.
-     *
-     * @return string
      */
     public function getRealPath(): string;
 
@@ -44,8 +42,6 @@ interface SourceInterface
 
     /**
      * the template source
-     *
-     * @return string
      */
     public function getData(): string;
 }

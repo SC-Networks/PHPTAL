@@ -37,7 +37,7 @@ class StringSource implements SourceInterface
         $mTime = 0;
 
         if (strpos($this->realpath, self::NO_PATH_PREFIX) !== 0 && file_exists($this->realpath)) {
-            $mTime = @filemtime($this->realpath);
+            $mTime = (int) @filemtime($this->realpath);
         }
 
         return $mTime;

@@ -349,7 +349,9 @@ class Compress extends Normalize
      */
     private static function compareQNames($a, $b): int
     {
+        /** @var false|int $a_index */
         $a_index = array_search($a, self::$attributes_order);
+        /** @var false|int $b_index */
         $b_index = array_search($b, self::$attributes_order);
 
         if ($a_index !== false && $b_index !== false) {

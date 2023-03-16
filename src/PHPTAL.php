@@ -670,7 +670,7 @@ class PHPTAL implements PhpTalInterface
             try {
                 ob_start();
                 $templateFunction($this, $this->context);
-                $res = ob_get_clean();
+                $res = (string) ob_get_clean();
             } catch (Throwable $e) {
                 ob_end_clean();
                 throw $e;
@@ -874,7 +874,7 @@ class PHPTAL implements PhpTalInterface
                 }
 
                 if (!function_exists($this->getFunctionName())) {
-                    $msg = str_replace('eval()\'d code', $this->getCodePath(), ob_get_clean());
+                    $msg = str_replace('eval()\'d code', $this->getCodePath(), (string) ob_get_clean());
 
                     // greedy .* ensures last match
                     $line = preg_match('/.*on line (\d+)$/m', $msg, $m) ? $m[1] : 0;
@@ -1046,8 +1046,7 @@ class PHPTAL implements PhpTalInterface
             // but that's still over 110 bits in addition to basename and timestamp.
             $hash = strtr(rtrim(base64_encode($hash), '='), '+/=', '_A_');
 
-            $this->functionName = $this->getFunctionNamePrefix($this->source->getLastModifiedTime()) .
-                                   $basename . '__' . $hash;
+            $this->functionName = $this->getFunctionNamePrefix($this->source->getLastModifiedTime()) . $basename . '__' . $hash;
         }
         return $this->functionName;
     }

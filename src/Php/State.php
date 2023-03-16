@@ -277,11 +277,11 @@ class State
     {
         // replaces $${ with literal ${ (or $$$${ with $${ etc)
         if (!empty($matches[4])) {
-            return substr($matches[4], strlen($matches[4]) / 2) . '{';
+            return substr($matches[4], (int) (strlen($matches[4]) / 2)) . '{';
         }
 
         // same replacement, but before executed expression
-        $dollars = substr($matches[1], strlen($matches[1]) / 2);
+        $dollars = substr($matches[1], (int) (strlen($matches[1]) / 2));
 
         $code = $matches[3];
         if ($format === 'html') {

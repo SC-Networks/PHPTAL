@@ -176,10 +176,9 @@ class TalesInternal implements TalesInterface
      *     // process default tag content
      * }
      *
-     * @param string $expression
      * @param bool $nothrow
      *
-     * @return array<string>|string
+     * @return array<int, array<string>|string>|string
      * @throws ParserException
      * @throws UnknownModifierException
      * @throws ReflectionException
@@ -209,7 +208,8 @@ class TalesInternal implements TalesInterface
         }
 
         // split OR expressions
-        $exps = preg_split('/\s*\|\s*/sm', $expression);
+        /** @var array<int, string> $exps */
+        $exps = (array) preg_split('/\s*\|\s*/sm', $expression);
 
         // if (many expressions) or (expressions or terminating string) found then
         // generate the array of sub expressions and return it.
@@ -281,7 +281,7 @@ class TalesInternal implements TalesInterface
     private static function checkExpressionPart(string $expression): int
     {
         $expression = preg_replace('/\${[^}]+}/', 'a', $expression); // pretend interpolation is done
-        return preg_match('/^[a-z_][a-z0-9_]*$/i', $expression);
+        return (int) preg_match('/^[a-z_][a-z0-9_]*$/i', $expression);
     }
 
     /**
@@ -584,7 +584,7 @@ class TalesInternal implements TalesInterface
      * Expressions with alternatives ("foo | bar") will cause it to return array
      * Use \PhpTal\Php\TalesInternal::compileToPHPExpression() if you always want string.
      *
-     * @param string $expression
+     * @param null|string $expression
      * @param bool $nothrow if true, invalid expression will return NULL (at run time) rather than throwing exception
      *
      * @return string|array<string>
@@ -666,7 +666,7 @@ class TalesInternal implements TalesInterface
      *
      * @param string $src
      *
-     * @return array<int, array<int, int|string>>
+     * @return array<array{0: int, 1: string}>
      */
     private static function tokenize($src): array
     {
@@ -715,7 +715,7 @@ class TalesInternal implements TalesInterface
 
             if ($checkWhitelist &&
                 $token[0] === T_STRING &&
-                !in_array(strtolower($token[1]), self::$functionWhitelist)
+                !in_array(strtolower((string) $token[1]), self::$functionWhitelist)
             ) {
                 $message = "User tried to execute not whitelisted statement '" . $token[1] . "'";
                 throw new ParserException($message);

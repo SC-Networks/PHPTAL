@@ -50,7 +50,7 @@ abstract class DocumentBuilder
     }
 
     /**
-     * @return Element|string (string in test only...)
+     * @return Element
      */
     abstract public function getResult();
 

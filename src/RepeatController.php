@@ -143,7 +143,7 @@ class RepeatController implements Iterator
     /**
      * Returns the current element key in the iteration
      *
-     * @return String/Int   The current element key
+     * @return int|string The current element key
      */
     public function key(): mixed
     {
