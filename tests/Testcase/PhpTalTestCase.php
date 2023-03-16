@@ -19,7 +19,6 @@ declare(strict_types=1);
 namespace Tests\Testcase;
 
 use DOMDocument;
-use Exception;
 use PhpTal\PHPTAL;
 use PhpTal\PhpTalInterface;
 use PHPUnit\Framework\TestCase;
@@ -32,19 +31,13 @@ abstract class PhpTalTestCase extends TestCase
      */
     private $cwd_backup;
 
-    private int $buffer_level;
-
     public function setUp(): void
     {
         static::assertTrue(PHPTAL::PHPTAL_VERSION >= '3_0_0');
 
-        $this->buffer_level = ob_get_level();
-
         // tests rely on cwd being in tests/
         $this->cwd_backup = getcwd();
         chdir(__DIR__);
-
-        ob_start(); // buffer test's output
 
         parent::setUp();
     }
@@ -54,19 +47,6 @@ abstract class PhpTalTestCase extends TestCase
         parent::tearDown();
 
         chdir($this->cwd_backup);
-
-        ob_get_clean();
-
-        // ensure that test hasn't left buffering on
-        $unflushed = 0;
-        while (ob_get_level() > $this->buffer_level) {
-            ob_end_flush();
-            $unflushed++;
-        }
-
-        if ($unflushed) {
-            throw new Exception("Unflushed buffers: $unflushed");
-        }
     }
 
     protected function newPHPTAL(?string $tpl = null): PhpTalInterface

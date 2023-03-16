@@ -173,15 +173,13 @@ class RepeatController implements Iterator
                 return $this->length = count($this->iterator);
             }
 
-            if (is_object($this->iterator)) {
-                // for backwards compatibility with existing PHPTAL templates
-                if (method_exists($this->iterator, 'size')) {
-                    return $this->length = $this->iterator->size();
-                }
+            // for backwards compatibility with existing PHPTAL templates
+            if (method_exists($this->iterator, 'size')) {
+                return $this->length = $this->iterator->size();
+            }
 
-                if (method_exists($this->iterator, 'length')) {
-                    return $this->length = $this->iterator->length();
-                }
+            if (method_exists($this->iterator, 'length')) {
+                return $this->length = $this->iterator->length();
             }
             $this->length = '_PHPTAL_LENGTH_UNKNOWN_';
         }

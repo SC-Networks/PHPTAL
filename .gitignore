@@ -7,3 +7,4 @@ doc/temp
 .phpdoc
 .phpunit.result.cache
 .php-cs-fixer.cache
+.phpunit.cache/
