@@ -21,8 +21,8 @@ use PhpTal\Exception\PhpTalException;
  */
 class TalesChainExecutor
 {
-    public const CHAIN_BREAK = 1;
-    public const CHAIN_CONT = 2;
+    final public const CHAIN_BREAK = 1;
+    final public const CHAIN_CONT = 2;
 
     /**
      * @var int
@@ -35,9 +35,7 @@ class TalesChainExecutor
     private $chainStarted = false;
 
     /**
-     * @param CodeWriter $codewriter
      * @param array<int, string> $chain
-     * @param TalesChainReaderInterface $reader
      *
      * @throws PhpTalException
      */
@@ -50,17 +48,12 @@ class TalesChainExecutor
         $this->executeChain();
     }
 
-    /**
-     * @return CodeWriter
-     */
     public function getCodeWriter(): CodeWriter
     {
         return $this->codewriter;
     }
 
     /**
-     * @param string $condition
-     * @return void
      * @throws PhpTalException
      */
     public function doIf(string $condition): void
@@ -74,7 +67,6 @@ class TalesChainExecutor
     }
 
     /**
-     * @return void
      * @throws PhpTalException
      */
     public function doElse(): void
@@ -82,32 +74,23 @@ class TalesChainExecutor
         $this->codewriter->doElse();
     }
 
-    /**
-     * @return void
-     */
     public function breakChain(): void
     {
         $this->state = self::CHAIN_BREAK;
     }
 
-    /**
-     * @return void
-     */
     public function continueChain(): void
     {
         $this->state = self::CHAIN_CONT;
     }
 
     /**
-     * @return void
      * @throws PhpTalException
      */
     private function executeChain(): void
     {
         $this->codewriter->noThrow(true);
-
-        end($this->chain);
-        $lastkey = key($this->chain);
+        $lastkey = array_key_last($this->chain);
 
         foreach ($this->chain as $key => $exp) {
             $this->state = 0;

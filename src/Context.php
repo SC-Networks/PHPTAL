@@ -18,6 +18,9 @@ use AllowDynamicProperties;
 use ArrayAccess;
 use BadMethodCallException;
 use Countable;
+use PhpTal\Exception\ConfigurationException;
+use PhpTal\Exception\InvalidVariableNameException;
+use PhpTal\Exception\VariableNotFoundException;
 use stdClass;
 
 /**
@@ -142,7 +145,7 @@ class Context
             $this->_parentContext->setDocType($doctype, $called_from_macro);
         } elseif ($this->_echoDeclarations) {
             if ($called_from_macro) {
-                throw new Exception\ConfigurationException(
+                throw new ConfigurationException(
                     'Executed macro in file with DOCTYPE when using echoExecute(). This is not supported yet. ' .
                     'Remove DOCTYPE or use PHPTAL->execute().'
                 );
@@ -175,7 +178,7 @@ class Context
             $this->_parentContext->setXmlDeclaration($xmldec, $called_from_macro);
         } elseif ($this->_echoDeclarations) {
             if ($called_from_macro) {
-                throw new Exception\ConfigurationException(
+                throw new ConfigurationException(
                     'Executed macro in file with XML declaration when using echoExecute(). This is not supported yet.' .
                     ' Remove XML declaration or use PHPTAL->execute().'
                 );
@@ -309,7 +312,7 @@ class Context
     public function __set(string $varname, mixed $value): void
     {
         if (preg_match('/^_|\s/', $varname)) {
-            throw new Exception\InvalidVariableNameException(
+            throw new InvalidVariableNameException(
                 'Template variable error \'' . $varname . '\' must not begin with underscore or contain spaces'
             );
         }
@@ -345,7 +348,7 @@ class Context
             return null;
         }
 
-        throw new Exception\VariableNotFoundException("Unable to find variable '$varname' in current scope");
+        throw new VariableNotFoundException("Unable to find variable '$varname' in current scope");
     }
 
     /**
@@ -366,17 +369,17 @@ class Context
         }
 
         if (is_array($base)) {
-            throw new Exception\VariableNotFoundException(
+            throw new VariableNotFoundException(
                 "Array {$basename} doesn't have key named '$current' $pathinfo"
             );
         }
         if (is_object($base)) {
-            throw new Exception\VariableNotFoundException(
-                ucfirst(get_class($base)) .
+            throw new VariableNotFoundException(
+                ucfirst($base::class) .
                 " object {$basename} doesn't have method/property named '$current' $pathinfo"
             );
         }
-        throw new Exception\VariableNotFoundException(
+        throw new VariableNotFoundException(
             trim("Attempt to read property '$current' $pathinfo from " . gettype($base) . " value {$basename}")
         );
     }
@@ -461,7 +464,7 @@ class Context
                     try {
                         $base = $base->__call($current, []);
                         continue;
-                    } catch (BadMethodCallException $e) {
+                    } catch (BadMethodCallException) {
                         // noop
                     }
                 }
@@ -482,7 +485,7 @@ class Context
             // array handling
             if (is_array($base)) {
                 // key or index
-                if (array_key_exists((string)$current, $base)) {
+                if (array_key_exists($current, $base)) {
                     $base = $base[$current];
                     continue;
                 }

@@ -77,7 +77,7 @@ class RepeatControllerGroups
     {
         if (!is_array($data) && !is_object($data) && $data !== null) {
             if (!isset($this->cache['F'])) {
-                $hash = md5($data);
+                $hash = md5((string) $data);
 
                 if (!isset($this->dict['F']) || $this->dict['F'] !== $hash) {
                     $this->dict['F'] = $hash;
@@ -112,7 +112,7 @@ class RepeatControllerGroups
     {
         if (!is_array($data) && !is_object($data) && $data !== null) {
             if (!isset($this->cache['L'])) {
-                $hash = md5($data);
+                $hash = md5((string) $data);
 
                 if (!array_key_exists('L', $this->dict)) {
                     $this->dict['L'] = $hash;
@@ -167,7 +167,7 @@ class RepeatControllerGroups
         }
 
         // get a hash of the variable contents
-        $hash = md5($value);
+        $hash = md5((string) $value);
 
         // compute a path for the variable to use as dictionary key
         $path = $this->branch . $this->getVarPath() . $var;

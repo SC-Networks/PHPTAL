@@ -32,9 +32,7 @@ class Id extends Attribute
     /**
      * Called before element printing.
      *
-     * @param CodeWriter $codewriter
      *
-     * @return void
      */
     public function before(CodeWriter $codewriter): void
     {
@@ -55,9 +53,7 @@ class Id extends Attribute
     /**
      * Called after element printing.
      *
-     * @param CodeWriter $codewriter
      *
-     * @return void
      * @throws PhpTalException
      */
     public function after(CodeWriter $codewriter): void

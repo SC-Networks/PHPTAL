@@ -49,9 +49,7 @@ class Condition extends Attribute implements TalesChainReaderInterface
     /**
      * Called before element printing.
      *
-     * @param CodeWriter $codewriter
      *
-     * @return void
      * @throws ParserException
      * @throws PhpNotAllowedException
      * @throws PhpTalException
@@ -80,9 +78,7 @@ class Condition extends Attribute implements TalesChainReaderInterface
     /**
      * Called after element printing.
      *
-     * @param CodeWriter $codewriter
      *
-     * @return void
      * @throws PhpTalException
      */
     public function after(CodeWriter $codewriter): void
@@ -92,11 +88,7 @@ class Condition extends Attribute implements TalesChainReaderInterface
 
 
     /**
-     * @param TalesChainExecutor $executor
-     * @param string $expression
-     * @param bool $islast
      *
-     * @return void
      * @throws PhpTalException
      */
     public function talesChainPart(TalesChainExecutor $executor, string $expression, bool $islast): void
@@ -115,9 +107,6 @@ class Condition extends Attribute implements TalesChainReaderInterface
     }
 
     /**
-     * @param TalesChainExecutor $executor
-     *
-     * @return void
      * @throws PhpTalException
      */
     public function talesChainNothingKeyword(TalesChainExecutor $executor): void
@@ -128,9 +117,6 @@ class Condition extends Attribute implements TalesChainReaderInterface
     }
 
     /**
-     * @param TalesChainExecutor $executor
-     *
-     * @return void
      * @throws ParserException
      */
     public function talesChainDefaultKeyword(TalesChainExecutor $executor): void

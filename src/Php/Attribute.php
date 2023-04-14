@@ -29,8 +29,8 @@ use PhpTal\Dom\Element;
  */
 abstract class Attribute
 {
-    public const ECHO_TEXT = 'text';
-    public const ECHO_STRUCTURE = 'structure';
+    final public const ECHO_TEXT = 'text';
+    final public const ECHO_STRUCTURE = 'structure';
 
     /**
      * @var string
@@ -52,25 +52,19 @@ abstract class Attribute
     /**
      * Called before element printing.
      *
-     * @param CodeWriter $codewriter
      *
-     * @return void
      */
     abstract public function before(CodeWriter $codewriter): void;
 
     /**
      * Called after element printing.
      *
-     * @param CodeWriter $codewriter
      *
-     * @return void
      */
     abstract public function after(CodeWriter $codewriter): void;
 
     /**
      * Attribute constructor.
-     * @param Element $phpelement
-     * @param string $expression
      */
     public function __construct(Element $phpelement, string $expression)
     {
@@ -90,8 +84,6 @@ abstract class Attribute
      * $this->doEcho($code);
      *
      * @param string $expression
-     *
-     * @return string
      */
     protected function extractEchoType(string $expression): string
     {
@@ -104,12 +96,6 @@ abstract class Attribute
         return trim($expression);
     }
 
-    /**
-     * @param CodeWriter $codewriter
-     * @param string $code
-     *
-     * @return void
-     */
     protected function doEchoAttribute(CodeWriter $codewriter, string $code): void
     {
         if ($this->echoType === self::ECHO_TEXT) {
@@ -120,8 +106,6 @@ abstract class Attribute
     }
 
     /**
-     * @param string $exp
-     *
      * @return array{
      *  0: string,
      *  1: null|string

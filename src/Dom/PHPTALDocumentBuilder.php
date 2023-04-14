@@ -52,9 +52,6 @@ class PHPTALDocumentBuilder extends DocumentBuilder
         return $this->documentElement;
     }
 
-    /**
-     * @return XmlnsState
-     */
     protected function getXmlnsState(): XmlnsState
     {
         return $this->xmlns;
@@ -85,9 +82,6 @@ class PHPTALDocumentBuilder extends DocumentBuilder
     }
 
     /**
-     * @param string $doctype
-     *
-     * @return void
      * @throws PhpTalException
      */
     public function onDocType(string $doctype): void
@@ -96,9 +90,6 @@ class PHPTALDocumentBuilder extends DocumentBuilder
     }
 
     /**
-     * @param string $decl
-     *
-     * @return void
      * @throws PhpTalException
      */
     public function onXmlDecl(string $decl): void
@@ -110,8 +101,6 @@ class PHPTALDocumentBuilder extends DocumentBuilder
     }
 
     /**
-     * @param string $data
-     * @return void
      * @throws PhpTalException
      */
     public function onComment(string $data): void
@@ -120,9 +109,6 @@ class PHPTALDocumentBuilder extends DocumentBuilder
     }
 
     /**
-     * @param string $data
-     *
-     * @return void
      * @throws PhpTalException
      */
     public function onCDATASection(string $data): void
@@ -131,9 +117,6 @@ class PHPTALDocumentBuilder extends DocumentBuilder
     }
 
     /**
-     * @param string $data
-     *
-     * @return void
      * @throws PhpTalException
      */
     public function onProcessingInstruction(string $data): void
@@ -142,7 +125,6 @@ class PHPTALDocumentBuilder extends DocumentBuilder
     }
 
     /**
-     * @param string $element_qname
      * @param array<string, string> $attributes
      *
      * @throws ParserException
@@ -204,9 +186,6 @@ class PHPTALDocumentBuilder extends DocumentBuilder
     }
 
     /**
-     * @param string $data
-     *
-     * @return void
      * @throws PhpTalException
      */
     public function onElementData(string $data): void
@@ -215,9 +194,6 @@ class PHPTALDocumentBuilder extends DocumentBuilder
     }
 
     /**
-     * @param string $qname
-     *
-     * @return void
      * @throws ParserException
      */
     public function onElementClose(string $qname): void
@@ -244,9 +220,6 @@ class PHPTALDocumentBuilder extends DocumentBuilder
     }
 
     /**
-     * @param Node $node
-     *
-     * @return void
      * @throws PhpTalException
      */
     private function pushNode(Node $node): void
@@ -255,11 +228,6 @@ class PHPTALDocumentBuilder extends DocumentBuilder
         $this->current->appendChild($node);
     }
 
-    /**
-     * @param string $encoding
-     *
-     * @return void
-     */
     public function setEncoding(string $encoding): void
     {
         $this->encoding = $encoding;

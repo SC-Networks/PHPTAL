@@ -56,8 +56,8 @@ use ReflectionException;
  */
 class TalesInternal implements TalesInterface
 {
-    public const DEFAULT_KEYWORD = 'new \PhpTal\DefaultKeyword';
-    public const NOTHING_KEYWORD = 'new \PhpTal\NothingKeyword';
+    final public const DEFAULT_KEYWORD = 'new \PhpTal\DefaultKeyword';
+    final public const NOTHING_KEYWORD = 'new \PhpTal\NothingKeyword';
 
     /**
      * @var bool
@@ -95,9 +95,7 @@ class TalesInternal implements TalesInterface
     private static $functionWhitelist = [];
 
     /**
-     * @param string $src
      *
-     * @return string
      * @throws ParserException
      * @throws UnknownModifierException
      * @throws ReflectionException
@@ -134,7 +132,6 @@ class TalesInternal implements TalesInterface
      * @param string $expression
      * @param bool $nothrow
      *
-     * @return string
      * @throws ParserException
      * @throws UnknownModifierException
      * @throws ReflectionException
@@ -274,9 +271,7 @@ class TalesInternal implements TalesInterface
     /**
      * check if part of exprssion (/foo/ or /foo${bar}/) is alphanumeric
      *
-     * @param string $expression
      *
-     * @return int
      */
     private static function checkExpressionPart(string $expression): int
     {
@@ -302,7 +297,6 @@ class TalesInternal implements TalesInterface
      * @param string $expression
      * @param bool $nothrow
      *
-     * @return string
      * @throws ParserException
      * @throws UnknownModifierException
      * @throws ReflectionException
@@ -313,11 +307,8 @@ class TalesInternal implements TalesInterface
     }
 
     /**
-     * @param string $expression
-     * @param bool $nothrow
      * @param string $tales_prefix prefix added to all TALES in the string
      *
-     * @return string
      * @throws ParserException
      * @throws UnknownModifierException
      * @throws ReflectionException
@@ -444,7 +435,6 @@ class TalesInternal implements TalesInterface
      *
      * @param string $src
      *
-     * @return string
      * @throws ParserException
      * @throws PhpNotAllowedException
      */
@@ -468,7 +458,6 @@ class TalesInternal implements TalesInterface
      *
      * @param string $src
      *
-     * @return string
      * @throws ParserException
      * @throws UnknownModifierException
      * @throws ReflectionException
@@ -489,7 +478,6 @@ class TalesInternal implements TalesInterface
      *
      * @param string $src
      *
-     * @return string
      * @throws ParserException
      */
     public static function number(string $src): string
@@ -503,10 +491,7 @@ class TalesInternal implements TalesInterface
     /**
      * json: modifier. Serializes anything as JSON.
      *
-     * @param string $src
-     * @param bool $nothrow
      *
-     * @return string
      * @throws ParserException
      * @throws UnknownModifierException
      * @throws ReflectionException
@@ -519,10 +504,7 @@ class TalesInternal implements TalesInterface
     /**
      * urlencode: modifier. Escapes a string.
      *
-     * @param string $src
-     * @param bool $nothrow
      *
-     * @return string
      * @throws ParserException
      * @throws UnknownModifierException
      * @throws ReflectionException
@@ -538,10 +520,8 @@ class TalesInternal implements TalesInterface
      *
      * @see \PhpTal\Php\TalesInternal::compileToPHPExpressions()
      *
-     * @param string $expression
      * @param bool $nothrow
      *
-     * @return string
      * @throws ParserException
      * @throws UnknownModifierException
      * @throws ReflectionException
@@ -560,8 +540,6 @@ class TalesInternal implements TalesInterface
     /**
      * @param array<string> $array
      * @param bool $nothrow
-     *
-     * @return string
      */
     private static function convertExpressionsToExpression(array $array, ?bool $nothrow): string
     {
@@ -623,10 +601,7 @@ class TalesInternal implements TalesInterface
     }
 
     /**
-     * @param string $typePrefix
      * @param array<string>|string $expressions
-     *
-     * @return void
      * @throws ParserException
      */
     private static function verifyPHPExpressions(string $typePrefix, string|array $expressions): void
@@ -644,17 +619,11 @@ class TalesInternal implements TalesInterface
         }
     }
 
-    /**
-     * @return bool
-     */
     public static function isPhpModifierAllowed(): bool
     {
         return self::$phpModifierAllowed;
     }
 
-    /**
-     * @param bool $phpModifierAllowed
-     */
     public static function setPhpModifierAllowed(bool $phpModifierAllowed): void
     {
         self::$phpModifierAllowed = $phpModifierAllowed;
@@ -700,7 +669,6 @@ class TalesInternal implements TalesInterface
      *
      * @param string $src
      *
-     * @return void
      * @throws ParserException
      */
     private static function checkTokens($src): void
@@ -715,7 +683,7 @@ class TalesInternal implements TalesInterface
 
             if ($checkWhitelist &&
                 $token[0] === T_STRING &&
-                !in_array(strtolower((string) $token[1]), self::$functionWhitelist)
+                !in_array(strtolower($token[1]), self::$functionWhitelist)
             ) {
                 $message = "User tried to execute not whitelisted statement '" . $token[1] . "'";
                 throw new ParserException($message);

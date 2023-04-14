@@ -59,9 +59,7 @@ class UseMacro extends Attribute
     /**
      * Called before element printing.
      *
-     * @param CodeWriter $codewriter
      *
-     * @return void
      * @throws TemplateException
      * @throws ParserException
      * @throws PhpTalException
@@ -106,9 +104,7 @@ class UseMacro extends Attribute
     /**
      * Called after element printing.
      *
-     * @param CodeWriter $codewriter
      *
-     * @return void
      */
     public function after(CodeWriter $codewriter): void
     {
@@ -139,8 +135,6 @@ class UseMacro extends Attribute
     /**
      * generate code that pops macro slots
      * (restore slots if not inherited macro)
-     *
-     * @param CodeWriter $codewriter
      */
     private function popSlots(CodeWriter $codewriter): void
     {
@@ -151,8 +145,6 @@ class UseMacro extends Attribute
 
     /**
      * recursively generates code for slots
-     * @param CodeWriter $codewriter
-     * @param Node|Element $phpelement
      *
      * @throws PhpTalException
      * @throws TemplateException

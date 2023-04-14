@@ -21,30 +21,10 @@ namespace PhpTal\Dom;
  */
 class Attr
 {
-    public const HIDDEN = -1;
-    public const NOT_REPLACED = 0;
-    public const VALUE_REPLACED = 1;
-    public const FULLY_REPLACED = 2;
-
-    /**
-     * @var string
-     */
-    private $value_escaped;
-
-    /**
-     * @var string
-     */
-    private $qualified_name;
-
-    /**
-     * @var string
-     */
-    private $namespace_uri;
-
-    /**
-     * @var string
-     */
-    private $encoding;
+    final public const HIDDEN = -1;
+    final public const NOT_REPLACED = 0;
+    final public const VALUE_REPLACED = 1;
+    final public const FULLY_REPLACED = 2;
 
     /**
      * attribute's value can be overriden with a variable
@@ -63,12 +43,8 @@ class Attr
      * @param string $value_escaped value with HTML-escaping
      * @param string $encoding character encoding used by the value
      */
-    public function __construct(string $qualified_name, string $namespace_uri, ?string $value_escaped, string $encoding)
+    public function __construct(private string $qualified_name, private string $namespace_uri, private ?string $value_escaped, private string $encoding)
     {
-        $this->value_escaped = $value_escaped;
-        $this->qualified_name = $qualified_name;
-        $this->namespace_uri = $namespace_uri;
-        $this->encoding = $encoding;
     }
 
     /**
@@ -106,8 +82,6 @@ class Attr
 
     /**
      * Returns true if this attribute is ns declaration (xmlns="...")
-     *
-     * @return bool
      */
     public function isNamespaceDeclaration(): bool
     {
@@ -117,8 +91,6 @@ class Attr
 
     /**
      * get value as plain text
-     *
-     * @return string
      */
     public function getValue(): string
     {
@@ -127,7 +99,6 @@ class Attr
 
     /**
      * set plain text as value
-     * @param string $val
      */
     public function setValue(string $val): void
     {
@@ -160,8 +131,6 @@ class Attr
 
     /**
      * set PHP code as value of this attribute. Code is expected to echo the value.
-     *
-     * @param string $code
      */
     private function setPHPCode(string $code): void
     {
@@ -178,8 +147,6 @@ class Attr
 
     /**
      * generate value of this attribute from variable
-     *
-     * @param string $phpVariable
      */
     public function overwriteValueWithVariable(string $phpVariable): void
     {
@@ -190,8 +157,6 @@ class Attr
 
     /**
      * generate complete syntax of this attribute using variable
-     *
-     * @param string $phpVariable
      */
     public function overwriteFullWithVariable(string $phpVariable): void
     {
@@ -202,8 +167,6 @@ class Attr
 
     /**
      * use any PHP code to generate this attribute's value
-     *
-     * @param string $code
      */
     public function overwriteValueWithCode(string $code): void
     {

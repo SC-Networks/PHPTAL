@@ -32,11 +32,8 @@ class Builtin extends TalNamespace
     public const NS_XHTML = 'http://www.w3.org/1999/xhtml';
 
     /**
-     * @param TalNamespaceAttribute $att
-     * @param Element $tag
      * @param mixed $expression
      *
-     * @return Attribute
      */
     public function createAttributeHandler(TalNamespaceAttribute $att, Element $tag, $expression): Attribute
     {

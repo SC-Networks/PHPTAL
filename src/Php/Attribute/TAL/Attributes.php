@@ -68,9 +68,7 @@ class Attributes extends Attribute implements TalesChainReaderInterface
     /**
      * Called before element printing.
      *
-     * @param CodeWriter $codewriter
      *
-     * @return void
      * @throws PhpTalException
      * @throws ReflectionException
      */
@@ -86,11 +84,7 @@ class Attributes extends Attribute implements TalesChainReaderInterface
     }
 
     /**
-     * @param CodeWriter $codewriter
-     * @param string $qname
-     * @param string $expression
      *
-     * @return void
      * @throws PhpTalException
      * @throws ReflectionException
      */
@@ -128,10 +122,6 @@ class Attributes extends Attribute implements TalesChainReaderInterface
 
     /**
      * attribute will be output regardless of its evaluated value. NULL behaves just like "".
-     *
-     * @param CodeWriter $codewriter
-     * @param string $qname
-     * @param string $code
      */
     private function prepareAttributeUnconditional(CodeWriter $codewriter, string $qname, string $code): void
     {
@@ -149,9 +139,6 @@ class Attributes extends Attribute implements TalesChainReaderInterface
     /**
      * If evaluated value of attribute is NULL, it will not be output at all.
      *
-     * @param CodeWriter $codewriter
-     * @param string $qname
-     * @param string $code
      *
      * @throws PhpTalException
      */
@@ -178,11 +165,8 @@ class Attributes extends Attribute implements TalesChainReaderInterface
     }
 
     /**
-     * @param CodeWriter $codewriter
-     * @param string $qname
      * @param array<string> $chain
      *
-     * @return void
      * @throws PhpTalException
      */
     private function prepareChainedAttribute(CodeWriter $codewriter, string $qname, array $chain): void
@@ -200,11 +184,7 @@ class Attributes extends Attribute implements TalesChainReaderInterface
     }
 
     /**
-     * @param CodeWriter $codewriter
-     * @param string $qname
-     * @param string $code
      *
-     * @return void
      * @throws PhpTalException
      */
     private function prepareBooleanAttribute(CodeWriter $codewriter, string $qname, string $code): void
@@ -224,11 +204,6 @@ class Attributes extends Attribute implements TalesChainReaderInterface
         $this->phpelement->getOrCreateAttributeNode($qname)->overwriteFullWithVariable($attkey);
     }
 
-    /**
-     * @param CodeWriter $codewriter
-     *
-     * @return string
-     */
     private function getVarName(CodeWriter $codewriter): string
     {
         $var = $codewriter->createTempVariable();
@@ -240,9 +215,7 @@ class Attributes extends Attribute implements TalesChainReaderInterface
     /**
      * Called after element printing.
      *
-     * @param CodeWriter $codewriter
      *
-     * @return void
      * @throws PhpTalException
      */
     public function after(CodeWriter $codewriter): void
@@ -253,8 +226,6 @@ class Attributes extends Attribute implements TalesChainReaderInterface
     }
 
     /**
-     * @param TalesChainExecutor $executor
-     * @return void
      * @throws PhpTalException
      */
     public function talesChainNothingKeyword(TalesChainExecutor $executor): void
@@ -269,9 +240,6 @@ class Attributes extends Attribute implements TalesChainReaderInterface
     }
 
     /**
-     * @param TalesChainExecutor $executor
-     *
-     * @return void
      * @throws PhpTalException
      */
     public function talesChainDefaultKeyword(TalesChainExecutor $executor): void
@@ -286,11 +254,7 @@ class Attributes extends Attribute implements TalesChainReaderInterface
     }
 
     /**
-     * @param TalesChainExecutor $executor
-     * @param string $expression
-     * @param bool $islast
      *
-     * @return void
      * @throws PhpTalException
      */
     public function talesChainPart(TalesChainExecutor $executor, string $expression, bool $islast): void

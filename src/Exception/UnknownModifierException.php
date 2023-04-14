@@ -22,24 +22,14 @@ namespace PhpTal\Exception;
 class UnknownModifierException extends TemplateException
 {
     /**
-     * @var string
-     */
-    private $modifier_name;
-
-    /**
      * UnknownModifierException constructor.
-     * @param string $msg
      * @param string $modifier_name
      */
-    public function __construct(string $msg, ?string $modifier_name = null)
+    public function __construct(string $msg, private ?string $modifier_name = null)
     {
-        $this->modifier_name = $modifier_name;
         parent::__construct($msg);
     }
 
-    /**
-     * @return null|string
-     */
     public function getModifierName(): ?string
     {
         return $this->modifier_name;

@@ -14,6 +14,7 @@ declare(strict_types=1);
 
 namespace PhpTal;
 
+use PhpTal\Dom\Element;
 use PhpTal\Php\Attribute;
 
 /**
@@ -64,16 +65,6 @@ use PhpTal\Php\Attribute;
 abstract class TalNamespaceAttribute
 {
     /**
-     * @var string Attribute name without the namespace: prefix
-     */
-    private $local_name;
-
-    /**
-     * @var int [0 - 1000]
-     */
-    private $priority;
-
-    /**
      * @var TalNamespace
      */
     private $namespace;
@@ -82,51 +73,35 @@ abstract class TalNamespaceAttribute
      * @param string $local_name The attribute name
      * @param int $priority Attribute execution priority
      */
-    public function __construct(string $local_name, int $priority)
+    public function __construct(private string $local_name, private int $priority)
     {
-        $this->local_name = $local_name;
-        $this->priority = $priority;
     }
 
-    /**
-     * @return string
-     */
     public function getLocalName(): string
     {
         return $this->local_name;
     }
 
-    /**
-     * @return int
-     */
     public function getPriority(): int
     {
         return $this->priority;
     }
 
-    /**
-     * @return TalNamespace
-     */
     public function getNamespace(): TalNamespace
     {
         return $this->namespace;
     }
 
-    /**
-     * @param TalNamespace $ns
-     * @return void
-     */
     public function setNamespace(TalNamespace $ns): void
     {
         $this->namespace = $ns;
     }
 
     /**
-     * @param Dom\Element $tag
      * @param mixed $expression
      * @return Attribute
      */
-    public function createAttributeHandler(Dom\Element $tag, $expression)
+    public function createAttributeHandler(Element $tag, $expression)
     {
         return $this->namespace->createAttributeHandler($this, $tag, $expression);
     }

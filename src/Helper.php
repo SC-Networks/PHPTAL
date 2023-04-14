@@ -16,20 +16,18 @@ class Helper
      * helper function for chained expressions
      *
      * @param mixed $var value to check
-     * @return bool
      * @access private
      */
     public static function phptal_isempty($var): bool
     {
         return in_array($var, [null, false, ''], true)
-            || ((is_array($var) || $var instanceof Countable) && count($var) === 0);
+            || ((is_countable($var)) && count($var) === 0);
     }
 
     /**
      * helper function for conditional expressions
      *
      * @param mixed $var value to check
-     * @return bool
      * @access private
      */
     public static function phptal_true($var): bool
@@ -71,7 +69,7 @@ class Helper
             return (string)(int)$var;
         }
         if (is_array($var)) {
-            return implode(', ', array_map([__CLASS__, 'phptal_tostring'], $var));
+            return implode(', ', array_map(self::phptal_tostring(...), $var));
         }
         if ($var instanceof SimpleXMLElement) {
             /* There is no sane way to tell apart element and attribute nodes

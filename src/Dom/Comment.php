@@ -23,8 +23,6 @@ class Comment extends Node
 {
     /**
      * use CodeWriter to compile this element to PHP code
-     *
-     * @param CodeWriter $codewriter
      */
     public function generateCode(CodeWriter $codewriter): void
     {

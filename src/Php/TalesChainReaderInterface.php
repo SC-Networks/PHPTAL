@@ -19,22 +19,9 @@ namespace PhpTal\Php;
  */
 interface TalesChainReaderInterface
 {
-    /**
-     * @param TalesChainExecutor $executor
-     *
-     * @return void
-     */
     public function talesChainNothingKeyword(TalesChainExecutor $executor): void;
 
-    /**
-     * @param TalesChainExecutor $executor
-     */
     public function talesChainDefaultKeyword(TalesChainExecutor $executor): void;
 
-    /**
-     * @param TalesChainExecutor $executor
-     * @param string $expression
-     * @param bool $islast
-     */
     public function talesChainPart(TalesChainExecutor $executor, string $expression, bool $islast): void;
 }

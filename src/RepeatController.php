@@ -22,6 +22,7 @@ use DOMNodeList;
 use Iterator;
 use IteratorAggregate;
 use IteratorIterator;
+use PhpTal\Exception\VariableNotFoundException;
 use stdClass;
 use Traversable;
 
@@ -251,7 +252,6 @@ class RepeatController implements Iterator
     /**
      * Gets an object property
      *
-     * @param string $var
      * @return mixed $var  Mixed  The variable value
      * @throws Exception\VariableNotFoundException
      */
@@ -294,7 +294,7 @@ class RepeatController implements Iterator
                 return is_bool($res) ? $res : $this->groups;
 
             default:
-                throw new Exception\VariableNotFoundException("Unable to find part '$var' in repeat variable");
+                throw new VariableNotFoundException("Unable to find part '$var' in repeat variable");
         }
     }
 

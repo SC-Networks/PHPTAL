@@ -15,7 +15,6 @@ interface TalesRegistryInterface
     /**
      * get callback for the prefix
      *
-     * @param string $prefix
      *
      * @return null|callable(?string, bool):mixed
      */
@@ -24,9 +23,7 @@ interface TalesRegistryInterface
     /**
      * true if given prefix is taken
      *
-     * @param string $prefix
      *
-     * @return bool
      */
     public static function isRegistered(string $prefix): bool;
 
@@ -47,7 +44,6 @@ interface TalesRegistryInterface
     /**
      * Unregisters a expression modifier
      *
-     * @param string $prefix
      *
      * @throws Exception\ConfigurationException
      */

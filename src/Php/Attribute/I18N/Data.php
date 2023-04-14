@@ -36,19 +36,12 @@ class Data extends Attribute
     /**
      * Called before element printing.
      *
-     * @param CodeWriter $codewriter
      *
-     * @return void
      */
     public function before(CodeWriter $codewriter): void
     {
     }
 
-    /**
-     * @param CodeWriter $codewriter
-     *
-     * @return void
-     */
     public function after(CodeWriter $codewriter): void
     {
     }

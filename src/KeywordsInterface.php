@@ -22,8 +22,5 @@ use Countable;
  */
 interface KeywordsInterface extends Countable
 {
-    /**
-     * @return string
-     */
     public function __toString(): string;
 }

@@ -14,6 +14,8 @@ declare(strict_types=1);
 
 namespace PhpTal;
 
+use PhpTal\Dom\Element;
+use PhpTal\Exception\ConfigurationException;
 use PhpTal\Php\Attribute;
 
 /**
@@ -38,14 +40,12 @@ abstract class TalNamespace
     protected $attributes;
 
     /**
-     * @param string $prefix
-     * @param string $namespace_uri
      * @throws Exception\ConfigurationException
      */
     public function __construct(string $prefix, string $namespace_uri)
     {
         if (trim($namespace_uri) === '' || trim($prefix) === '') {
-            throw new Exception\ConfigurationException("Can't create namespace with empty prefix or namespace URI");
+            throw new ConfigurationException("Can't create namespace with empty prefix or namespace URI");
         }
 
         $this->attributes = [];
@@ -53,35 +53,22 @@ abstract class TalNamespace
         $this->namespace_uri = $namespace_uri;
     }
 
-    /**
-     * @return string
-     */
     public function getPrefix(): string
     {
         return $this->prefix;
     }
 
-    /**
-     * @return string
-     */
     public function getNamespaceURI(): string
     {
         return $this->namespace_uri;
     }
 
-    /**
-     * @param string $attributeName
-     *
-     * @return bool
-     */
     public function hasAttribute(string $attributeName): bool
     {
         return array_key_exists(strtolower($attributeName), $this->attributes);
     }
 
     /**
-     * @param string $attributeName
-     *
      * @return mixed
      */
     public function getAttribute(string $attributeName)
@@ -89,11 +76,6 @@ abstract class TalNamespace
         return $this->attributes[strtolower($attributeName)];
     }
 
-    /**
-     * @param TalNamespaceAttribute $attribute
-     *
-     * @return void
-     */
     public function addAttribute(TalNamespaceAttribute $attribute): void
     {
         $attribute->setNamespace($this);
@@ -109,15 +91,12 @@ abstract class TalNamespace
     }
 
     /**
-     * @param TalNamespaceAttribute $att
-     * @param Dom\Element $tag
      * @param mixed $expression
      *
-     * @return Php\Attribute
      */
     abstract public function createAttributeHandler(
         TalNamespaceAttribute $att,
-        Dom\Element $tag,
+        Element $tag,
         $expression
     ): Attribute;
 }

@@ -37,9 +37,7 @@ class Domain extends Attribute
     /**
      * Called before element printing.
      *
-     * @param CodeWriter $codewriter
      *
-     * @return void
      * @throws ConfigurationException
      * @throws ParserException
      * @throws PhpTalException
@@ -63,9 +61,7 @@ class Domain extends Attribute
     /**
      * Called after element printing.
      *
-     * @param CodeWriter $codewriter
      *
-     * @return void
      * @throws ConfigurationException
      */
     public function after(CodeWriter $codewriter): void

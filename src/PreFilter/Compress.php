@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace PhpTal\PreFilter;
 
+use DOMElement;
 use PhpTal\Dom\DocumentType;
 use PhpTal\Dom\Element;
 use PhpTal\Dom\ProcessingInstruction;
@@ -154,11 +155,6 @@ class Compress extends Normalize
         'id',
     ];
 
-    /**
-     * @param Element $root
-     *
-     * @return void
-     */
     public function filterDOM(Element $root): void
     {
         // let xml:space=preserve preserve everything
@@ -230,7 +226,7 @@ class Compress extends Normalize
                 // (otherwise trimming of most_recent_text_node would be useless)
                 if ($norm !== '') {
                     $this->most_recent_text_node = $node;
-                    $this->had_space = (substr($norm, -1) === ' ');
+                    $this->had_space = (str_ends_with($norm, ' '));
                 }
             } elseif ($node instanceof Element) {
                 $this->filterDOM($node);
@@ -264,10 +260,6 @@ class Compress extends Normalize
         }
     }
 
-    /**
-     * @param Element $element
-     * @return bool
-     */
     private function hasNoInterelementSpace(Element $element): bool
     {
         $namespaceURI = $element->getNamespaceURI();
@@ -281,10 +273,6 @@ class Compress extends Normalize
             && ($namespaceURI === Builtin::NS_XHTML || $namespaceURI === '');
     }
 
-    /**
-     * @param Element $element
-     * @return bool
-     */
     private function breaksLine(Element $element): bool
     {
         if ($element->getAttributeNS(Builtin::NS_METAL, 'define-macro')) {
@@ -303,10 +291,6 @@ class Compress extends Normalize
         return in_array($element->getLocalName(), self::$breaks_line);
     }
 
-    /**
-     * @param Element $element
-     * @return bool
-     */
     private function isInlineBlock(Element $element): bool
     {
         $namespaceURI = $element->getNamespaceURI();
@@ -319,7 +303,6 @@ class Compress extends Normalize
 
     /**
      * Consistent sorting of attributes might give slightly better gzip performance
-     * @param Element $element
      */
     protected function normalizeAttributes(Element $element): void
     {
@@ -332,7 +315,7 @@ class Compress extends Normalize
         }
 
         if (count($attrs_by_qname) > 1) {
-            uksort($attrs_by_qname, [$this, 'compareQNames']);
+            uksort($attrs_by_qname, $this->compareQNames(...));
             $element->setAttributeNodes(array_values($attrs_by_qname));
         }
     }
@@ -344,8 +327,6 @@ class Compress extends Normalize
      *
      * @param string $a
      * @param string $b
-     *
-     * @return int
      */
     private static function compareQNames($a, $b): int
     {
@@ -365,8 +346,6 @@ class Compress extends Normalize
 
     /**
      * HTML5 doesn't care about boilerplate
-     *
-     * @param Element $element
      */
     private function elementSpecificOptimizations(Element $element): void
     {
@@ -402,5 +381,10 @@ class Compress extends Normalize
                 $element->removeAttributeNS('', 'type');
             }
         }
+    }
+
+    public function filterElement(DOMElement $node): void
+    {
+        // TODO: Implement filterElement() method.
     }
 }

@@ -14,6 +14,8 @@ declare(strict_types=1);
 
 namespace PhpTal;
 
+use PhpTal\Exception\IOException;
+
 /**
  * Reads template from the filesystem
  *
@@ -30,12 +32,12 @@ class FileSource implements SourceInterface
     {
         $realPath = realpath($path);
         if ($realPath === false) {
-            throw new Exception\IOException(
+            throw new IOException(
                 sprintf('Unable to find real path of file \'%s\' (in %s)', $path, getcwd())
             );
         }
         if (is_dir($realPath)) {
-            throw new Exception\IOException(
+            throw new IOException(
                 sprintf('Path \'%s\' points to a directory', $realPath)
             );
         }
@@ -62,7 +64,7 @@ class FileSource implements SourceInterface
 
         // file_get_contents returns "" when loading directory!?
         if ($content === false || ($content === '' && is_dir($this->path))) {
-            throw new Exception\IOException('Unable to load file ' . $this->path);
+            throw new IOException('Unable to load file ' . $this->path);
         }
         return $content;
     }

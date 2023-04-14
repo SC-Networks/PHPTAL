@@ -60,7 +60,7 @@ use PhpTal\TalNamespace\Builtin;
  */
 class FillSlot extends Attribute
 {
-    public const CALLBACK_THRESHOLD = 10000;
+    final public const CALLBACK_THRESHOLD = 10000;
 
     /**
      * @var int
@@ -74,8 +74,6 @@ class FillSlot extends Attribute
 
     /**
      * Called before element printing.
-     *
-     * @param CodeWriter $codewriter
      */
     public function before(CodeWriter $codewriter): void
     {
@@ -95,7 +93,6 @@ class FillSlot extends Attribute
     /**
      * Called after element printing.
      *
-     * @param CodeWriter $codewriter
      *
      * @throws PhpTalException
      */
@@ -123,10 +120,8 @@ class FillSlot extends Attribute
     }
 
     /**
-     * @param Element $element
      * @param bool $is_nested_in_repeat true if any parent element has tal:repeat
      *
-     * @return int
      */
     private function estimateNumberOfBytesOutput(Element $element, bool $is_nested_in_repeat): int
     {

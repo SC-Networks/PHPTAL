@@ -29,8 +29,6 @@ interface FilterInterface
      * TAL or PHP tags won't be executed. Postfilters should be fast.
      *
      * @param string $str
-     *
-     * @return string
      */
     public function filter(string $str): string;
 }

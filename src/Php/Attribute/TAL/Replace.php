@@ -47,9 +47,7 @@ class Replace extends Attribute implements TalesChainReaderInterface
     /**
      * Called before element printing.
      *
-     * @param CodeWriter $codewriter
      *
-     * @return void
      * @throws ParserException
      * @throws PhpNotAllowedException
      * @throws PhpTalException
@@ -90,9 +88,7 @@ class Replace extends Attribute implements TalesChainReaderInterface
     /**
      * Called after element printing.
      *
-     * @param CodeWriter $codewriter
      *
-     * @return void
      */
     public function after(CodeWriter $codewriter): void
     {
@@ -101,9 +97,7 @@ class Replace extends Attribute implements TalesChainReaderInterface
     /**
      * support expressions like "foo | bar"
      *
-     * @param CodeWriter $codewriter
      * @param array<string> $expArray
-     *
      * @throws PhpTalException
      */
     private function replaceByChainedExpression(CodeWriter $codewriter, $expArray): void
@@ -111,20 +105,12 @@ class Replace extends Attribute implements TalesChainReaderInterface
         new TalesChainExecutor($codewriter, $expArray, $this);
     }
 
-    /**
-     * @param TalesChainExecutor $executor
-     *
-     * @return void
-     */
     public function talesChainNothingKeyword(TalesChainExecutor $executor): void
     {
         $executor->continueChain();
     }
 
     /**
-     * @param TalesChainExecutor $executor
-     *
-     * @return void
      * @throws PhpTalException
      */
     public function talesChainDefaultKeyword(TalesChainExecutor $executor): void
@@ -135,11 +121,7 @@ class Replace extends Attribute implements TalesChainReaderInterface
     }
 
     /**
-     * @param TalesChainExecutor $executor
-     * @param string $expression
-     * @param bool $islast
      *
-     * @return void
      * @throws PhpTalException
      */
     public function talesChainPart(TalesChainExecutor $executor, string $expression, bool $islast): void
@@ -157,7 +139,6 @@ class Replace extends Attribute implements TalesChainReaderInterface
 
     /**
      * don't replace - re-generate default content
-     * @param CodeWriter $codewriter
      *
      * @throws PhpTalException
      */
