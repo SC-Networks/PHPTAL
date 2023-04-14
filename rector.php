@@ -14,9 +14,6 @@ use Rector\Set\ValueObject\LevelSetList;
 use Rector\Set\ValueObject\SetList;
 
 return static function (RectorConfig $rector_config): void {
-    // Path to phpstan with extensions, that PHPSTan in Rector uses to determine types
-    $rector_config->phpstanConfig(__DIR__ . '/phpstan.neon');
-
     // Define paths to process
     $rector_config->paths([
         'src/',
