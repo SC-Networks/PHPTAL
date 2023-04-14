@@ -325,7 +325,7 @@ class Transformer
                     // Klass::$static
                     // Klass::const
                     // Kclass::staticMethod()
-                //
+                    //
                 case self::ST_STATIC:
                     if (self::isVarNameChar($c)) {
                         // noop

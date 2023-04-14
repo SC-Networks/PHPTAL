@@ -1,14 +1,9 @@
 <?xml version="1.0"?>
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          bootstrap="./tests/config/bootstrap.php"
-         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.0/phpunit.xsd"
-         cacheDirectory=".phpunit.cache"
->
-  <coverage>
-    <include>
-      <directory suffix=".php">src/</directory>
-    </include>
-  </coverage>
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.1/phpunit.xsd"
+         cacheDirectory=".phpunit.cache">
+  <coverage/>
   <php>
     <ini name="display_errors" value="1"/>
     <ini name="zend.exception_ignore_args" value="0"/>
@@ -19,4 +14,9 @@
       <exclude>tests/config</exclude>
     </testsuite>
   </testsuites>
+  <source>
+    <include>
+      <directory suffix=".php">src/</directory>
+    </include>
+  </source>
 </phpunit>
