@@ -25,9 +25,7 @@ class Comment extends Attribute
     /**
      * Called before element printing.
      *
-     * @param CodeWriter $codewriter
      *
-     * @return void
      */
     public function before(CodeWriter $codewriter): void
     {
@@ -37,9 +35,7 @@ class Comment extends Attribute
     /**
      * Called after element printing.
      *
-     * @param CodeWriter $codewriter
      *
-     * @return void
      */
     public function after(CodeWriter $codewriter): void
     {

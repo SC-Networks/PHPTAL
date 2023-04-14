@@ -73,7 +73,6 @@ class Attributes extends Attribute
 {
     /**
      * Called before element printing.
-     * @param CodeWriter $codewriter
      * @throws TemplateException
      * @throws ConfigurationException
      */
@@ -116,17 +115,14 @@ class Attributes extends Attribute
 
     /**
      * Called after element printing.
-     * @param CodeWriter $codewriter
      */
     public function after(CodeWriter $codewriter): void
     {
     }
 
     /**
-     * @param CodeWriter $codewriter
      * @param string $key - unescaped string (not PHP code) for the key
      *
-     * @return string
      * @throws ConfigurationException
      * @throws ParserException
      * @throws UnknownModifierException

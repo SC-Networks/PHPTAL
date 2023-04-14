@@ -38,16 +38,16 @@ use PhpTal\Exception\ParserException;
  */
 class Transformer
 {
-    public const ST_WHITE = -1; // start of string or whitespace
-    public const ST_NONE = 0;  // pass through (operators, parens, etc.)
-    public const ST_STR = 1;  // 'foo'
-    public const ST_ESTR = 2;  // "foo ${x} bar"
-    public const ST_VAR = 3;  // abcd
-    public const ST_NUM = 4;  // 123.02
-    public const ST_EVAL = 5;  // $somevar
-    public const ST_MEMBER = 6;  // abcd.x
-    public const ST_STATIC = 7;  // class::[$]static|const
-    public const ST_DEFINE = 8;  // @MY_DEFINE
+    final public const ST_WHITE = -1; // start of string or whitespace
+    final public const ST_NONE = 0;  // pass through (operators, parens, etc.)
+    final public const ST_STR = 1;  // 'foo'
+    final public const ST_ESTR = 2;  // "foo ${x} bar"
+    final public const ST_VAR = 3;  // abcd
+    final public const ST_NUM = 4;  // 123.02
+    final public const ST_EVAL = 5;  // $somevar
+    final public const ST_MEMBER = 6;  // abcd.x
+    final public const ST_STATIC = 7;  // class::[$]static|const
+    final public const ST_DEFINE = 8;  // @MY_DEFINE
 
     /**
      * @var array<string, string>
@@ -67,15 +67,12 @@ class Transformer
     /**
      * transform PHPTAL's php-like syntax into real PHP
      *
-     * @param string $str
      * @param string $prefix
-     *
-     * @return string
      * @throws ParserException
      */
     public static function transform(string $str, ?string $prefix = null): string
     {
-        $prefix = $prefix ?? '$';
+        $prefix ??= '$';
         $len = strlen($str);
         $state = self::ST_WHITE;
         $result = '';
@@ -385,42 +382,22 @@ class Transformer
         return $result;
     }
 
-    /**
-     * @param string $c
-     *
-     * @return bool
-     */
     private static function isAlpha(string $c): bool
     {
         $c = strtolower($c);
         return $c >= 'a' && $c <= 'z';
     }
 
-    /**
-     * @param string $c
-     *
-     * @return bool
-     */
     private static function isDigit(string $c): bool
     {
         return ($c >= '0' && $c <= '9');
     }
 
-    /**
-     * @param string $c
-     *
-     * @return bool
-     */
     private static function isDigitCompound(string $c): bool
     {
         return (self::isDigit($c) || $c === '.');
     }
 
-    /**
-     * @param string $c
-     *
-     * @return bool
-     */
     private static function isVarNameChar(string $c): bool
     {
         return self::isAlpha($c) || self::isDigit($c) || $c === '_' || $c === '\\';

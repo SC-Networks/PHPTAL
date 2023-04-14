@@ -22,9 +22,7 @@ interface SourceResolverInterface
     /**
      * Returns Source or null.
      *
-     * @param string $path
      *
-     * @return SourceInterface|null
      */
     public function resolve(string $path): ?SourceInterface;
 }

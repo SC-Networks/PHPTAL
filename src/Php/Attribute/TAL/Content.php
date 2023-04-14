@@ -44,9 +44,7 @@ class Content extends Attribute implements TalesChainReaderInterface
     /**
      * Called before element printing.
      *
-     * @param CodeWriter $codewriter
      *
-     * @return void
      * @throws ParserException
      * @throws PhpNotAllowedException
      * @throws UnknownModifierException
@@ -78,29 +76,19 @@ class Content extends Attribute implements TalesChainReaderInterface
     /**
      * Called after element printing.
      *
-     * @param CodeWriter $codewriter
      *
-     * @return void
      */
     public function after(CodeWriter $codewriter): void
     {
     }
 
-    /**
-     * @param CodeWriter $codewriter
-     *
-     * @return void
-     */
     private function generateDefault(CodeWriter $codewriter): void
     {
         $this->phpelement->generateContent($codewriter, true);
     }
 
     /**
-     * @param CodeWriter $codewriter
      * @param array<string> $code
-     *
-     * @return void
      * @throws PhpTalException
      */
     protected function generateChainedContent(CodeWriter $codewriter, array $code): void
@@ -110,11 +98,7 @@ class Content extends Attribute implements TalesChainReaderInterface
     }
 
     /**
-     * @param TalesChainExecutor $executor
-     * @param string $expression
-     * @param bool $islast
      *
-     * @return void
      * @throws PhpTalException
      */
     public function talesChainPart(TalesChainExecutor $executor, string $expression, bool $islast): void
@@ -130,20 +114,12 @@ class Content extends Attribute implements TalesChainReaderInterface
         }
     }
 
-    /**
-     * @param TalesChainExecutor $executor
-     *
-     * @return void
-     */
     public function talesChainNothingKeyword(TalesChainExecutor $executor): void
     {
         $executor->breakChain();
     }
 
     /**
-     * @param TalesChainExecutor $executor
-     *
-     * @return void
      * @throws PhpTalException
      */
     public function talesChainDefaultKeyword(TalesChainExecutor $executor): void

@@ -13,7 +13,20 @@ declare(strict_types=1);
 
 namespace PhpTal;
 
+use Exception;
+use PhpTal\Dom\PHPTALDocumentBuilder;
+use PhpTal\Dom\SaxXmlParser;
+use PhpTal\Exception\ConfigurationException;
+use PhpTal\Exception\InvalidVariableNameException;
+use PhpTal\Exception\IOException;
+use PhpTal\Exception\MacroMissingException;
+use PhpTal\Exception\ParserException;
+use PhpTal\Exception\PhpTalException;
+use PhpTal\Exception\TemplateException;
+use PhpTal\Php\CodeWriter;
+use PhpTal\Php\State;
 use PhpTal\Php\TalesInternal;
+use PhpTal\PreFilter\StripComments;
 use RuntimeException;
 use stdClass;
 use Throwable;
@@ -30,15 +43,15 @@ use Throwable;
  */
 class PHPTAL implements PhpTalInterface
 {
-    public const PHPTAL_VERSION = '3_0_2';
+    final public const PHPTAL_VERSION = '3_0_2';
 
     /**
      * constants for output mode
      * @see setOutputMode()
      */
-    public const XHTML = 11;
-    public const XML   = 22;
-    public const HTML5 = 55;
+    final public const XHTML = 11;
+    final public const XML   = 22;
+    final public const HTML5 = 55;
 
     /**
      * @see getPreFilters()
@@ -134,7 +147,7 @@ class PHPTAL implements PhpTalInterface
     /**
      * list of on-error caught exceptions
      *
-     * @var \Exception[]
+     * @var Exception[]
      */
     protected $errors = [];
 
@@ -329,7 +342,7 @@ class PHPTAL implements PhpTalInterface
         $this->resetPrepared();
 
         if ($bool) {
-            $this->prefilters['_phptal_strip_comments_'] = new PreFilter\StripComments();
+            $this->prefilters['_phptal_strip_comments_'] = new StripComments();
         } else {
             unset($this->prefilters['_phptal_strip_comments_']);
         }
@@ -348,14 +361,14 @@ class PHPTAL implements PhpTalInterface
      * @param int $mode (\PhpTal\PHPTAL::XML, \PhpTal\PHPTAL::XHTML or \PhpTal\PHPTAL::HTML5).
      *
      * @return $this
-     * @throws Exception\ConfigurationException
+     * @throws ConfigurationException
      */
     public function setOutputMode(int $mode): PhpTalInterface
     {
         $this->resetPrepared();
 
         if (!in_array($mode, [static::XHTML, static::XML, static::HTML5], true)) {
-            throw new Exception\ConfigurationException('Unsupported output mode ' . $mode);
+            throw new ConfigurationException('Unsupported output mode ' . $mode);
         }
         $this->outputMode = $mode;
         return $this;
@@ -395,8 +408,6 @@ class PHPTAL implements PhpTalInterface
 
     /**
      * Get input and ouput encoding.
-     *
-     * @return string
      */
     public function getEncoding(): string
     {
@@ -408,8 +419,6 @@ class PHPTAL implements PhpTalInterface
      * The path cannot contain characters that would be interpreted by glob() (e.g. *[]?)
      *
      * @param string $path Intermediate file path.
-     *
-     * @return void
      */
     public function setPhpCodeDestination(string $path): void
     {
@@ -419,8 +428,6 @@ class PHPTAL implements PhpTalInterface
 
     /**
      * Get the storage location for intermediate PHP files.
-     *
-     * @return string
      */
     public function getPhpCodeDestination(): string
     {
@@ -467,8 +474,6 @@ class PHPTAL implements PhpTalInterface
 
     /**
      * Get the value of the force reparse state.
-     *
-     * @return bool
      */
     public function getForceReparse(): bool
     {
@@ -513,7 +518,6 @@ class PHPTAL implements PhpTalInterface
     /**
      * Sets the level of recursion for template cache directories
      *
-     * @param int $recursion_level
      *
      * @return self
      */
@@ -541,8 +545,6 @@ class PHPTAL implements PhpTalInterface
      * Result of prefilters may be cached until this string changes.
      *
      * You can override this function.
-     *
-     * @return string
      */
     private function getPreFiltersCacheId(): string
     {
@@ -551,7 +553,7 @@ class PHPTAL implements PhpTalInterface
             if ($prefilter instanceof PreFilter) {
                 $cacheid .= $key . $prefilter->getCacheId();
             } else {
-                $cacheid .= $key . get_class($prefilter);
+                $cacheid .= $key . $prefilter::class;
             }
         }
         return $cacheid;
@@ -594,7 +596,6 @@ class PHPTAL implements PhpTalInterface
      * Register a trigger for specified phptal:id.
      *
      * @param string $id phptal:id to look for
-     * @param TriggerInterface $trigger
      *
      * @return $this
      */
@@ -608,8 +609,6 @@ class PHPTAL implements PhpTalInterface
      * Returns trigger for specified phptal:id.
      *
      * @param string $id phptal:id
-     *
-     * @return TriggerInterface|null
      */
     public function getTrigger(string $id): ?TriggerInterface
     {
@@ -624,7 +623,7 @@ class PHPTAL implements PhpTalInterface
      * @param mixed $value
      *
      * @return void
-     * @throws Exception\InvalidVariableNameException
+     * @throws InvalidVariableNameException
      */
     public function __set($varname, $value)
     {
@@ -639,7 +638,7 @@ class PHPTAL implements PhpTalInterface
      * @param mixed $value value of the variable
      *
      * @return $this
-     * @throws Exception\InvalidVariableNameException
+     * @throws InvalidVariableNameException
      */
     public function set(string $varname, $value): PhpTalInterface
     {
@@ -650,8 +649,7 @@ class PHPTAL implements PhpTalInterface
     /**
      * Execute the template code and return generated markup.
      *
-     * @return string
-     * @throws Exception\TemplateException
+     * @throws TemplateException
      * @throws Throwable
      */
     public function execute(): string
@@ -700,8 +698,7 @@ class PHPTAL implements PhpTalInterface
      * Execute and echo template without buffering of the output.
      * This function does not allow postfilters nor DOCTYPE/XML declaration.
      *
-     * @return void
-     * @throws Exception\TemplateException
+     * @throws TemplateException
      * @throws Throwable
      */
     public function echoExecute(): void
@@ -713,7 +710,7 @@ class PHPTAL implements PhpTalInterface
             }
 
             if ($this->postfilter !== null) {
-                throw new Exception\ConfigurationException('echoExecute() does not support postfilters');
+                throw new ConfigurationException('echoExecute() does not support postfilters');
             }
 
             $this->context->echoDeclarations(true);
@@ -735,9 +732,9 @@ class PHPTAL implements PhpTalInterface
      * @param PhpTalInterface $local_tpl is PHPTAL instance of the file in which macro is defined
      *                          (it will be different from $this if it's external macro call)
      *
-     * @throws Exception\IOException
-     * @throws Exception\MacroMissingException
-     * @throws Exception\TemplateException
+     * @throws IOException
+     * @throws MacroMissingException
+     * @throws TemplateException
      * @throws Throwable
      */
     final public function executeMacroOfTemplate(string $path, PhpTalInterface $local_tpl): void
@@ -765,7 +762,7 @@ class PHPTAL implements PhpTalInterface
 
             $fun = $tpl->getFunctionName() . '_' . str_replace('-', '_', $macroName);
             if (!function_exists($fun)) {
-                throw new Exception\MacroMissingException(
+                throw new MacroMissingException(
                     "Macro '$macroName' is not defined in $file",
                     $this->getSource()->getRealPath()
                 );
@@ -776,7 +773,7 @@ class PHPTAL implements PhpTalInterface
             // call local macro
             $fun = $local_tpl->getFunctionName() . '_' . str_replace('-', '_', $path);
             if (!function_exists($fun)) {
-                throw new Exception\MacroMissingException(
+                throw new MacroMissingException(
                     "Macro '$path' is not defined",
                     $local_tpl->getSource()->getRealPath()
                 );
@@ -788,9 +785,8 @@ class PHPTAL implements PhpTalInterface
     /**
      * ensure that getCodePath will return up-to-date path
      *
-     * @return void
-     * @throws Exception\ConfigurationException
-     * @throws Exception\IOException
+     * @throws ConfigurationException
+     * @throws IOException
      */
     private function setCodeFile(): void
     {
@@ -801,8 +797,6 @@ class PHPTAL implements PhpTalInterface
 
     /**
      * Generate a subpath structure depending on the config
-     *
-     * @return string
      */
     private function getSubPath(): string
     {
@@ -819,9 +813,6 @@ class PHPTAL implements PhpTalInterface
         return $path;
     }
 
-    /**
-     * @return void
-     */
     protected function resetPrepared(): void
     {
         $this->prepared = false;
@@ -833,9 +824,9 @@ class PHPTAL implements PhpTalInterface
      * Prepare template without executing it.
      *
      * @return self
-     * @throws Exception\ConfigurationException
-     * @throws Exception\IOException
-     * @throws Exception\TemplateException
+     * @throws ConfigurationException
+     * @throws IOException
+     * @throws TemplateException
      * @throws Throwable
      */
     public function prepare(): PhpTalInterface
@@ -852,14 +843,14 @@ class PHPTAL implements PhpTalInterface
             if ($this->getForceReparse() || !file_exists($this->getCodePath())) {
                 // i'm not sure where that belongs, but not in normal path of execution
                 // because some sites have _a lot_ of files in temp
-                if ($this->getCachePurgeFrequency() && mt_rand() % $this->getCachePurgeFrequency() === 0) {
+                if ($this->getCachePurgeFrequency() && random_int(0, mt_getrandmax()) % $this->getCachePurgeFrequency() === 0) {
                     $this->cleanUpGarbage();
                 }
 
                 $result = $this->parse();
 
                 if (!file_put_contents($this->getCodePath(), $result)) {
-                    throw new Exception\IOException('Unable to open '.$this->getCodePath().' for writing');
+                    throw new IOException('Unable to open '.$this->getCodePath().' for writing');
                 }
 
                 // the awesome thing about eval() is that parse errors don't stop PHP.
@@ -878,7 +869,7 @@ class PHPTAL implements PhpTalInterface
 
                     // greedy .* ensures last match
                     $line = preg_match('/.*on line (\d+)$/m', $msg, $m) ? $m[1] : 0;
-                    throw new Exception\TemplateException(trim($msg), $this->getCodePath(), (int) $line);
+                    throw new TemplateException(trim($msg), $this->getCodePath(), (int) $line);
                 }
                 ob_end_clean();
             } else {
@@ -894,8 +885,6 @@ class PHPTAL implements PhpTalInterface
 
     /**
      * get how long compiled templates and phptal:cache files are kept, in days
-     *
-     * @return float
      */
     private function getCacheLifetime(): float
     {
@@ -919,7 +908,6 @@ class PHPTAL implements PhpTalInterface
      * PHPTAL will scan cache and remove old files on every nth compile
      * Set to 0 to disable cleanups
      *
-     * @param int $n
      *
      * @return $this
      */
@@ -932,8 +920,6 @@ class PHPTAL implements PhpTalInterface
     /**
      * how likely cache cleaning can happen
      * @see self::setCachePurgeFrequency()
-     *
-     * @return int
      */
     private function getCachePurgeFrequency(): int
     {
@@ -944,8 +930,6 @@ class PHPTAL implements PhpTalInterface
     /**
      * Removes all compiled templates from cache that
      * are older than getCacheLifetime() days
-     *
-     * @return void
      */
     public function cleanUpGarbage(): void
     {
@@ -964,9 +948,9 @@ class PHPTAL implements PhpTalInterface
         ), GLOB_NOSORT);
 
         if ($cacheFiles) {
-            foreach ($cacheFiles as $index => $file) {
+            foreach ($cacheFiles as $file) {
                 // comparison here skips filenames that are certainly too new
-                if (strcmp($file, $upperLimit) <= 0 || strpos($file, $lowerLimit) === 0) {
+                if (strcmp($file, $upperLimit) <= 0 || str_starts_with($file, $lowerLimit)) {
                     $time = filemtime($file);
                     if ($time && $time < $cacheFilesExpire) {
                         @unlink($file);
@@ -980,9 +964,8 @@ class PHPTAL implements PhpTalInterface
      * Removes content cached with phptal:cache for currently set template
      * Must be called after setSource/setTemplate.
      *
-     * @return void
-     * @throws Exception\ConfigurationException
-     * @throws Exception\IOException
+     * @throws ConfigurationException
+     * @throws IOException
      */
     public function cleanUpCache(): void
     {
@@ -990,7 +973,7 @@ class PHPTAL implements PhpTalInterface
         $cacheFiles = glob($filename . '?*', GLOB_NOSORT);
         if ($cacheFiles) {
             foreach ($cacheFiles as $file) {
-                if (strpos($file, $filename) !== 0) {
+                if (!str_starts_with($file, $filename)) {
                     continue;
                 } // safety net
                 @unlink($file);
@@ -1005,9 +988,8 @@ class PHPTAL implements PhpTalInterface
      * The returned file may be used to cleanup (unlink) temporary files
      * generated by temporary templates or more simply for debug.
      *
-     * @return string
-     * @throws Exception\ConfigurationException
-     * @throws Exception\IOException
+     * @throws ConfigurationException
+     * @throws IOException
      */
     public function getCodePath(): string
     {
@@ -1019,8 +1001,6 @@ class PHPTAL implements PhpTalInterface
 
     /**
      * Returns the generated template function name.
-     *
-     * @return string
      */
     public function getFunctionName(): string
     {
@@ -1056,8 +1036,6 @@ class PHPTAL implements PhpTalInterface
      * Function name is also base name for the template.
      *
      * @param int|null $timestamp unix timestamp with template modification date
-     *
-     * @return string
      */
     private function getFunctionNamePrefix(?int $timestamp = null): string
     {
@@ -1068,8 +1046,6 @@ class PHPTAL implements PhpTalInterface
 
     /**
      * Returns template translator.
-     *
-     * @return TranslationServiceInterface|null
      */
     public function getTranslator(): ?TranslationServiceInterface
     {
@@ -1079,7 +1055,7 @@ class PHPTAL implements PhpTalInterface
     /**
      * Returns array of exceptions caught by tal:on-error attribute.
      *
-     * @return \Exception[]
+     * @return Exception[]
      */
     public function getErrors(): array
     {
@@ -1089,11 +1065,9 @@ class PHPTAL implements PhpTalInterface
     /**
      * Public for phptal templates, private for user.
      *
-     * @param \Exception $error
      *
-     * @return void
      */
-    public function addError(\Exception $error): void
+    public function addError(Exception $error): void
     {
         $this->errors[] = $error;
     }
@@ -1101,8 +1075,6 @@ class PHPTAL implements PhpTalInterface
     /**
      * Returns current context object.
      * Use only in Triggers.
-     *
-     * @return Context
      */
     public function getContext(): Context
     {
@@ -1111,8 +1083,6 @@ class PHPTAL implements PhpTalInterface
 
     /**
      * only for use in generated template code
-     *
-     * @return stdClass
      */
     public function getGlobalContext(): stdClass
     {
@@ -1121,8 +1091,6 @@ class PHPTAL implements PhpTalInterface
 
     /**
      * only for use in generated template code
-     *
-     * @return Context
      */
     final public function pushContext(): Context
     {
@@ -1132,8 +1100,6 @@ class PHPTAL implements PhpTalInterface
 
     /**
      * only for use in generated template code
-     *
-     * @return Context
      */
     final public function popContext(): Context
     {
@@ -1145,10 +1111,10 @@ class PHPTAL implements PhpTalInterface
      * Parse currently set template, prefilter and generate PHP code.
      *
      * @return string (compiled PHP code)
-     * @throws Exception\ConfigurationException
-     * @throws Exception\ParserException
-     * @throws Exception\TemplateException
-     * @throws Exception\PhpTalException
+     * @throws ConfigurationException
+     * @throws ParserException
+     * @throws TemplateException
+     * @throws PhpTalException
      */
     protected function parse(): string
     {
@@ -1160,9 +1126,9 @@ class PHPTAL implements PhpTalInterface
         }
 
         $realpath = $this->source->getRealPath();
-        $parser = new Dom\SaxXmlParser($this->encoding);
+        $parser = new SaxXmlParser($this->encoding);
 
-        $builder = new Dom\PHPTALDocumentBuilder();
+        $builder = new PHPTALDocumentBuilder();
         $tree = $parser->parseString($builder, $data, $realpath)->getResult();
 
         foreach ($prefilters as $prefilter) {
@@ -1171,9 +1137,9 @@ class PHPTAL implements PhpTalInterface
             }
         }
 
-        $state = new Php\State($this);
+        $state = new State($this);
 
-        $codewriter = new Php\CodeWriter($state);
+        $codewriter = new CodeWriter($state);
         $codewriter->doTemplateFile($this->getFunctionName(), $tree);
 
         return $codewriter->getResult();
@@ -1182,14 +1148,13 @@ class PHPTAL implements PhpTalInterface
     /**
      * Search template source location.
      *
-     * @return void
-     * @throws Exception\ConfigurationException
-     * @throws Exception\IOException
+     * @throws ConfigurationException
+     * @throws IOException
      */
     protected function findTemplate(): void
     {
         if ($this->path === null) {
-            throw new Exception\ConfigurationException('No template file specified');
+            throw new ConfigurationException('No template file specified');
         }
 
         if ($this->source !== null) {
@@ -1212,13 +1177,10 @@ class PHPTAL implements PhpTalInterface
         }
 
         if (!$this->source) {
-            throw new Exception\IOException('Unable to locate template file '.$this->path);
+            throw new IOException('Unable to locate template file '.$this->path);
         }
     }
 
-    /**
-     * @return SourceInterface
-     */
     public function getSource(): SourceInterface
     {
         return $this->source;

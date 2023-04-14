@@ -47,9 +47,7 @@ use ReflectionException;
 class Translate extends Content
 {
     /**
-     * @param CodeWriter $codewriter
      *
-     * @return void
      *
      * @throws TemplateException
      * @throws ConfigurationException
@@ -101,20 +99,12 @@ class Translate extends Content
         );
     }
 
-    /**
-     * @param CodeWriter $codewriter
-     * @return void
-     */
     public function after(CodeWriter $codewriter): void
     {
     }
 
     /**
-     * @param TalesChainExecutor $executor
-     * @param string $expression
-     * @param bool $islast
      *
-     * @return void
      * @throws ConfigurationException
      * @throws PhpTalException
      */
@@ -137,10 +127,7 @@ class Translate extends Content
 
     /**
      * @param Node&Element $tag
-     * @param bool $preserve_tags
-     * @param string $encoding
      *
-     * @return string
      */
     private function getTranslationKey(Node $tag, bool $preserve_tags, string $encoding): string
     {
@@ -176,10 +163,8 @@ class Translate extends Content
     }
 
     /**
-     * @param CodeWriter $codewriter
      * @param Node&Element $tag
      *
-     * @return void
      *
      * @throws PhpTalException
      * @throws TemplateException

@@ -16,23 +16,19 @@ declare(strict_types=1);
 namespace PhpTal\Dom;
 
 use PhpTal\Php\CodeWriter;
+use Stringable;
 
 /**
  * Document node abstract class.
  *
  * @package PHPTAL
  */
-abstract class Node
+abstract class Node implements Stringable
 {
     /**
      * @var Element|null
      */
     public $parentNode;
-
-    /**
-     * @var string
-     */
-    private $value_escaped;
 
     /**
      * @var string
@@ -45,27 +41,14 @@ abstract class Node
     private $source_line;
 
     /**
-     * @var string
-     */
-    private $encoding;
-
-    /**
      * Node constructor.
-     *
-     * @param string $value_escaped
-     * @param string $encoding
      */
-    public function __construct(string $value_escaped, string $encoding)
+    public function __construct(private string $value_escaped, private string $encoding)
     {
-        $this->value_escaped = $value_escaped;
-        $this->encoding = $encoding;
     }
 
     /**
      * hint where this node is in source code
-     *
-     * @param string $file
-     * @param int $line
      */
     public function setSource(string $file, int $line): void
     {
@@ -75,8 +58,6 @@ abstract class Node
 
     /**
      * file from which this node comes from
-     *
-     * @return string
      */
     public function getSourceFile(): string
     {
@@ -85,8 +66,6 @@ abstract class Node
 
     /**
      * line on which this node was defined
-     *
-     * @return int
      */
     public function getSourceLine(): int
     {
@@ -95,8 +74,6 @@ abstract class Node
 
     /**
      * depends on node type. Value will be escaped according to context that node comes from.
-     *
-     * @return string
      */
     public function getValueEscaped(): string
     {
@@ -117,8 +94,6 @@ abstract class Node
 
     /**
      * get value as plain text. Depends on node type.
-     *
-     * @return string
      */
     public function getValue(): string
     {
@@ -127,8 +102,6 @@ abstract class Node
 
     /**
      * encoding used by value of this node.
-     *
-     * @return string
      */
     public function getEncoding(): string
     {
@@ -137,14 +110,9 @@ abstract class Node
 
     /**
      * use CodeWriter to compile this element to PHP code
-     *
-     * @param CodeWriter $codewriter
      */
     abstract public function generateCode(CodeWriter $codewriter): void;
 
-    /**
-     * @return string
-     */
     public function __toString(): string
     {
         return ' “' . $this->getValue() . '” ';

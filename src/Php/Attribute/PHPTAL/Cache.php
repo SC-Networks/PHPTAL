@@ -51,9 +51,7 @@ class Cache extends Attribute
     /**
      * Called before element printing.
      *
-     * @param CodeWriter $codewriter
      *
-     * @return void
      * @throws ParserException
      * @throws PhpNotAllowedException
      * @throws UnknownModifierException
@@ -134,9 +132,7 @@ class Cache extends Attribute
     /**
      * Called after element printing.
      *
-     * @param CodeWriter $codewriter
      *
-     * @return void
      * @throws PhpTalException
      */
     public function after(CodeWriter $codewriter): void

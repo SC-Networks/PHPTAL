@@ -23,7 +23,6 @@ interface TriggerInterface
 
     /**
      * @param mixed $id
-     * @param PhpTalInterface $tpl
      *
      * @return mixed
      */
@@ -31,7 +30,6 @@ interface TriggerInterface
 
     /**
      * @param mixed $id
-     * @param PhpTalInterface $tpl
      *
      * @return mixed
      */

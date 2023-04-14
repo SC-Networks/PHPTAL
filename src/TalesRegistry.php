@@ -14,6 +14,7 @@ declare(strict_types=1);
 
 namespace PhpTal;
 
+use PhpTal\Exception\ConfigurationException;
 use PhpTal\Php\TalesInternal;
 use ReflectionClass;
 use ReflectionException;
@@ -50,14 +51,13 @@ final class TalesRegistry implements TalesRegistryInterface
     /**
      * Unregisters a expression modifier
      *
-     * @param string $prefix
      *
      * @throws Exception\ConfigurationException
      */
     public static function unregisterPrefix(string $prefix): void
     {
         if (!static::isRegistered($prefix)) {
-            throw new Exception\ConfigurationException("Expression modifier '$prefix' is not registered");
+            throw new ConfigurationException("Expression modifier '$prefix' is not registered");
         }
 
         unset(static::$callbacks[$prefix]);
@@ -81,7 +81,7 @@ final class TalesRegistry implements TalesRegistryInterface
             if ($is_fallback === true) {
                 return; // simply ignored
             }
-            throw new Exception\ConfigurationException("Expression modifier '$prefix' is already registered");
+            throw new ConfigurationException("Expression modifier '$prefix' is already registered");
         }
 
         // Check if valid callback
@@ -90,7 +90,7 @@ final class TalesRegistry implements TalesRegistryInterface
             $class = new ReflectionClass($callback[0]);
 
             if (!$class->isSubclassOf(TalesInterface::class)) {
-                throw new Exception\ConfigurationException(
+                throw new ConfigurationException(
                     'The class you want to register does not implement "\PhpTal\Tales".'
                 );
             }
@@ -98,12 +98,12 @@ final class TalesRegistry implements TalesRegistryInterface
             $method = new ReflectionMethod($callback[0], $callback[1]);
 
             if (!$method->isStatic()) {
-                throw new Exception\ConfigurationException('The method you want to register is not static.');
+                throw new ConfigurationException('The method you want to register is not static.');
             }
         } elseif (is_callable($callback)) {
             // do nothing
         } elseif (!function_exists($callback)) {
-            throw new Exception\ConfigurationException('The function you are trying to register does not exist.');
+            throw new ConfigurationException('The function you are trying to register does not exist.');
         }
 
         /** @var callable():mixed|callable-string|array{0: class-string, 1: string} $callback */
@@ -113,9 +113,7 @@ final class TalesRegistry implements TalesRegistryInterface
     /**
      * true if given prefix is taken
      *
-     * @param string $prefix
      *
-     * @return bool
      */
     public static function isRegistered(string $prefix): bool
     {
@@ -125,7 +123,6 @@ final class TalesRegistry implements TalesRegistryInterface
     /**
      * get callback for the prefix
      *
-     * @param string $prefix
      *
      * @return null|callable(?string, bool):mixed
      * @throws Exception\UnknownModifierException

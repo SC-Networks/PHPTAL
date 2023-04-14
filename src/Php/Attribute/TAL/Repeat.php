@@ -84,9 +84,7 @@ class Repeat extends Attribute
     /**
      * Called before element printing.
      *
-     * @param CodeWriter $codewriter
      *
-     * @return void
      * @throws ParserException
      * @throws PhpNotAllowedException
      * @throws UnknownModifierException
@@ -114,9 +112,7 @@ class Repeat extends Attribute
     /**
      * Called after element printing.
      *
-     * @param CodeWriter $codewriter
      *
-     * @return void
      * @throws PhpTalException
      */
     public function after(CodeWriter $codewriter): void

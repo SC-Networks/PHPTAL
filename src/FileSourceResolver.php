@@ -21,21 +21,14 @@ namespace PhpTal;
 class FileSourceResolver implements SourceResolverInterface
 {
     /**
-     * @var string[]
-     */
-    private $repositories;
-
-    /**
      * FileSourceResolver constructor.
      * @param array<string> $repositories
      */
-    public function __construct(array $repositories)
+    public function __construct(private array $repositories)
     {
-        $this->repositories = $repositories;
     }
 
     /**
-     * @param string $path
      * @return FileSource
      * @throws Exception\IOException
      */

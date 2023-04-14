@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace PhpTal\PreFilter;
 
+use DOMElement;
 use PhpTal\Dom\Attr;
 use PhpTal\Dom\Element;
 use PhpTal\Dom\Text;
@@ -21,7 +22,7 @@ use PhpTal\PreFilter;
 use PhpTal\TalNamespace\Builtin;
 
 /**
- * Collapses conscutive whitespace, trims attributes, merges adjacent text nodes
+ * Collapses consecutive whitespace, trims attributes, merges adjacent text nodes
  */
 class Normalize extends PreFilter
 {
@@ -31,13 +32,11 @@ class Normalize extends PreFilter
      *
      * Default implementation does nothing. Override it.
      *
-     * @param string $src markup to filter
-     *
-     * @return string
+     * @param string $str markup to filter
      */
-    public function filter(string $src): string
+    public function filter(string $str): string
     {
-        return str_replace("\r\n", "\n", $src);
+        return str_replace("\r\n", "\n", $str);
     }
 
     /**
@@ -50,7 +49,6 @@ class Normalize extends PreFilter
      *
      * @param Element $root PHPTAL DOM node to modify in place
      *
-     * @return void
      * @throws PhpTalException
      */
     public function filterDOM(Element $root): void
@@ -97,11 +95,6 @@ class Normalize extends PreFilter
         }
     }
 
-    /**
-     * @param Element $element
-     *
-     * @return bool
-     */
     protected function isSpaceSensitiveInXHTML(Element $element): bool
     {
         $ln = $element->getLocalName();
@@ -111,9 +104,6 @@ class Normalize extends PreFilter
     }
 
     /**
-     * @param Element $root
-     *
-     * @return void
      * @throws PhpTalException
      */
     protected function findElementToFilter(Element $root): void
@@ -132,10 +122,7 @@ class Normalize extends PreFilter
     /**
      * does not trim
      *
-     * @param string $text
-     * @param string $encoding
      *
-     * @return string
      */
     protected function normalizeSpace(string $text, string $encoding): string
     {
@@ -144,11 +131,6 @@ class Normalize extends PreFilter
         return preg_replace('/[ \t\r\n]+/' . $utf_regex_mod, ' ', $text); // \s removes nbsp
     }
 
-    /**
-     * @param Element $element
-     *
-     * @return void
-     */
     protected function normalizeAttributes(Element $element): void
     {
         foreach ($element->getAttributeNodes() as $attrnode) {
@@ -160,5 +142,10 @@ class Normalize extends PreFilter
             $val = $this->normalizeSpace($attrnode->getValueEscaped(), $attrnode->getEncoding());
             $attrnode->setValueEscaped(trim($val, ' '));
         }
+    }
+
+    public function filterElement(DOMElement $node): void
+    {
+        // TODO: Implement filterElement() method.
     }
 }

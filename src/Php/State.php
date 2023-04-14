@@ -47,18 +47,10 @@ class State
     private $output_mode;
 
     /**
-     * @var PhpTalInterface
-     */
-    private $phptal;
-
-    /**
      * State constructor.
-     *
-     * @param PhpTalInterface $phptal
      */
-    public function __construct(PhpTalInterface $phptal)
+    public function __construct(private PhpTalInterface $phptal)
     {
-        $this->phptal = $phptal;
         $this->encoding = $phptal->getEncoding();
         $this->output_mode = $phptal->getOutputMode();
     }
@@ -82,9 +74,7 @@ class State
     /**
      * controlled by phptal:debug
      *
-     * @param bool $bool
      *
-     * @return bool
      */
     public function setDebug(bool $bool): bool
     {
@@ -95,8 +85,6 @@ class State
 
     /**
      * if true, add additional diagnostic information to generated code
-     *
-     * @return bool
      */
     public function isDebugOn(): bool
     {
@@ -107,9 +95,7 @@ class State
      * Sets new and returns old TALES mode.
      * Valid modes are 'tales' and 'php'
      *
-     * @param string $mode
      *
-     * @return string
      */
     public function setTalesMode(string $mode): string
     {
@@ -118,9 +104,6 @@ class State
         return $old;
     }
 
-    /**
-     * @return string
-     */
     public function getTalesMode(): string
     {
         return $this->tales_mode;
@@ -128,8 +111,6 @@ class State
 
     /**
      * encoding used for both template input and output
-     *
-     * @return string
      */
     public function getEncoding(): string
     {
@@ -149,7 +130,6 @@ class State
     /**
      * compile TALES expression according to current talesMode
      *
-     * @param null|string $expression
      *
      * @return string|array<string> string with PHP code or array with expressions for TalesChainExecutor
      * @throws ParserException
@@ -191,7 +171,6 @@ class State
      *
      * @param string $string
      *
-     * @return string
      * @throws ParserException
      * @throws UnknownModifierException
      * @throws ReflectionException
@@ -204,15 +183,13 @@ class State
     /**
      * replaces ${} in string, expecting HTML-encoded input and HTML-escapes output
      *
-     * @param string $src
      *
-     * @return string
      */
     public function interpolateTalesVarsInHTML(string $src): string
     {
         return preg_replace_callback(
             '/((?:\$\$)*)\$\{(structure |text )?(.*?)\}|((?:\$\$)+)\{/isS',
-            [$this, 'interpolateTalesVarsInHTMLCallback'],
+            $this->interpolateTalesVarsInHTMLCallback(...),
             $src
         );
     }
@@ -222,7 +199,6 @@ class State
      *
      * @param array<int, string> $matches
      *
-     * @return string
      * @throws ParserException
      * @throws UnknownModifierException
      */
@@ -236,15 +212,13 @@ class State
      * generates output protected against breaking out of CDATA in XML/HTML
      * (depending on current output mode).
      *
-     * @param string $src
      *
-     * @return string
      */
     public function interpolateTalesVarsInCDATA(string $src): string
     {
         return preg_replace_callback(
             '/((?:\$\$)*)\$\{(structure |text )?(.*?)\}|((?:\$\$)+)\{/isS',
-            [$this, 'interpolateTalesVarsInCDATACallback'],
+            $this->interpolateTalesVarsInCDATACallback(...),
             $src
         );
     }
@@ -254,7 +228,6 @@ class State
      *
      * @param array<int, string> $matches
      *
-     * @return string
      * @throws ParserException
      * @throws UnknownModifierException
      */
@@ -265,9 +238,7 @@ class State
 
     /**
      * @param array<int, string> $matches
-     * @param string $format
      *
-     * @return string
      * @throws ParserException
      * @throws PhpNotAllowedException
      * @throws UnknownModifierException
@@ -318,7 +289,6 @@ class State
      * expects PHP code and returns PHP code that will generate escaped string
      * Optimizes case when PHP string is given.
      *
-     * @param string $php
      *
      * @return string php code
      */
@@ -335,7 +305,6 @@ class State
      * allow proper printing of any object
      * (without escaping - for use with structure keyword)
      *
-     * @param string $php
      *
      * @return string php code
      */

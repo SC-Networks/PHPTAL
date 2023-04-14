@@ -147,10 +147,8 @@ class Defs
      * true if it's empty in XHTML (e.g. <img/>)
      * it will assume elements with no namespace may be XHTML too.
      *
-     * @param string $namespace_uri
      * @param string $local_name local name of the tag
      *
-     * @return bool
      */
     public function isEmptyTagNS(string $namespace_uri, string $local_name): bool
     {
@@ -174,8 +172,6 @@ class Defs
      * gives typical prefix for given (built-in) namespace
      *
      * @param string $uri
-     *
-     * @return bool
      */
     public function namespaceURIToPrefix($uri): bool
     {
@@ -196,8 +192,6 @@ class Defs
      * Returns true if the attribute is an xhtml boolean attribute.
      *
      * @param string $att local name
-     *
-     * @return bool
      */
     public function isBooleanAttribute(string $att): bool
     {
@@ -208,10 +202,7 @@ class Defs
      * true if elements content is parsed as CDATA in text/html
      * and also accepts /* * / as comments.
      *
-     * @param string $namespace_uri
-     * @param string $local_name
      *
-     * @return bool
      */
     public function isCDATAElementInHTML(string $namespace_uri, string $local_name): bool
     {
@@ -227,8 +218,6 @@ class Defs
      *
      * @param string $namespace_uri
      * @param string $local_name
-     *
-     * @return bool
      */
     public function isValidAttributeNS(string $namespace_uri, string $local_name): bool
     {
@@ -243,9 +232,7 @@ class Defs
     /**
      * is URI registered (built-in) namespace
      *
-     * @param string $namespace_uri
      *
-     * @return bool
      */
     public function isHandledNamespace(string $namespace_uri): bool
     {
@@ -260,8 +247,6 @@ class Defs
      *
      * @param string $qname
      * @param string $value
-     *
-     * @return bool
      */
     public function isHandledXmlNs(string $qname, string $value): bool
     {
@@ -271,10 +256,7 @@ class Defs
     /**
      * return objects that holds information about given TAL attribute
      *
-     * @param string $namespace_uri
-     * @param string $local_name
      *
-     * @return TalNamespaceAttribute
      */
     public function getNamespaceAttribute(string $namespace_uri, string $local_name): TalNamespaceAttribute
     {
@@ -284,8 +266,6 @@ class Defs
 
     /**
      * Register a \PhpTal\TalNamespace and its attribute into PHPTAL.
-     *
-     * @param TalNamespace $ns
      */
     public function registerNamespace(TalNamespace $ns): void
     {

@@ -31,9 +31,7 @@ class Debug extends Attribute
     /**
      * Called before element printing.
      *
-     * @param CodeWriter $codewriter
      *
-     * @return void
      */
     public function before(CodeWriter $codewriter): void
     {
@@ -43,9 +41,7 @@ class Debug extends Attribute
     /**
      * Called after element printing.
      *
-     * @param CodeWriter $codewriter
      *
-     * @return void
      */
     public function after(CodeWriter $codewriter): void
     {

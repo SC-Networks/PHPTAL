@@ -38,24 +38,24 @@ use PhpTal\Exception\TemplateException;
 class SaxXmlParser
 {
     // available parser states
-    public const ST_ROOT = 0;
-    public const ST_TEXT = 1;
-    public const ST_LT = 2;
-    public const ST_TAG_NAME = 3;
-    public const ST_TAG_CLOSE = 4;
-    public const ST_TAG_SINGLE = 5;
-    public const ST_TAG_ATTRIBUTES = 6;
-    public const ST_TAG_BETWEEN_ATTRIBUTE = 7;
-    public const ST_CDATA = 8;
-    public const ST_COMMENT = 9;
-    public const ST_DOCTYPE = 10;
-    public const ST_XMLDEC = 11;
-    public const ST_PREPROC = 12;
-    public const ST_ATTR_KEY = 13;
-    public const ST_ATTR_EQ = 14;
-    public const ST_ATTR_QUOTE = 15;
-    public const ST_ATTR_VALUE = 16;
-    public const BOM_STR = "\xef\xbb\xbf";
+    final public const ST_ROOT = 0;
+    final public const ST_TEXT = 1;
+    final public const ST_LT = 2;
+    final public const ST_TAG_NAME = 3;
+    final public const ST_TAG_CLOSE = 4;
+    final public const ST_TAG_SINGLE = 5;
+    final public const ST_TAG_ATTRIBUTES = 6;
+    final public const ST_TAG_BETWEEN_ATTRIBUTE = 7;
+    final public const ST_CDATA = 8;
+    final public const ST_COMMENT = 9;
+    final public const ST_DOCTYPE = 10;
+    final public const ST_XMLDEC = 11;
+    final public const ST_PREPROC = 12;
+    final public const ST_ATTR_KEY = 13;
+    final public const ST_ATTR_EQ = 14;
+    final public const ST_ATTR_QUOTE = 15;
+    final public const ST_ATTR_VALUE = 16;
+    final public const BOM_STR = "\xef\xbb\xbf";
 
     /**
      * @var array<int, string>
@@ -90,28 +90,17 @@ class SaxXmlParser
      */
     private $line;
 
-    /**
-     * @var string
-     */
-    private $input_encoding;
-
 
     /**
      * SaxXmlParser constructor.
-     *
-     * @param string $input_encoding
      */
-    public function __construct(string $input_encoding)
+    public function __construct(private string $input_encoding)
     {
-        $this->input_encoding = $input_encoding;
         $this->file = '<string>';
     }
 
     /**
-     * @param DocumentBuilder $builder
-     * @param string $src
      *
-     * @return DocumentBuilder
      * @throws IOException
      * @throws ParserException
      * @throws TemplateException
@@ -125,11 +114,7 @@ class SaxXmlParser
     }
 
     /**
-     * @param DocumentBuilder $builder
-     * @param string $src
-     * @param string $filename
      *
-     * @return DocumentBuilder
      * @throws ParserException
      * @throws TemplateException
      */
@@ -156,7 +141,7 @@ class SaxXmlParser
 
             $i = 0;
             // remove BOM (UTF-8 byte order mark)...
-            if (strpos($src, self::BOM_STR) === 0) {
+            if (str_starts_with($src, self::BOM_STR)) {
                 $i = 3;
             }
             for (; $i < $len; $i++) {
@@ -403,10 +388,7 @@ class SaxXmlParser
             }
 
             $builder->onDocumentEnd();
-        } catch (ParserException $e) {
-            $e->hintSrcPosition($this->file, $this->line);
-            throw $e;
-        } catch (TemplateException $e) {
+        } catch (ParserException|TemplateException $e) {
             $e->hintSrcPosition($this->file, $this->line);
             throw $e;
         }
@@ -414,9 +396,6 @@ class SaxXmlParser
     }
 
     /**
-     * @param string $name
-     *
-     * @return bool
      * @throws ParserException
      */
     private function isValidQName(string $name): bool
@@ -429,9 +408,6 @@ class SaxXmlParser
     }
 
     /**
-     * @param string $str
-     *
-     * @return string
      * @throws ParserException
      */
     private function checkEncoding(string $str): string
@@ -446,7 +422,7 @@ class SaxXmlParser
             if (strlen($str) > 200) {
                 $chunks = preg_split('/(?>[\x09\x0A\x0D\x20-\x7F]+)/', $str, -1, PREG_SPLIT_NO_EMPTY);
                 foreach ($chunks as $chunk) {
-                    if (strlen($chunk) < 200) {
+                    if (strlen((string) $chunk) < 200) {
                         $this->checkEncoding($chunk);
                     }
                 }
@@ -467,7 +443,7 @@ class SaxXmlParser
 
             if (!preg_match('/^(?:(?>' . $match . '))+$/s', $str)) {
                 $res = preg_split('/((?>' . $match . ')+)/s', $str, -1, PREG_SPLIT_DELIM_CAPTURE);
-                for ($i = 0, $iMax = count($res); $i < $iMax; $i += 2) {
+                for ($i = 0, $iMax = is_countable($res) ? count($res) : 0; $i < $iMax; $i += 2) {
                     $res[$i] = self::convertBytesToEntities([1 => $res[$i]]);
                 }
                 $this->raiseError('Invalid UTF-8 bytes: ' . implode('', $res));
@@ -491,8 +467,6 @@ class SaxXmlParser
      * Changes all bytes to hexadecimal XML entities
      *
      * @param array<int, string> $m first array element is used for input
-     *
-     * @return string
      */
     private static function convertBytesToEntities(array $m): string
     {
@@ -507,9 +481,7 @@ class SaxXmlParser
     /**
      * This is where this parser violates XML and refuses to be an annoying bastard.
      *
-     * @param string $str
      *
-     * @return string
      */
     private function sanitizeEscapedText(string $str): string
     {
@@ -528,17 +500,11 @@ class SaxXmlParser
         return $str;
     }
 
-    /**
-     * @return string
-     */
     public function getSourceFile(): string
     {
         return $this->file;
     }
 
-    /**
-     * @return int
-     */
     public function getLineNumber(): int
     {
         return $this->line;
@@ -546,21 +512,16 @@ class SaxXmlParser
 
     /**
      * @param string $c
-     *
-     * @return bool
      */
     public static function isWhiteChar($c): bool
     {
-        return strpos(" \t\n\r\0", $c) !== false;
+        return str_contains(" \t\n\r\0", $c);
     }
 
     /**
-     * @param string $errStr
-     *
-     * @return void
      * @throws ParserException
      */
-    protected function raiseError(string $errStr): void
+    protected function raiseError(string $errStr): never
     {
         throw new ParserException($errStr, $this->file, $this->line);
     }

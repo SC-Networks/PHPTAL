@@ -32,9 +32,7 @@ class Source extends Attribute
     /**
      * Called before element printing.
      *
-     * @param CodeWriter $codewriter
      *
-     * @return void
      * @throws ConfigurationException
      * @throws PhpTalException
      */
@@ -54,9 +52,7 @@ class Source extends Attribute
     /**
      * Called after element printing.
      *
-     * @param CodeWriter $codewriter
      *
-     * @return void
      * @throws ConfigurationException
      */
     public function after(CodeWriter $codewriter): void

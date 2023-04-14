@@ -21,17 +21,10 @@ use Throwable;
 class ExceptionHandler
 {
     /**
-     * @var string
-     */
-    private $encoding;
-
-    /**
      * ExceptionHandler constructor.
-     * @param string $encoding
      */
-    public function __construct(string $encoding)
+    public function __construct(private string $encoding)
     {
-        $this->encoding = $encoding;
     }
 
     /**
@@ -43,7 +36,6 @@ class ExceptionHandler
      * @param Throwable $e exception to re-throw and display
      * @param string $encoding
      *
-     * @return void
      * @throws TemplateException
      * @throws Throwable
      */
@@ -61,7 +53,7 @@ class ExceptionHandler
             }
         }
 
-        if (get_class($e) === ParseError::class) {
+        if ($e::class === ParseError::class) {
             $e = new TemplateException($e->getMessage());
         }
         throw $e; // throws instead of outputting immediately to support user's try/catch
@@ -86,7 +78,7 @@ class ExceptionHandler
         }
 
         if (ini_get('display_errors')) {
-            $title = get_class($e) . ': ' . htmlspecialchars($e->getMessage(), ENT_COMPAT);
+            $title = $e::class . ': ' . htmlspecialchars($e->getMessage(), ENT_COMPAT);
             $body = "<p><strong>\n" . htmlspecialchars($e->getMessage(), ENT_COMPAT) . '</strong></p>' .
                 '<p>In ' . htmlspecialchars($line, ENT_COMPAT) . "</p><pre>\n" .
                 htmlspecialchars($e->getTraceAsString(), ENT_COMPAT) . '</pre>';

@@ -51,11 +51,6 @@ class CodeWriter
     private $known_functions = [];
 
     /**
-     * @var State
-     */
-    private $state;
-
-    /**
      * @var string
      */
     private $result = '';
@@ -102,16 +97,11 @@ class CodeWriter
 
     /**
      * CodeWriter constructor.
-     * @param State $state
      */
-    public function __construct(State $state)
+    public function __construct(private State $state)
     {
-        $this->state = $state;
     }
 
-    /**
-     * @return string
-     */
     public function createTempVariable(): string
     {
         if (count($this->temp_recycling)) {
@@ -122,28 +112,21 @@ class CodeWriter
 
     /**
      * @param string $var
-     * @return void
      * @throws PhpTalException
      */
     public function recycleTempVariable($var): void
     {
-        if (strpos($var, '$_tmp_') !== 0) {
+        if (!str_starts_with($var, '$_tmp_')) {
             throw new PhpTalException('Invalid variable recycled');
         }
         $this->temp_recycling[] = $var;
     }
 
-    /**
-     * @return string
-     */
     public function getCacheFilesBaseName(): string
     {
         return $this->state->getCacheFilesBaseName();
     }
 
-    /**
-     * @return string
-     */
     public function getResult(): string
     {
         $this->flush();
@@ -153,9 +136,7 @@ class CodeWriter
     /**
      * set full '<!DOCTYPE...>' string to output later
      *
-     * @param string $dt
      *
-     * @return void
      */
     public function setDocType(string $dt): void
     {
@@ -165,9 +146,7 @@ class CodeWriter
     /**
      * set full '<?xml ?>' string to output later
      *
-     * @param string $dt
      *
-     * @return void
      */
     public function setXmlDeclaration(string $dt): void
     {
@@ -178,18 +157,13 @@ class CodeWriter
      * functions later generated and checked for existence will have this prefix added
      * (poor man's namespace)
      *
-     * @param string $prefix
      *
-     * @return void
      */
     public function setFunctionPrefix(string $prefix): void
     {
         $this->functionPrefix = $prefix;
     }
 
-    /**
-     * @return string
-     */
     public function getFunctionPrefix(): string
     {
         return $this->functionPrefix;
@@ -198,9 +172,7 @@ class CodeWriter
     /**
      * @see \PhpTal\Php\State::setTalesMode()
      *
-     * @param string $mode
      *
-     * @return string
      */
     public function setTalesMode(string $mode): string
     {
@@ -208,8 +180,6 @@ class CodeWriter
     }
 
     /**
-     * @param string $src
-     *
      * @return array<string>
      */
     public function splitExpression(string $src): array
@@ -217,13 +187,12 @@ class CodeWriter
         preg_match_all('/(?:[^;]+|;;)+/sm', $src, $array);
         $array = $array[0];
         foreach ($array as &$a) {
-            $a = str_replace(';;', ';', $a);
+            $a = str_replace(';;', ';', (string) $a);
         }
         return $array;
     }
 
     /**
-     * @param string $src
      *
      * @return string|array<string>
      * @throws ParserException
@@ -236,35 +205,22 @@ class CodeWriter
         return $this->state->evaluateExpression($src);
     }
 
-    /**
-     * @return void
-     */
     public function indent(): void
     {
         $this->indentation++;
     }
 
-    /**
-     * @return void
-     */
     public function unindent(): void
     {
         $this->indentation--;
     }
 
-    /**
-     * @return void
-     */
     public function flush(): void
     {
         $this->flushCode();
         $this->flushHtml();
     }
 
-    /**
-     * @param bool $bool
-     * @return void
-     */
     public function noThrow(bool $bool): void
     {
         if ($bool) {
@@ -274,9 +230,6 @@ class CodeWriter
         }
     }
 
-    /**
-     * @return void
-     */
     public function flushCode(): void
     {
         $count = count($this->codeBuffer);
@@ -310,9 +263,6 @@ class CodeWriter
         $this->codeBuffer = [];
     }
 
-    /**
-     * @return void
-     */
     public function flushHtml(): void
     {
         if (count($this->htmlBuffer) === 0) {
@@ -351,20 +301,12 @@ class CodeWriter
         }
     }
 
-    /**
-     * @param string $name
-     *
-     * @return bool
-     */
     public function functionExists(string $name): bool
     {
         return isset($this->known_functions[$this->functionPrefix . $name]);
     }
 
     /**
-     * @param string $functionName
-     * @param Element $treeGen
-     * @return void
      * @throws PhpTalException
      * @throws TemplateException
      */
@@ -383,12 +325,6 @@ class CodeWriter
         $this->doEnd('function');
     }
 
-    /**
-     * @param string $name
-     * @param string $params
-     *
-     * @return void
-     */
     public function doFunction(string $name, string $params): void
     {
         $name = $this->functionPrefix . $name;
@@ -400,20 +336,12 @@ class CodeWriter
         $this->segments[] = 'function';
     }
 
-    /**
-     * @param string $comment
-     *
-     * @return void
-     */
     public function doComment(string $comment): void
     {
         $comment = str_replace('*/', '* /', $comment);
         $this->pushCode("/* $comment */");
     }
 
-    /**
-     * @return void
-     */
     public function doInitTranslator(): void
     {
         if ($this->state->isTranslationOn()) {
@@ -422,7 +350,6 @@ class CodeWriter
     }
 
     /**
-     * @return string
      * @throws ConfigurationException
      */
     public function getTranslatorReference(): string
@@ -433,22 +360,11 @@ class CodeWriter
         return '$_translator';
     }
 
-    /**
-     * @param string $code
-     *
-     * @return void
-     */
     public function doEval(string $code): void
     {
         $this->pushCode($code);
     }
 
-    /**
-     * @param string $out
-     * @param string $source
-     *
-     * @return void
-     */
     public function doForeach(string $out, string $source): void
     {
         $this->segments[] = 'foreach';
@@ -457,9 +373,6 @@ class CodeWriter
     }
 
     /**
-     * @param string $expects
-     *
-     * @return void
      * @throws PhpTalException
      */
     public function doEnd(string $expects = null): void
@@ -492,9 +405,6 @@ class CodeWriter
         }
     }
 
-    /**
-     * @return void
-     */
     public function doTry(): void
     {
         $this->segments[] = 'try';
@@ -502,21 +412,12 @@ class CodeWriter
         $this->indent();
     }
 
-    /**
-     * @param string $varname
-     * @param string $code
-     *
-     * @return void
-     */
     public function doSetVar(string $varname, string $code): void
     {
         $this->pushCode($varname . ' = ' . $code);
     }
 
     /**
-     * @param string $catch
-     *
-     * @return void
      * @throws PhpTalException
      */
     public function doCatch(string $catch): void
@@ -527,11 +428,6 @@ class CodeWriter
         $this->indent();
     }
 
-    /**
-     * @param string $condition
-     *
-     * @return void
-     */
     public function doIf(string $condition): void
     {
         $this->segments[] = 'if';
@@ -540,9 +436,6 @@ class CodeWriter
     }
 
     /**
-     * @param string $condition
-     *
-     * @return void
      * @throws PhpTalException
      */
     public function doElseIf(string $condition): void
@@ -556,7 +449,6 @@ class CodeWriter
     }
 
     /**
-     * @return void
      * @throws PhpTalException
      */
     public function doElse(): void
@@ -569,11 +461,6 @@ class CodeWriter
         $this->indent();
     }
 
-    /**
-     * @param string $code
-     *
-     * @return void
-     */
     public function doEcho(string $code): void
     {
         if ($code === "''") {
@@ -583,11 +470,6 @@ class CodeWriter
         $this->pushCode('echo ' . $this->escapeCode($code));
     }
 
-    /**
-     * @param string $code
-     *
-     * @return void
-     */
     public function doEchoRaw(string $code): void
     {
         if ($code === "''") {
@@ -596,31 +478,16 @@ class CodeWriter
         $this->pushCode('echo ' . $this->stringifyCode($code));
     }
 
-    /**
-     * @param string $html
-     *
-     * @return string
-     */
     public function interpolateHTML(string $html): string
     {
         return $this->state->interpolateTalesVarsInHTML($html);
     }
 
-    /**
-     * @param string $str
-     *
-     * @return string
-     */
     public function interpolateCDATA(string $str): string
     {
         return $this->state->interpolateTalesVarsInCDATA($str);
     }
 
-    /**
-     * @param string $html
-     *
-     * @return void
-     */
     public function pushHTML(string $html): void
     {
         if ($html === '') {
@@ -630,11 +497,6 @@ class CodeWriter
         $this->htmlBuffer[] = $html;
     }
 
-    /**
-     * @param string $codeLine
-     *
-     * @return void
-     */
     public function pushCode(string $codeLine): void
     {
         $this->flushHtml();
@@ -645,47 +507,30 @@ class CodeWriter
     /**
      * php string with escaped text
      *
-     * @param string $string
      *
-     * @return string
      */
     public function str(string $string): string
     {
         return "'" . strtr($string, ["'" => '\\\'', '\\' => '\\\\']) . "'";
     }
 
-    /**
-     * @param string $code
-     *
-     * @return string
-     */
     public function escapeCode(string $code): string
     {
         return $this->state->htmlchars($code);
     }
 
-    /**
-     * @param string $code
-     *
-     * @return string
-     */
     public function stringifyCode(string $code): string
     {
         return $this->state->stringify($code);
     }
 
-    /**
-     * @return string
-     */
     public function getEncoding(): string
     {
         return $this->state->getEncoding();
     }
 
     /**
-     * @param string $src
      *
-     * @return string
      * @throws ParserException
      * @throws UnknownModifierException
      * @throws ReflectionException
@@ -695,37 +540,21 @@ class CodeWriter
         return $this->state->interpolateTalesVarsInString($src);
     }
 
-    /**
-     * @param bool $bool
-     *
-     * @return bool
-     */
     public function setDebug(bool $bool): bool
     {
         return $this->state->setDebug($bool);
     }
 
-    /**
-     * @return bool
-     */
     public function isDebugOn(): bool
     {
         return $this->state->isDebugOn();
     }
 
-    /**
-     * @return int
-     */
     public function getOutputMode(): int
     {
         return $this->state->getOutputMode();
     }
 
-    /**
-     * @param string $value
-     *
-     * @return string
-     */
     public function quoteAttributeValue(string $value): string
     {
         // FIXME: interpolation is done _after_ that function, so ${} must be forbidden for now
@@ -745,33 +574,21 @@ class CodeWriter
         return '"' . $value . '"';
     }
 
-    /**
-     * @return void
-     */
     public function pushContext(): void
     {
         $this->doSetVar('$ctx', '$tpl->pushContext()');
     }
 
-    /**
-     * @return void
-     */
     public function popContext(): void
     {
         $this->doSetVar('$ctx', '$tpl->popContext()');
     }
 
-    /**
-     * @return string
-     */
     private function indentSpaces(): string
     {
         return str_repeat("\t", $this->indentation);
     }
 
-    /**
-     * @return void
-     */
     private function pushCodeWriterContext(): void
     {
         $this->contexts[] = clone $this;
@@ -782,9 +599,6 @@ class CodeWriter
         $this->segments = [];
     }
 
-    /**
-     * @return void
-     */
     private function popCodeWriterContext(): void
     {
         /** @var CodeWriter $oldContext TODO ???*/

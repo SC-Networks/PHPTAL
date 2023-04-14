@@ -14,6 +14,9 @@ declare(strict_types=1);
 
 namespace PhpTal;
 
+use PhpTal\Exception\ConfigurationException;
+use PhpTal\Exception\VariableNotFoundException;
+
 /**
  * \PhpTal\TranslationService gettext implementation.
  *
@@ -49,7 +52,7 @@ class GetTextTranslator implements TranslationServiceInterface
     public function __construct()
     {
         if (!function_exists('gettext')) {
-            throw new Exception\ConfigurationException('Gettext not installed');
+            throw new ConfigurationException('Gettext not installed');
         }
     }
 
@@ -88,15 +91,13 @@ class GetTextTranslator implements TranslationServiceInterface
             }
         }
 
-        throw new Exception\ConfigurationException(
+        throw new ConfigurationException(
             'Language(s) code(s) "' . implode(', ', $langs) . '" not supported by your system'
         );
     }
 
     /**
-     * @param int $category
      * @param array<string> $langs
-     *
      * @return string
      */
     private function trySettingLanguages(int $category, array $langs): ?string
@@ -147,7 +148,6 @@ class GetTextTranslator implements TranslationServiceInterface
     /**
      * used by generated PHP code. Don't use directly.
      *
-     * @param string $key
      * @param mixed $value
      */
     public function setVar(string $key, $value): void
@@ -158,10 +158,7 @@ class GetTextTranslator implements TranslationServiceInterface
     /**
      * translate given key.
      *
-     * @param string $key
      * @param bool $htmlencode if true, output will be HTML-escaped.
-     *
-     * @return string
      * @throws Exception\VariableNotFoundException
      */
     public function translate(string $key, bool $htmlencode): string
@@ -174,7 +171,7 @@ class GetTextTranslator implements TranslationServiceInterface
         while (preg_match('/\${(.*?)\}/sm', $value, $m)) {
             [$src, $var] = $m;
             if (!array_key_exists($var, $this->vars)) {
-                throw new Exception\VariableNotFoundException(
+                throw new VariableNotFoundException(
                     'Interpolation error. Translation uses ${' . $var . '}, which is not defined in the template (via i18n:name)'
                 );
             }

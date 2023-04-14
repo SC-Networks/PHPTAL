@@ -15,33 +15,23 @@ namespace PhpTal;
 
 use Countable;
 use stdClass;
+use Stringable;
 
 /**
  * Representation of the template 'default' keyword
  *
  * @package PHPTAL
  */
-class DefaultKeyword implements Countable
+class DefaultKeyword implements Countable, Stringable
 {
-    /**
-     * @return string
-     */
     public function __toString(): string
     {
         return "''";
     }
-
-    /**
-     * @return int
-     */
     public function count(): int
     {
         return 1;
     }
-
-    /**
-     * @return stdClass
-     */
     public function jsonSerialize(): stdClass
     {
         return new stdClass();

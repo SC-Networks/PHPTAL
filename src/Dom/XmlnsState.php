@@ -28,29 +28,14 @@ use PhpTal\TalNamespace\Builtin;
  */
 class XmlnsState
 {
-    /**
-     * @var array<string, string>
-     */
-    private $prefix_to_uri;
-
-    /**
-     * @var string
-     */
-    private $current_default;
-
     /** Create a new XMLNS state inheriting provided aliases.
      * @param array<string, string> $prefix_to_uri
-     * @param string $current_default
      */
-    public function __construct(array $prefix_to_uri, string $current_default)
+    public function __construct(private array $prefix_to_uri, private string $current_default)
     {
-        $this->prefix_to_uri = $prefix_to_uri;
-        $this->current_default = $current_default;
     }
 
     /**
-     * @param string $prefix
-     *
      * @return string
      */
     public function prefixToNamespaceURI(string $prefix): ?string
@@ -70,21 +55,13 @@ class XmlnsState
     /**
      * Returns true if $attName is a valid attribute name, false otherwise.
      *
-     * @param string $namespace_uri
-     * @param string $local_name
      *
-     * @return bool
      */
     public function isValidAttributeNS(string $namespace_uri, string $local_name): bool
     {
         return Defs::getInstance()->isValidAttributeNS($namespace_uri, $local_name);
     }
 
-    /**
-     * @param string $namespace_uri
-     *
-     * @return bool
-     */
     public function isHandledNamespace(string $namespace_uri): bool
     {
         return Defs::getInstance()->isHandledNamespace($namespace_uri);
@@ -98,8 +75,6 @@ class XmlnsState
      * each encountered node.
      *
      * @param array<string, string> $nodeAttributes
-     *
-     * @return XmlnsState
      */
     public function newElement(array $nodeAttributes): XmlnsState
     {
@@ -126,9 +101,6 @@ class XmlnsState
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getCurrentDefaultNamespaceURI(): string
     {
         return $this->current_default;

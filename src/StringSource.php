@@ -21,7 +21,7 @@ namespace PhpTal;
  */
 class StringSource implements SourceInterface
 {
-    public const NO_PATH_PREFIX = '<string ';
+    final public const NO_PATH_PREFIX = '<string ';
 
     private string $realpath;
 
@@ -36,16 +36,13 @@ class StringSource implements SourceInterface
     {
         $mTime = 0;
 
-        if (strpos($this->realpath, self::NO_PATH_PREFIX) !== 0 && file_exists($this->realpath)) {
+        if (!str_starts_with($this->realpath, self::NO_PATH_PREFIX) && file_exists($this->realpath)) {
             $mTime = (int) @filemtime($this->realpath);
         }
 
         return $mTime;
     }
 
-    /**
-     * @return string
-     */
     public function getData(): string
     {
         return $this->data;
@@ -53,8 +50,6 @@ class StringSource implements SourceInterface
 
     /**
      * well, this is not always a real path. If it starts with self::NO_PATH_PREFIX, then it's fake.
-     *
-     * @return string
      */
     public function getRealPath(): string
     {

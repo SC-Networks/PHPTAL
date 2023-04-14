@@ -82,9 +82,7 @@ class Define extends Attribute implements TalesChainReaderInterface
     /**
      * Called before element printing.
      *
-     * @param CodeWriter $codewriter
      *
-     * @return void
      * @throws ParserException
      * @throws PhpNotAllowedException
      * @throws UnknownModifierException
@@ -139,9 +137,7 @@ class Define extends Attribute implements TalesChainReaderInterface
     /**
      * Called after element printing.
      *
-     * @param CodeWriter $codewriter
      *
-     * @return void
      * @throws PhpTalException
      */
     public function after(CodeWriter $codewriter): void
@@ -155,9 +151,7 @@ class Define extends Attribute implements TalesChainReaderInterface
     }
 
     /**
-     * @param CodeWriter $codewriter
      * @param array<string> $parts
-     *
      * @throws PhpTalException
      */
     private function chainedDefine(CodeWriter $codewriter, $parts): void
@@ -166,9 +160,7 @@ class Define extends Attribute implements TalesChainReaderInterface
     }
 
     /**
-     * @param TalesChainExecutor $executor
      *
-     * @return void
      * @throws TemplateException
      * @throws PhpTalException
      */
@@ -188,9 +180,7 @@ class Define extends Attribute implements TalesChainReaderInterface
     }
 
     /**
-     * @param TalesChainExecutor $executor
      *
-     * @return void
      * @throws TemplateException
      * @throws PhpTalException
      */
@@ -210,11 +200,7 @@ class Define extends Attribute implements TalesChainReaderInterface
     }
 
     /**
-     * @param TalesChainExecutor $executor
-     * @param string $expression
-     * @param bool $islast
      *
-     * @return void
      * @throws PhpTalException
      */
     public function talesChainPart(TalesChainExecutor $executor, string $expression, bool $islast): void
@@ -243,7 +229,6 @@ class Define extends Attribute implements TalesChainReaderInterface
     /**
      * Parse the define expression, already splitted in sub parts by ';'.
      *
-     * @param string $exp
      *
      * @return array{
      *  0: false|string,
@@ -270,11 +255,6 @@ class Define extends Attribute implements TalesChainReaderInterface
         return [$defineScope, $defineVar, $newExp];
     }
 
-    /**
-     * @param CodeWriter $codewriter
-     *
-     * @return void
-     */
     private function bufferizeContent(CodeWriter $codewriter): void
     {
         if (!$this->buffered) {
@@ -287,12 +267,6 @@ class Define extends Attribute implements TalesChainReaderInterface
         $this->doDefineVarWith($codewriter, $this->tmp_content_var);
     }
 
-    /**
-     * @param CodeWriter $codewriter
-     * @param string $code
-     *
-     * @return void
-     */
     private function doDefineVarWith(CodeWriter $codewriter, string $code): void
     {
         if ($this->defineScope === 'global') {

@@ -25,13 +25,14 @@ use PhpTal\TalNamespaceAttribute;
 use PhpTal\TalNamespaceAttributeContent;
 use PhpTal\TalNamespaceAttributeReplace;
 use PhpTal\TalNamespaceAttributeSurround;
+use Stringable;
 
 /**
  * Document Tag representation.
  *
  * @package PHPTAL
  */
-class Element extends Node
+class Element extends Node implements Stringable
 {
     /**
      * @var string
@@ -42,11 +43,6 @@ class Element extends Node
      * @var string
      */
     protected $namespace_uri;
-
-    /**
-     * @var Attr[]
-     */
-    private $attribute_nodes;
 
     /**
      * @var array<Attribute>
@@ -101,11 +97,10 @@ class Element extends Node
     public function __construct(
         string $qname,
         string $namespace_uri,
-        array $attribute_nodes,
+        private array $attribute_nodes,
         private readonly XmlnsState $xmlns,
     ) {
         $this->qualifiedName = $qname;
-        $this->attribute_nodes = $attribute_nodes;
         $this->namespace_uri = $namespace_uri;
 
         // implements inheritance of element's namespace to tal attributes (<metal: use-macro>)
@@ -144,7 +139,6 @@ class Element extends Node
      *
      * Note that \PhpTal\Dom\CDATASection::generate() does reverse operation, if needed!
      *
-     * @return void
      * @throws PhpTalException
      */
     private function replaceTextWithCDATA(): void
@@ -172,7 +166,7 @@ class Element extends Node
 
         // only add cdata if there are entities
         // and there's no ${structure} (because it may rely on cdata syntax)
-        if (strpos($valueEscaped, '&') === false || preg_match('/<\?|\${structure/', $value)) {
+        if (!str_contains($valueEscaped, '&') || preg_match('/<\?|\${structure/', $value)) {
             return;
         }
 
@@ -185,9 +179,6 @@ class Element extends Node
     }
 
     /**
-     * @param Node $child
-     *
-     * @return void
      * @throws PhpTalException
      */
     public function appendChild(Node $child): void
@@ -200,9 +191,6 @@ class Element extends Node
     }
 
     /**
-     * @param Node $child
-     *
-     * @return void
      * @throws PhpTalException
      */
     public function removeChild(Node $child): void
@@ -218,10 +206,7 @@ class Element extends Node
     }
 
     /**
-     * @param Node $newElement
-     * @param Node $oldElement
      *
-     * @return void
      * @throws PhpTalException
      */
     public function replaceChild(Node $newElement, Node $oldElement): void
@@ -245,7 +230,6 @@ class Element extends Node
     /**
      * use CodeWriter to compile this element to PHP code
      *
-     * @param CodeWriter $codewriter
      *
      * @throws TemplateException
      * @throws PhpTalException
@@ -308,9 +292,7 @@ class Element extends Node
 
     /** Returns true if the element contains specified PHPTAL attribute.
      *
-     * @param string $qname
      *
-     * @return bool
      */
     public function hasAttribute(string $qname): bool
     {
@@ -322,20 +304,12 @@ class Element extends Node
         return false;
     }
 
-    /**
-     * @param string $ns_uri
-     * @param string $localname
-     *
-     * @return bool
-     */
     public function hasAttributeNS(string $ns_uri, string $localname): bool
     {
         return $this->getAttributeNodeNS($ns_uri, $localname) !== null;
     }
 
     /**
-     * @param string $ns_uri
-     * @param string $localname
      *
      * @return Attr
      */
@@ -349,12 +323,6 @@ class Element extends Node
         return null;
     }
 
-    /**
-     * @param string $ns_uri
-     * @param string $localname
-     *
-     * @return void
-     */
     public function removeAttributeNS(string $ns_uri, string $localname): void
     {
         foreach ($this->attribute_nodes as $k => $attr) {
@@ -366,8 +334,6 @@ class Element extends Node
     }
 
     /**
-     * @param string $qname
-     *
      * @return Attr
      */
     public function getAttributeNode(string $qname): ?Attr
@@ -386,8 +352,6 @@ class Element extends Node
      * NB: This method doesn't handle namespaces properly.
      *
      * @param string $qname
-     *
-     * @return Attr
      */
     public function getOrCreateAttributeNode(string $qname): Attr
     {
@@ -404,10 +368,7 @@ class Element extends Node
 
     /** Returns textual (unescaped) value of specified element attribute.
      *
-     * @param string $namespace_uri
-     * @param string $localname
      *
-     * @return string
      */
     public function getAttributeNS(string $namespace_uri, string $localname): string
     {
@@ -421,8 +382,6 @@ class Element extends Node
      * @param string $namespace_uri full namespace URI. "" for default namespace
      * @param string $qname prefixed qualified name (e.g. "atom:feed") or local name (e.g. "p")
      * @param string $value unescaped value
-     *
-     * @return void
      */
     public function setAttributeNS(string $namespace_uri, string $qname, string $value): void
     {
@@ -436,8 +395,6 @@ class Element extends Node
     /**
      * Returns true if this element or one of its PHPTAL attributes has some
      * content to print (an empty text node child does not count).
-     *
-     * @return bool
      */
     public function hasRealContent(): bool
     {
@@ -453,9 +410,6 @@ class Element extends Node
         return false;
     }
 
-    /**
-     * @return bool
-     */
     public function hasRealAttributes(): bool
     {
         if ($this->hasAttributeNS(Builtin::NS_TAL, 'attributes')) {
@@ -470,12 +424,6 @@ class Element extends Node
     }
 
     // ~~~~~ Generation methods may be called by some PHPTAL attributes ~~~~~
-
-    /**
-     * @param CodeWriter $codewriter
-     *
-     * @return void
-     */
     public function generateSurroundHead(CodeWriter $codewriter): void
     {
         foreach ($this->surroundAttributes as $att) {
@@ -484,9 +432,6 @@ class Element extends Node
     }
 
     /**
-     * @param CodeWriter $codewriter
-     *
-     * @return void
      * @throws PhpTalException
      */
     public function generateHead(CodeWriter $codewriter): void
@@ -519,12 +464,6 @@ class Element extends Node
         }
     }
 
-    /**
-     * @param CodeWriter $codewriter
-     * @param bool $realContent
-     *
-     * @return void
-     */
     public function generateContent(CodeWriter $codewriter, bool $realContent = null): void
     {
         if (!$this->isEmptyNode($codewriter->getOutputMode())) {
@@ -542,9 +481,6 @@ class Element extends Node
     }
 
     /**
-     * @param CodeWriter $codewriter
-     *
-     * @return void
      * @throws PhpTalException
      */
     public function generateFoot(CodeWriter $codewriter): void
@@ -571,11 +507,6 @@ class Element extends Node
         }
     }
 
-    /**
-     * @param CodeWriter $codewriter
-     *
-     * @return void
-     */
     public function generateSurroundFoot(CodeWriter $codewriter): void
     {
         $v = count($this->surroundAttributes) - 1;
@@ -584,11 +515,6 @@ class Element extends Node
         }
     }
 
-    /**
-     * @param CodeWriter $codewriter
-     *
-     * @return void
-     */
     private function generateAttributes(CodeWriter $codewriter): void
     {
         $html5mode = ($codewriter->getOutputMode() === PHPTAL::HTML5);
@@ -625,11 +551,6 @@ class Element extends Node
         }
     }
 
-    /**
-     * @param int $mode
-     *
-     * @return bool
-     */
     private function isEmptyNode(int $mode): bool
     {
         $modeXHTML = $mode === PHPTAL::XHTML || $mode === PHPTAL::HTML5;
@@ -639,9 +560,6 @@ class Element extends Node
         return ($modeXHTML && $isEmptyTagNS) || $modeXML;
     }
 
-    /**
-     * @return bool
-     */
     private function hasContent(): bool
     {
         return count($this->childNodes) > 0 || count($this->contentAttributes) > 0;
@@ -696,7 +614,7 @@ class Element extends Node
         }
         ksort($temp);
 
-        foreach ($temp as $prio => [$nsattr, $domattr]) {
+        foreach ($temp as [$nsattr, $domattr]) {
             /** @var TalNamespaceAttribute $nsattr */
             $handler = $nsattr->createAttributeHandler($this, $domattr->getValue());
 
@@ -708,7 +626,7 @@ class Element extends Node
                 $this->contentAttributes[] = $handler;
             } else {
                 throw new ParserException(
-                    'Unknown namespace attribute class ' . get_class($nsattr),
+                    'Unknown namespace attribute class ' . $nsattr::class,
                     $this->getSourceFile(),
                     $this->getSourceLine()
                 );
@@ -716,34 +634,22 @@ class Element extends Node
         }
     }
 
-    /**
-     * @return string
-     */
     public function getQualifiedName(): string
     {
         return $this->qualifiedName;
     }
 
-    /**
-     * @return string
-     */
     public function getNamespaceURI(): string
     {
         return $this->namespace_uri;
     }
 
-    /**
-     * @return string
-     */
     public function getLocalName(): string
     {
         $n = explode(':', $this->qualifiedName, 2);
         return end($n);
     }
 
-    /**
-     * @return string
-     */
     public function __toString(): string
     {
         return '<{' . $this->getNamespaceURI() . '}:' . $this->getLocalName() . '>';

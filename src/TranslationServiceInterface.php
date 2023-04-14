@@ -37,8 +37,6 @@ interface TranslationServiceInterface
     /**
      * PHPTAL will inform translation service what encoding page uses.
      * Output of translate() must be in this encoding.
-     *
-     * @param string $encoding
      */
     public function setEncoding(string $encoding): void;
 
@@ -46,7 +44,6 @@ interface TranslationServiceInterface
      * Set the domain to use for translations (if different parts of application are translated in different files.
      * This is not for language selection).
      *
-     * @param string $domain
      *
      * @return string
      */
@@ -68,8 +65,6 @@ interface TranslationServiceInterface
      * @param string $key - translation key, e.g. "hello ${username}!"
      * @param bool $htmlescape - if true, you should HTML-escape translated string.
      *                             You should never HTML-escape interpolated variables.
-     *
-     * @return string
      */
     public function translate(string $key, bool $htmlescape): string;
 }

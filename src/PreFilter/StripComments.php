@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace PhpTal\PreFilter;
 
+use DOMElement;
 use PhpTal\Dom\CDATASection;
 use PhpTal\Dom\Comment;
 use PhpTal\Dom\Defs;
@@ -28,19 +29,18 @@ class StripComments extends PreFilter
      *
      * Default implementation does nothing. Override it.
      *
-     * @see \PhpTal\Dom\Element class for methods and fields available.
+     * @param Element $root
      *
-     * @param Element $element
-     * @return void
      * @throws PhpTalException
+     * @see Element class for methods and fields available.
      */
-    public function filterDOM(Element $element): void
+    public function filterDOM(Element $root): void
     {
         $defs = Defs::getInstance();
 
-        foreach ($element->childNodes as $node) {
+        foreach ($root->childNodes as $node) {
             if ($node instanceof Comment) {
-                if ($defs->isCDATAElementInHTML($element->getNamespaceURI(), $element->getLocalName())) {
+                if ($defs->isCDATAElementInHTML($root->getNamespaceURI(), $root->getLocalName())) {
                     $textNode = new CDATASection($node->getValueEscaped(), $node->getEncoding());
                     $node->parentNode->replaceChild($textNode, $node);
                 } else {
@@ -50,5 +50,10 @@ class StripComments extends PreFilter
                 $this->filterDOM($node);
             }
         }
+    }
+
+    public function filterElement(DOMElement $node): void
+    {
+        // TODO: Implement filterElement() method.
     }
 }

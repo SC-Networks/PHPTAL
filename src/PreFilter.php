@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace PhpTal;
 
 use DOMElement;
+use PhpTal\Dom\Element;
 
 /**
  * Base class for prefilters.
@@ -39,12 +40,8 @@ abstract class PreFilter implements FilterInterface
      * Default implementation does nothing. Override it.
      *
      * @param DOMElement $node PHP5 DOM node to modify in place
-     *
-     * @return void
      */
-    public function filterElement(DOMElement $node): void
-    {
-    }
+    abstract public function filterElement(DOMElement $node): void;
 
     /**
      * Receives root PHPTAL DOM node of parsed file and should edit it in place.
@@ -55,12 +52,8 @@ abstract class PreFilter implements FilterInterface
      * @see \PhpTal\Dom\Element class for methods and fields available.
      *
      * @param Dom\Element $root PHPTAL DOM node to modify in place
-     *
-     * @return void
      */
-    public function filterDOM(Dom\Element $root): void
-    {
-    }
+    abstract public function filterDOM(Element $root): void;
 
     /**
      * Receives DOM node that had phptal:filter attribute calling this filter.
@@ -70,10 +63,8 @@ abstract class PreFilter implements FilterInterface
      * Default implementation calls filterDOM(). Override it.
      *
      * @param Dom\Element $node PHPTAL DOM node to modify in place
-     *
-     * @return void
      */
-    public function filterDOMFragment(Dom\Element $node): void
+    public function filterDOMFragment(Element $node): void
     {
         $this->filterDOM($node);
     }
@@ -84,13 +75,11 @@ abstract class PreFilter implements FilterInterface
      *
      * Default implementation does nothing. Override it.
      *
-     * @param string $src markup to filter
-     *
-     * @return string
+     * @param string $str markup to filter
      */
-    public function filter(string $src): string
+    public function filter(string $str): string
     {
-        return $src;
+        return $str;
     }
 
     /**
@@ -100,12 +89,10 @@ abstract class PreFilter implements FilterInterface
      * Unlike other filter methods, this one is called on every execution.
      *
      * Override this method if result of the filter depends on its configuration.
-     *
-     * @return string
      */
     public function getCacheId(): string
     {
-        return get_class($this);
+        return static::class;
     }
 
     /**
