@@ -65,18 +65,26 @@
         "sort-packages": true
     },
     "scripts": {
-        "tests": "bin/phpunit -c phpunit.xml",
+        "tests": "phpunit -c phpunit.xml",
         "stan": "phpstan",
-        "check-cs": "bin/php-cs-fixer fix --dry-run --diff",
-        "fix-cs": "bin/php-cs-fixer fix",
-        "qa": "composer check-cs && composer stan && composer tests"
+        "check-cs": "php-cs-fixer fix --dry-run --diff",
+        "fix-cs": "php-cs-fixer fix",
+        "rector:dry": "rector process -n",
+        "rector:fix": "rector process",
+        "qa": [
+            "@composer check-cs",
+            "@composer stan",
+            "@composer tests"
+        ]
     },
     "scripts-descriptions": {
         "tests": "Run the projects unittest",
         "stan": "Run phpstan check",
         "check-cs": "Run codestyle checker",
         "fix-cs": "Correct codestyle errors",
-        "qa": "Auto-run quality assurance tools"
+        "qa": "Auto-run quality assurance tools",
+        "rector:dry": "Dry run rector code migrations",
+        "rectory:fix": "Execute rector code migrations"
     },
     "suggest": {
         "scn/phptal-lint": "Linter for phptal template files",
