@@ -878,7 +878,7 @@ class PHPTAL implements PhpTalInterface
 
                     // greedy .* ensures last match
                     $line = preg_match('/.*on line (\d+)$/m', $msg, $m) ? $m[1] : 0;
-                    throw new Exception\TemplateException(trim($msg), $this->getCodePath(), $line);
+                    throw new Exception\TemplateException(trim($msg), $this->getCodePath(), (int) $line);
                 }
                 ob_end_clean();
             } else {
