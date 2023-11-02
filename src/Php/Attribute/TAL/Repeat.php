@@ -76,10 +76,7 @@ use ReflectionException;
  */
 class Repeat extends Attribute
 {
-    /**
-     * @var string
-     */
-    private $var;
+    private ?string $var = null;
 
     /**
      * Called before element printing.

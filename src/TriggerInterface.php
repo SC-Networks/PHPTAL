@@ -22,16 +22,12 @@ interface TriggerInterface
     public const PROCEED = 2;
 
     /**
-     * @param mixed $id
-     *
      * @return mixed
      */
-    public function start($id, PhpTalInterface $tpl);
+    public function start(mixed $id, PhpTalInterface $tpl);
 
     /**
-     * @param mixed $id
-     *
      * @return mixed
      */
-    public function end($id, PhpTalInterface $tpl);
+    public function end(mixed $id, PhpTalInterface $tpl);
 }

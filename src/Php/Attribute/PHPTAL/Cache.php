@@ -43,10 +43,7 @@ use ReflectionException;
  */
 class Cache extends Attribute
 {
-    /**
-     * @var string
-     */
-    private $cache_filename_var;
+    private ?string $cache_filename_var = null;
 
     /**
      * Called before element printing.

@@ -55,10 +55,7 @@ use ReflectionException;
  */
 class DefineSlot extends Attribute
 {
-    /**
-     * @var string
-     */
-    private $tmp_var;
+    private ?string $tmp_var = null;
 
     /**
      * Called before element printing.

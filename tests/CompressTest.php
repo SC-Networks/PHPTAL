@@ -133,7 +133,7 @@ class CompressTest extends PhpTalTestCase
         $this->assertStrips("<div><img/> y</div>", "<div><img/> y </div>");
     }
 
-    public function testPreservesSpaceAroundButtons(): never
+    public function testPreservesSpaceAroundButtons(): void
     {
         $this->assertStrips("<div><button>Z</button></div>", "<div> <button>Z</button> </div>");
         $this->assertStrips("<div>x <button>Z</button></div>", "<div> x <button>Z</button> </div>");

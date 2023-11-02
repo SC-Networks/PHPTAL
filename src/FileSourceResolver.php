@@ -24,7 +24,7 @@ class FileSourceResolver implements SourceResolverInterface
      * FileSourceResolver constructor.
      * @param array<string> $repositories
      */
-    public function __construct(private array $repositories)
+    public function __construct(private readonly array $repositories)
     {
     }
 

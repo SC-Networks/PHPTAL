@@ -122,8 +122,6 @@ class UseMacro extends Attribute
      * we may define a member.html macro which use the design.html macro
      * for the general layout, fill the menu slot and let caller templates
      * fill the parent content slot without interfering.
-     *
-     * @param CodeWriter $codewriter
      */
     private function pushSlots(CodeWriter $codewriter): void
     {

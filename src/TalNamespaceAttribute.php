@@ -64,16 +64,13 @@ use PhpTal\Php\Attribute;
  */
 abstract class TalNamespaceAttribute
 {
-    /**
-     * @var TalNamespace
-     */
-    private $namespace;
+    private ?TalNamespace $namespace = null;
 
     /**
      * @param string $local_name The attribute name
      * @param int $priority Attribute execution priority
      */
-    public function __construct(private string $local_name, private int $priority)
+    public function __construct(private readonly string $local_name, private readonly int $priority)
     {
     }
 
@@ -98,10 +95,9 @@ abstract class TalNamespaceAttribute
     }
 
     /**
-     * @param mixed $expression
      * @return Attribute
      */
-    public function createAttributeHandler(Element $tag, $expression)
+    public function createAttributeHandler(Element $tag, mixed $expression)
     {
         return $this->namespace->createAttributeHandler($this, $tag, $expression);
     }

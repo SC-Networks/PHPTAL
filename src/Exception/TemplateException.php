@@ -35,10 +35,7 @@ class TemplateException extends PhpTalException implements Stringable
      */
     public $srcLine;
 
-    /**
-     * @var bool
-     */
-    private $is_src_accurate;
+    private ?bool $is_src_accurate = null;
 
     /**
      * Construct the exception. Note: The message is NOT binary safe.

@@ -26,30 +26,18 @@ use ReflectionException;
  */
 class State
 {
-    /**
-     * @var bool
-     */
-    private $debug = false;
+    private bool $debug = false;
 
-    /**
-     * @var string
-     */
-    private $tales_mode = 'tales';
+    private string $tales_mode = 'tales';
 
-    /**
-     * @var string
-     */
-    private $encoding;
+    private readonly string $encoding;
 
-    /**
-     * @var int
-     */
-    private $output_mode;
+    private readonly int $output_mode;
 
     /**
      * State constructor.
      */
-    public function __construct(private PhpTalInterface $phptal)
+    public function __construct(private readonly PhpTalInterface $phptal)
     {
         $this->encoding = $phptal->getEncoding();
         $this->output_mode = $phptal->getOutputMode();
@@ -169,7 +157,6 @@ class State
      *
      * It's almost unused.
      *
-     * @param string $string
      *
      * @throws ParserException
      * @throws UnknownModifierException

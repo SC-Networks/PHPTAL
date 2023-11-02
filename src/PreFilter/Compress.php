@@ -32,23 +32,19 @@ class Compress extends Normalize
     /**
      * keeps track whether last element had trailing whitespace (or didn't need it).
      * If had_space==false, next element must keep leading space.
-     *
-     * @var bool
      */
-    private $had_space = false;
+    private bool $had_space = false;
 
     /**
      * last text node before closing tag that may need trailing whitespace trimmed.
      * It's often last-child, but comments, multiple end tags make that trickier.
-     *
-     * @var Text|null
      */
-    private $most_recent_text_node;
+    private ?Text $most_recent_text_node = null;
 
     /**
      * @var array<string>
      */
-    private static $no_interelement_space = [
+    private static array $no_interelement_space = [
         'html',
         'head',
         'table',
@@ -68,7 +64,7 @@ class Compress extends Normalize
      *
      * @var array<string>
      */
-    private static $breaks_line = [
+    private static array $breaks_line = [
         'address',
         'article',
         'aside',
@@ -122,7 +118,7 @@ class Compress extends Normalize
      *
      * @var array<string>
      */
-    private static $inline_blocks = [
+    private static array $inline_blocks = [
         'select',
         'input',
         'button',
@@ -138,7 +134,7 @@ class Compress extends Normalize
      *
      * @var array<string>
      */
-    private static $attributes_order = [
+    private static array $attributes_order = [
         'href',
         'src',
         'class',

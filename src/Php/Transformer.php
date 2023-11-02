@@ -52,7 +52,7 @@ class Transformer
     /**
      * @var array<string, string>
      */
-    private static $TranslationTable = [
+    private static array $TranslationTable = [
         'not' => '!',
         'ne' => '!=',
         'and' => '&&',

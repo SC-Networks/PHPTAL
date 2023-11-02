@@ -34,21 +34,20 @@ class CodeWriter
 {
     /**
      * max id of variable to give as temp
-     * @var int
      */
-    private $temp_var_counter = 0;
+    private int $temp_var_counter = 0;
 
     /**
      * stack with free'd variables
      * @var string[]
      */
-    private $temp_recycling = [];
+    private array $temp_recycling = [];
 
     /**
      * keeps track of seen functions for function_exists
      * @var array<string, bool>
      */
-    private $known_functions = [];
+    private array $known_functions = [];
 
     /**
      * @var string
@@ -78,22 +77,13 @@ class CodeWriter
     /**
      * @var array<CodeWriter>
      */
-    private $contexts = [];
+    private array $contexts = [];
 
-    /**
-     * @var string
-     */
-    private $functionPrefix = '';
+    private string $functionPrefix = '';
 
-    /**
-     * @var string
-     */
-    private $doctype = '';
+    private string $doctype = '';
 
-    /**
-     * @var string
-     */
-    private $xmldeclaration = '';
+    private string $xmldeclaration = '';
 
     /**
      * CodeWriter constructor.

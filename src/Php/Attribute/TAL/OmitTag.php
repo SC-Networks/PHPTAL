@@ -54,10 +54,7 @@ use ReflectionException;
  */
 class OmitTag extends Attribute
 {
-    /**
-     * @var string
-     */
-    private $varname;
+    private ?string $varname = null;
 
     /**
      * Called before element printing.

@@ -82,8 +82,6 @@ abstract class Attribute
      * ...
      *
      * $this->doEcho($code);
-     *
-     * @param string $expression
      */
     protected function extractEchoType(string $expression): string
     {

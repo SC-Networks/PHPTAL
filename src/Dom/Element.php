@@ -350,8 +350,6 @@ class Element extends Node implements Stringable
      * If possible, use getAttributeNodeNS and setAttributeNS.
      *
      * NB: This method doesn't handle namespaces properly.
-     *
-     * @param string $qname
      */
     public function getOrCreateAttributeNode(string $qname): Attr
     {

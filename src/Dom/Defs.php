@@ -36,22 +36,19 @@ use PhpTal\TalNamespaceAttribute;
  */
 class Defs
 {
-    /**
-     * @var Defs|null
-     */
-    private static $instance;
+    private static ?\PhpTal\Dom\Defs $instance = null;
 
     /**
      * list of \PhpTal\TalNamespace objects
      *
      * @var array<string, TalNamespace>
      */
-    private $namespaces_by_uri = [];
+    private array $namespaces_by_uri = [];
 
     /**
      * @var array<string, string>
      */
-    private $prefix_to_uri = [
+    private array $prefix_to_uri = [
         'xml' => Builtin::NS_XML,
         'xmlns' => Builtin::NS_XMLNS,
     ];
@@ -65,7 +62,7 @@ class Defs
      *
      * @var array<string>
      */
-    private static $XHTML_EMPTY_TAGS = [
+    private static array $XHTML_EMPTY_TAGS = [
         'area',
         'base',
         'basefont',
@@ -93,7 +90,7 @@ class Defs
      *
      * @var array<string>
      */
-    private static $XHTML_BOOLEAN_ATTRIBUTES = [
+    private static array $XHTML_BOOLEAN_ATTRIBUTES = [
         'autoplay',
         'async',
         'autofocus',
@@ -215,9 +212,6 @@ class Defs
      *
      * Examples of valid attributes: tal:content, metal:use-slot
      * Examples of invalid attributes: tal:unknown, metal:content
-     *
-     * @param string $namespace_uri
-     * @param string $local_name
      */
     public function isValidAttributeNS(string $namespace_uri, string $local_name): bool
     {
@@ -244,9 +238,6 @@ class Defs
      * declaration.
      *
      * Examples of handled xmlns:  xmlns:tal, xmlns:metal
-     *
-     * @param string $qname
-     * @param string $value
      */
     public function isHandledXmlNs(string $qname, string $value): bool
     {

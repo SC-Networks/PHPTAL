@@ -52,7 +52,7 @@ class Attributes extends Attribute implements TalesChainReaderInterface
      *
      * @var array<string>
      */
-    private $vars_to_recycle = [];
+    private array $vars_to_recycle = [];
 
     /**
      * value for default keyword
