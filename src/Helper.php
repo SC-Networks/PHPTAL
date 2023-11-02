@@ -18,7 +18,7 @@ class Helper
      * @param mixed $var value to check
      * @access private
      */
-    public static function phptal_isempty($var): bool
+    public static function phptal_isempty(mixed $var): bool
     {
         return in_array($var, [null, false, ''], true)
             || ((is_countable($var)) && count($var) === 0);
@@ -30,7 +30,7 @@ class Helper
      * @param mixed $var value to check
      * @access private
      */
-    public static function phptal_true($var): bool
+    public static function phptal_true(mixed $var): bool
     {
         $var = static::phptal_unravel_closure($var);
         return $var && (!$var instanceof Countable || count($var));
@@ -41,10 +41,9 @@ class Helper
      *
      * @access private
      *
-     * @param mixed $var
      * @param string $encoding
      */
-    public static function phptal_escape($var, $encoding): string
+    public static function phptal_escape(mixed $var, $encoding): string
     {
         if (is_string($var)) {
             return htmlspecialchars($var, ENT_QUOTES, $encoding);
@@ -56,10 +55,8 @@ class Helper
      * convert anything to string
      *
      * @access private
-     *
-     * @param mixed $var
      */
-    public static function phptal_tostring($var): string
+    public static function phptal_tostring(mixed $var): string
     {
         if (is_string($var)) {
             return $var;
@@ -93,10 +90,9 @@ class Helper
      *
      * This function has no effect on non-Closure expressions
      *
-     * @param mixed $var
      * @return mixed
      */
-    public static function phptal_unravel_closure($var)
+    public static function phptal_unravel_closure(mixed $var)
     {
         while (is_object($var) && is_callable($var)) {
             $var = $var();

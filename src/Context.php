@@ -401,7 +401,7 @@ class Context
      *
      * @throws Exception\VariableNotFoundException
      */
-    public static function path($base, string $path, bool $nothrow = null): mixed
+    public static function path(mixed $base, string $path, bool $nothrow = null): mixed
     {
         if ($base === null) {
             if ($nothrow) {

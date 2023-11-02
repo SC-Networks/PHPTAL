@@ -62,15 +62,9 @@ class FillSlot extends Attribute
 {
     final public const CALLBACK_THRESHOLD = 10000;
 
-    /**
-     * @var int
-     */
-    private static $uid = 0;
+    private static int $uid = 0;
 
-    /**
-     * @var string|null
-     */
-    private $function_name;
+    private ?string $function_name = null;
 
     /**
      * Called before element printing.

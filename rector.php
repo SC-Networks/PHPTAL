@@ -8,6 +8,7 @@ use Rector\Php55\Rector\String_\StringClassNameToClassConstantRector;
 use Rector\Php73\Rector\FuncCall\JsonThrowOnErrorRector;
 use Rector\Php74\Rector\Closure\ClosureToArrowFunctionRector;
 use Rector\Php74\Rector\LNumber\AddLiteralSeparatorToNumberRector;
+use Rector\Php81\Rector\Array_\FirstClassCallableRector;
 use Rector\Set\ValueObject\LevelSetList;
 use Rector\Set\ValueObject\SetList;
 
@@ -26,6 +27,7 @@ return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->skip([
         StringClassNameToClassConstantRector::class,
         JsonThrowOnErrorRector::class,
+        FirstClassCallableRector::class,
     ]);
 
     // define sets of rules

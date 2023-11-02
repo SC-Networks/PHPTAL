@@ -31,10 +31,7 @@ class PHPTALDocumentBuilder extends DocumentBuilder
      */
     private $xmlns;
 
-    /**
-     * @var string
-     */
-    private $encoding;
+    private ?string $encoding = null;
 
     private ?Element $documentElement = null;
 

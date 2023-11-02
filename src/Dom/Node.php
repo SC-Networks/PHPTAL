@@ -30,20 +30,14 @@ abstract class Node implements Stringable
      */
     public $parentNode;
 
-    /**
-     * @var string
-     */
-    private $source_file;
+    private ?string $source_file = null;
 
-    /**
-     * @var int
-     */
-    private $source_line;
+    private ?int $source_line = null;
 
     /**
      * Node constructor.
      */
-    public function __construct(private string $value_escaped, private string $encoding)
+    public function __construct(private string $value_escaped, private readonly string $encoding)
     {
     }
 

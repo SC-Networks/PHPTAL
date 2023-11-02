@@ -24,15 +24,9 @@ class TalesChainExecutor
     final public const CHAIN_BREAK = 1;
     final public const CHAIN_CONT = 2;
 
-    /**
-     * @var int
-     */
-    private $state = 0;
+    private int $state = 0;
 
-    /**
-     * @var bool
-     */
-    private $chainStarted = false;
+    private bool $chainStarted = false;
 
     /**
      * @param array<int, string> $chain

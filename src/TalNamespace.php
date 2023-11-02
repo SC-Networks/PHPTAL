@@ -24,15 +24,9 @@ use PhpTal\Php\Attribute;
  */
 abstract class TalNamespace
 {
-    /**
-     * @var string
-     */
-    private $prefix;
+    private readonly string $prefix;
 
-    /**
-     * @var string
-     */
-    private $namespace_uri;
+    private readonly string $namespace_uri;
 
     /**
      * @var array<string, TalNamespaceAttribute>
@@ -90,13 +84,10 @@ abstract class TalNamespace
         return $this->attributes;
     }
 
-    /**
-     * @param mixed $expression
-     *
-     */
+    
     abstract public function createAttributeHandler(
         TalNamespaceAttribute $att,
         Element $tag,
-        $expression
+        mixed $expression
     ): Attribute;
 }

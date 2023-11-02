@@ -73,7 +73,7 @@ class RepeatControllerGroups
      *
      * @todo cleanup this abomination of type abuse
      */
-    public function first($data)
+    public function first(mixed $data)
     {
         if (!is_array($data) && !is_object($data) && $data !== null) {
             if (!isset($this->cache['F'])) {
@@ -108,7 +108,7 @@ class RepeatControllerGroups
      *
      * @todo cleanup this abomination of type abuse
      */
-    public function last($data)
+    public function last(mixed $data)
     {
         if (!is_array($data) && !is_object($data) && $data !== null) {
             if (!isset($this->cache['L'])) {

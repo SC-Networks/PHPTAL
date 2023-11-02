@@ -23,7 +23,7 @@ class ExceptionHandler
     /**
      * ExceptionHandler constructor.
      */
-    public function __construct(private string $encoding)
+    public function __construct(private readonly string $encoding)
     {
     }
 
@@ -34,7 +34,6 @@ class ExceptionHandler
      * Doesn't change exception handler if non-default one is set.
      *
      * @param Throwable $e exception to re-throw and display
-     * @param string $encoding
      *
      * @throws TemplateException
      * @throws Throwable

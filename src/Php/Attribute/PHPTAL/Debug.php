@@ -23,10 +23,7 @@ use PhpTal\Php\CodeWriter;
  */
 class Debug extends Attribute
 {
-    /**
-     * @var bool
-     */
-    private $oldMode;
+    private ?bool $oldMode = null;
 
     /**
      * Called before element printing.

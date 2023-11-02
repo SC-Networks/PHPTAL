@@ -48,15 +48,9 @@ use ReflectionException;
  */
 class Define extends Attribute implements TalesChainReaderInterface
 {
-    /**
-     * @var string
-     */
-    private $tmp_content_var;
+    private ?string $tmp_content_var = null;
 
-    /**
-     * @var bool
-     */
-    private $buffered = false;
+    private bool $buffered = false;
 
     /**
      * @var string
@@ -68,16 +62,12 @@ class Define extends Attribute implements TalesChainReaderInterface
      */
     private $defineVar;
 
-    /**
-     * @var bool
-     */
-    private $pushedContext = false;
+    private bool $pushedContext = false;
 
     /**
      * Prevents generation of invalid PHP code when given invalid TALES
-     * @var bool
      */
-    private $chainPartGenerated = false;
+    private bool $chainPartGenerated = false;
 
     /**
      * Called before element printing.

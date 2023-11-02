@@ -57,20 +57,11 @@ class RepeatController implements Iterator
      */
     private $current;
 
-    /**
-     * @var bool
-     */
-    private $valid;
+    private ?bool $valid = null;
 
-    /**
-     * @var bool
-     */
-    private $validOnNext;
+    private ?bool $validOnNext = null;
 
-    /**
-     * @var bool
-     */
-    private $uses_groups = false;
+    private bool $uses_groups = false;
 
     /**
      * @var Iterator<mixed>
@@ -92,10 +83,7 @@ class RepeatController implements Iterator
      */
     private $length;
 
-    /**
-     * @var RepeatControllerGroups
-     */
-    private $groups;
+    private ?RepeatControllerGroups $groups = null;
 
     /**
      * Construct a new RepeatController.
@@ -104,7 +92,7 @@ class RepeatController implements Iterator
      *
      * @todo welcome to hell, I'll be your guide
      */
-    public function __construct($source)
+    public function __construct(mixed $source)
     {
         if (is_string($source)) {
             $this->iterator = new ArrayIterator(str_split($source));  // FIXME: invalid for UTF-8 encoding, use preg_match_all('/./u') trick

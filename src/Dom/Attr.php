@@ -28,14 +28,10 @@ class Attr
 
     /**
      * attribute's value can be overriden with a variable
-     * @var string|null
      */
-    private $phpVariable;
+    private ?string $phpVariable = null;
 
-    /**
-     * @var int
-     */
-    private $replacedState = 0;
+    private int $replacedState = 0;
 
     /**
      * @param string $qualified_name attribute name with prefix
@@ -43,7 +39,7 @@ class Attr
      * @param string $value_escaped value with HTML-escaping
      * @param string $encoding character encoding used by the value
      */
-    public function __construct(private string $qualified_name, private string $namespace_uri, private ?string $value_escaped, private string $encoding)
+    public function __construct(private readonly string $qualified_name, private readonly string $namespace_uri, private ?string $value_escaped, private readonly string $encoding)
     {
     }
 

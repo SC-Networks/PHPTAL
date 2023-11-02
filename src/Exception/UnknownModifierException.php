@@ -25,7 +25,7 @@ class UnknownModifierException extends TemplateException
      * UnknownModifierException constructor.
      * @param string $modifier_name
      */
-    public function __construct(string $msg, private ?string $modifier_name = null)
+    public function __construct(string $msg, private readonly ?string $modifier_name = null)
     {
         parent::__construct($msg);
     }

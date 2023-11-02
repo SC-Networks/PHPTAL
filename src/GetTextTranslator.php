@@ -33,17 +33,11 @@ class GetTextTranslator implements TranslationServiceInterface
     /**
      * @var array<string, string>
      */
-    private $vars = [];
+    private array $vars = [];
 
-    /**
-     * @var string
-     */
-    private $currentDomain;
+    private ?string $currentDomain = null;
 
-    /**
-     * @var string
-     */
-    private $encoding = 'UTF-8';
+    private string $encoding = 'UTF-8';
 
     /**
      * GetTextTranslator constructor.
@@ -118,7 +112,6 @@ class GetTextTranslator implements TranslationServiceInterface
      *
      * Encoding must be set before calling addDomain!
      *
-     * @param string $domain
      * @param string $path
      */
     public function addDomain(string $domain, ?string $path = null): void

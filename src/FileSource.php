@@ -23,7 +23,7 @@ use PhpTal\Exception\IOException;
  */
 class FileSource implements SourceInterface
 {
-    private string $path;
+    private readonly string $path;
 
     /**
      * @throws Exception\IOException

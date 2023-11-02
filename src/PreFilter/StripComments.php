@@ -29,7 +29,6 @@ class StripComments extends PreFilter
      *
      * Default implementation does nothing. Override it.
      *
-     * @param Element $root
      *
      * @throws PhpTalException
      * @see Element class for methods and fields available.

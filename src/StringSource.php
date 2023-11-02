@@ -23,10 +23,10 @@ class StringSource implements SourceInterface
 {
     final public const NO_PATH_PREFIX = '<string ';
 
-    private string $realpath;
+    private readonly string $realpath;
 
     public function __construct(
-        private string $data,
+        private readonly string $data,
         ?string $realpath = null
     ) {
         $this->realpath = $realpath ?? self::NO_PATH_PREFIX . md5($data) . '>';

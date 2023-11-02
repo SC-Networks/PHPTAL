@@ -176,15 +176,10 @@ class PHPTAL implements PhpTalInterface
 
     /**
      * directory where code cache is
-     *
-     * @var string
      */
-    private $phpCodeDestination;
+    private string $phpCodeDestination;
 
-    /**
-     * @var string
-     */
-    private $phpCodeExtension = 'php';
+    private string $phpCodeExtension = 'php';
 
     /**
      * number of days
@@ -195,10 +190,8 @@ class PHPTAL implements PhpTalInterface
 
     /**
      * 1/x
-     *
-     * @var int
      */
-    private $cachePurgeFrequency = 30;
+    private int $cachePurgeFrequency = 30;
 
     /**
      * speeds up calls to external templates
@@ -207,10 +200,7 @@ class PHPTAL implements PhpTalInterface
      */
     private $externalMacroTemplatesCache = [];
 
-    /**
-     * @var int
-     */
-    private $subpathRecursionLevel = 0;
+    private int $subpathRecursionLevel = 0;
 
     /**
      * @param string $path Template file path.
@@ -620,12 +610,11 @@ class PHPTAL implements PhpTalInterface
      * Use it by setting properties on PHPTAL object.
      *
      * @param string $varname
-     * @param mixed $value
      *
      * @return void
      * @throws InvalidVariableNameException
      */
-    public function __set($varname, $value)
+    public function __set($varname, mixed $value)
     {
         $this->context->set($varname, $value);
     }
@@ -728,7 +717,6 @@ class PHPTAL implements PhpTalInterface
      *
      * $this is caller's context (the file where execution had originally started)
      *
-     * @param string $path
      * @param PhpTalInterface $local_tpl is PHPTAL instance of the file in which macro is defined
      *                          (it will be different from $this if it's external macro call)
      *

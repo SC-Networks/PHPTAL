@@ -80,21 +80,15 @@ class SaxXmlParser
         self::ST_ATTR_VALUE => 'unquoted attribute value',
     ];
 
-    /**
-     * @var string
-     */
-    private $file;
+    private string $file;
 
-    /**
-     * @var int
-     */
-    private $line;
+    private ?int $line = null;
 
 
     /**
      * SaxXmlParser constructor.
      */
-    public function __construct(private string $input_encoding)
+    public function __construct(private readonly string $input_encoding)
     {
         $this->file = '<string>';
     }
@@ -422,7 +416,7 @@ class SaxXmlParser
             if (strlen($str) > 200) {
                 $chunks = preg_split('/(?>[\x09\x0A\x0D\x20-\x7F]+)/', $str, -1, PREG_SPLIT_NO_EMPTY);
                 foreach ($chunks as $chunk) {
-                    if (strlen((string) $chunk) < 200) {
+                    if (strlen($chunk) < 200) {
                         $this->checkEncoding($chunk);
                     }
                 }

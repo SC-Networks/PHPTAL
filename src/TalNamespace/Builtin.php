@@ -24,12 +24,12 @@ use PhpTal\TalNamespaceAttribute;
  */
 class Builtin extends TalNamespace
 {
-    public const NS_METAL = 'http://xml.zope.org/namespaces/metal';
-    public const NS_TAL = 'http://xml.zope.org/namespaces/tal';
-    public const NS_I18N = 'http://xml.zope.org/namespaces/i18n';
-    public const NS_XML = 'http://www.w3.org/XML/1998/namespace';
-    public const NS_XMLNS = 'http://www.w3.org/2000/xmlns/';
-    public const NS_XHTML = 'http://www.w3.org/1999/xhtml';
+    final public const NS_METAL = 'http://xml.zope.org/namespaces/metal';
+    final public const NS_TAL = 'http://xml.zope.org/namespaces/tal';
+    final public const NS_I18N = 'http://xml.zope.org/namespaces/i18n';
+    final public const NS_XML = 'http://www.w3.org/XML/1998/namespace';
+    final public const NS_XMLNS = 'http://www.w3.org/2000/xmlns/';
+    final public const NS_XHTML = 'http://www.w3.org/1999/xhtml';
 
     /**
      * @param mixed $expression

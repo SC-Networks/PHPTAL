@@ -59,15 +59,12 @@ class TalesInternal implements TalesInterface
     final public const DEFAULT_KEYWORD = 'new \PhpTal\DefaultKeyword';
     final public const NOTHING_KEYWORD = 'new \PhpTal\NothingKeyword';
 
-    /**
-     * @var bool
-     */
-    private static $phpModifierAllowed = false;
+    private static bool $phpModifierAllowed = false;
 
     /**
      * @var array<int>
      */
-    private static $tokenBlacklist = [
+    private static array $tokenBlacklist = [
         T_CLASS_C,
         T_FUNC_C,
         T_METHOD_C,
@@ -92,7 +89,7 @@ class TalesInternal implements TalesInterface
     /**
      * @var array<string>
      */
-    private static $functionWhitelist = [];
+    private static array $functionWhitelist = [];
 
     /**
      *
@@ -129,8 +126,6 @@ class TalesInternal implements TalesInterface
      *      not: string:${foo}
      *      not: foo/bar/booleancomparable
      *
-     * @param string $expression
-     * @param bool $nothrow
      *
      * @throws ParserException
      * @throws UnknownModifierException
@@ -294,7 +289,6 @@ class TalesInternal implements TalesInterface
      *      string:hello, ${user/name}
      *      string:you have $$130 in your bank account
      *
-     * @param string $expression
      * @param bool $nothrow
      *
      * @throws ParserException
@@ -433,7 +427,6 @@ class TalesInternal implements TalesInterface
      *
      * Transform the expression into a regular PHP expression.
      *
-     * @param string $src
      *
      * @throws ParserException
      * @throws PhpNotAllowedException
@@ -456,7 +449,6 @@ class TalesInternal implements TalesInterface
      *
      * Returns the code required to invoke Context::exists() on specified path.
      *
-     * @param string $src
      *
      * @throws ParserException
      * @throws UnknownModifierException
@@ -476,7 +468,6 @@ class TalesInternal implements TalesInterface
      *
      * Returns the number as is.
      *
-     * @param string $src
      *
      * @throws ParserException
      */

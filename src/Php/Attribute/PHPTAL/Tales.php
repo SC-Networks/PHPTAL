@@ -24,10 +24,7 @@ use PhpTal\Php\CodeWriter;
  */
 class Tales extends Attribute
 {
-    /**
-     * @var string
-     */
-    private $oldMode;
+    private ?string $oldMode = null;
 
     /**
      * Called before element printing.
