@@ -18,7 +18,7 @@ Compatibility
 | PHPTAL-Version | PHP-Version(s) |
 |----------------|----------------|
 | 3.x            | 7.3, 7.4, 8.0  |
-| master         | 8.1, 8.2       |
+| master         | 8.1, 8.2, 8.3  |
 
 Composer install (recommended)
 ==============================
