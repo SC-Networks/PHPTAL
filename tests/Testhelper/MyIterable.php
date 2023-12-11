@@ -50,9 +50,6 @@ class MyIterable implements Iterator
         return $this->index;
     }
 
-    /**
-     * @return int
-     */
     public function next(): void
     {
         $this->index++;

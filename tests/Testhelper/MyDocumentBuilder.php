@@ -68,7 +68,6 @@ class MyDocumentBuilder extends DocumentBuilder
 
     /**
      *
-     * @return mixed
      * @throws Exception
      */
     public function onXmlDecl(string $decl): void
@@ -86,9 +85,6 @@ class MyDocumentBuilder extends DocumentBuilder
         $this->onProcessingInstruction('<![CDATA[' . $data . ']]>');
     }
 
-    /**
-     * @return mixed
-     */
     public function onProcessingInstruction(string $data): void
     {
         $this->specifics++;
