@@ -64,7 +64,7 @@ use PhpTal\Php\Attribute;
  */
 abstract class TalNamespaceAttribute
 {
-    private ?TalNamespace $namespace = null;
+    private TalNamespace $namespace;
 
     /**
      * @param string $local_name The attribute name

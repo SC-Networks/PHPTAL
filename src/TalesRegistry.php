@@ -68,7 +68,7 @@ final class TalesRegistry implements TalesRegistryInterface
      * Expects either a function name or an array of class and method or a closure as callback.
      * A closure *must* return a string enclosed in double quotes.
      *
-     * @param string|callable-string|callable(?string, bool):mixed|array{0: callable-string, 1: string} $callback
+     * @param string|callable-string|callable(string, bool):mixed|array{0: callable-string, 1: string} $callback
      * @param bool $is_fallback if true, method will be used as last resort (if there's no phptal_tales_foo)
      *
      * @throws Exception\ConfigurationException
@@ -123,7 +123,7 @@ final class TalesRegistry implements TalesRegistryInterface
      * get callback for the prefix
      *
      *
-     * @return null|callable(?string, bool):mixed
+     * @return null|callable(string, bool):mixed
      * @throws Exception\UnknownModifierException
      * @throws ReflectionException
      */

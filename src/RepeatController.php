@@ -61,8 +61,6 @@ class RepeatController implements Iterator
 
     private ?bool $validOnNext = null;
 
-    private bool $uses_groups = false;
-
     /**
      * @var Iterator<mixed>
      */
@@ -199,10 +197,8 @@ class RepeatController implements Iterator
             $this->validOnNext = false;
         }
 
-        if ($this->uses_groups) {
-            // Notify the grouping helper of the change
-            $this->groups->reset();
-        }
+        // Notify the grouping helper of the change (if available)
+        $this->groups?->reset();
     }
 
     /**
@@ -218,10 +214,8 @@ class RepeatController implements Iterator
             $this->prefetch();
         }
 
-        if ($this->uses_groups) {
-            // Notify the grouping helper of the change
-            $this->groups->reset();
-        }
+        // Notify the grouping helper of the change if available
+        $this->groups?->reset();
     }
 
     /**
@@ -229,12 +223,13 @@ class RepeatController implements Iterator
      *
      * Groups are rarely-used feature, which is why they're lazily loaded.
      */
-    private function initializeGroups(): void
+    private function getGroups(): RepeatControllerGroups
     {
-        if (!$this->uses_groups) {
+        if ($this->groups === null) {
             $this->groups = new RepeatControllerGroups();
-            $this->uses_groups = true;
         }
+
+        return $this->groups;
     }
 
     /**
@@ -266,20 +261,19 @@ class RepeatController implements Iterator
                 return strtoupper($this->int2roman($this->index + 1));
 
             case 'groups':
-                $this->initializeGroups();
-                return $this->groups;
+                return $this->getGroups();
 
             case 'first':
-                $this->initializeGroups();
+                $groups = $this->getGroups();
                 // Compare the current one with the previous in the dictionary
-                $res = $this->groups->first($this->current);
-                return is_bool($res) ? $res : $this->groups;
+                $res = $groups->first($this->current);
+                return is_bool($res) ? $res : $groups;
 
             case 'last':
-                $this->initializeGroups();
+                $groups = $this->getGroups();
                 // Compare the next one with the dictionary
-                $res = $this->groups->last($this->iterator->current());
-                return is_bool($res) ? $res : $this->groups;
+                $res = $groups->last($this->iterator->current());
+                return is_bool($res) ? $res : $groups;
 
             default:
                 throw new VariableNotFoundException("Unable to find part '$var' in repeat variable");
