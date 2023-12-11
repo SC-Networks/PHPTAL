@@ -125,7 +125,7 @@ class State
      * @throws ReflectionException
      * @throws PhpNotAllowedException
      */
-    public function evaluateExpression(?string $expression)
+    public function evaluateExpression(string $expression)
     {
         if ($this->getTalesMode() === 'php') {
             return TalesInternal::php($expression);

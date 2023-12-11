@@ -136,7 +136,6 @@ class TalesInternal implements TalesInterface
         return '!\PhpTal\Helper::phptal_true(' . self::compileToPHPExpression($expression, $nothrow) . ')';
     }
 
-
     /**
      * path:
      *
@@ -175,7 +174,7 @@ class TalesInternal implements TalesInterface
      * @throws UnknownModifierException
      * @throws ReflectionException
      */
-    public static function path(?string $expression, ?bool $nothrow = null)
+    public static function path(string $expression, ?bool $nothrow = null)
     {
         $expression = trim($expression);
         if ($expression === 'default') {
@@ -270,7 +269,7 @@ class TalesInternal implements TalesInterface
      */
     private static function checkExpressionPart(string $expression): int
     {
-        $expression = preg_replace('/\${[^}]+}/', 'a', $expression); // pretend interpolation is done
+        $expression = (string) preg_replace('/\${[^}]+}/', 'a', $expression); // pretend interpolation is done
         return (int) preg_match('/^[a-z_][a-z0-9_]*$/i', $expression);
     }
 
@@ -406,7 +405,7 @@ class TalesInternal implements TalesInterface
         }
 
         // optimize ''.foo.'' to foo
-        $result = preg_replace("/^(?:''\.)?(.*?)(?:\.'')?$/", '\1', '\'' . $result . '\'');
+        $result = (string) preg_replace("/^(?:''\.)?(.*?)(?:\.'')?$/", '\1', '\'' . $result . '\'');
 
         /*
             The following expression (with + in first alternative):
@@ -417,9 +416,7 @@ class TalesInternal implements TalesInterface
         */
 
         // optimize (foo()) to foo()
-        $result = preg_replace("/^\(((?:[^\(\)]|\([^\(\)]*\))*)\)$/", '\1', $result);
-
-        return $result;
+        return (string) preg_replace("/^\(((?:[^\(\)]|\([^\(\)]*\))*)\)$/", '\1', $result);
     }
 
     /**
@@ -553,7 +550,6 @@ class TalesInternal implements TalesInterface
      * Expressions with alternatives ("foo | bar") will cause it to return array
      * Use \PhpTal\Php\TalesInternal::compileToPHPExpression() if you always want string.
      *
-     * @param null|string $expression
      * @param bool $nothrow if true, invalid expression will return NULL (at run time) rather than throwing exception
      *
      * @return string|array<string>
@@ -561,10 +557,9 @@ class TalesInternal implements TalesInterface
      * @throws UnknownModifierException
      * @throws ReflectionException
      */
-    public static function compileToPHPExpressions(?string $expression, ?bool $nothrow = null)
+    public static function compileToPHPExpressions(string $expression, ?bool $nothrow = null)
     {
-        $expression = trim($expression ?? '');
-        $typePrefix = null;
+        $expression = trim($expression);
 
         // Look for tales modifier (string:, exists:, Namespaced\Tale:, etc...)
         if (preg_match('/^([a-z](?:[a-z0-9._\\\\-]*[a-z0-9])?):(.*)$/si', $expression, $m)) {
