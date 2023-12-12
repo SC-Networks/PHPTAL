@@ -174,7 +174,7 @@ class State
      */
     public function interpolateTalesVarsInHTML(string $src): string
     {
-        return preg_replace_callback(
+        return (string) preg_replace_callback(
             '/((?:\$\$)*)\$\{(structure |text )?(.*?)\}|((?:\$\$)+)\{/isS',
             $this->interpolateTalesVarsInHTMLCallback(...),
             $src
@@ -203,7 +203,7 @@ class State
      */
     public function interpolateTalesVarsInCDATA(string $src): string
     {
-        return preg_replace_callback(
+        return (string) preg_replace_callback(
             '/((?:\$\$)*)\$\{(structure |text )?(.*?)\}|((?:\$\$)+)\{/isS',
             $this->interpolateTalesVarsInCDATACallback(...),
             $src

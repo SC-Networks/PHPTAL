@@ -737,7 +737,7 @@ class PHPTAL implements PhpTalInterface
                 $tpl = $this->externalMacroTemplatesCache[$file];
             } else {
                 $tpl = clone $this;
-                array_unshift($tpl->repositories, dirname($this->source->getRealPath()));
+                array_unshift($tpl->repositories, dirname($this->source?->getRealPath() ?? ''));
                 $tpl->setTemplate($file);
                 $tpl->prepare();
 
@@ -768,19 +768,6 @@ class PHPTAL implements PhpTalInterface
             }
             $fun($local_tpl, $this);
         }
-    }
-
-    /**
-     * ensure that getCodePath will return up-to-date path
-     *
-     * @throws ConfigurationException
-     * @throws IOException
-     */
-    private function setCodeFile(): void
-    {
-        $this->findTemplate();
-        $this->codeFile = $this->getPhpCodeDestination() . $this->getSubPath() . '/'  . $this->getFunctionName()
-            . '.' . $this->getPhpCodeExtension();
     }
 
     /**
@@ -823,12 +810,12 @@ class PHPTAL implements PhpTalInterface
         $this->externalMacroTemplatesCache = [];
 
         // find the template source file and update function name
-        $this->setCodeFile();
+        $codePath = $this->getCodePath();
 
         if (!function_exists($this->getFunctionName())) {
             // parse template if php generated code does not exists or template
             // source file modified since last generation or force reparse is set
-            if ($this->getForceReparse() || !file_exists($this->getCodePath())) {
+            if ($this->getForceReparse() || !file_exists($codePath)) {
                 // i'm not sure where that belongs, but not in normal path of execution
                 // because some sites have _a lot_ of files in temp
                 if ($this->getCachePurgeFrequency() && random_int(0, mt_getrandmax()) % $this->getCachePurgeFrequency() === 0) {
@@ -837,8 +824,8 @@ class PHPTAL implements PhpTalInterface
 
                 $result = $this->parse();
 
-                if (!file_put_contents($this->getCodePath(), $result)) {
-                    throw new IOException('Unable to open '.$this->getCodePath().' for writing');
+                if (!file_put_contents($codePath, $result)) {
+                    throw new IOException('Unable to open '.$codePath.' for writing');
                 }
 
                 // the awesome thing about eval() is that parse errors don't stop PHP.
@@ -853,17 +840,17 @@ class PHPTAL implements PhpTalInterface
                 }
 
                 if (!function_exists($this->getFunctionName())) {
-                    $msg = str_replace('eval()\'d code', $this->getCodePath(), (string) ob_get_clean());
+                    $msg = str_replace('eval()\'d code', $codePath, (string) ob_get_clean());
 
                     // greedy .* ensures last match
                     $line = preg_match('/.*on line (\d+)$/m', $msg, $m) ? $m[1] : 0;
-                    throw new TemplateException(trim($msg), $this->getCodePath(), (int) $line);
+                    throw new TemplateException(trim($msg), $codePath, (int) $line);
                 }
                 ob_end_clean();
             } else {
                 // eval trick is used only on first run,
                 // just in case it causes any problems with opcode accelerators
-                require $this->getCodePath();
+                require $codePath;
             }
         }
 
@@ -982,7 +969,9 @@ class PHPTAL implements PhpTalInterface
     public function getCodePath(): string
     {
         if (!$this->codeFile) {
-            $this->setCodeFile();
+            $this->findTemplate();
+            $this->codeFile = $this->getPhpCodeDestination() . $this->getSubPath() . '/'  . $this->getFunctionName()
+                . '.' . $this->getPhpCodeExtension();
         }
         return $this->codeFile;
     }
@@ -994,15 +983,16 @@ class PHPTAL implements PhpTalInterface
     {
         // function name is used as base for caching, so it must be unique for
         // every combination of settings that changes code in compiled template
+        $source = $this->getSource();
 
         if (!$this->functionName) {
-            // just to make tempalte name recognizable
-            $basename = preg_replace('/\.[a-z]{3,5}$/', '', basename($this->source->getRealPath()));
-            $basename = substr(trim(preg_replace('/[^a-zA-Z0-9]+/', '_', $basename), '_'), 0, 20);
+            // just to make template name recognizable
+            $basename = (string) preg_replace('/\.[a-z]{3,5}$/', '', basename($source->getRealPath()));
+            $basename = substr(trim((string) preg_replace('/[^a-zA-Z0-9]+/', '_', $basename), '_'), 0, 20);
 
             $hash = md5(
                 static::PHPTAL_VERSION . PHP_VERSION
-                . $this->source->getRealPath()
+                . $source->getRealPath()
                 . $this->getEncoding()
                 . $this->getPreFiltersCacheId()
                 . $this->getOutputMode(),
@@ -1014,7 +1004,7 @@ class PHPTAL implements PhpTalInterface
             // but that's still over 110 bits in addition to basename and timestamp.
             $hash = strtr(rtrim(base64_encode($hash), '='), '+/=', '_A_');
 
-            $this->functionName = $this->getFunctionNamePrefix($this->source->getLastModifiedTime()) . $basename . '__' . $hash;
+            $this->functionName = $this->getFunctionNamePrefix($source->getLastModifiedTime()) . $basename . '__' . $hash;
         }
         return $this->functionName;
     }
@@ -1106,14 +1096,16 @@ class PHPTAL implements PhpTalInterface
      */
     protected function parse(): string
     {
-        $data = $this->source->getData();
+        $source = $this->getSource();
+
+        $data = $source->getData();
 
         $prefilters = $this->getPreFilterInstances();
         foreach ($prefilters as $prefilter) {
             $data = $prefilter->filter($data);
         }
 
-        $realpath = $this->source->getRealPath();
+        $realpath = $source->getRealPath();
         $parser = new SaxXmlParser($this->encoding);
 
         $builder = new PHPTALDocumentBuilder();
@@ -1171,6 +1163,9 @@ class PHPTAL implements PhpTalInterface
 
     public function getSource(): SourceInterface
     {
+        if ($this->source === null) {
+            throw new IOException('Template source not set');
+        }
         return $this->source;
     }
 

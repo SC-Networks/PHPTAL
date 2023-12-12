@@ -41,9 +41,9 @@ class StripComments extends PreFilter
             if ($node instanceof Comment) {
                 if ($defs->isCDATAElementInHTML($root->getNamespaceURI(), $root->getLocalName())) {
                     $textNode = new CDATASection($node->getValueEscaped(), $node->getEncoding());
-                    $node->parentNode->replaceChild($textNode, $node);
+                    $node->parentNode?->replaceChild($textNode, $node);
                 } else {
-                    $node->parentNode->removeChild($node);
+                    $node->parentNode?->removeChild($node);
                 }
             } elseif ($node instanceof Element) {
                 $this->filterDOM($node);

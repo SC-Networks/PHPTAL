@@ -152,7 +152,7 @@ class TemplateException extends PhpTalException implements Stringable
 
         // this is not accurate yet, hopefully will be overwritten later
         $this->srcFile = $file;
-        $this->srcLine = $line;
+        $this->srcLine = (int) $line;
 
         $lines = @file($file);
         if (!$lines) {

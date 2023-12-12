@@ -75,7 +75,7 @@ class Translate extends Content
         // a translation key
         if (trim($this->expression) === '') {
             $key = $this->getTranslationKey($this->phpelement, !$escape, $codewriter->getEncoding());
-            $key = trim(preg_replace('/\s+/sm' . ($codewriter->getEncoding() === 'UTF-8' ? 'u' : ''), ' ', $key));
+            $key = trim((string) preg_replace('/\s+/sm' . ($codewriter->getEncoding() === 'UTF-8' ? 'u' : ''), ' ', $key));
             if (trim($key) === '') {
                 throw new TemplateException(
                     'Empty translation key',

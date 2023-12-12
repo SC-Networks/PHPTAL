@@ -129,7 +129,7 @@ class FillSlot extends Attribute
         foreach ($element->getAttributeNodes() as $attr) {
             $estimated_bytes += 4 + strlen($attr->getQualifiedName());
             if ($attr->getReplacedState() === Attr::NOT_REPLACED) {
-                $estimated_bytes += strlen($attr->getValueEscaped()); // this is shoddy for replaced attributes
+                $estimated_bytes += strlen((string) $attr->getValueEscaped()); // this is shoddy for replaced attributes
             }
         }
 

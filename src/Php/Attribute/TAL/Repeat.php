@@ -117,6 +117,6 @@ class Repeat extends Attribute
         $codewriter->doEnd('foreach');
         $codewriter->popContext();
 
-        $codewriter->recycleTempVariable($this->var);
+        $codewriter->recycleTempVariable((string) $this->var);
     }
 }

@@ -31,7 +31,7 @@ final class TalesRegistry implements TalesRegistryInterface
      * @var array<
      *  string,
      *  array{
-     *    callback: callable(?string, bool):mixed|callable-string|array{0: class-string, 1: string},
+     *    callback: callable(string, bool):mixed|callable-string|array{0: class-string, 1: string},
      *    is_fallback: bool
      *  }
      * >
