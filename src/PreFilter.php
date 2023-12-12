@@ -41,7 +41,9 @@ abstract class PreFilter implements FilterInterface
      *
      * @param DOMElement $node PHP5 DOM node to modify in place
      */
-    abstract public function filterElement(DOMElement $node): void;
+    public function filterElement(DOMElement $node): void
+    {
+    }
 
     /**
      * Receives root PHPTAL DOM node of parsed file and should edit it in place.
@@ -53,7 +55,9 @@ abstract class PreFilter implements FilterInterface
      *
      * @param Dom\Element $root PHPTAL DOM node to modify in place
      */
-    abstract public function filterDOM(Element $root): void;
+    public function filterDOM(Element $root): void
+    {
+    }
 
     /**
      * Receives DOM node that had phptal:filter attribute calling this filter.
