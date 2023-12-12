@@ -101,12 +101,14 @@ class CodeWriter
     }
 
     /**
-     * @param string $var
      * @throws PhpTalException
      */
-    public function recycleTempVariable($var): void
+    public function recycleTempVariable(?string $var): void
     {
-        if (!str_starts_with($var, '$_tmp_')) {
+        if (
+            $var === null
+            || !str_starts_with($var, '$_tmp_')
+        ) {
             throw new PhpTalException('Invalid variable recycled');
         }
         $this->temp_recycling[] = $var;

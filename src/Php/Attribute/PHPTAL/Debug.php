@@ -42,6 +42,6 @@ class Debug extends Attribute
      */
     public function after(CodeWriter $codewriter): void
     {
-        $codewriter->setDebug($this->oldMode);
+        $codewriter->setDebug((bool) $this->oldMode);
     }
 }

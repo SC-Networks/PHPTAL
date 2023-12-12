@@ -254,7 +254,7 @@ class Define extends Attribute implements TalesChainReaderInterface
             $codewriter->doSetVar($this->tmp_content_var, 'ob_get_clean()');
             $this->buffered = true;
         }
-        $this->doDefineVarWith($codewriter, $this->tmp_content_var);
+        $this->doDefineVarWith($codewriter, (string) $this->tmp_content_var);
     }
 
     private function doDefineVarWith(CodeWriter $codewriter, string $code): void

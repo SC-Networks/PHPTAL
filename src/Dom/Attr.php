@@ -90,7 +90,7 @@ class Attr
      */
     public function getValue(): string
     {
-        return html_entity_decode($this->value_escaped, ENT_QUOTES, $this->encoding);
+        return html_entity_decode((string) $this->value_escaped, ENT_QUOTES, $this->encoding);
     }
 
     /**

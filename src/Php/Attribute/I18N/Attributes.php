@@ -83,7 +83,7 @@ class Attributes extends Attribute
             [$qname, $key] = $this->parseSetExpression($exp);
 
             // if the translation key is specified and not empty (but may be '0')
-            if (strlen($key ?? '')) {
+            if ($key !== null && strlen($key) > 0) {
                 // we use it and replace the tag attribute with the result of the translation
                 $code = $this->getTranslationCode($codewriter, $key);
             } else {

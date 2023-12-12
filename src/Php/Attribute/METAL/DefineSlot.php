@@ -86,6 +86,6 @@ class DefineSlot extends Attribute
     {
         $codewriter->doEnd('if');
 
-        $codewriter->recycleTempVariable($this->tmp_var);
+        $codewriter->recycleTempVariable((string) $this->tmp_var);
     }
 }

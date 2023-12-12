@@ -383,7 +383,7 @@ class Element extends Node implements Stringable
      */
     public function setAttributeNS(string $namespace_uri, string $qname, string $value): void
     {
-        $localname = preg_replace('/^[^:]*:/', '', $qname);
+        $localname = (string) preg_replace('/^[^:]*:/', '', $qname);
         if (!($n = $this->getAttributeNodeNS($namespace_uri, $localname))) {
             $this->attribute_nodes[] = $n = new Attr($qname, $namespace_uri, null, 'UTF-8'); // FIXME: find encoding
         }
@@ -528,7 +528,7 @@ class Element extends Node implements Stringable
                     $codewriter->pushHTML(' ' . $attr->getQualifiedName());
                     if ($codewriter->getOutputMode() !== PHPTAL::HTML5
                         || !Defs::getInstance()->isBooleanAttribute($attr->getQualifiedName())) {
-                        $html = $codewriter->interpolateHTML($attr->getValueEscaped());
+                        $html = $codewriter->interpolateHTML((string) $attr->getValueEscaped());
                         $codewriter->pushHTML('=' . $codewriter->quoteAttributeValue($html));
                     }
                     break;
@@ -537,12 +537,12 @@ class Element extends Node implements Stringable
                     break;
 
                 case Attr::FULLY_REPLACED:
-                    $codewriter->pushHTML($attr->getValueEscaped());
+                    $codewriter->pushHTML((string) $attr->getValueEscaped());
                     break;
 
                 case Attr::VALUE_REPLACED:
                     $codewriter->pushHTML(' ' . $attr->getQualifiedName() . '="');
-                    $codewriter->pushHTML($attr->getValueEscaped());
+                    $codewriter->pushHTML((string) $attr->getValueEscaped());
                     $codewriter->pushHTML('"');
                     break;
             }

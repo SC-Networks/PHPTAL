@@ -350,7 +350,7 @@ class Compress extends Normalize
             return;
         }
 
-        if ($this->getPHPTAL()->getOutputMode() !== PHPTAL::HTML5) {
+        if ($this->getPHPTAL()?->getOutputMode() !== PHPTAL::HTML5) {
             return;
         }
 

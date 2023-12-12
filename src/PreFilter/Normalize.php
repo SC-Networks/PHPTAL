@@ -128,7 +128,7 @@ class Normalize extends PreFilter
     {
         $utf_regex_mod = $encoding === 'UTF-8' ? 'u' : '';
 
-        return preg_replace('/[ \t\r\n]+/' . $utf_regex_mod, ' ', $text); // \s removes nbsp
+        return (string) preg_replace('/[ \t\r\n]+/' . $utf_regex_mod, ' ', $text); // \s removes nbsp
     }
 
     protected function normalizeAttributes(Element $element): void
@@ -139,7 +139,7 @@ class Normalize extends PreFilter
                 continue;
             }
 
-            $val = $this->normalizeSpace($attrnode->getValueEscaped(), $attrnode->getEncoding());
+            $val = $this->normalizeSpace((string) $attrnode->getValueEscaped(), $attrnode->getEncoding());
             $attrnode->setValueEscaped(trim($val, ' '));
         }
     }

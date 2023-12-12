@@ -253,4 +253,13 @@ class PhptalTest extends PhpTalTestCase
 
         static::assertStringContainsString('DOCTYPE', $res);
     }
+
+    public function testGetSourceThrowsIfPathNotDefined(): void
+    {
+        static::expectException(IOException::class);
+        static::expectExceptionMessage('Template source not set');
+
+        $tpl = new PHPTAL();
+        $tpl->getSource();
+    }
 }
