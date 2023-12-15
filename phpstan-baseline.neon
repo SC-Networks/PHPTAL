@@ -1,9 +1,104 @@
 parameters:
 	ignoreErrors:
 		-
+			message: "#^Method PhpTal\\\\Context\\:\\:popContext\\(\\) should return PhpTal\\\\Context but returns PhpTal\\\\Context\\|null\\.$#"
+			count: 1
+			path: src/Context.php
+
+		-
 			message: "#^Offset numeric\\-string does not exist on string\\.$#"
 			count: 1
 			path: src/Context.php
+
+		-
+			message: "#^Property PhpTal\\\\Context\\:\\:\\$_slots \\(array\\<string, array\\{\\(callable\\(\\)\\: string\\)\\|callable\\-string, PhpTal\\\\PhpTalInterface, PhpTal\\\\PhpTalInterface\\}\\|string\\>\\) does not accept array\\<string, array\\{\\(callable\\(\\)\\: string\\)\\|callable\\-string, PhpTal\\\\PhpTalInterface, PhpTal\\\\PhpTalInterface\\}\\|string\\>\\|null\\.$#"
+			count: 1
+			path: src/Context.php
+
+		-
+			message: "#^Method PhpTal\\\\Dom\\\\Attr\\:\\:getOverwrittenVariableName\\(\\) should return string but returns string\\|null\\.$#"
+			count: 1
+			path: src/Dom/Attr.php
+
+		-
+			message: "#^Cannot call method getLocalName\\(\\) on PhpTal\\\\Dom\\\\Element\\|null\\.$#"
+			count: 1
+			path: src/Dom/CDATASection.php
+
+		-
+			message: "#^Cannot call method getNamespaceURI\\(\\) on PhpTal\\\\Dom\\\\Element\\|null\\.$#"
+			count: 1
+			path: src/Dom/CDATASection.php
+
+		-
+			message: "#^Method PhpTal\\\\Dom\\\\Node\\:\\:getSourceFile\\(\\) should return string but returns string\\|null\\.$#"
+			count: 1
+			path: src/Dom/Node.php
+
+		-
+			message: "#^Method PhpTal\\\\Dom\\\\Node\\:\\:getSourceLine\\(\\) should return int but returns int\\|null\\.$#"
+			count: 1
+			path: src/Dom/Node.php
+
+		-
+			message: "#^Method PhpTal\\\\Dom\\\\Node\\:\\:getValueEscaped\\(\\) should return string but returns string\\|null\\.$#"
+			count: 1
+			path: src/Dom/Node.php
+
+		-
+			message: "#^Cannot call method appendChild\\(\\) on PhpTal\\\\Dom\\\\Element\\|null\\.$#"
+			count: 1
+			path: src/Dom/PHPTALDocumentBuilder.php
+
+		-
+			message: "#^Cannot call method getQualifiedName\\(\\) on PhpTal\\\\Dom\\\\Element\\|null\\.$#"
+			count: 3
+			path: src/Dom/PHPTALDocumentBuilder.php
+
+		-
+			message: "#^Cannot call method getSourceLine\\(\\) on PhpTal\\\\Dom\\\\Element\\|null\\.$#"
+			count: 1
+			path: src/Dom/PHPTALDocumentBuilder.php
+
+		-
+			message: "#^Method PhpTal\\\\Dom\\\\PHPTALDocumentBuilder\\:\\:getResult\\(\\) should return PhpTal\\\\Dom\\\\Element but returns PhpTal\\\\Dom\\\\Element\\|null\\.$#"
+			count: 1
+			path: src/Dom/PHPTALDocumentBuilder.php
+
+		-
+			message: "#^Parameter \\#2 \\$encoding of class PhpTal\\\\Dom\\\\CDATASection constructor expects string, string\\|null given\\.$#"
+			count: 1
+			path: src/Dom/PHPTALDocumentBuilder.php
+
+		-
+			message: "#^Parameter \\#2 \\$encoding of class PhpTal\\\\Dom\\\\Comment constructor expects string, string\\|null given\\.$#"
+			count: 1
+			path: src/Dom/PHPTALDocumentBuilder.php
+
+		-
+			message: "#^Parameter \\#2 \\$encoding of class PhpTal\\\\Dom\\\\DocumentType constructor expects string, string\\|null given\\.$#"
+			count: 1
+			path: src/Dom/PHPTALDocumentBuilder.php
+
+		-
+			message: "#^Parameter \\#2 \\$encoding of class PhpTal\\\\Dom\\\\ProcessingInstruction constructor expects string, string\\|null given\\.$#"
+			count: 1
+			path: src/Dom/PHPTALDocumentBuilder.php
+
+		-
+			message: "#^Parameter \\#2 \\$encoding of class PhpTal\\\\Dom\\\\Text constructor expects string, string\\|null given\\.$#"
+			count: 1
+			path: src/Dom/PHPTALDocumentBuilder.php
+
+		-
+			message: "#^Parameter \\#4 \\$encoding of class PhpTal\\\\Dom\\\\Attr constructor expects string, string\\|null given\\.$#"
+			count: 1
+			path: src/Dom/PHPTALDocumentBuilder.php
+
+		-
+			message: "#^Property PhpTal\\\\Dom\\\\DocumentBuilder\\:\\:\\$stack \\(array\\<PhpTal\\\\Dom\\\\Element\\>\\) does not accept array\\<PhpTal\\\\Dom\\\\Element\\|null\\>\\.$#"
+			count: 1
+			path: src/Dom/PHPTALDocumentBuilder.php
 
 		-
 			message: "#^Argument of an invalid type array\\<int, string\\>\\|false supplied for foreach, only iterables are supported\\.$#"
@@ -44,6 +139,21 @@ parameters:
 			message: "#^PHPDoc tag @var with type PhpTal\\\\Dom\\\\Node is not subtype of native type mixed\\.$#"
 			count: 1
 			path: src/Php/Attribute/METAL/FillSlot.php
+
+		-
+			message: "#^Parameter \\#1 \\$condition of method PhpTal\\\\Php\\\\CodeWriter\\:\\:doIf\\(\\) expects string, string\\|null given\\.$#"
+			count: 1
+			path: src/Php/Attribute/PHPTAL/Id.php
+
+		-
+			message: "#^Parameter \\#1 \\$mode of method PhpTal\\\\Php\\\\CodeWriter\\:\\:setTalesMode\\(\\) expects string, string\\|null given\\.$#"
+			count: 1
+			path: src/Php/Attribute/PHPTAL/Tales.php
+
+		-
+			message: "#^Property PhpTal\\\\Php\\\\Attribute\\\\TAL\\\\Attributes\\:\\:\\$default_escaped \\(string\\|false\\) does not accept string\\|null\\.$#"
+			count: 1
+			path: src/Php/Attribute/TAL/Attributes.php
 
 		-
 			message: "#^Property PhpTal\\\\Php\\\\Attribute\\\\TAL\\\\Define\\:\\:\\$defineScope \\(string\\) does not accept string\\|false\\.$#"
@@ -91,7 +201,7 @@ parameters:
 			path: src/RepeatControllerGroups.php
 
 		-
-			message: "#^Method PhpTal\\\\TalesRegistry\\:\\:getCallback\\(\\) should return \\(callable\\(string\\|null, bool\\)\\: mixed\\)\\|null but returns array\\{class\\-string, string\\}\\|\\(callable\\(string\\|null, bool\\)\\: mixed\\)\\.$#"
+			message: "#^Method PhpTal\\\\TalesRegistry\\:\\:getCallback\\(\\) should return \\(callable\\(string, bool\\)\\: mixed\\)\\|null but returns array\\{class\\-string, string\\}\\|\\(callable\\(string, bool\\)\\: mixed\\)\\.$#"
 			count: 1
 			path: src/TalesRegistry.php
 
