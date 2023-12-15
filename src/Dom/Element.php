@@ -571,7 +571,7 @@ class Element extends Node implements Stringable
         $talAttributes = [];
         foreach ($this->attribute_nodes as $index => $attr) {
             // remove handled xml namespaces
-            if (Defs::getInstance()->isHandledXmlNs($attr->getQualifiedName(), $attr->getValueEscaped())) {
+            if (Defs::getInstance()->isHandledXmlNs($attr->getQualifiedName(), (string) $attr->getValueEscaped())) {
                 unset($this->attribute_nodes[$index]);
             } elseif ($this->xmlns->isHandledNamespace($attr->getNamespaceURI())) {
                 $talAttributes[$attr->getQualifiedName()] = $attr;

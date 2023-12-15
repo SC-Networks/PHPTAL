@@ -483,7 +483,7 @@ class SaxXmlParser
 
         // corrects all non-entities and neutralizes potentially problematic CDATA end marker
         $str = strtr(
-            preg_replace(
+            (string) preg_replace(
                 '/&(?!(?:#x?[a-f0-9]+|[a-z][a-z0-9]*);)/i',
                 '&amp;',
                 $str
@@ -499,11 +499,6 @@ class SaxXmlParser
         return $this->file;
     }
 
-    public function getLineNumber(): int
-    {
-        return $this->line;
-    }
-
     /**
      * @param string $c
      */
@@ -517,6 +512,6 @@ class SaxXmlParser
      */
     protected function raiseError(string $errStr): never
     {
-        throw new ParserException($errStr, $this->file, $this->line);
+        throw new ParserException($errStr, $this->file, (int) $this->line);
     }
 }
