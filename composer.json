@@ -89,6 +89,7 @@
     "suggest": {
         "scn/phptal-lint": "Linter for phptal template files",
         "ext-gettext": "Php gettext extension for i18n support",
-        "ext-mbstring": "Multibyte support is important for any non-english strings"
+        "ext-mbstring": "Multibyte support is important for any non-english strings",
+        "usox/tal-i18n-extract": "Extracts translation-keys from phptal templates"
     }
 }

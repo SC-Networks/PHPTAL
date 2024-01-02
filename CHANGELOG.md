@@ -1,5 +1,11 @@
 # Changelog
 
+v4.0.0 2024
+-------
+additions:
+ * Add support for recent php-versions
+ * More explicit type-hints
+
 v3.1.0 2021-05-18
 -------
 additions:
