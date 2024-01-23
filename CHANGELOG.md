@@ -3,8 +3,11 @@
 v4.0.0 2024
 -------
 additions:
- * Add support for recent php-versions
+ * Add support for recent php-versions (8.2, 8.3)
  * More explicit type-hints
+
+removals:
+ * Drop support for outdated php-versions <= 8.0
 
 v3.1.0 2021-05-18
 -------
