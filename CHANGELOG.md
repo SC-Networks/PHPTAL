@@ -1,6 +1,6 @@
 # Changelog
 
-v4.0.0 2024
+v4.0.0 2024-01-23
 -------
 additions:
  * Add support for recent php-versions (8.2, 8.3)
