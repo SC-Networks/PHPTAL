@@ -131,7 +131,7 @@ class MetalMacroTest extends PhpTalTestCase
             TAL_TEST_FILES_DIR
         ));
         $res = $tpl->execute();
-        static::assertSame('Call OK OK', trim(preg_replace('/\s+/', ' ', $res)));
+        static::assertSame('Call OK OK', trim((string) preg_replace('/\s+/', ' ', $res)));
     }
 
     public function testMacroRedefinitionIsGraceful(): void
