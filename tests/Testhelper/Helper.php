@@ -29,8 +29,8 @@ class Helper
     {
         $src = trim($src);
         $src = preg_replace('/\s+/usm', ' ', $src);
-        $src = preg_replace('/(?<!]])&gt;/', '>', $src); // > may or may not be escaped, except ]]>
-        $src = str_replace(['> ', ' <', ' />'], ['>', '<', '/>'], $src);
+        $src = preg_replace('/(?<!]])&gt;/', '>', (string) $src); // > may or may not be escaped, except ]]>
+        $src = str_replace(['> ', ' <', ' />'], ['>', '<', '/>'], (string) $src);
         return $src;
     }
 
@@ -38,9 +38,9 @@ class Helper
     {
         // ignore debug
         $code = preg_replace('!<\?php\s+/\* tag ".*?" from line \d+ \*/ ?; \?>!', '', $code);
-        $code = preg_replace('!/\* tag ".*?" from line \d+ \*/ ?;!', '', $code);
+        $code = preg_replace('!/\* tag ".*?" from line \d+ \*/ ?;!', '', (string) $code);
 
-        $code = str_replace('<?php use pear2\HTML\Template\PHPTAL as P; ?>', '', $code);
+        $code = str_replace('<?php use pear2\HTML\Template\PHPTAL as P; ?>', '', (string) $code);
 
         $lines = explode("\n", $code);
         $code = "";
