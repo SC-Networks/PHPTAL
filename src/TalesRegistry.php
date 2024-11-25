@@ -24,6 +24,8 @@ use ReflectionMethod;
  * Global registry of TALES expression modifiers
  *
  * @package PHPTAL
+ *
+ * @phpstan-import-type CallbackReturnType from TalesRegistryInterface
  */
 final class TalesRegistry implements TalesRegistryInterface
 {
@@ -31,7 +33,7 @@ final class TalesRegistry implements TalesRegistryInterface
      * @var array<
      *  string,
      *  array{
-     *    callback: callable(string, bool):mixed|callable-string|array{0: class-string, 1: string},
+     *    callback: CallbackReturnType,
      *    is_fallback: bool
      *  }
      * >
@@ -123,11 +125,12 @@ final class TalesRegistry implements TalesRegistryInterface
      * get callback for the prefix
      *
      *
-     * @return null|callable(string, bool):mixed
+     * @return null|CallbackReturnType
+     *
      * @throws Exception\UnknownModifierException
      * @throws ReflectionException
      */
-    public static function getCallback(string $prefix): ?callable
+    public static function getCallback(string $prefix): null|array|string|callable
     {
         if (!static::isRegistered($prefix)) {
             return null;

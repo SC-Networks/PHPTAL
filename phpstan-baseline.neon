@@ -111,11 +111,6 @@ parameters:
 			path: src/Dom/SaxXmlParser.php
 
 		-
-			message: "#^Parameter \\#1 \\$m of static method PhpTal\\\\Dom\\\\SaxXmlParser\\:\\:convertBytesToEntities\\(\\) expects array\\<int, string\\>, array\\<int\\|string, string\\> given\\.$#"
-			count: 1
-			path: src/Dom/SaxXmlParser.php
-
-		-
 			message: "#^Parameter \\#2 \\$array of function implode expects array\\|null, array\\<int\\<0, max\\>, string\\>\\|false given\\.$#"
 			count: 1
 			path: src/Dom/SaxXmlParser.php
@@ -199,9 +194,4 @@ parameters:
 			message: "#^Property PhpTal\\\\RepeatControllerGroups\\:\\:\\$cache \\(array\\<string, string\\>\\) does not accept array\\<string, bool\\|string\\>\\.$#"
 			count: 3
 			path: src/RepeatControllerGroups.php
-
-		-
-			message: "#^Method PhpTal\\\\TalesRegistry\\:\\:getCallback\\(\\) should return \\(callable\\(string, bool\\)\\: mixed\\)\\|null but returns array\\{class\\-string, string\\}\\|\\(callable\\(string, bool\\)\\: mixed\\)\\.$#"
-			count: 1
-			path: src/TalesRegistry.php
 

@@ -576,6 +576,7 @@ class TalesInternal implements TalesInterface
         // is a registered TALES expression modifier
         $callback = TalesRegistry::getCallback($typePrefix);
         if ($callback !== null) {
+            /** @var callable $callback */
             $result = $callback($expression, $nothrow ?? false);
             self::verifyPHPExpressions($typePrefix, $result);
             return $result;
