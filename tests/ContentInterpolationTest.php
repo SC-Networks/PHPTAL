@@ -284,7 +284,7 @@ EOT;
         try {
             // PHP 5.4: short tag <?= is always enabled.
             static::assertSame('<p>test<? print("<x>"); ?>test<_ "&amp;" ?>test</p>', $tpl->execute());
-        } catch(ParserException) {/* xml ill-formedness error is ok too */
+        } catch (ParserException) {/* xml ill-formedness error is ok too */
         }
         ini_restore('short_open_tag');
     }

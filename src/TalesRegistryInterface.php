@@ -9,6 +9,8 @@ use ReflectionException;
  * TalesRegistryInterface
  *
  * @package PHPTAL
+ *
+ * @phpstan-type CallbackReturnType callable(string, bool):mixed|callable-string|array{0: class-string, 1: string}
  */
 interface TalesRegistryInterface
 {
@@ -16,9 +18,9 @@ interface TalesRegistryInterface
      * get callback for the prefix
      *
      *
-     * @return null|callable(?string, bool):mixed
+     * @return null|CallbackReturnType
      */
-    public static function getCallback(string $prefix): ?callable;
+    public static function getCallback(string $prefix): null|array|string|callable;
 
     /**
      * true if given prefix is taken
