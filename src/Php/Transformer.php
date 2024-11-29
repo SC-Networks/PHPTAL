@@ -55,6 +55,7 @@ class Transformer
     private static array $TranslationTable = [
         'not' => '!',
         'ne' => '!=',
+        'nee' => '!==',
         'and' => '&&',
         'or' => '||',
         'lt' => '<',
@@ -62,6 +63,7 @@ class Transformer
         'ge' => '>=',
         'le' => '<=',
         'eq' => '==',
+        'eqq' => '===',
     ];
 
     /**

@@ -1385,6 +1385,18 @@ this page has been readed ${page/countRead} times"/>
           </listitem>
           <listitem>
             <para>
+              <code>!==</code> :
+              <code>EQQ</code> (strictly equal)
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              <code>===</code> :
+              <code>NEE</code> (strictly not equal)
+            </para>
+          </listitem>
+          <listitem>
+            <para>
               <code>&amp;&amp;</code> : 
               <code>AND</code>
             </para>
