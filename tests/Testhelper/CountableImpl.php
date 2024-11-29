@@ -24,7 +24,7 @@ class CountableImpl implements Countable
 {
     private readonly int $cnt;
 
-    public function __construct(int $cnt = null)
+    public function __construct(null|int $cnt = null)
     {
         $this->cnt = $cnt ?? 0;
     }
