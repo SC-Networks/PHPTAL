@@ -270,7 +270,7 @@ class CodeWriter
      *
      * @param bool $called_from_macro for error checking: unbuffered output doesn't support that
      */
-    public function doDoctype(bool $called_from_macro = null): void
+    public function doDoctype(bool $called_from_macro = false): void
     {
         if ($this->doctype) {
             $code = '$ctx->setDocType(' . $this->str($this->doctype) .
@@ -284,7 +284,7 @@ class CodeWriter
      *
      * @param bool $called_from_macro for error checking: unbuffered output doesn't support that
      */
-    public function doXmlDeclaration(bool $called_from_macro = null): void
+    public function doXmlDeclaration(bool $called_from_macro = false): void
     {
         if ($this->xmldeclaration && $this->getOutputMode() !== PHPTAL::HTML5) {
             $code = '$ctx->setXmlDeclaration(' . $this->str($this->xmldeclaration) .
@@ -367,7 +367,7 @@ class CodeWriter
     /**
      * @throws PhpTalException
      */
-    public function doEnd(string $expects = null): void
+    public function doEnd(null|string $expects = null): void
     {
         if (count($this->segments) === 0) {
             if ($expects === null) {

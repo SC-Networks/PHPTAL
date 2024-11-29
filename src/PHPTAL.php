@@ -256,7 +256,7 @@ class PHPTAL implements PhpTalInterface
      *
      * @return $this
      */
-    public function setSource(string $src, ?string $path = null): PhpTalInterface
+    public function setSource(string $src, null|string $path = null): PhpTalInterface
     {
         $this->prepared = false;
         $this->functionName = null;
