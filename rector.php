@@ -2,10 +2,8 @@
 
 declare(strict_types=1);
 
-use Rector\CodeQuality\Rector\FuncCall\IntvalToTypeCastRector;
 use Rector\Config\RectorConfig;
 use Rector\Php55\Rector\String_\StringClassNameToClassConstantRector;
-use Rector\Php73\Rector\FuncCall\JsonThrowOnErrorRector;
 use Rector\Php74\Rector\Closure\ClosureToArrowFunctionRector;
 use Rector\Php74\Rector\LNumber\AddLiteralSeparatorToNumberRector;
 use Rector\Php80\Rector\FunctionLike\MixedTypeRector;
@@ -19,14 +17,12 @@ return RectorConfig::configure()
     ->withImportNames()
     ->withSkip([
         StringClassNameToClassConstantRector::class,
-        JsonThrowOnErrorRector::class,
         FirstClassCallableRector::class,
         MixedTypeRector::class,
     ])
     ->withPhpSets(php81: true)
     ->withPreparedSets(deadCode: true)
     ->withRules([
-        IntvalToTypeCastRector::class,
         AddLiteralSeparatorToNumberRector::class,
         ClosureToArrowFunctionRector::class,
     ]);

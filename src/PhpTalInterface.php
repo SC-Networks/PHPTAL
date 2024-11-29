@@ -28,11 +28,11 @@ interface PhpTalInterface
      * Use setTemplate() or addSourceResolver() whenever possible.
      *
      * @param string $src The phptal template source.
-     * @param string $path Fake and 'unique' template path.
+     * @param null|string $path Fake and 'unique' template path.
      *
      * @return $this
      */
-    public function setSource(string $src, string $path = null): self;
+    public function setSource(string $src, null|string $path = null): self;
 
     /**
      * Specify where to look for templates.

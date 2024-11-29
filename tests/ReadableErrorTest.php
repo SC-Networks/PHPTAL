@@ -88,7 +88,7 @@ class ReadableErrorTest extends PhpTalTestCase
         $this->assertThrowsInLine(5, 'input/error-13.html');
     }
 
-    public function assertThrowsInLine(int $line, string $file, string $expected_file = null): void
+    public function assertThrowsInLine(int $line, string $file, null|string $expected_file = null): void
     {
         $tpl = null;
         try {

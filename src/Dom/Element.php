@@ -462,7 +462,7 @@ class Element extends Node implements Stringable
         }
     }
 
-    public function generateContent(CodeWriter $codewriter, bool $realContent = null): void
+    public function generateContent(CodeWriter $codewriter, bool $realContent = false): void
     {
         if (!$this->isEmptyNode($codewriter->getOutputMode())) {
             if ($realContent || count($this->contentAttributes) === 0) {

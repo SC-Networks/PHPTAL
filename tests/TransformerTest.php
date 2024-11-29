@@ -22,7 +22,7 @@ use PhpTal\Exception\ParserException;
 use PhpTal\Php\Transformer;
 use Tests\Testcase\PhpTalTestCase;
 
-class PhpTransformerTestTestCase extends PhpTalTestCase
+class TransformerTest extends PhpTalTestCase
 {
     public function testBooleanOperators(): void
     {
@@ -150,6 +150,9 @@ class PhpTransformerTestTestCase extends PhpTalTestCase
     {
         static::assertSame('true != false', Transformer::transform('true ne false'));
         static::assertSame('$test == null', Transformer::transform('test eq null'));
+
+        static::assertSame('true !== false', Transformer::transform('true nee false'));
+        static::assertSame('$test === null', Transformer::transform('test eqq null'));
     }
 
     public function testTernaryOperator(): void

@@ -112,7 +112,7 @@ class SaxXmlParser
      * @throws ParserException
      * @throws TemplateException
      */
-    public function parseString(DocumentBuilder $builder, string $src, string $filename = null): DocumentBuilder
+    public function parseString(DocumentBuilder $builder, string $src, null|string $filename = null): DocumentBuilder
     {
         try {
             $builder->setEncoding($this->input_encoding);
