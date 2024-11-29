@@ -31,7 +31,7 @@ class XmlnsState
     /** Create a new XMLNS state inheriting provided aliases.
      * @param array<string, string> $prefix_to_uri
      */
-    public function __construct(private array $prefix_to_uri, private string $current_default)
+    public function __construct(private array $prefix_to_uri, private readonly string $current_default)
     {
     }
 

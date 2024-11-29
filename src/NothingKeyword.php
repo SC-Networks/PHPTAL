@@ -30,9 +30,6 @@ class NothingKeyword implements KeywordsInterface, Stringable
     {
         return 0;
     }
-    /**
-     * @return null
-     */
     public function jsonSerialize(): ?string
     {
         return null;

@@ -20,9 +20,6 @@ namespace Tests\Testhelper;
 
 class DummyClass
 {
-    /**
-     * @var null
-     */
     public $foo;
 
     /**

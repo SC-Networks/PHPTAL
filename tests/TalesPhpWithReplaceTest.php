@@ -22,7 +22,7 @@ use PhpTal\Exception\PhpNotAllowedException;
 use Tests\Testcase\PhpTalTestCase;
 use Tests\Testhelper\Helper;
 
-class TalesPhpWithReplaceTestTestCase extends PhpTalTestCase
+class TalesPhpWithReplaceTest extends PhpTalTestCase
 {
     public function testMix(): void
     {

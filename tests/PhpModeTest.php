@@ -22,7 +22,7 @@ use PhpTal\Php\TalesInternal;
 use Tests\Testcase\PhpTalTestCase;
 use Tests\Testhelper\Helper;
 
-class PhpModeTestTestCase extends PhpTalTestCase
+class PhpModeTest extends PhpTalTestCase
 {
     public function tearDown(): void
     {
