@@ -8,6 +8,7 @@ use Rector\Php74\Rector\Closure\ClosureToArrowFunctionRector;
 use Rector\Php74\Rector\LNumber\AddLiteralSeparatorToNumberRector;
 use Rector\Php80\Rector\FunctionLike\MixedTypeRector;
 use Rector\Php81\Rector\Array_\FirstClassCallableRector;
+use Rector\Php83\Rector\ClassMethod\AddOverrideAttributeToOverriddenMethodsRector;
 
 return RectorConfig::configure()
     ->withPaths([
@@ -19,8 +20,9 @@ return RectorConfig::configure()
         StringClassNameToClassConstantRector::class,
         FirstClassCallableRector::class,
         MixedTypeRector::class,
+        AddOverrideAttributeToOverriddenMethodsRector::class,
     ])
-    ->withPhpSets(php81: true)
+    ->withPhpSets(php83: true)
     ->withPreparedSets(deadCode: true)
     ->withRules([
         AddLiteralSeparatorToNumberRector::class,

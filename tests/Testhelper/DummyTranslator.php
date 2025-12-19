@@ -65,7 +65,10 @@ class DummyTranslator implements TranslationServiceInterface
 
     public function translate(?string $key, bool $escape = true): string
     {
-        if (array_key_exists($key, $this->translations)) {
+        if (
+            $key !== null
+            && array_key_exists($key, $this->translations)
+        ) {
             $v = $this->translations[$key];
         } else {
             $v = $key;

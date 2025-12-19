@@ -19,6 +19,7 @@ declare(strict_types=1);
 namespace Tests;
 
 use DOMDocument;
+use PHPUnit\Framework\Attributes\RequiresPhp;
 use SimpleXMLElement;
 use Tests\Testcase\PhpTalTestCase;
 use Tests\Testhelper\Helper;
@@ -92,6 +93,7 @@ class TalTestCaseRepeatTest extends PhpTalTestCase
         static::assertSame('<div></div>', $tpl->execute());
     }
 
+    #[RequiresPhp('<8.5')]
     public function testArrayObjectAggregated(): void
     {
         $tpl = $this->newPHPTAL();

@@ -38,16 +38,16 @@ use PhpTal\Exception\ParserException;
  */
 class Transformer
 {
-    final public const ST_WHITE = -1; // start of string or whitespace
-    final public const ST_NONE = 0;  // pass through (operators, parens, etc.)
-    final public const ST_STR = 1;  // 'foo'
-    final public const ST_ESTR = 2;  // "foo ${x} bar"
-    final public const ST_VAR = 3;  // abcd
-    final public const ST_NUM = 4;  // 123.02
-    final public const ST_EVAL = 5;  // $somevar
-    final public const ST_MEMBER = 6;  // abcd.x
-    final public const ST_STATIC = 7;  // class::[$]static|const
-    final public const ST_DEFINE = 8;  // @MY_DEFINE
+    final public const int ST_WHITE = -1; // start of string or whitespace
+    final public const int ST_NONE = 0;  // pass through (operators, parens, etc.)
+    final public const int ST_STR = 1;  // 'foo'
+    final public const int ST_ESTR = 2;  // "foo ${x} bar"
+    final public const int ST_VAR = 3;  // abcd
+    final public const int ST_NUM = 4;  // 123.02
+    final public const int ST_EVAL = 5;  // $somevar
+    final public const int ST_MEMBER = 6;  // abcd.x
+    final public const int ST_STATIC = 7;  // class::[$]static|const
+    final public const int ST_DEFINE = 8;  // @MY_DEFINE
 
     /**
      * @var array<string, string>

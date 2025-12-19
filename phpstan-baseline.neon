@@ -131,11 +131,6 @@ parameters:
 			path: src/Php/Attribute/I18N/Translate.php
 
 		-
-			message: "#^PHPDoc tag @var with type PhpTal\\\\Dom\\\\Node is not subtype of native type mixed\\.$#"
-			count: 1
-			path: src/Php/Attribute/METAL/FillSlot.php
-
-		-
 			message: "#^Parameter \\#1 \\$condition of method PhpTal\\\\Php\\\\CodeWriter\\:\\:doIf\\(\\) expects string, string\\|null given\\.$#"
 			count: 1
 			path: src/Php/Attribute/PHPTAL/Id.php

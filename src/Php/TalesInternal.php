@@ -56,8 +56,8 @@ use ReflectionException;
  */
 class TalesInternal implements TalesInterface
 {
-    final public const DEFAULT_KEYWORD = 'new \PhpTal\DefaultKeyword';
-    final public const NOTHING_KEYWORD = 'new \PhpTal\NothingKeyword';
+    final public const string DEFAULT_KEYWORD = 'new \PhpTal\DefaultKeyword';
+    final public const string NOTHING_KEYWORD = 'new \PhpTal\NothingKeyword';
 
     private static bool $phpModifierAllowed = false;
 

@@ -43,15 +43,15 @@ use Throwable;
  */
 class PHPTAL implements PhpTalInterface
 {
-    final public const PHPTAL_VERSION = '3_0_2';
+    final public const string PHPTAL_VERSION = '4_2_0';
 
     /**
      * constants for output mode
      * @see setOutputMode()
      */
-    final public const XHTML = 11;
-    final public const XML   = 22;
-    final public const HTML5 = 55;
+    final public const int XHTML = 11;
+    final public const int XML   = 22;
+    final public const int HTML5 = 55;
 
     /**
      * @see getPreFilters()
