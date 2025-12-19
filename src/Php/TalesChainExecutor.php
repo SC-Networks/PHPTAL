@@ -21,8 +21,8 @@ use PhpTal\Exception\PhpTalException;
  */
 class TalesChainExecutor
 {
-    final public const CHAIN_BREAK = 1;
-    final public const CHAIN_CONT = 2;
+    final public const int CHAIN_BREAK = 1;
+    final public const int CHAIN_CONT = 2;
 
     private int $state = 0;
 

@@ -38,24 +38,24 @@ use PhpTal\Exception\TemplateException;
 class SaxXmlParser
 {
     // available parser states
-    final public const ST_ROOT = 0;
-    final public const ST_TEXT = 1;
-    final public const ST_LT = 2;
-    final public const ST_TAG_NAME = 3;
-    final public const ST_TAG_CLOSE = 4;
-    final public const ST_TAG_SINGLE = 5;
-    final public const ST_TAG_ATTRIBUTES = 6;
-    final public const ST_TAG_BETWEEN_ATTRIBUTE = 7;
-    final public const ST_CDATA = 8;
-    final public const ST_COMMENT = 9;
-    final public const ST_DOCTYPE = 10;
-    final public const ST_XMLDEC = 11;
-    final public const ST_PREPROC = 12;
-    final public const ST_ATTR_KEY = 13;
-    final public const ST_ATTR_EQ = 14;
-    final public const ST_ATTR_QUOTE = 15;
-    final public const ST_ATTR_VALUE = 16;
-    final public const BOM_STR = "\xef\xbb\xbf";
+    final public const int ST_ROOT = 0;
+    final public const int ST_TEXT = 1;
+    final public const int ST_LT = 2;
+    final public const int ST_TAG_NAME = 3;
+    final public const int ST_TAG_CLOSE = 4;
+    final public const int ST_TAG_SINGLE = 5;
+    final public const int ST_TAG_ATTRIBUTES = 6;
+    final public const int ST_TAG_BETWEEN_ATTRIBUTE = 7;
+    final public const int ST_CDATA = 8;
+    final public const int ST_COMMENT = 9;
+    final public const int ST_DOCTYPE = 10;
+    final public const int ST_XMLDEC = 11;
+    final public const int ST_PREPROC = 12;
+    final public const int ST_ATTR_KEY = 13;
+    final public const int ST_ATTR_EQ = 14;
+    final public const int ST_ATTR_QUOTE = 15;
+    final public const int ST_ATTR_VALUE = 16;
+    final public const string BOM_STR = "\xef\xbb\xbf";
 
     /**
      * @var array<int, string>

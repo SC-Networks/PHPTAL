@@ -21,7 +21,7 @@ namespace PhpTal;
  */
 class StringSource implements SourceInterface
 {
-    final public const NO_PATH_PREFIX = '<string ';
+    final public const string NO_PATH_PREFIX = '<string ';
 
     private readonly string $realpath;
 

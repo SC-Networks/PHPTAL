@@ -21,10 +21,10 @@ namespace PhpTal\Dom;
  */
 class Attr
 {
-    final public const HIDDEN = -1;
-    final public const NOT_REPLACED = 0;
-    final public const VALUE_REPLACED = 1;
-    final public const FULLY_REPLACED = 2;
+    final public const int HIDDEN = -1;
+    final public const int NOT_REPLACED = 0;
+    final public const int VALUE_REPLACED = 1;
+    final public const int FULLY_REPLACED = 2;
 
     /**
      * attribute's value can be overriden with a variable

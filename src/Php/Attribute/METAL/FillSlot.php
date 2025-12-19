@@ -60,7 +60,7 @@ use PhpTal\TalNamespace\Builtin;
  */
 class FillSlot extends Attribute
 {
-    final public const CALLBACK_THRESHOLD = 10000;
+    final public const int CALLBACK_THRESHOLD = 10000;
 
     private static int $uid = 0;
 
