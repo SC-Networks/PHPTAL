@@ -36,7 +36,7 @@ use PhpTal\TalNamespaceAttribute;
  */
 class Defs
 {
-    private static ?\PhpTal\Dom\Defs $instance = null;
+    private static ?Defs $instance = null;
 
     /**
      * list of \PhpTal\TalNamespace objects

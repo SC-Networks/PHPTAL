@@ -415,9 +415,11 @@ class SaxXmlParser
             // to avoid this, check string bit by bit, omitting ASCII fragments.
             if (strlen($str) > 200) {
                 $chunks = preg_split('/(?>[\x09\x0A\x0D\x20-\x7F]+)/', $str, -1, PREG_SPLIT_NO_EMPTY);
-                foreach ($chunks as $chunk) {
-                    if (strlen($chunk) < 200) {
-                        $this->checkEncoding($chunk);
+                if ($chunks !== false) {
+                    foreach ($chunks as $chunk) {
+                        if (strlen($chunk) < 200) {
+                            $this->checkEncoding($chunk);
+                        }
                     }
                 }
                 return $str;
@@ -437,8 +439,14 @@ class SaxXmlParser
 
             if (!preg_match('/^(?:(?>' . $match . '))+$/s', $str)) {
                 $res = preg_split('/((?>' . $match . ')+)/s', $str, -1, PREG_SPLIT_DELIM_CAPTURE);
-                for ($i = 0, $iMax = is_countable($res) ? count($res) : 0; $i < $iMax; $i += 2) {
-                    $res[$i] = self::convertBytesToEntities([1 => $res[$i]]);
+
+                if ($res !== false) {
+                    for ($i = 0, $iMax = count($res); $i < $iMax; $i += 2) {
+                        $res[$i] = self::convertBytesToEntities([1 => $res[$i]]);
+                    }
+
+                } else {
+                    $res = [];
                 }
                 $this->raiseError('Invalid UTF-8 bytes: ' . implode('', $res));
             }
@@ -448,7 +456,7 @@ class SaxXmlParser
             $forbid = '/((?>[\x00-\x08\x0B\x0C\x0E-\x1F\x7F-\x84\x86-\x9F]+))/s';
 
             if (preg_match($forbid, $str)) {
-                $str = preg_replace_callback($forbid, fn (array $element): string => self::convertBytesToEntities($element), $str);
+                $str = preg_replace_callback($forbid, self::convertBytesToEntities(...), $str);
                 $this->raiseError('Invalid ISO-8859-1 characters: ' . $str);
             }
         }

@@ -53,6 +53,6 @@ class StringSource implements SourceInterface
      */
     public function getRealPath(): string
     {
-        return $this->realpath ?? '<string>';
+        return $this->realpath;
     }
 }

@@ -1,192 +1,206 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Method PhpTal\\\\Context\\:\\:popContext\\(\\) should return PhpTal\\\\Context but returns PhpTal\\\\Context\\|null\\.$#"
+			rawMessage: 'Method PhpTal\Context::popContext() should return PhpTal\Context but returns PhpTal\Context|null.'
+			identifier: return.type
 			count: 1
 			path: src/Context.php
 
 		-
-			message: "#^Offset numeric\\-string does not exist on string\\.$#"
+			rawMessage: Offset numeric-string does not exist on string.
+			identifier: offsetAccess.notFound
 			count: 1
 			path: src/Context.php
 
 		-
-			message: "#^Property PhpTal\\\\Context\\:\\:\\$_slots \\(array\\<string, array\\{\\(callable\\(\\)\\: string\\)\\|callable\\-string, PhpTal\\\\PhpTalInterface, PhpTal\\\\PhpTalInterface\\}\\|string\\>\\) does not accept array\\<string, array\\{\\(callable\\(\\)\\: string\\)\\|callable\\-string, PhpTal\\\\PhpTalInterface, PhpTal\\\\PhpTalInterface\\}\\|string\\>\\|null\\.$#"
+			rawMessage: 'Property PhpTal\Context::$_slots (array<string, array{(callable(): string)|callable-string, PhpTal\PhpTalInterface, PhpTal\PhpTalInterface}|string>) does not accept array<string, array{(callable(): string)|callable-string, PhpTal\PhpTalInterface, PhpTal\PhpTalInterface}|string>|null.'
+			identifier: assign.propertyType
 			count: 1
 			path: src/Context.php
 
 		-
-			message: "#^Method PhpTal\\\\Dom\\\\Attr\\:\\:getOverwrittenVariableName\\(\\) should return string but returns string\\|null\\.$#"
+			rawMessage: 'Method PhpTal\Dom\Attr::getOverwrittenVariableName() should return string but returns string|null.'
+			identifier: return.type
 			count: 1
 			path: src/Dom/Attr.php
 
 		-
-			message: "#^Cannot call method getLocalName\\(\\) on PhpTal\\\\Dom\\\\Element\\|null\\.$#"
+			rawMessage: 'Cannot call method getLocalName() on PhpTal\Dom\Element|null.'
+			identifier: method.nonObject
 			count: 1
 			path: src/Dom/CDATASection.php
 
 		-
-			message: "#^Cannot call method getNamespaceURI\\(\\) on PhpTal\\\\Dom\\\\Element\\|null\\.$#"
+			rawMessage: 'Cannot call method getNamespaceURI() on PhpTal\Dom\Element|null.'
+			identifier: method.nonObject
 			count: 1
 			path: src/Dom/CDATASection.php
 
 		-
-			message: "#^Method PhpTal\\\\Dom\\\\Node\\:\\:getSourceFile\\(\\) should return string but returns string\\|null\\.$#"
+			rawMessage: 'Method PhpTal\Dom\Node::getSourceFile() should return string but returns string|null.'
+			identifier: return.type
 			count: 1
 			path: src/Dom/Node.php
 
 		-
-			message: "#^Method PhpTal\\\\Dom\\\\Node\\:\\:getSourceLine\\(\\) should return int but returns int\\|null\\.$#"
+			rawMessage: 'Method PhpTal\Dom\Node::getSourceLine() should return int but returns int|null.'
+			identifier: return.type
 			count: 1
 			path: src/Dom/Node.php
 
 		-
-			message: "#^Method PhpTal\\\\Dom\\\\Node\\:\\:getValueEscaped\\(\\) should return string but returns string\\|null\\.$#"
+			rawMessage: 'Method PhpTal\Dom\Node::getValueEscaped() should return string but returns string|null.'
+			identifier: return.type
 			count: 1
 			path: src/Dom/Node.php
 
 		-
-			message: "#^Cannot call method appendChild\\(\\) on PhpTal\\\\Dom\\\\Element\\|null\\.$#"
+			rawMessage: 'Cannot call method appendChild() on PhpTal\Dom\Element|null.'
+			identifier: method.nonObject
 			count: 1
 			path: src/Dom/PHPTALDocumentBuilder.php
 
 		-
-			message: "#^Cannot call method getQualifiedName\\(\\) on PhpTal\\\\Dom\\\\Element\\|null\\.$#"
+			rawMessage: 'Cannot call method getQualifiedName() on PhpTal\Dom\Element|null.'
+			identifier: method.nonObject
 			count: 3
 			path: src/Dom/PHPTALDocumentBuilder.php
 
 		-
-			message: "#^Cannot call method getSourceLine\\(\\) on PhpTal\\\\Dom\\\\Element\\|null\\.$#"
+			rawMessage: 'Cannot call method getSourceLine() on PhpTal\Dom\Element|null.'
+			identifier: method.nonObject
 			count: 1
 			path: src/Dom/PHPTALDocumentBuilder.php
 
 		-
-			message: "#^Method PhpTal\\\\Dom\\\\PHPTALDocumentBuilder\\:\\:getResult\\(\\) should return PhpTal\\\\Dom\\\\Element but returns PhpTal\\\\Dom\\\\Element\\|null\\.$#"
+			rawMessage: 'Method PhpTal\Dom\PHPTALDocumentBuilder::getResult() should return PhpTal\Dom\Element but returns PhpTal\Dom\Element|null.'
+			identifier: return.type
 			count: 1
 			path: src/Dom/PHPTALDocumentBuilder.php
 
 		-
-			message: "#^Parameter \\#2 \\$encoding of class PhpTal\\\\Dom\\\\CDATASection constructor expects string, string\\|null given\\.$#"
+			rawMessage: 'Parameter #2 $encoding of class PhpTal\Dom\CDATASection constructor expects string, string|null given.'
+			identifier: argument.type
 			count: 1
 			path: src/Dom/PHPTALDocumentBuilder.php
 
 		-
-			message: "#^Parameter \\#2 \\$encoding of class PhpTal\\\\Dom\\\\Comment constructor expects string, string\\|null given\\.$#"
+			rawMessage: 'Parameter #2 $encoding of class PhpTal\Dom\Comment constructor expects string, string|null given.'
+			identifier: argument.type
 			count: 1
 			path: src/Dom/PHPTALDocumentBuilder.php
 
 		-
-			message: "#^Parameter \\#2 \\$encoding of class PhpTal\\\\Dom\\\\DocumentType constructor expects string, string\\|null given\\.$#"
+			rawMessage: 'Parameter #2 $encoding of class PhpTal\Dom\DocumentType constructor expects string, string|null given.'
+			identifier: argument.type
 			count: 1
 			path: src/Dom/PHPTALDocumentBuilder.php
 
 		-
-			message: "#^Parameter \\#2 \\$encoding of class PhpTal\\\\Dom\\\\ProcessingInstruction constructor expects string, string\\|null given\\.$#"
+			rawMessage: 'Parameter #2 $encoding of class PhpTal\Dom\ProcessingInstruction constructor expects string, string|null given.'
+			identifier: argument.type
 			count: 1
 			path: src/Dom/PHPTALDocumentBuilder.php
 
 		-
-			message: "#^Parameter \\#2 \\$encoding of class PhpTal\\\\Dom\\\\Text constructor expects string, string\\|null given\\.$#"
+			rawMessage: 'Parameter #2 $encoding of class PhpTal\Dom\Text constructor expects string, string|null given.'
+			identifier: argument.type
 			count: 1
 			path: src/Dom/PHPTALDocumentBuilder.php
 
 		-
-			message: "#^Parameter \\#4 \\$encoding of class PhpTal\\\\Dom\\\\Attr constructor expects string, string\\|null given\\.$#"
+			rawMessage: 'Parameter #4 $encoding of class PhpTal\Dom\Attr constructor expects string, string|null given.'
+			identifier: argument.type
 			count: 1
 			path: src/Dom/PHPTALDocumentBuilder.php
 
 		-
-			message: "#^Property PhpTal\\\\Dom\\\\DocumentBuilder\\:\\:\\$stack \\(array\\<PhpTal\\\\Dom\\\\Element\\>\\) does not accept array\\<PhpTal\\\\Dom\\\\Element\\|null\\>\\.$#"
+			rawMessage: 'Property PhpTal\Dom\DocumentBuilder::$stack (array<PhpTal\Dom\Element>) does not accept array<PhpTal\Dom\Element|null>.'
+			identifier: assign.propertyType
 			count: 1
 			path: src/Dom/PHPTALDocumentBuilder.php
 
 		-
-			message: "#^Argument of an invalid type array\\<int, string\\>\\|false supplied for foreach, only iterables are supported\\.$#"
-			count: 1
-			path: src/Dom/SaxXmlParser.php
-
-		-
-			message: "#^Cannot access offset 0\\|int\\<2, max\\> on list\\<string\\>\\|false\\.$#"
-			count: 2
-			path: src/Dom/SaxXmlParser.php
-
-		-
-			message: "#^Parameter \\#2 \\$array of function implode expects array\\|null, array\\<int\\<0, max\\>, string\\>\\|false given\\.$#"
-			count: 1
-			path: src/Dom/SaxXmlParser.php
-
-		-
-			message: "#^Argument of an invalid type array\\|false supplied for foreach, only iterables are supported\\.$#"
+			rawMessage: 'Argument of an invalid type array|false supplied for foreach, only iterables are supported.'
+			identifier: foreach.nonIterable
 			count: 1
 			path: src/Exception/TemplateException.php
 
 		-
-			message: "#^Trying to invoke string but it might not be a callable\\.$#"
+			rawMessage: Trying to invoke string but it might not be a callable.
+			identifier: callable.nonCallable
 			count: 2
 			path: src/PHPTAL.php
 
 		-
-			message: "#^Binary operation \"\\.\" between non\\-falsy\\-string and array\\<string\\>\\|string results in an error\\.$#"
+			rawMessage: Binary operation "." between non-falsy-string and array<string>|string results in an error.
+			identifier: binaryOp.invalid
 			count: 1
 			path: src/Php/Attribute/I18N/Translate.php
 
 		-
-			message: "#^Parameter \\#1 \\$condition of method PhpTal\\\\Php\\\\CodeWriter\\:\\:doIf\\(\\) expects string, string\\|null given\\.$#"
+			rawMessage: 'Parameter #1 $condition of method PhpTal\Php\CodeWriter::doIf() expects string, string|null given.'
+			identifier: argument.type
 			count: 1
 			path: src/Php/Attribute/PHPTAL/Id.php
 
 		-
-			message: "#^Parameter \\#1 \\$mode of method PhpTal\\\\Php\\\\CodeWriter\\:\\:setTalesMode\\(\\) expects string, string\\|null given\\.$#"
+			rawMessage: 'Parameter #1 $mode of method PhpTal\Php\CodeWriter::setTalesMode() expects string, string|null given.'
+			identifier: argument.type
 			count: 1
 			path: src/Php/Attribute/PHPTAL/Tales.php
 
 		-
-			message: "#^Property PhpTal\\\\Php\\\\Attribute\\\\TAL\\\\Attributes\\:\\:\\$default_escaped \\(string\\|false\\) does not accept string\\|null\\.$#"
+			rawMessage: 'Property PhpTal\Php\Attribute\TAL\Attributes::$default_escaped (string|false) does not accept string|null.'
+			identifier: assign.propertyType
 			count: 1
 			path: src/Php/Attribute/TAL/Attributes.php
 
 		-
-			message: "#^Property PhpTal\\\\Php\\\\Attribute\\\\TAL\\\\Define\\:\\:\\$defineScope \\(string\\) does not accept string\\|false\\.$#"
+			rawMessage: 'Property PhpTal\Php\Attribute\TAL\Define::$defineScope (string) does not accept string|false.'
+			identifier: assign.propertyType
 			count: 1
 			path: src/Php/Attribute/TAL/Define.php
 
 		-
-			message: "#^Binary operation \"\\.\" between non\\-falsy\\-string and array\\<string\\>\\|string results in an error\\.$#"
+			rawMessage: Binary operation "." between non-falsy-string and array<string>|string results in an error.
+			identifier: binaryOp.invalid
 			count: 1
 			path: src/Php/Attribute/TAL/OmitTag.php
 
 		-
-			message: "#^Parameter \\#2 \\$code of method PhpTal\\\\Php\\\\Attribute\\:\\:doEchoAttribute\\(\\) expects string, array\\<string\\>\\|string given\\.$#"
+			rawMessage: 'Parameter #2 $code of method PhpTal\Php\Attribute::doEchoAttribute() expects string, array<string>|string given.'
+			identifier: argument.type
 			count: 1
 			path: src/Php/Attribute/TAL/OnError.php
 
 		-
-			message: "#^Binary operation \"\\.\" between 'new \\\\\\\\PhpTal…' and array\\<string\\>\\|string results in an error\\.$#"
+			rawMessage: Binary operation "." between 'new \\PhpTal…' and array<string>|string results in an error.
+			identifier: binaryOp.invalid
 			count: 1
 			path: src/Php/Attribute/TAL/Repeat.php
 
 		-
-			message: "#^Parameter \\#2 \\$callback of function preg_replace_callback expects callable\\(array\\<int\\|string, string\\>\\)\\: string, Closure\\(array\\<int, string\\>\\)\\: string given\\.$#"
-			count: 2
-			path: src/Php/State.php
-
-		-
-			message: "#^Instanceof between mixed and DOMNodeList will always evaluate to false\\.$#"
+			rawMessage: Instanceof between mixed and DOMNodeList will always evaluate to false.
+			identifier: instanceof.alwaysFalse
 			count: 1
 			path: src/RepeatController.php
 
 		-
-			message: "#^Method PhpTal\\\\RepeatController\\:\\:length\\(\\) should return int\\|null but returns int\\|string\\.$#"
+			rawMessage: 'Method PhpTal\RepeatController::length() should return int|null but returns int|string.'
+			identifier: return.type
 			count: 1
 			path: src/RepeatController.php
 
 		-
-			message: "#^Property PhpTal\\\\RepeatController\\:\\:\\$iterator \\(Iterator\\<mixed, mixed\\>\\) does not accept Traversable\\<mixed, mixed\\>\\.$#"
+			rawMessage: 'Property PhpTal\RepeatController::$iterator (Iterator<mixed, mixed>) does not accept Traversable<mixed, mixed>.'
+			identifier: assign.propertyType
 			count: 1
 			path: src/RepeatController.php
 
 		-
-			message: "#^Property PhpTal\\\\RepeatControllerGroups\\:\\:\\$cache \\(array\\<string, string\\>\\) does not accept array\\<string, bool\\|string\\>\\.$#"
+			rawMessage: 'Property PhpTal\RepeatControllerGroups::$cache (array<string, string>) does not accept array<string, bool|string>.'
+			identifier: assign.propertyType
 			count: 3
 			path: src/RepeatControllerGroups.php
 

@@ -4,10 +4,6 @@ declare(strict_types=1);
 
 use Rector\Config\RectorConfig;
 use Rector\Php55\Rector\String_\StringClassNameToClassConstantRector;
-use Rector\Php74\Rector\Closure\ClosureToArrowFunctionRector;
-use Rector\Php74\Rector\LNumber\AddLiteralSeparatorToNumberRector;
-use Rector\Php80\Rector\FunctionLike\MixedTypeRector;
-use Rector\Php81\Rector\Array_\FirstClassCallableRector;
 use Rector\Php83\Rector\ClassMethod\AddOverrideAttributeToOverriddenMethodsRector;
 
 return RectorConfig::configure()
@@ -18,13 +14,8 @@ return RectorConfig::configure()
     ->withImportNames()
     ->withSkip([
         StringClassNameToClassConstantRector::class,
-        FirstClassCallableRector::class,
-        MixedTypeRector::class,
         AddOverrideAttributeToOverriddenMethodsRector::class,
     ])
     ->withPhpSets(php83: true)
     ->withPreparedSets(deadCode: true)
-    ->withRules([
-        AddLiteralSeparatorToNumberRector::class,
-        ClosureToArrowFunctionRector::class,
-    ]);
+;
