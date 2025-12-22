@@ -1,5 +1,13 @@
 # Changelog
 
+v4.2.0 2025-12-22
+-------
+additions:
+ * Add support for php 8.5
+
+removals:
+ * Drop Support for older php-versions (<= 8.2)
+
 v4.1.0 2025-03-12
 -------
 additions:
