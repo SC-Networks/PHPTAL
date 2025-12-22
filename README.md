@@ -15,10 +15,12 @@ If you want to use the builtin internationalisation system (I18N), the php-gette
 Compatibility
 =============
 
-| PHPTAL-Version | PHP-Version(s) |
-|----------------|----------------|
-| 3.1            | 7.3, 7.4, 8.0  |
-| 4              | 8.1, 8.2, 8.3  |
+| PHPTAL-Version | PHP-Version(s)     |
+|----------------|--------------------|
+| 4.2            | 8.3, 8.4, 8.5      |
+| 4.1            | 8.1, 8.2, 8.3, 8.4 |
+| 4              | 8.1, 8.2, 8.3      |
+| 3.1            | 7.3, 7.4, 8.0      |
 
 Composer install (recommended)
 ==============================
