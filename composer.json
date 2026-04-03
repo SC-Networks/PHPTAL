@@ -34,8 +34,7 @@
         "ext-dom": "*",
         "ext-gettext": "*",
         "ext-simplexml": "*",
-        "symfony/polyfill-mbstring": "^1.12",
-        "symfony/polyfill-php82": "^1.26"
+        "symfony/polyfill-mbstring": "^1.12"
     },
     "require-dev": {
         "ext-mbstring": "*",
