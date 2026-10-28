@@ -622,7 +622,7 @@ class TalesInternal implements TalesInterface
      *
      * @param string $src
      *
-     * @return array<array{0: int, 1: string}>
+     * @return array<array{0: int, 1: string, 2: int}>
      */
     private static function tokenize($src): array
     {
