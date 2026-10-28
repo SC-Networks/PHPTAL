@@ -370,9 +370,7 @@ class CodeWriter
     public function doEnd(null|string $expects = null): void
     {
         if (count($this->segments) === 0) {
-            if ($expects === null) {
-                $expects = 'anything';
-            }
+            $expects ??= 'anything';
             throw new PhpTalException("Bug: CodeWriter generated end of block without $expects open");
         }
 

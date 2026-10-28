@@ -93,7 +93,7 @@ class TalTestCaseRepeatTest extends PhpTalTestCase
         static::assertSame('<div></div>', $tpl->execute());
     }
 
-    #[RequiresPhp('<8.5')]
+    #[RequiresPhp('<8.5.0')]
     public function testArrayObjectAggregated(): void
     {
         $tpl = $this->newPHPTAL();

@@ -225,11 +225,7 @@ class RepeatController implements Iterator
      */
     private function getGroups(): RepeatControllerGroups
     {
-        if ($this->groups === null) {
-            $this->groups = new RepeatControllerGroups();
-        }
-
-        return $this->groups;
+        return $this->groups ??= new RepeatControllerGroups();
     }
 
     /**

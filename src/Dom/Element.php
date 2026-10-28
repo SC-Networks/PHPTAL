@@ -371,7 +371,7 @@ class Element extends Node implements Stringable
     public function getAttributeNS(string $namespace_uri, string $localname): string
     {
         $n = $this->getAttributeNodeNS($namespace_uri, $localname);
-        return $n !== null ? $n->getValue() : '';
+        return $n?->getValue() ?? '';
     }
 
     /**

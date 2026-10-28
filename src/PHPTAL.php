@@ -217,8 +217,6 @@ class PHPTAL implements PhpTalInterface
 
     /**
      * Clone template state and context.
-     *
-     * @return void
      */
     public function __clone()
     {

@@ -275,7 +275,6 @@ class Transformer
                         }
                         $result .= '->';
                         $mark = $i + 1;
-                        $state = self::ST_MEMBER;
                     } elseif ($c === ':') {
                         // begin of static access
                         $result .= substr($str, $mark, $i - $mark + 1);
@@ -340,7 +339,6 @@ class Transformer
                     } elseif ($c === ':') {
                         // end of static var which is a class name
                         $result .= substr($str, $mark, $i - $mark + 1);
-                        $state = self::ST_STATIC;
                         break;
                     } elseif ($c === '(' || $c === '[') {
                         // static method or array

@@ -293,7 +293,6 @@ class SaxXmlParser
                             $mark = $i + 1; // mark text start
                             $state = self::ST_TEXT;
                         } elseif (!$customDoctype && $c === '>') {
-                            $customDoctype = false;
                             $builder->onDocType($this->checkEncoding(substr($src, $mark, $i - $mark + 1)));
                             $mark = $i + 1; // mark text start
                             $state = self::ST_TEXT;
